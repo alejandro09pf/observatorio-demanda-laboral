@@ -1,5 +1,6 @@
 import scrapy
 
+
 class JobItem(scrapy.Item):
     portal = scrapy.Field()
     country = scrapy.Field()
@@ -7,7 +8,6 @@ class JobItem(scrapy.Item):
     title = scrapy.Field()
     company = scrapy.Field()
     location = scrapy.Field()
-    
     description = scrapy.Field()
     requirements = scrapy.Field()
     salary_raw = scrapy.Field()
