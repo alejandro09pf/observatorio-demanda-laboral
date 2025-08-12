@@ -60,8 +60,11 @@ def setup_database():
         # Enable required extensions
         print("Enabling required extensions...")
         cursor.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
-        cursor.execute('CREATE EXTENSION IF NOT EXISTS "pgvector"')
-        print("Extensions enabled successfully!")
+        print("✅ uuid-ossp extension enabled successfully!")
+        
+        # Note: pgvector extension is not available in the current PostgreSQL image
+        # It will be added later when we upgrade to a compatible image
+        print("⚠️  pgvector extension skipped - not available in current image")
         
         # Run migration script
         migration_file = Path(__file__).parent.parent / "src" / "database" / "migrations" / "001_initial_schema.sql"
@@ -82,11 +85,11 @@ def setup_database():
                         print(f"Warning: Could not execute statement: {e}")
                         print(f"Statement: {statement[:100]}...")
             
-            print("Migration completed successfully!")
+            print("✅ Migration completed successfully!")
         else:
             print(f"Warning: Migration file not found: {migration_file}")
         
-        print("\nDatabase setup completed successfully!")
+        print("\n🎉 Database setup completed successfully!")
         
     except Exception as e:
         print(f"Error setting up database: {e}")

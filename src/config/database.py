@@ -1,29 +1,24 @@
+"""
+Database configuration utilities for Labor Market Observatory.
+"""
+
 import os
 from urllib.parse import urlparse
+from typing import Dict, Any
 
 def get_database_url() -> str:
-    """Get database URL from environment or construct from components."""
-    if os.getenv('DATABASE_URL'):
-        return os.getenv('DATABASE_URL')
-    
-    # Construct from individual components
-    user = os.getenv('DB_USER', 'labor_user')
-    password = os.getenv('DB_PASSWORD', 'password')
-    host = os.getenv('DB_HOST', 'localhost')
-    port = os.getenv('DB_PORT', '5432')
-    name = os.getenv('DB_NAME', 'labor_observatory')
-    
-    return f"postgresql://{user}:{password}@{host}:{port}/{name}"
+    """Get database URL from environment variables."""
+    return os.getenv('DATABASE_URL', 'postgresql://labor_user:your_password@localhost:5433/labor_observatory')
 
-def get_database_config() -> dict:
-    """Parse database URL into components."""
-    url = get_database_url()
-    parsed = urlparse(url)
+def get_database_config() -> Dict[str, Any]:
+    """Parse database URL and return configuration dictionary."""
+    database_url = get_database_url()
+    parsed = urlparse(database_url)
     
     return {
-        'host': parsed.hostname,
-        'port': parsed.port or 5432,
-        'user': parsed.username,
-        'password': parsed.password,
-        'database': parsed.path.lstrip('/')
+        'host': parsed.hostname or 'localhost',
+        'port': parsed.port or 5433,
+        'user': parsed.username or 'labor_user',
+        'password': parsed.password or 'your_password',
+        'database': parsed.path.lstrip('/') or 'labor_observatory'
     } 
