@@ -8,14 +8,10 @@ services:
       POSTGRES_USER: labor_user
       POSTGRES_PASSWORD: your_password
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./src/database/migrations:/docker-entrypoint-initdb.d
-    command: >
-      postgres
-      -c shared_preload_libraries=pg_stat_statements,pgvector
-      -c pg_stat_statements.track=all
 
   redis:
     image: redis:7-alpine
