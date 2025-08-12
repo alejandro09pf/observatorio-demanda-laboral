@@ -2,6 +2,14 @@
 
 > **An automated system for monitoring technical skill demands in Latin American labor markets using AI, NLP, and data analysis.**
 
+## 🆕 **NEW DEVELOPER? READ THIS FIRST!**
+
+**If you're new to this project, start with the [ONBOARDING GUIDE](docs/ONBOARDING_GUIDE.md) - it will tell you exactly what to do, where to find everything, and how to continue development.**
+
+**For immediate guidance, see [QUICK_START.md](QUICK_START.md)**
+
+**Current Status: ✅ Phases 1 & 2 Complete - Foundation & Database Working**
+
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
@@ -146,11 +154,13 @@ python src/orchestrator.py report --country CO
 
 ## 📚 Documentation
 
-### **Comprehensive Guides**
+### **🚀 NEW DEVELOPER? START HERE!**
+- **[ONBOARDING GUIDE](docs/ONBOARDING_GUIDE.md)** ← **READ THIS FIRST!** - Complete guide for new developers
 
-- **[Master Technical Specification](documentation/master-tech-spec.md)** - Complete system blueprint
-- **[Complete Implementation Guide](documentation/complete-implementation-guide.md)** - All production-ready code
-- **[Data Flow Reference](documentation/data-flow-reference.md)** - Inter-module communication patterns
+### **📋 Core Documentation**
+- **[Master Technical Specification](docs/technical-specification.md)** - Complete system blueprint
+- **[Complete Implementation Guide](docs/implementation-guide.md)** - All production-ready code
+- **[Data Flow Reference](docs/data-flow-reference.md)** - Inter-module communication patterns
 - **[Architecture Overview](docs/architecture.md)** - System design and components
 
 ### **API Reference**
