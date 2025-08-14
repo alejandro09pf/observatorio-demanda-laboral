@@ -6,12 +6,16 @@ Main command-line interface for controlling the entire data pipeline.
 """
 
 import typer
-from typing import Optional
+from typing import Optional, List
 import logging
+import subprocess
+import sys
+import os
 from pathlib import Path
+import json
+from datetime import datetime
 
 # Add src to path for imports
-import sys
 sys.path.insert(0, str(Path(__file__).parent))
 
 from config.settings import get_settings
@@ -29,86 +33,208 @@ settings = get_settings()
 setup_logging(settings.log_level, settings.log_file)
 logger = logging.getLogger(__name__)
 
-@app.command()
-def scrape(
-    country: str = typer.Argument(..., help="Country code (CO, MX, AR)"),
-    portal: str = typer.Argument(..., help="Portal name (computrabajo, bumeran, elempleo)"),
-    pages: int = typer.Option(1, "--pages", "-p", help="Number of pages to scrape")
-):
-    """Scrape job postings from a specific portal."""
-    logger.info(f"Starting scraping for {country}/{portal} with {pages} pages")
-    # TODO: Implement scraping logic
-    typer.echo(f"Scraping {pages} pages from {portal} in {country}")
+# Available spiders
+AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo']
+SUPPORTED_COUNTRIES = ['CO', 'MX', 'AR']
+
+
+def validate_spiders(spiders: List[str]) -> List[str]:
+    """Validate spider names."""
+    invalid_spiders = [s for s in spiders if s not in AVAILABLE_SPIDERS]
+    if invalid_spiders:
+        raise typer.BadParameter(f"Invalid spiders: {invalid_spiders}. Available: {AVAILABLE_SPIDERS}")
+    return spiders
+
+
+def validate_country(country: str) -> str:
+    """Validate country code."""
+    if country not in SUPPORTED_COUNTRIES:
+        raise typer.BadParameter(f"Invalid country: {country}. Supported: {SUPPORTED_COUNTRIES}")
+    return country
+
 
 @app.command()
-def extract(
-    batch_size: int = typer.Option(100, "--batch-size", "-b", help="Batch size for processing")
+def run(
+    spiders: str = typer.Argument(..., help="Comma-separated list of spiders to run"),
+    country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR)"),
+    limit: int = typer.Option(500, "--limit", "-l", help="Maximum number of jobs per spider"),
+    max_pages: int = typer.Option(10, "--max-pages", "-p", help="Maximum pages to scrape per spider")
 ):
-    """Extract skills from scraped job postings."""
-    logger.info(f"Starting skill extraction with batch size {batch_size}")
-    # TODO: Implement skill extraction logic
-    typer.echo(f"Extracting skills with batch size {batch_size}")
+    """Run multiple spiders with specified parameters."""
+    spider_list = [s.strip() for s in spiders.split(",")]
+    spider_list = validate_spiders(spider_list)
+    country = validate_country(country)
+    
+    logger.info(f"Starting scraping run for spiders: {spider_list} in {country}")
+    
+    results = {}
+    for spider in spider_list:
+        try:
+            result = run_single_spider(spider, country, limit, max_pages)
+            results[spider] = result
+        except Exception as e:
+            logger.error(f"Error running spider {spider}: {e}")
+            results[spider] = {"error": str(e)}
+    
+    # Print summary
+    typer.echo("\n" + "="*50)
+    typer.echo("SCRAPING RUN SUMMARY")
+    typer.echo("="*50)
+    for spider, result in results.items():
+        if "error" in result:
+            typer.echo(f"❌ {spider}: {result['error']}")
+        else:
+            typer.echo(f"✅ {spider}: {result.get('items_scraped', 0)} items scraped")
+    
+    return results
+
 
 @app.command()
-def enhance(
-    batch_size: int = typer.Option(50, "--batch-size", "-b", help="Batch size for LLM processing")
+def run_once(
+    spider: str = typer.Argument(..., help="Spider name to run"),
+    country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR)"),
+    limit: int = typer.Option(100, "--limit", "-l", help="Maximum number of jobs to scrape"),
+    max_pages: int = typer.Option(5, "--max-pages", "-p", help="Maximum pages to scrape")
 ):
-    """Enhance skills using LLM processing."""
-    logger.info(f"Starting skill enhancement with batch size {batch_size}")
-    # TODO: Implement LLM enhancement logic
-    typer.echo(f"Enhancing skills with batch size {batch_size}")
+    """Run a single spider once."""
+    validate_spiders([spider])
+    country = validate_country(country)
+    
+    logger.info(f"Running single spider: {spider} for {country}")
+    
+    try:
+        result = run_single_spider(spider, country, limit, max_pages)
+        typer.echo(f"✅ {spider} completed: {result.get('items_scraped', 0)} items scraped")
+        return result
+    except Exception as e:
+        logger.error(f"Error running spider {spider}: {e}")
+        typer.echo(f"❌ {spider} failed: {e}")
+        raise typer.Exit(1)
+
+
+def run_single_spider(spider: str, country: str, limit: int, max_pages: int) -> dict:
+    """Run a single spider and return results."""
+    # Build scrapy command
+    cmd = [
+        sys.executable, "-m", "scrapy", "crawl", spider,
+        "-a", f"country={country}",
+        "-a", f"max_pages={max_pages}",
+        "-s", f"CLOSESPIDER_ITEMCOUNT={limit}",
+        "-L", "INFO"
+    ]
+    
+    logger.info(f"Running command: {' '.join(cmd)}")
+    
+    try:
+        # Change to project directory
+        project_dir = Path(__file__).parent.parent
+        os.chdir(project_dir)
+        
+        # Run scrapy command
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=3600  # 1 hour timeout
+        )
+        
+        if result.returncode != 0:
+            logger.error(f"Scrapy command failed: {result.stderr}")
+            raise Exception(f"Scrapy command failed: {result.stderr}")
+        
+        # Parse output to get item count
+        items_scraped = 0
+        for line in result.stdout.split('\n'):
+            if 'Inserted new job:' in line:
+                items_scraped += 1
+        
+        return {
+            "spider": spider,
+            "country": country,
+            "items_scraped": items_scraped,
+            "return_code": result.returncode,
+            "stdout": result.stdout,
+            "stderr": result.stderr
+        }
+        
+    except subprocess.TimeoutExpired:
+        logger.error(f"Spider {spider} timed out after 1 hour")
+        raise Exception("Spider execution timed out")
+    except Exception as e:
+        logger.error(f"Error running spider {spider}: {e}")
+        raise
+
 
 @app.command()
-def embed():
-    """Generate embeddings for enhanced skills."""
-    logger.info("Starting embedding generation")
-    # TODO: Implement embedding generation logic
-    typer.echo("Generating skill embeddings")
-
-@app.command()
-def analyze(
-    method: str = typer.Option("hdbscan", "--method", "-m", help="Clustering method")
+def schedule(
+    action: str = typer.Argument(..., help="Action: start or stop"),
+    config_file: str = typer.Option("config/schedule.yaml", "--config", "-c", help="Schedule configuration file")
 ):
-    """Run clustering and analysis on skill embeddings."""
-    logger.info(f"Starting analysis with method {method}")
-    # TODO: Implement analysis logic
-    typer.echo(f"Running analysis with {method}")
+    """Start or stop scheduled scraping jobs."""
+    if action not in ["start", "stop"]:
+        raise typer.BadParameter("Action must be 'start' or 'stop'")
+    
+    if action == "start":
+        typer.echo("Starting scheduled scraping jobs...")
+        # This would start the APScheduler process
+        # For now, just run the schedule script
+        try:
+            subprocess.run([sys.executable, "scripts/run_schedule.py", "--config", config_file])
+        except FileNotFoundError:
+            typer.echo("Schedule script not found. Please create scripts/run_schedule.py")
+    else:
+        typer.echo("Stopping scheduled scraping jobs...")
+        # This would stop the APScheduler process
 
-@app.command()
-def report(
-    country: Optional[str] = typer.Option(None, "--country", "-c", help="Country filter"),
-    format: str = typer.Option("pdf", "--format", "-f", help="Report format (pdf, png, csv)")
-):
-    """Generate analysis reports."""
-    logger.info(f"Generating {format} report for {country or 'all countries'}")
-    # TODO: Implement report generation logic
-    typer.echo(f"Generating {format} report for {country or 'all countries'}")
-
-@app.command()
-def pipeline(
-    country: str = typer.Argument(..., help="Country code"),
-    portal: str = typer.Argument(..., help="Portal name"),
-    full: bool = typer.Option(False, "--full", help="Run complete pipeline"),
-    pages: int = typer.Option(1, "--pages", "-p", help="Number of pages to scrape")
-):
-    """Run complete pipeline from scraping to analysis."""
-    logger.info(f"Starting complete pipeline for {country}/{portal}")
-    # TODO: Implement complete pipeline logic
-    typer.echo(f"Running {'full' if full else 'basic'} pipeline for {country}/{portal}")
 
 @app.command()
 def status():
     """Show system status and statistics."""
     logger.info("Checking system status")
-    # TODO: Implement status checking logic
-    typer.echo("System status: Ready")
+    
+    # Check database connection
+    try:
+        import psycopg2
+        from src.scraper.settings import DB_PARAMS
+        
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+        
+        # Get job counts by portal
+        cursor.execute("""
+            SELECT portal, COUNT(*) as count, 
+                   MAX(scraped_at) as last_scraped
+            FROM raw_jobs 
+            GROUP BY portal
+        """)
+        
+        results = cursor.fetchall()
+        
+        typer.echo("\n" + "="*50)
+        typer.echo("SYSTEM STATUS")
+        typer.echo("="*50)
+        typer.echo(f"Database: ✅ Connected to {DB_PARAMS['database']}")
+        
+        if results:
+            typer.echo("\nJob Statistics:")
+            for portal, count, last_scraped in results:
+                typer.echo(f"  {portal}: {count} jobs (last: {last_scraped})")
+        else:
+            typer.echo("\nNo jobs found in database")
+        
+        cursor.close()
+        conn.close()
+        
+    except Exception as e:
+        typer.echo(f"❌ Database connection failed: {e}")
+
 
 @app.command()
-def setup():
-    """Initial setup and configuration."""
-    logger.info("Running initial setup")
-    # TODO: Implement setup logic
-    typer.echo("Running initial setup...")
+def list_spiders():
+    """List all available spiders."""
+    typer.echo("Available spiders:")
+    for spider in AVAILABLE_SPIDERS:
+        typer.echo(f"  - {spider}")
 
 if __name__ == "__main__":
     app()

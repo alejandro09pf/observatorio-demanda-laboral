@@ -55,11 +55,12 @@ class Settings(BaseSettings):
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'
+        extra = 'ignore'  # Allow extra fields from environment
     
     @validator('output_dir', 'log_file', 'embedding_cache_dir')
     def create_directories(cls, v):
         os.makedirs(os.path.dirname(v) if os.path.dirname(v) else v, exist_ok=True)
-        return v
+        return 
 
 @lru_cache()
 def get_settings() -> Settings:

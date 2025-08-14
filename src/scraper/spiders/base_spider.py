@@ -3,7 +3,7 @@ Base spider class for Labor Market Observatory job portals.
 """
 
 import scrapy
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Optional, Dict, Any
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
@@ -37,15 +37,13 @@ class BaseSpider(scrapy.Spider, ABC):
         if self.country not in ['CO', 'MX', 'AR']:
             raise ValueError(f"Unsupported country: {self.country}")
     
-    @abstractmethod
     def parse_job(self, response) -> JobItem:
         """Parse individual job posting. Must be implemented by subclasses."""
-        pass
+        raise NotImplementedError("Subclasses must implement parse_job method")
     
-    @abstractmethod
     def parse_search_results(self, response) -> None:
         """Parse search results page. Must be implemented by subclasses."""
-        pass
+        raise NotImplementedError("Subclasses must implement parse_search_results method")
     
     def extract_text(self, selector, default: str = "") -> str:
         """Extract and clean text from CSS selector."""

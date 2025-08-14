@@ -1,0 +1,81 @@
+# Schedule configuration for Labor Market Observatory scraping jobs
+# This file defines when and how often each spider should run
+
+jobs:
+  # InfoJobs - Run every 4 hours
+  - spider: infojobs
+    country: CO
+    trigger: cron
+    cron: "0 */4 * * *"
+    max_pages: 10
+    limit: 200
+
+  # Elempleo - Run every 12 hours (720 minutes)
+  - spider: elempleo
+    country: CO
+    trigger: interval
+    every_minutes: 720
+    max_pages: 15
+    limit: 300
+
+  # Bumeran - Run daily at 6:30 AM
+  - spider: bumeran
+    country: CO
+    trigger: cron
+    cron: "30 6 * * *"
+    max_pages: 20
+    limit: 500
+
+  # Computrabajo - Run every 6 hours
+  - spider: computrabajo
+    country: CO
+    trigger: cron
+    cron: "0 */6 * * *"
+    max_pages: 12
+    limit: 250
+
+  # Mexico jobs - Run every 8 hours
+  - spider: infojobs
+    country: MX
+    trigger: cron
+    cron: "0 */8 * * *"
+    max_pages: 8
+    limit: 150
+
+  - spider: elempleo
+    country: MX
+    trigger: cron
+    cron: "30 */8 * * *"
+    max_pages: 10
+    limit: 200
+
+  # Argentina jobs - Run daily at 8:00 AM
+  - spider: infojobs
+    country: AR
+    trigger: cron
+    cron: "0 8 * * *"
+    max_pages: 5
+    limit: 100
+
+  - spider: bumeran
+    country: AR
+    trigger: cron
+    cron: "30 8 * * *"
+    max_pages: 8
+    limit: 150
+
+# Global settings
+settings:
+  # Maximum concurrent jobs
+  max_concurrent_jobs: 3
+  
+  # Job timeout in seconds
+  job_timeout: 3600
+  
+  # Retry failed jobs
+  retry_failed_jobs: true
+  max_retries: 3
+  
+  # Logging
+  log_level: INFO
+  log_file: logs/scheduler.log
