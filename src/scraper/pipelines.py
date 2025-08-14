@@ -3,21 +3,34 @@ import hashlib
 from scrapy.exceptions import DropItem
 from datetime import datetime
 from .settings import DB_PARAMS
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class JobPostgresPipeline:
     def open_spider(self, spider):
-        self.connection = psycopg2.connect(**DB_PARAMS)
-        self.cursor = self.connection.cursor()
+        """Open database connection when spider starts."""
+        try:
+            self.connection = psycopg2.connect(**DB_PARAMS)
+            self.cursor = self.connection.cursor()
+            logger.info(f"Connected to PostgreSQL database: {DB_PARAMS['database']}")
+        except Exception as e:
+            logger.error(f"Failed to connect to database: {e}")
+            raise
 
     def close_spider(self, spider):
-        self.connection.commit()
-        self.cursor.close()
-        self.connection.close()
+        """Close database connection when spider finishes."""
+        if hasattr(self, 'connection'):
+            self.connection.commit()
+            self.cursor.close()
+            self.connection.close()
+            logger.info("Database connection closed")
 
     def process_item(self, item, spider):
-        # Crear hash para evitar duplicados
-        content_string = f"{item['title']}{item['description']}{item.get('requirements', '')}"
+        """Process job item and insert into database."""
+        # Create content hash for deduplication
+        content_string = f"{item.get('title', '')}{item.get('description', '')}{item.get('requirements', '')}"
         content_hash = hashlib.sha256(content_string.encode("utf-8")).hexdigest()
 
         try:
@@ -44,8 +57,17 @@ class JobPostgresPipeline:
                 content_hash
             ))
 
+            # Check if row was actually inserted
+            if self.cursor.rowcount > 0:
+                logger.info(f"Inserted new job: {item.get('title', 'Unknown')} from {item.get('portal')}")
+            else:
+                logger.debug(f"Duplicate job skipped: {item.get('title', 'Unknown')} from {item.get('portal')}")
+
             return item
 
         except psycopg2.Error as e:
-            spider.logger.warning(f"Error al insertar en PostgreSQL: {e}")
-            raise DropItem(f"Error al insertar: {e}")
+            logger.error(f"Database error while inserting job: {e}")
+            raise DropItem(f"Database error: {e}")
+        except Exception as e:
+            logger.error(f"Unexpected error while processing job: {e}")
+            raise DropItem(f"Processing error: {e}")

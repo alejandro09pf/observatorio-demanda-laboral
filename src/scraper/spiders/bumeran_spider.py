@@ -6,28 +6,28 @@ from datetime import datetime
 import re
 
 
-class InfoJobsSpider(BaseSpider):
-    name = "infojobs"
-    allowed_domains = ["infojobs.net"]
+class BumeranSpider(BaseSpider):
+    name = "bumeran"
+    allowed_domains = ["bumeran.com"]
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.portal = "infojobs"
+        self.portal = "bumeran"
         
         # Set start URLs based on country
         country_urls = {
-            'CO': ['https://co.infojobs.net/empleos'],
-            'MX': ['https://mx.infojobs.net/empleos'],
-            'AR': ['https://ar.infojobs.net/empleos']
+            'CO': ['https://www.bumeran.com.co/empleos'],
+            'MX': ['https://www.bumeran.com.mx/empleos'],
+            'AR': ['https://www.bumeran.com.ar/empleos']
         }
         self.start_urls = country_urls.get(self.country, country_urls['CO'])
 
     def parse_search_results(self, response):
         """Parse search results page."""
-        job_cards = response.css("article[data-testid='job-card']")
+        job_cards = response.css("div.job-card, article.job-item")
         
         for job_card in job_cards:
-            job_url = job_card.css("a[data-testid='job-card-link']::attr(href)").get()
+            job_url = job_card.css("a.job-link::attr(href), a[href*='/empleo/']::attr(href)").get()
             if job_url:
                 absolute_url = self.build_absolute_url(job_url, response.url)
                 yield scrapy.Request(
@@ -37,7 +37,7 @@ class InfoJobsSpider(BaseSpider):
                 )
         
         # Handle pagination
-        next_page = response.css("a[data-testid='pagination-next']::attr(href)").get()
+        next_page = response.css("a.next-page::attr(href), a[rel='next']::attr(href)").get()
         if next_page and self.current_page < self.max_pages:
             self.current_page += 1
             next_url = self.build_absolute_url(next_page, response.url)
@@ -55,30 +55,30 @@ class InfoJobsSpider(BaseSpider):
         item["portal"] = self.portal
         item["country"] = self.country
         item["url"] = response.url
-        item["title"] = self.extract_text(response.css("h1[data-testid='job-title']::text"))
-        item["company"] = self.extract_text(response.css("span[data-testid='company-name']::text"))
-        item["location"] = self.extract_text(response.css("span[data-testid='job-location']::text"))
+        item["title"] = self.extract_text(response.css("h1.job-title::text, h1::text"))
+        item["company"] = self.extract_text(response.css("span.company-name::text, .company::text"))
+        item["location"] = self.extract_text(response.css("span.location::text, .location::text"))
         
         # Description and requirements
-        description_elements = response.css("div[data-testid='job-description'] *::text").getall()
+        description_elements = response.css("div.job-description *::text, .description *::text").getall()
         item["description"] = self.clean_text(" ".join(description_elements))
         
-        requirements_elements = response.css("div[data-testid='job-requirements'] *::text").getall()
+        requirements_elements = response.css("div.job-requirements *::text, .requirements *::text").getall()
         item["requirements"] = self.clean_text(" ".join(requirements_elements))
         
         # Salary information
-        salary_element = response.css("span[data-testid='salary']::text").get()
+        salary_element = response.css("span.salary::text, .salary::text").get()
         item["salary_raw"] = self.clean_text(salary_element) if salary_element else None
         
         # Contract and remote type
-        contract_element = response.css("span[data-testid='contract-type']::text").get()
+        contract_element = response.css("span.contract-type::text, .contract::text").get()
         item["contract_type"] = self.clean_text(contract_element) if contract_element else None
         
-        remote_element = response.css("span[data-testid='remote-type']::text").get()
+        remote_element = response.css("span.remote-type::text, .remote::text").get()
         item["remote_type"] = self.clean_text(remote_element) if remote_element else None
         
         # Posted date
-        date_element = response.css("span[data-testid='posted-date']::text").get()
+        date_element = response.css("span.posted-date::text, .date::text").get()
         item["posted_date"] = self.parse_date(date_element) if date_element else datetime.today().date().isoformat()
         
         # Validate and yield item
