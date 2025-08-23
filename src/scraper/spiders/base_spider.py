@@ -34,7 +34,7 @@ class BaseSpider(scrapy.Spider, ABC):
         self.current_page = 0
         
         # Validate country
-        if self.country not in ['CO', 'MX', 'AR']:
+        if self.country not in ['CO', 'MX', 'AR', 'CL', 'PE', 'EC', 'PA', 'UY']:
             raise ValueError(f"Unsupported country: {self.country}")
     
     def parse_job(self, response) -> JobItem:

@@ -53,8 +53,9 @@ python -m src.orchestrator run infojobs,elempleo,bumeran --country CO --limit 50
 |--------|-----------|-------------|
 | infojobs | CO, MX, AR | InfoJobs job portal |
 | elempleo | CO, MX, AR | El Empleo job portal |
-| bumeran | CO, MX, AR | Bumeran job portal |
+| bumeran | CO, MX, AR, CL, PE, EC, PA, UY | Bumeran job portal |
 | computrabajo | CO, MX, AR | Computrabajo job portal |
+| zonajobs | AR, CO, MX | ZonaJobs job portal |
 | lego | CO, MX, AR | LEGO careers (example) |
 
 ## Configuration
