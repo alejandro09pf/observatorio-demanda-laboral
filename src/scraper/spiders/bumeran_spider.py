@@ -1,12 +1,22 @@
+"""
+Bumeran spider for Labor Market Observatory.
+Scrapes job postings from bumeran.com
+"""
+
 import scrapy
-from .base_spider import BaseSpider
-from ..items import JobItem
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 from datetime import datetime
 import re
+from .base_spider import BaseSpider
+from ..items import JobItem
+from typing import Optional
+import logging
 
+logger = logging.getLogger(__name__)
 
 class BumeranSpider(BaseSpider):
+    """Spider for Bumeran job portal."""
+    
     name = "bumeran"
     allowed_domains = ["bumeran.com"]
     
@@ -14,75 +24,368 @@ class BumeranSpider(BaseSpider):
         super().__init__(*args, **kwargs)
         self.portal = "bumeran"
         
-        # Set start URLs based on country
-        country_urls = {
-            'CO': ['https://www.bumeran.com.co/empleos'],
-            'MX': ['https://www.bumeran.com.mx/empleos'],
-            'AR': ['https://www.bumeran.com.ar/empleos']
-        }
-        self.start_urls = country_urls.get(self.country, country_urls['CO'])
-
+        # Set start URLs based on country with specific job categories
+        if self.country == "CO":
+            self.start_urls = [
+                "https://www.bumeran.com.co/empleos",
+                "https://www.bumeran.com.co/empleos/sistemas-y-tecnologia",
+                "https://www.bumeran.com.co/empleos/administracion",
+                "https://www.bumeran.com.co/empleos/ventas"
+            ]
+        elif self.country == "MX":
+            self.start_urls = [
+                "https://www.bumeran.com.mx/empleos",
+                "https://www.bumeran.com.mx/empleos/sistemas-y-tecnologia",
+                "https://www.bumeran.com.mx/empleos/administracion",
+                "https://www.bumeran.com.mx/empleos/ventas"
+            ]
+        elif self.country == "AR":
+            self.start_urls = [
+                "https://www.bumeran.com.ar/empleos",
+                "https://www.bumeran.com.ar/empleos/sistemas-y-tecnologia",
+                "https://www.bumeran.com.ar/empleos/administracion",
+                "https://www.bumeran.com.ar/empleos/ventas"
+            ]
+        elif self.country == "CL":
+            self.start_urls = [
+                "https://www.bumeran.cl/empleos",
+                "https://www.bumeran.cl/empleos/sistemas-y-tecnologia"
+            ]
+        elif self.country == "PE":
+            self.start_urls = [
+                "https://www.bumeran.com.pe/empleos",
+                "https://www.bumeran.com.pe/empleos/sistemas-y-tecnologia"
+            ]
+        elif self.country == "EC":
+            self.start_urls = [
+                "https://www.bumeran.com.ec/empleos",
+                "https://www.bumeran.com.ec/empleos/sistemas-y-tecnologia"
+            ]
+        elif self.country == "PA":
+            self.start_urls = [
+                "https://www.bumeran.com.pa/empleos",
+                "https://www.bumeran.com.pa/empleos/sistemas-y-tecnologia"
+            ]
+        elif self.country == "UY":
+            self.start_urls = [
+                "https://www.bumeran.com.uy/empleos",
+                "https://www.bumeran.com.uy/empleos/sistemas-y-tecnologia"
+            ]
+        
+        # Override custom settings for this spider
+        self.custom_settings.update({
+            'DOWNLOAD_DELAY': 2,
+            'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+        })
+    
     def parse_search_results(self, response):
         """Parse search results page."""
-        job_cards = response.css("div.job-card, article.job-item")
+        logger.info(f"Parsing search results: {response.url}")
         
-        for job_card in job_cards:
-            job_url = job_card.css("a.job-link::attr(href), a[href*='/empleo/']::attr(href)").get()
-            if job_url:
-                absolute_url = self.build_absolute_url(job_url, response.url)
+        # Extract job listings - based on the actual HTML structure
+        job_cards = response.css("div[class*='job-card'], article[class*='job-item'], div[class*='offer'], .job-listing")
+        
+        if not job_cards:
+            # Try alternative selectors based on the actual structure
+            job_cards = response.css("div:has(h2), article:has(h2), .job-result")
+            logger.info(f"Trying alternative selectors, found {len(job_cards)} cards")
+        
+        if not job_cards:
+            logger.warning("No job cards found on page")
+            return
+        
+        logger.info(f"Found {len(job_cards)} job cards")
+        
+        for i, job_card in enumerate(job_cards):
+            try:
+                # Extract job URL - try multiple selectors
+                job_url = (
+                    job_card.css("h2 a::attr(href)").get() or
+                    job_card.css("a[href*='/empleo/']::attr(href)").get() or
+                    job_card.css("a[href*='/trabajo/']::attr(href)").get() or
+                    job_card.css("a[href*='/job/']::attr(href)").get() or
+                    job_card.css("a::attr(href)").get()
+                )
+                
+                if not job_url:
+                    continue
+                
+                job_url = self.build_absolute_url(job_url, response.url)
+                
+                # Skip if not a job detail URL
+                if not any(keyword in job_url for keyword in ['/empleo/', '/trabajo/', '/job/', '/oferta/']):
+                    continue
+                
+                # Follow job detail page
                 yield scrapy.Request(
-                    url=absolute_url,
+                    url=job_url,
                     callback=self.parse_job,
                     meta={'job_card': job_card}
                 )
+                
+                # Log progress
+                self.log_progress(i + 1, len(job_cards))
+                
+            except Exception as e:
+                logger.error(f"Error processing job card {i}: {e}")
+                continue
         
         # Handle pagination
-        next_page = response.css("a.next-page::attr(href), a[rel='next']::attr(href)").get()
-        if next_page and self.current_page < self.max_pages:
-            self.current_page += 1
-            next_url = self.build_absolute_url(next_page, response.url)
-            yield scrapy.Request(
-                url=next_url,
-                callback=self.parse_search_results,
-                meta={'page': self.current_page}
-            )
-
+        next_page = self.handle_pagination(response, "a[rel='next']::attr(href), a:contains('Siguiente')::attr(href), .pagination a:last-child::attr(href)")
+        if next_page:
+            yield next_page
+    
     def parse_job(self, response):
         """Parse individual job posting."""
-        item = JobItem()
-        
-        # Basic job information
-        item["portal"] = self.portal
-        item["country"] = self.country
-        item["url"] = response.url
-        item["title"] = self.extract_text(response.css("h1.job-title::text, h1::text"))
-        item["company"] = self.extract_text(response.css("span.company-name::text, .company::text"))
-        item["location"] = self.extract_text(response.css("span.location::text, .location::text"))
-        
-        # Description and requirements
-        description_elements = response.css("div.job-description *::text, .description *::text").getall()
-        item["description"] = self.clean_text(" ".join(description_elements))
-        
-        requirements_elements = response.css("div.job-requirements *::text, .requirements *::text").getall()
-        item["requirements"] = self.clean_text(" ".join(requirements_elements))
-        
-        # Salary information
-        salary_element = response.css("span.salary::text, .salary::text").get()
-        item["salary_raw"] = self.clean_text(salary_element) if salary_element else None
-        
-        # Contract and remote type
-        contract_element = response.css("span.contract-type::text, .contract::text").get()
-        item["contract_type"] = self.clean_text(contract_element) if contract_element else None
-        
-        remote_element = response.css("span.remote-type::text, .remote::text").get()
-        item["remote_type"] = self.clean_text(remote_element) if remote_element else None
-        
-        # Posted date
-        date_element = response.css("span.posted-date::text, .date::text").get()
-        item["posted_date"] = self.parse_date(date_element) if date_element else datetime.today().date().isoformat()
-        
-        # Validate and yield item
-        if self.validate_job_item(item):
+        try:
+            logger.info(f"Parsing job: {response.url}")
+            
+            # Create job item
+            item = JobItem()
+            
+            # Basic information
+            item['portal'] = 'bumeran'
+            item['country'] = self.country
+            item['url'] = response.url
+            
+            # Extract title - try multiple selectors
+            title_selectors = [
+                "h1::text",
+                "h1.job-title::text",
+                ".job-title::text",
+                "h2::text",
+                ".title::text",
+                ".job-name::text"
+            ]
+            
+            title = None
+            for selector in title_selectors:
+                title = response.css(selector).get()
+                if title:
+                    break
+            
+            item['title'] = self.clean_text(title) if title else ""
+            
+            # Extract company - try multiple selectors
+            company_selectors = [
+                ".company-name::text",
+                ".company::text",
+                ".employer::text",
+                "span:contains('Empresa') + span::text",
+                ".business-name::text",
+                ".company-info::text"
+            ]
+            
+            company = None
+            for selector in company_selectors:
+                company = response.css(selector).get()
+                if company:
+                    break
+            
+            item['company'] = self.clean_text(company) if company else ""
+            
+            # Extract location - try multiple selectors
+            location_selectors = [
+                ".location::text",
+                ".place::text",
+                ".city::text",
+                "span:contains('Ubicación') + span::text",
+                ".job-location::text",
+                ".location-info::text"
+            ]
+            
+            location = None
+            for selector in location_selectors:
+                location = response.css(selector).get()
+                if location:
+                    break
+            
+            item['location'] = self.clean_text(location) if location else ""
+            
+            # Extract description - try multiple selectors
+            description_selectors = [
+                ".description::text",
+                ".job-description::text",
+                ".content-description::text",
+                ".offer-description::text",
+                "div[class*='description']::text",
+                "div[class*='content']::text",
+                ".job-details::text"
+            ]
+            
+            description_parts = []
+            for selector in description_selectors:
+                text = response.css(selector).get()
+                if text:
+                    description_parts.append(self.clean_text(text))
+            
+            # If no specific description found, try to get all text content
+            if not description_parts:
+                all_text = response.css("body *::text").getall()
+                description_parts = [self.clean_text(text) for text in all_text if text.strip()]
+            
+            item['description'] = " ".join(description_parts) if description_parts else ""
+            
+            # Extract requirements - try multiple selectors
+            requirements_selectors = [
+                ".requirements::text",
+                ".skills::text",
+                ".profile::text",
+                ".qualifications::text",
+                "div:contains('Requisitos') *::text",
+                "div:contains('Perfil') *::text",
+                ".job-requirements::text"
+            ]
+            
+            requirements_parts = []
+            for selector in requirements_selectors:
+                text = response.css(selector).get()
+                if text:
+                    requirements_parts.append(self.clean_text(text))
+            
+            item['requirements'] = " ".join(requirements_parts) if requirements_parts else ""
+            
+            # Extract salary - try multiple selectors
+            salary_selectors = [
+                ".salary::text",
+                ".wage::text",
+                ".payment::text",
+                "span:contains('Salario') + span::text",
+                ".job-salary::text",
+                ".salary-info::text"
+            ]
+            
+            salary = None
+            for selector in salary_selectors:
+                salary = response.css(selector).get()
+                if salary:
+                    break
+            
+            item['salary_raw'] = self.clean_text(salary) if salary else ""
+            
+            # Extract contract type - try multiple selectors
+            contract_selectors = [
+                ".contract-type::text",
+                ".type::text",
+                ".contract::text",
+                "span:contains('Tipo de contrato') + span::text",
+                ".job-type::text"
+            ]
+            
+            contract_type = None
+            for selector in contract_selectors:
+                contract_type = response.css(selector).get()
+                if contract_type:
+                    break
+            
+            item['contract_type'] = self.clean_text(contract_type) if contract_type else ""
+            
+            # Extract remote type - try multiple selectors
+            remote_selectors = [
+                ".remote::text",
+                ".work-mode::text",
+                ".modality::text",
+                "span:contains('Modalidad') + span::text",
+                "span:contains('Trabajo') + span::text",
+                ".work-type::text"
+            ]
+            
+            remote_info = None
+            for selector in remote_selectors:
+                remote_info = response.css(selector).get()
+                if remote_info:
+                    break
+            
+            item['remote_type'] = self.clean_text(remote_info) if remote_info else ""
+            
+            # Extract posted date - try multiple selectors
+            date_selectors = [
+                ".date::text",
+                ".posted::text",
+                ".publication-date::text",
+                "span:contains('Publicado') + span::text",
+                ".job-date::text",
+                ".posting-date::text"
+            ]
+            
+            date_text = None
+            for selector in date_selectors:
+                date_text = response.css(selector).get()
+                if date_text:
+                    break
+            
+            item['posted_date'] = self.parse_date(date_text) if date_text else None
+            
+            # Validate item
+            if not self.validate_job_item(item):
+                logger.warning(f"Invalid job item: {item['title']}")
+                return
+            
+            # Clean and normalize all text fields
+            for field in ['title', 'company', 'location', 'description', 'requirements']:
+                if item.get(field):
+                    item[field] = self.clean_text(item[field])
+            
+            logger.info(f"Successfully parsed job: {item['title']}")
             yield item
-        else:
-            self.logger.warning(f"Invalid job item for URL: {response.url}")
+            
+        except Exception as e:
+            logger.error(f"Error parsing job {response.url}: {e}")
+            return
+    
+    def parse_date(self, date_string: str) -> Optional[str]:
+        """Parse Bumeran date format."""
+        if not date_string:
+            return None
+        
+        try:
+            # Common date patterns in Bumeran
+            date_patterns = [
+                r'Publicado (\d{1,2}) (\w+) (\d{4})',  # "Publicado 23 Ago 2025"
+                r'(\d{1,2})/(\d{1,2})/(\d{4})',  # DD/MM/YYYY
+                r'(\d{1,2})-(\d{1,2})-(\d{4})',  # DD-MM-YYYY
+                r'hace (\d+) días?',  # "hace X días"
+                r'hace (\d+) horas?',  # "hace X horas"
+                r'(\d{1,2}) (\w+) (\d{4})',  # "23 Ago 2025"
+                r'(\d{1,2}) de (\w+) de (\d{4})',  # "23 de Agosto de 2025"
+            ]
+            
+            # Spanish month mappings
+            month_map = {
+                'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04',
+                'may': '05', 'jun': '06', 'jul': '07', 'ago': '08',
+                'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12',
+                'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+                'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+                'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+            }
+            
+            for pattern in date_patterns:
+                match = re.search(pattern, date_string, re.IGNORECASE)
+                if match:
+                    if 'hace' in pattern:
+                        # Handle relative dates
+                        return datetime.today().date().isoformat()
+                    elif len(match.groups()) == 3:
+                        # Handle absolute dates
+                        if pattern == r'Publicado (\d{1,2}) (\w+) (\d{4})':
+                            day, month, year = match.groups()
+                        elif pattern == r'(\d{1,2}) (\w+) (\d{4})':
+                            day, month, year = match.groups()
+                        elif pattern == r'(\d{1,2}) de (\w+) de (\d{4})':
+                            day, month, year = match.groups()
+                        else:
+                            day, month, year = match.groups()
+                        
+                        # Convert month name to number
+                        month_lower = month.lower()[:3]
+                        if month_lower in month_map:
+                            month_num = month_map[month_lower]
+                            return f"{year}-{month_num}-{day.zfill(2)}"
+            
+            # If no pattern matches, return today's date
+            return datetime.today().date().isoformat()
+            
+        except Exception as e:
+            logger.warning(f"Could not parse date '{date_string}': {e}")
+            return datetime.today().date().isoformat()

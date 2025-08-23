@@ -34,8 +34,8 @@ setup_logging(settings.log_level, settings.log_file)
 logger = logging.getLogger(__name__)
 
 # Available spiders
-AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo']
-SUPPORTED_COUNTRIES = ['CO', 'MX', 'AR']
+AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo', 'zonajobs']
+SUPPORTED_COUNTRIES = ['CO', 'MX', 'AR', 'CL', 'PE', 'EC', 'PA', 'UY']
 
 
 def validate_spiders(spiders: List[str]) -> List[str]:
@@ -56,7 +56,7 @@ def validate_country(country: str) -> str:
 @app.command()
 def run(
     spiders: str = typer.Argument(..., help="Comma-separated list of spiders to run"),
-    country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR)"),
+    country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR, CL, PE, EC, PA, UY)"),
     limit: int = typer.Option(500, "--limit", "-l", help="Maximum number of jobs per spider"),
     max_pages: int = typer.Option(10, "--max-pages", "-p", help="Maximum pages to scrape per spider")
 ):
@@ -92,7 +92,7 @@ def run(
 @app.command()
 def run_once(
     spider: str = typer.Argument(..., help="Spider name to run"),
-    country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR)"),
+    country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR, CL, PE, EC, PA, UY)"),
     limit: int = typer.Option(100, "--limit", "-l", help="Maximum number of jobs to scrape"),
     max_pages: int = typer.Option(5, "--max-pages", "-p", help="Maximum pages to scrape")
 ):
@@ -104,11 +104,11 @@ def run_once(
     
     try:
         result = run_single_spider(spider, country, limit, max_pages)
-        typer.echo(f"✅ {spider} completed: {result.get('items_scraped', 0)} items scraped")
+        typer.echo(f" {spider} completed: {result.get('items_scraped', 0)} items scraped")
         return result
     except Exception as e:
         logger.error(f"Error running spider {spider}: {e}")
-        typer.echo(f"❌ {spider} failed: {e}")
+        typer.echo(f" {spider} failed: {e}")
         raise typer.Exit(1)
 
 
@@ -213,7 +213,7 @@ def status():
         typer.echo("\n" + "="*50)
         typer.echo("SYSTEM STATUS")
         typer.echo("="*50)
-        typer.echo(f"Database: ✅ Connected to {DB_PARAMS['database']}")
+        typer.echo(f"Database:  Connected to {DB_PARAMS['database']}")
         
         if results:
             typer.echo("\nJob Statistics:")
@@ -226,7 +226,7 @@ def status():
         conn.close()
         
     except Exception as e:
-        typer.echo(f"❌ Database connection failed: {e}")
+        typer.echo(f" Database connection failed: {e}")
 
 
 @app.command()

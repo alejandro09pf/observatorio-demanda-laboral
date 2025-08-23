@@ -1,6 +1,6 @@
 """
-Elempleo spider for Labor Market Observatory.
-Scrapes job postings from elempleo.com
+ZonaJobs spider for Labor Market Observatory.
+Scrapes job postings from zonajobs.com.ar
 """
 
 import scrapy
@@ -14,33 +14,42 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class ElempleoSpider(BaseSpider):
-    """Spider for Elempleo job portal."""
+class ZonaJobsSpider(BaseSpider):
+    """Spider for ZonaJobs job portal."""
     
-    name = "elempleo"
-    allowed_domains = ["elempleo.com"]
+    name = "zonajobs"
+    allowed_domains = ["zonajobs.com.ar"]
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.portal = "elempleo"
+        self.portal = "zonajobs"
         
         # Set start URLs based on country with specific job categories
-        if self.country == "CO":
+        if self.country == "AR":
             self.start_urls = [
-                "https://www.elempleo.com/co/ofertas-empleo",
-                "https://www.elempleo.com/co/ofertas-empleo/sistemas-y-tecnologia",
-                "https://www.elempleo.com/co/ofertas-empleo/administrativa-y-financiera",
-                "https://www.elempleo.com/co/ofertas-empleo/comercial-ventas-y-telemercadeo"
+                "https://www.zonajobs.com.ar/empleos",
+                "https://www.zonajobs.com.ar/empleos/sistemas-y-tecnologia",
+                "https://www.zonajobs.com.ar/empleos/administracion",
+                "https://www.zonajobs.com.ar/empleos/ventas",
+                "https://www.zonajobs.com.ar/empleos/ingenieria"
+            ]
+        elif self.country == "CO":
+            # ZonaJobs Colombia (if available)
+            self.start_urls = [
+                "https://co.zonajobs.com/empleos",
+                "https://co.zonajobs.com/empleos/sistemas-y-tecnologia"
             ]
         elif self.country == "MX":
+            # ZonaJobs Mexico (if available)
             self.start_urls = [
-                "https://www.elempleo.com/mx/ofertas-empleo",
-                "https://www.elempleo.com/mx/ofertas-empleo/sistemas-y-tecnologia"
+                "https://mx.zonajobs.com/empleos",
+                "https://mx.zonajobs.com/empleos/sistemas-y-tecnologia"
             ]
-        elif self.country == "AR":
+        else:
+            # Default to Argentina
             self.start_urls = [
-                "https://www.elempleo.com/ar/ofertas-empleo",
-                "https://www.elempleo.com/ar/ofertas-empleo/sistemas-y-tecnologia"
+                "https://www.zonajobs.com.ar/empleos",
+                "https://www.zonajobs.com.ar/empleos/sistemas-y-tecnologia"
             ]
         
         # Override custom settings for this spider
@@ -53,13 +62,19 @@ class ElempleoSpider(BaseSpider):
         """Parse search results page."""
         logger.info(f"Parsing search results: {response.url}")
         
-        # Extract job listings - based on the actual HTML structure
-        job_cards = response.css("div[class*='job-card'], article[class*='job-offer'], div[class*='offer']")
+        # Extract job listings - ZonaJobs specific selectors
+        # ZonaJobs typically uses cards with job information
+        job_cards = response.css("div[class*='job-card'], article[class*='job-item'], div[class*='offer'], .job-listing, .job-result")
         
         if not job_cards:
-            # Try alternative selectors based on the actual structure
-            job_cards = response.css("div:has(h2), article:has(h2)")
+            # Try alternative selectors for ZonaJobs structure
+            job_cards = response.css("div:has(h2), article:has(h2), .job-card, .job-item")
             logger.info(f"Trying alternative selectors, found {len(job_cards)} cards")
+        
+        if not job_cards:
+            # Try more generic selectors
+            job_cards = response.css("div[class*='card'], div[class*='item'], div[class*='listing']")
+            logger.info(f"Trying generic selectors, found {len(job_cards)} cards")
         
         if not job_cards:
             logger.warning("No job cards found on page")
@@ -69,11 +84,13 @@ class ElempleoSpider(BaseSpider):
         
         for i, job_card in enumerate(job_cards):
             try:
-                # Extract job URL - try multiple selectors
+                # Extract job URL - ZonaJobs specific patterns
                 job_url = (
                     job_card.css("h2 a::attr(href)").get() or
-                    job_card.css("a[href*='/oferta/']::attr(href)").get() or
                     job_card.css("a[href*='/empleo/']::attr(href)").get() or
+                    job_card.css("a[href*='/trabajo/']::attr(href)").get() or
+                    job_card.css("a[href*='/job/']::attr(href)").get() or
+                    job_card.css("a[href*='/oferta/']::attr(href)").get() or
                     job_card.css("a::attr(href)").get()
                 )
                 
@@ -83,7 +100,7 @@ class ElempleoSpider(BaseSpider):
                 job_url = self.build_absolute_url(job_url, response.url)
                 
                 # Skip if not a job detail URL
-                if not any(keyword in job_url for keyword in ['/oferta/', '/empleo/', '/trabajo/']):
+                if not any(keyword in job_url for keyword in ['/empleo/', '/trabajo/', '/job/', '/oferta/', '/puesto/']):
                     continue
                 
                 # Follow job detail page
@@ -100,8 +117,9 @@ class ElempleoSpider(BaseSpider):
                 logger.error(f"Error processing job card {i}: {e}")
                 continue
         
-        # Handle pagination
-        next_page = self.handle_pagination(response, "a[rel='next']::attr(href), a:contains('Siguiente')::attr(href)")
+        # Handle pagination - ZonaJobs specific patterns
+        # Look for pagination links, "Siguiente" button, or page parameters
+        next_page = self.handle_pagination(response, "a[rel='next']::attr(href), a:contains('Siguiente')::attr(href), .pagination a:last-child::attr(href), a[href*='page=']::attr(href)")
         if next_page:
             yield next_page
     
@@ -114,17 +132,20 @@ class ElempleoSpider(BaseSpider):
             item = JobItem()
             
             # Basic information
-            item['portal'] = 'elempleo'
+            item['portal'] = 'zonajobs'
             item['country'] = self.country
             item['url'] = response.url
             
-            # Extract title - try multiple selectors
+            # Extract title - ZonaJobs specific selectors
             title_selectors = [
                 "h1::text",
                 "h1.job-title::text",
                 ".job-title::text",
                 "h2::text",
-                ".title::text"
+                ".title::text",
+                ".job-name::text",
+                ".position-title::text",
+                "h1[class*='title']::text"
             ]
             
             title = None
@@ -135,13 +156,16 @@ class ElempleoSpider(BaseSpider):
             
             item['title'] = self.clean_text(title) if title else ""
             
-            # Extract company - try multiple selectors
+            # Extract company - ZonaJobs specific selectors
             company_selectors = [
                 ".company-name::text",
                 ".company::text",
                 ".employer::text",
                 "span:contains('Empresa') + span::text",
-                ".business-name::text"
+                ".business-name::text",
+                ".company-info::text",
+                ".employer-name::text",
+                "div[class*='company']::text"
             ]
             
             company = None
@@ -152,13 +176,16 @@ class ElempleoSpider(BaseSpider):
             
             item['company'] = self.clean_text(company) if company else ""
             
-            # Extract location - try multiple selectors
+            # Extract location - ZonaJobs specific selectors
             location_selectors = [
                 ".location::text",
                 ".place::text",
                 ".city::text",
                 "span:contains('Ubicación') + span::text",
-                ".job-location::text"
+                ".job-location::text",
+                ".location-info::text",
+                ".place-info::text",
+                "div[class*='location']::text"
             ]
             
             location = None
@@ -169,14 +196,17 @@ class ElempleoSpider(BaseSpider):
             
             item['location'] = self.clean_text(location) if location else ""
             
-            # Extract description - try multiple selectors
+            # Extract description - ZonaJobs specific selectors
             description_selectors = [
                 ".description::text",
                 ".job-description::text",
                 ".content-description::text",
                 ".offer-description::text",
                 "div[class*='description']::text",
-                "div[class*='content']::text"
+                "div[class*='content']::text",
+                ".job-details::text",
+                ".job-content::text",
+                "div[class*='job-details']::text"
             ]
             
             description_parts = []
@@ -192,14 +222,17 @@ class ElempleoSpider(BaseSpider):
             
             item['description'] = " ".join(description_parts) if description_parts else ""
             
-            # Extract requirements - try multiple selectors
+            # Extract requirements - ZonaJobs specific selectors
             requirements_selectors = [
                 ".requirements::text",
                 ".skills::text",
                 ".profile::text",
                 ".qualifications::text",
                 "div:contains('Requisitos') *::text",
-                "div:contains('Perfil') *::text"
+                "div:contains('Perfil') *::text",
+                ".job-requirements::text",
+                ".requirements-list::text",
+                "div[class*='requirements']::text"
             ]
             
             requirements_parts = []
@@ -210,13 +243,16 @@ class ElempleoSpider(BaseSpider):
             
             item['requirements'] = " ".join(requirements_parts) if requirements_parts else ""
             
-            # Extract salary - try multiple selectors
+            # Extract salary - ZonaJobs specific selectors
             salary_selectors = [
                 ".salary::text",
                 ".wage::text",
                 ".payment::text",
                 "span:contains('Salario') + span::text",
-                ".job-salary::text"
+                ".job-salary::text",
+                ".salary-info::text",
+                ".compensation::text",
+                "div[class*='salary']::text"
             ]
             
             salary = None
@@ -227,12 +263,15 @@ class ElempleoSpider(BaseSpider):
             
             item['salary_raw'] = self.clean_text(salary) if salary else ""
             
-            # Extract contract type - try multiple selectors
+            # Extract contract type - ZonaJobs specific selectors
             contract_selectors = [
                 ".contract-type::text",
                 ".type::text",
                 ".contract::text",
-                "span:contains('Tipo de contrato') + span::text"
+                "span:contains('Tipo de contrato') + span::text",
+                ".job-type::text",
+                ".employment-type::text",
+                "div[class*='contract']::text"
             ]
             
             contract_type = None
@@ -243,13 +282,16 @@ class ElempleoSpider(BaseSpider):
             
             item['contract_type'] = self.clean_text(contract_type) if contract_type else ""
             
-            # Extract remote type - try multiple selectors
+            # Extract remote type - ZonaJobs specific selectors
             remote_selectors = [
                 ".remote::text",
                 ".work-mode::text",
                 ".modality::text",
                 "span:contains('Modalidad') + span::text",
-                "span:contains('Trabajo') + span::text"
+                "span:contains('Trabajo') + span::text",
+                ".work-type::text",
+                ".work-mode-info::text",
+                "div[class*='remote']::text"
             ]
             
             remote_info = None
@@ -260,13 +302,16 @@ class ElempleoSpider(BaseSpider):
             
             item['remote_type'] = self.clean_text(remote_info) if remote_info else ""
             
-            # Extract posted date - try multiple selectors
+            # Extract posted date - ZonaJobs specific selectors
             date_selectors = [
                 ".date::text",
                 ".posted::text",
                 ".publication-date::text",
                 "span:contains('Publicado') + span::text",
-                ".job-date::text"
+                ".job-date::text",
+                ".posting-date::text",
+                ".date-info::text",
+                "div[class*='date']::text"
             ]
             
             date_text = None
@@ -295,12 +340,12 @@ class ElempleoSpider(BaseSpider):
             return
     
     def parse_date(self, date_string: str) -> Optional[str]:
-        """Parse Elempleo date format."""
+        """Parse ZonaJobs date format."""
         if not date_string:
             return None
         
         try:
-            # Common date patterns in Elempleo
+            # Common date patterns in ZonaJobs
             date_patterns = [
                 r'Publicado (\d{1,2}) (\w+) (\d{4})',  # "Publicado 23 Ago 2025"
                 r'(\d{1,2})/(\d{1,2})/(\d{4})',  # DD/MM/YYYY
@@ -308,13 +353,18 @@ class ElempleoSpider(BaseSpider):
                 r'hace (\d+) días?',  # "hace X días"
                 r'hace (\d+) horas?',  # "hace X horas"
                 r'(\d{1,2}) (\w+) (\d{4})',  # "23 Ago 2025"
+                r'(\d{1,2}) de (\w+) de (\d{4})',  # "23 de Agosto de 2025"
+                r'(\d{1,2})/(\d{1,2})/(\d{2})',  # DD/MM/YY
             ]
             
             # Spanish month mappings
             month_map = {
                 'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04',
                 'may': '05', 'jun': '06', 'jul': '07', 'ago': '08',
-                'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12'
+                'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12',
+                'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+                'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+                'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
             }
             
             for pattern in date_patterns:
@@ -329,6 +379,12 @@ class ElempleoSpider(BaseSpider):
                             day, month, year = match.groups()
                         elif pattern == r'(\d{1,2}) (\w+) (\d{4})':
                             day, month, year = match.groups()
+                        elif pattern == r'(\d{1,2}) de (\w+) de (\d{4})':
+                            day, month, year = match.groups()
+                        elif pattern == r'(\d{1,2})/(\d{1,2})/(\d{2})':
+                            day, month, year = match.groups()
+                            # Convert 2-digit year to 4-digit
+                            year = f"20{year}" if int(year) < 50 else f"19{year}"
                         else:
                             day, month, year = match.groups()
                         
