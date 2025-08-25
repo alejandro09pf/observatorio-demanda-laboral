@@ -47,6 +47,30 @@ python -m src.orchestrator run-once infojobs --country CO --limit 100
 python -m src.orchestrator run infojobs,elempleo,bumeran --country CO --limit 500
 ```
 
+### 6. Run New Spiders
+
+```bash
+# Magneto (Colombia)
+python -m src.orchestrator run-once magneto --country CO --limit 100
+
+# OCCMundial (Mexico)
+python -m src.orchestrator run-once occmundial --country MX --limit 100
+
+# Clarín (Argentina)
+python -m src.orchestrator run-once clarin --country AR --limit 100
+
+# Multiple new spiders
+python -m src.orchestrator run magneto,occmundial,clarin --country CO --limit 200
+
+### 7. Direct Scrapy Runs (Smoke Tests)
+
+```bash
+# Direct Scrapy commands for testing
+scrapy crawl magneto -a country=CO -o outputs/magneto.json
+scrapy crawl occmundial -a country=MX -o outputs/occmundial.json
+scrapy crawl clarin -a country=AR -o outputs/clarin.json
+```
+
 ## Available Spiders
 
 | Spider | Countries | Description |
@@ -56,6 +80,9 @@ python -m src.orchestrator run infojobs,elempleo,bumeran --country CO --limit 50
 | bumeran | CO, MX, AR, CL, PE, EC, PA, UY | Bumeran job portal |
 | computrabajo | CO, MX, AR | Computrabajo job portal |
 | zonajobs | AR, CO, MX | ZonaJobs job portal |
+| magneto | CO, MX, AR | Magneto job portal |
+| occmundial | MX, CO, AR | OCCMundial job portal |
+| clarin | AR, CO, MX | Empleos Clarín job portal |
 | lego | CO, MX, AR | LEGO careers (example) |
 
 ## Configuration

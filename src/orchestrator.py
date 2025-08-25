@@ -34,7 +34,7 @@ setup_logging(settings.log_level, settings.log_file)
 logger = logging.getLogger(__name__)
 
 # Available spiders
-AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo', 'zonajobs']
+AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo', 'zonajobs', 'magneto', 'occmundial', 'clarin']
 SUPPORTED_COUNTRIES = ['CO', 'MX', 'AR', 'CL', 'PE', 'EC', 'PA', 'UY']
 
 
@@ -82,9 +82,9 @@ def run(
     typer.echo("="*50)
     for spider, result in results.items():
         if "error" in result:
-            typer.echo(f"❌ {spider}: {result['error']}")
+            typer.echo(f" {spider}: {result['error']}")
         else:
-            typer.echo(f"✅ {spider}: {result.get('items_scraped', 0)} items scraped")
+            typer.echo(f" {spider}: {result.get('items_scraped', 0)} items scraped")
     
     return results
 

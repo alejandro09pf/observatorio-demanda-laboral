@@ -205,3 +205,4 @@ class ComputrabajoSpider(BaseSpider):
         except Exception as e:
             logger.warning(f"Could not parse date '{date_string}': {e}")
             return datetime.today().date().isoformat()
+            
