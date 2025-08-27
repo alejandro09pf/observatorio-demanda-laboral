@@ -130,13 +130,19 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int) -> 
         project_dir = Path(__file__).parent.parent
         os.chdir(project_dir)
         
+        # Set PYTHONPATH to include src/
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(project_dir / "src")
+
         # Run scrapy command
         result = subprocess.run(
             cmd,
             capture_output=True,
             text=True,
-            timeout=3600  # 1 hour timeout
+            timeout=3600,
+            env=env
         )
+
         
         if result.returncode != 0:
             logger.error(f"Scrapy command failed: {result.stderr}")
