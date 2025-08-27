@@ -1,18 +1,33 @@
 """
 Scrapy settings for Labor Market Observatory
 """
-
 import os
-from config.settings import get_settings
+import sys
+from pathlib import Path
 
-# Get application settings
-settings = get_settings()
+# Add the project root to Python path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+try:
+    from config.settings import get_settings
+    # Get application settings
+    settings = get_settings()
+except ImportError:
+    # Fallback settings if config module is not available
+    class FallbackSettings:
+        scraper_concurrent_requests = 8
+        scraper_download_delay = 1.0
+        scraper_retry_times = 3
+        scraper_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    
+    settings = FallbackSettings()
 
 # Scrapy project settings
 BOT_NAME = 'labor_observatory'
 
-SPIDER_MODULES = ['src.scraper.spiders']
-NEWSPIDER_MODULE = 'src.scraper.spiders'
+SPIDER_MODULES = ['scraper.spiders']
+NEWSPIDER_MODULE = 'scraper.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -33,10 +48,10 @@ DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 20))
 # Enable or disable downloader middlewares
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    'src.scraper.middlewares.UserAgentRotationMiddleware': 400,
+    'scraper.middlewares.UserAgentRotationMiddleware': 400,
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
-    'src.scraper.middlewares.ProxyRotationMiddleware': 760,
-    'src.scraper.middlewares.RetryWithBackoffMiddleware': 770,
+    'scraper.middlewares.ProxyRotationMiddleware': 760,
+    'scraper.middlewares.RetryWithBackoffMiddleware': 770,
 }
 
 # Enable or disable spider middlewares
@@ -46,7 +61,7 @@ SPIDER_MIDDLEWARES = {
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-    'src.scraper.pipelines.JobPostgresPipeline': 300,
+    'scraper.pipelines.JobPostgresPipeline': 300,
 }
 
 # Retry configuration
