@@ -1,22 +1,31 @@
 """
 Clarín spider for Labor Market Observatory.
-Scrapes job postings from clasificados.clarin.com
+Scrapes job postings from clasificados.clarin.com using Selenium
 """
 
 import scrapy
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
 import re
+import json
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 from .base_spider import BaseSpider
 from ..items import JobItem
-from typing import Optional
+from typing import Optional, List, Dict
 import logging
+import requests
 
 logger = logging.getLogger(__name__)
 
 
 class ClarinSpider(BaseSpider):
-    """Spider for Clarín job portal."""
+    """Selenium-based spider for Clarín job portal."""
 
     name = "clarin"
     allowed_domains = ["clasificados.clarin.com"]
@@ -24,389 +33,463 @@ class ClarinSpider(BaseSpider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.portal = "clarin"
+        self.driver = None
+        self.scraped_count = 0
+        self.error_count = 0
 
-        # Set start URLs based on country with specific job categories
+        # Set start URL based on country
         if self.country == "AR":
-            self.start_urls = [
-                "https://clasificados.clarin.com/inicio/index#!/1/listado/nivel-estructura/Empleos",
-                "https://clasificados.clarin.com/inicio/index#!/1/listado/nivel-estructura/Empleos/tecnologia",
-                "https://clasificados.clarin.com/inicio/index#!/1/listado/nivel-estructura/Empleos/administracion",
-                "https://clasificados.clarin.com/inicio/index#!/1/listado/nivel-estructura/Empleos/ventas"
-            ]
+            self.start_url = "https://clasificados.clarin.com/empleos"
         elif self.country == "CO":
-            self.start_urls = [
-                "https://clasificados.clarin.com/co/inicio/index#!/1/listado/nivel-estructura/Empleos",
-                "https://clasificados.clarin.com/co/inicio/index#!/1/listado/nivel-estructura/Empleos/tecnologia"
-            ]
+            self.start_url = "https://clasificados.clarin.com/co/empleos"
         elif self.country == "MX":
-            self.start_urls = [
-                "https://clasificados.clarin.com/mx/inicio/index#!/1/listado/nivel-estructura/Empleos",
-                "https://clasificados.clarin.com/mx/inicio/index#!/1/listado/nivel-estructura/Empleos/tecnologia"
-            ]
+            self.start_url = "https://clasificados.clarin.com/mx/empleos"
         else:
             # Default to Argentina
-            self.start_urls = [
-                "https://clasificados.clarin.com/inicio/index#!/1/listado/nivel-estructura/Empleos"
-            ]
+            self.start_url = "https://clasificados.clarin.com/empleos"
 
         # Override custom settings for this spider
         self.custom_settings.update({
             'DOWNLOAD_DELAY': 2,
-            'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+            'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
         })
 
-    def parse_search_results(self, response):
-        """Parse search results page."""
-        logger.info(f"Parsing search results: {response.url}")
+    def setup_driver(self):
+        """Setup Chrome WebDriver with anti-detection options."""
+        try:
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--disable-gpu")
+            chrome_options.add_argument("--window-size=1920,1080")
+            chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            
+            # Anti-detection flags
+            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+            chrome_options.add_experimental_option('useAutomationExtension', False)
+            
+            self.driver = webdriver.Chrome(options=chrome_options)
+            self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            
+            logger.info("Chrome WebDriver setup completed")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to setup Chrome WebDriver: {e}")
+            return False
 
-        # Extract job listings - Clarín specific selectors
-        # Look for listing items: article, li within results
-        job_cards = response.css("article, li[class*='result'], div[class*='listing'], div[class*='item']")
+    def cleanup_driver(self):
+        """Clean up WebDriver resources."""
+        if self.driver:
+            try:
+                self.driver.quit()
+                logger.info("WebDriver cleanup completed")
+            except Exception as e:
+                logger.error(f"Error during WebDriver cleanup: {e}")
 
-        if not job_cards:
-            # Try alternative selectors for Clarín structure
-            job_cards = response.css("div:has(h2), article:has(h2), .job-listing, .job-result, .result-item")
-            logger.info(f"Trying alternative selectors, found {len(job_cards)} cards")
+    def closed(self, reason):
+        """Called when spider is closed."""
+        self.cleanup_driver()
+        self.save_scraping_summary()
 
-        if not job_cards:
-            # Try more generic selectors
-            job_cards = response.css("div[class*='listing'], div[class*='result'], div[class*='offer'], .grid-item")
-            logger.info(f"Trying generic selectors, found {len(job_cards)} cards")
+    def save_scraping_summary(self):
+        """Save scraping summary to file."""
+        summary = {
+            "spider": self.name,
+            "country": self.country,
+            "scraped_count": self.scraped_count,
+            "error_count": self.error_count,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        try:
+            with open(f"outputs/clarin_scraping_summary.json", "w", encoding="utf-8") as f:
+                json.dump(summary, f, indent=2, ensure_ascii=False)
+            logger.info(f"Scraping summary saved: {summary}")
+        except Exception as e:
+            logger.error(f"Failed to save scraping summary: {e}")
 
-        if not job_cards:
-            logger.warning("No job cards found on page")
+    def start_requests(self):
+        """Initialize Selenium and start scraping."""
+        if not self.setup_driver():
+            logger.error("Failed to setup WebDriver, cannot proceed")
             return
 
-        logger.info(f"Found {len(job_cards)} job cards")
+        # Yield a dummy request to trigger the parsing
+        yield scrapy.Request(
+            url=self.start_url,
+            callback=self.parse_search_results,
+            dont_filter=True
+        )
 
-        for i, job_card in enumerate(job_cards):
-            try:
-                # Extract job URL - Clarín specific patterns
-                job_url = (
-                    job_card.css("h2 a::attr(href)").get() or
-                    job_card.css("a[href*='/empleo/']::attr(href)").get() or
-                    job_card.css("a[href*='/trabajo/']::attr(href)").get() or
-                    job_card.css("a[href*='/job/']::attr(href)").get() or
-                    job_card.css("a[href*='/oferta/']::attr(href)").get() or
-                    job_card.css("a[href*='/vacante/']::attr(href)").get() or
-                    job_card.css("a[href*='/clasificado/']::attr(href)").get() or
-                    job_card.css("a::attr(href)").get()
-                )
-
-                if not job_url:
-                    continue
-
-                job_url = self.build_absolute_url(job_url, response.url)
-
-                # Skip if not a job detail URL
-                if not any(keyword in job_url for keyword in ['/empleo/', '/trabajo/', '/job/', '/oferta/', '/puesto/', '/vacante/', '/clasificado/']):
-                    continue
-
-                # Follow job detail page
-                yield scrapy.Request(
-                    url=job_url,
-                    callback=self.parse_job,
-                    meta={'job_card': job_card}
-                )
-
-                # Log progress
-                self.log_progress(i + 1, len(job_cards))
-
-            except Exception as e:
-                logger.error(f"Error processing job card {i}: {e}")
-                continue
-
-        # Handle pagination - Clarín specific patterns
-        next_page = self.handle_pagination(response, "a[rel='next']::attr(href), a:contains('Siguiente')::attr(href), .pagination a:last-child::attr(href), a[href*='page=']::attr(href)")
-        if next_page:
-            yield next_page
-
-    def parse_job(self, response):
-        """Parse individual job posting."""
+    def parse_search_results(self, response):
+        """Parse search results using Selenium."""
         try:
-            logger.info(f"Parsing job: {response.url}")
+            logger.info(f"Starting Selenium scraping from: {self.start_url}")
+            
+            # Navigate to the start URL
+            self.driver.get(self.start_url)
+            
+            # Wait for page to load
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+            
+            # Scroll to load more content (infinite scrolling)
+            self.scroll_to_load_content()
+            
+            # Extract job cards and their IDs
+            job_items = self.extract_job_items()
+            
+            logger.info(f"Found {len(job_items)} job items")
+            
+            # Process each job item
+            for job_item in job_items:
+                try:
+                    yield job_item
+                    self.scraped_count += 1
+                except Exception as e:
+                    logger.error(f"Error processing job item: {e}")
+                    self.error_count += 1
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error in parse_search_results: {e}")
+            self.error_count += 1
 
+    def scroll_to_load_content(self):
+        """Scroll down to load more content (infinite scrolling)."""
+        try:
+            logger.info("Starting infinite scroll to load content...")
+            
+            last_height = self.driver.execute_script("return document.body.scrollHeight")
+            scroll_attempts = 0
+            max_scroll_attempts = 10
+            
+            while scroll_attempts < max_scroll_attempts:
+                # Scroll down
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                
+                # Wait for new content to load
+                time.sleep(2)
+                
+                # Calculate new scroll height
+                new_height = self.driver.execute_script("return document.body.scrollHeight")
+                
+                if new_height == last_height:
+                    # No more content loaded
+                    break
+                    
+                last_height = new_height
+                scroll_attempts += 1
+                
+                logger.info(f"Scroll attempt {scroll_attempts}: loaded more content")
+            
+            logger.info(f"Finished scrolling after {scroll_attempts} attempts")
+            
+        except Exception as e:
+            logger.error(f"Error during scrolling: {e}")
+
+    def extract_job_items(self) -> List[Dict]:
+        """Extract job items from the page."""
+        job_items = []
+        
+        try:
+            # Wait for job cards to be present (using Clarín-specific classes)
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".item-aviso, .flowGridItem, article"))
+            )
+            
+            # Find all job cards using Clarín-specific selectors
+            job_cards = self.driver.find_elements(By.CSS_SELECTOR, 
+                ".item-aviso, .flowGridItem, article, div[class*='result']")
+            
+            logger.info(f"Found {len(job_cards)} potential job cards")
+            
+            for card in job_cards:
+                try:
+                    # Extract Advert ID using regex
+                    advert_id = self.extract_advert_id(card)
+                    
+                    if not advert_id:
+                        continue
+                    
+                    # Build detail URL
+                    detail_url = f"https://clasificados.clarin.com/aviso/{advert_id}"
+                    
+                    # Fetch JSON data
+                    json_data = self.fetch_job_json(detail_url)
+                    
+                    if not json_data:
+                        continue
+                    
+                    # Parse job item from JSON
+                    job_item = self.parse_job_from_json(json_data, detail_url)
+                    
+                    if job_item:
+                        job_items.append(job_item)
+                        
+                except Exception as e:
+                    logger.error(f"Error extracting job from card: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error extracting job items: {e}")
+            
+        return job_items
+
+    def extract_advert_id(self, card) -> Optional[str]:
+        """Extract Advert ID from job card using regex."""
+        try:
+            # Get card HTML
+            card_html = card.get_attribute('outerHTML')
+            
+            # Look for 6-8 digit numbers that could be advert IDs
+            # Try different patterns
+            patterns = [
+                r'\b(\d{6,8})\b',  # 6-8 digit numbers
+                r'aviso[\/\-](\d{6,8})',  # aviso/123456 or aviso-123456
+                r'id[=:](\d{6,8})',  # id=123456 or id:123456
+                r'(\d{6,8})\.html',  # 123456.html
+            ]
+            
+            for pattern in patterns:
+                match = re.search(pattern, card_html)
+                if match:
+                    advert_id = match.group(1)
+                    logger.debug(f"Found advert ID: {advert_id}")
+                    return advert_id
+            
+            # If no pattern matches, try to extract from href attributes
+            try:
+                links = card.find_elements(By.TAG_NAME, "a")
+                for link in links:
+                    href = link.get_attribute('href')
+                    if href:
+                        for pattern in patterns:
+                            match = re.search(pattern, href)
+                            if match:
+                                advert_id = match.group(1)
+                                logger.debug(f"Found advert ID from href: {advert_id}")
+                                return advert_id
+            except Exception as e:
+                logger.debug(f"Error extracting from href: {e}")
+                
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error extracting advert ID: {e}")
+            return None
+
+    def fetch_job_json(self, detail_url: str) -> Optional[Dict]:
+        """Fetch JSON data from job detail URL."""
+        try:
+            logger.debug(f"Fetching JSON from: {detail_url}")
+            
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*',
+                'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+                'Referer': 'https://clasificados.clarin.com/',
+                'Origin': 'https://clasificados.clarin.com'
+            }
+            
+            response = requests.get(detail_url, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                try:
+                    json_data = response.json()
+                    logger.debug(f"Successfully fetched JSON data")
+                    return json_data
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse JSON from {detail_url}: {e}")
+                    return None
+            else:
+                logger.error(f"HTTP {response.status_code} for {detail_url}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"Error fetching JSON from {detail_url}: {e}")
+            return None
+
+    def parse_job_from_json(self, json_data: Dict, detail_url: str) -> Optional[Dict]:
+        """Parse job information from JSON data."""
+        try:
             # Create job item
             item = JobItem()
-
+            
             # Basic information
             item['portal'] = 'clarin'
             item['country'] = self.country
-            item['url'] = response.url
-
-            # Extract title - Clarín specific selectors
-            title_selectors = [
-                "h1::text",
-                "h1.job-title::text",
-                ".job-title::text",
-                "h2::text",
-                ".title::text",
-                ".job-name::text",
-                ".position-title::text",
-                "h1[class*='title']::text",
-                ".clasificado-title::text"
-            ]
-
-            title = None
-            for selector in title_selectors:
-                title = response.css(selector).get()
-                if title:
-                    break
-
-            item['title'] = self.clean_text(title) if title else ""
-
-            # Extract company - Clarín specific selectors
-            company_selectors = [
-                ".company::text",
-                ".company-name::text",
-                ".employer::text",
-                "span:contains('Empresa') + span::text",
-                ".business-name::text",
-                ".company-info::text",
-                ".employer-name::text",
-                "div[class*='company']::text",
-                ".company-title::text",
-                ".meta-company::text"
-            ]
-
-            company = None
-            for selector in company_selectors:
-                company = response.css(selector).get()
-                if company:
-                    break
-
-            item['company'] = self.clean_text(company) if company else ""
-
-            # Extract location - Clarín specific selectors
-            location_selectors = [
-                ".location::text",
-                ".place::text",
-                ".city::text",
-                "span:contains('Ubicación') + span::text",
-                ".job-location::text",
-                ".location-info::text",
-                ".place-info::text",
-                "div[class*='location']::text",
-                ".location-title::text",
-                ".meta-location::text"
-            ]
-
-            location = None
-            for selector in location_selectors:
-                location = response.css(selector).get()
-                if location:
-                    break
-
-            item['location'] = self.clean_text(location) if location else ""
-
-            # Extract description - Clarín specific selectors
-            description_selectors = [
-                ".description::text",
-                ".job-description::text",
-                ".content-description::text",
-                ".offer-description::text",
-                "div[class*='description']::text",
-                "div[class*='content']::text",
-                ".job-details::text",
-                ".job-content::text",
-                "div[class*='job-details']::text",
-                ".clasificado-description::text",
-                ".summary::text"
-            ]
-
-            description_parts = []
-            for selector in description_selectors:
-                text = response.css(selector).get()
-                if text:
-                    description_parts.append(self.clean_text(text))
-
-            # If no specific description found, try to get all text content
-            if not description_parts:
-                all_text = response.css("body *::text").getall()
-                description_parts = [self.clean_text(text) for text in all_text if text.strip()]
-
-            item['description'] = " ".join(description_parts) if description_parts else ""
-
-            # Extract requirements - Clarín specific selectors
-            requirements_selectors = [
-                ".requirements::text",
-                ".skills::text",
-                ".profile::text",
-                ".qualifications::text",
-                "div:contains('Requisitos') *::text",
-                "div:contains('Perfil') *::text",
-                ".job-requirements::text",
-                ".requirements-list::text",
-                "div[class*='requirements']::text",
-                ".clasificado-requirements::text"
-            ]
-
-            requirements_parts = []
-            for selector in requirements_selectors:
-                text = response.css(selector).get()
-                if text:
-                    requirements_parts.append(self.clean_text(text))
-
-            item['requirements'] = " ".join(requirements_parts) if requirements_parts else ""
-
-            # Extract salary - Clarín specific selectors
-            salary_selectors = [
-                ".salary::text",
-                ".wage::text",
-                ".payment::text",
-                "span:contains('Salario') + span::text",
-                ".job-salary::text",
-                ".salary-info::text",
-                ".compensation::text",
-                "div[class*='salary']::text",
-                ".clasificado-salary::text"
-            ]
-
-            salary = None
-            for selector in salary_selectors:
-                salary = response.css(selector).get()
-                if salary:
-                    break
-
-            item['salary_raw'] = self.clean_text(salary) if salary else ""
-
-            # Extract contract type - Clarín specific selectors
-            contract_selectors = [
-                ".contract-type::text",
-                ".type::text",
-                ".contract::text",
-                "span:contains('Tipo de contrato') + span::text",
-                ".job-type::text",
-                ".employment-type::text",
-                "div[class*='contract']::text",
-                ".clasificado-type::text"
-            ]
-
-            contract_type = None
-            for selector in contract_selectors:
-                contract_type = response.css(selector).get()
-                if contract_type:
-                    break
-
-            item['contract_type'] = self.clean_text(contract_type) if contract_type else ""
-
-            # Extract remote type - Clarín specific selectors
-            remote_selectors = [
-                ".remote::text",
-                ".work-mode::text",
-                ".modality::text",
-                "span:contains('Modalidad') + span::text",
-                "span:contains('Trabajo') + span::text",
-                ".work-type::text",
-                ".work-mode-info::text",
-                "div[class*='remote']::text",
-                ".clasificado-modality::text"
-            ]
-
-            remote_info = None
-            for selector in remote_selectors:
-                remote_info = response.css(selector).get()
-                if remote_info:
-                    break
-
-            item['remote_type'] = self.clean_text(remote_info) if remote_info else ""
-
-            # Extract posted date - Clarín specific selectors
-            date_selectors = [
-                ".date::text",
-                ".posted::text",
-                ".publication-date::text",
-                "span:contains('Publicado') + span::text",
-                ".job-date::text",
-                ".posting-date::text",
-                ".date-info::text",
-                "div[class*='date']::text",
-                ".clasificado-date::text"
-            ]
-
-            date_text = None
-            for selector in date_selectors:
-                date_text = response.css(selector).get()
-                if date_text:
-                    break
-
-            item['posted_date'] = self.parse_date(date_text) if date_text else None
-
+            item['url'] = detail_url
+            
+            # Extract the aviso object from the JSON response
+            aviso = json_data.get('aviso')
+            if not aviso:
+                logger.warning(f"No 'aviso' data found in JSON response")
+                return None
+            
+            # Extract title and description from textoLibre
+            texto_libre = aviso.get('textoLibre', '')
+            if texto_libre:
+                # For Clarín, the textoLibre contains the job title
+                item['title'] = self.clean_text(texto_libre)
+                # Use the title as description since there's no separate description field
+                item['description'] = self.clean_text(texto_libre)
+            else:
+                item['title'] = ""
+                item['description'] = ""
+            
+            # Extract posted date from fechaPublicacion (Unix timestamp to ISO 8601)
+            fecha_publicacion = aviso.get('fechaPublicacion')
+            if fecha_publicacion:
+                try:
+                    # Convert Unix timestamp to ISO 8601 (timestamp is in milliseconds)
+                    timestamp = int(fecha_publicacion) / 1000  # Convert from milliseconds to seconds
+                    date_obj = datetime.fromtimestamp(timestamp)
+                    item['posted_date'] = date_obj.isoformat()
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Could not parse fechaPublicacion {fecha_publicacion}: {e}")
+                    item['posted_date'] = None
+            else:
+                item['posted_date'] = None
+            
+            # Extract company information
+            nombre_anunciante = aviso.get('nombreAnunciante', '')
+            tipo_anunciante = aviso.get('tipoAnunciante', '')
+            
+            if nombre_anunciante:
+                item['company'] = self.clean_text(nombre_anunciante)
+            elif tipo_anunciante:
+                item['company'] = self.clean_text(tipo_anunciante)
+            else:
+                item['company'] = ""
+            
+            # Extract location from individuo
+            individuo = aviso.get('individuo', '')
+            if individuo:
+                # Split by "#" and ";" as specified
+                location_parts = individuo.replace('#', ';').split(';')
+                location_parts = [part.strip() for part in location_parts if part.strip()]
+                item['location'] = self.clean_text(', '.join(location_parts))
+            else:
+                item['location'] = ""
+            
+            # Extract requirements from textoLibre (heuristic)
+            if texto_libre:
+                # Look for common requirement keywords
+                requirement_keywords = ['requisitos', 'experiencia', 'conocimientos', 'habilidades', 'perfil']
+                requirements = []
+                
+                lines = texto_libre.split('\n')
+                in_requirements_section = False
+                
+                for line in lines:
+                    line_lower = line.lower()
+                    if any(keyword in line_lower for keyword in requirement_keywords):
+                        in_requirements_section = True
+                        requirements.append(line)
+                    elif in_requirements_section and line.strip():
+                        requirements.append(line)
+                    elif in_requirements_section and not line.strip():
+                        # Empty line might end requirements section
+                        break
+                
+                item['requirements'] = self.clean_text('\n'.join(requirements))
+            else:
+                item['requirements'] = ""
+            
+            # Extract salary from textoLibre (heuristic)
+            salary = self.extract_salary_from_text(texto_libre)
+            item['salary_raw'] = salary
+            
+            # Extract contract type from textoLibre (heuristic)
+            contract_type = self.extract_contract_from_text(texto_libre)
+            item['contract_type'] = contract_type
+            
+            # Extract remote type from textoLibre (heuristic)
+            remote_type = self.extract_remote_from_text(texto_libre)
+            item['remote_type'] = remote_type
+            
             # Validate item
             if not self.validate_job_item(item):
-                logger.warning(f"Invalid job item: {item['title']}")
-                return
-
-            # Clean and normalize all text fields
-            for field in ['title', 'company', 'location', 'description', 'requirements']:
-                if item.get(field):
-                    item[field] = self.clean_text(item[field])
-
-            logger.info(f"Successfully parsed job: {item['title']}")
-            yield item
-
+                logger.warning(f"Invalid job item: {item.get('title', 'No title')}")
+                return None
+            
+            logger.info(f"Successfully parsed job: {item.get('title', 'No title')}")
+            return item
+            
         except Exception as e:
-            logger.error(f"Error parsing job {response.url}: {e}")
-            return
-
-    def parse_date(self, date_string: str) -> Optional[str]:
-        """Parse Clarín date format."""
-        if not date_string:
+            logger.error(f"Error parsing job from JSON: {e}")
             return None
 
-        try:
-            # Common date patterns in Clarín
-            date_patterns = [
-                r'Publicado (\d{1,2}) (\w+) (\d{4})',  # "Publicado 23 Ago 2025"
-                r'(\d{1,2})/(\d{1,2})/(\d{4})',  # DD/MM/YYYY
-                r'(\d{1,2})-(\d{1,2})-(\d{4})',  # DD-MM-YYYY
-                r'hace (\d+) días?',  # "hace X días"
-                r'hace (\d+) horas?',  # "hace X horas"
-                r'(\d{1,2}) (\w+) (\d{4})',  # "23 Ago 2025"
-                r'(\d{1,2}) de (\w+) de (\d{4})',  # "23 de Agosto de 2025"
-                r'(\d{1,2})/(\d{1,2})/(\d{2})',  # DD/MM/YY
-            ]
+    def extract_salary_from_text(self, text: str) -> str:
+        """Extract salary information from text heuristically."""
+        if not text:
+            return ""
+        
+        # Look for salary patterns
+        salary_patterns = [
+            r'\$\s*\d{1,3}(?:,\d{3})*(?:\.\d{2})?',  # $1,000.00
+            r'\d{1,3}(?:,\d{3})*\s*pesos',  # 1,000 pesos
+            r'\d{1,3}(?:,\d{3})*\s*ars',  # 1,000 ARS
+            r'salario[:\s]*(\$?\d{1,3}(?:,\d{3})*)',  # Salario: $1,000
+            r'remuneración[:\s]*(\$?\d{1,3}(?:,\d{3})*)',  # Remuneración: $1,000
+        ]
+        
+        for pattern in salary_patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                return self.clean_text(match.group(0))
+        
+        return ""
 
-            # Spanish month mappings
-            month_map = {
-                'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04',
-                'may': '05', 'jun': '06', 'jul': '07', 'ago': '08',
-                'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12',
-                'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
-                'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
-                'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
-            }
+    def extract_contract_from_text(self, text: str) -> str:
+        """Extract contract type from text heuristically."""
+        if not text:
+            return ""
+        
+        # Look for contract type keywords
+        contract_keywords = {
+            'tiempo completo': 'Tiempo completo',
+            'tiempo parcial': 'Tiempo parcial',
+            'contrato': 'Contrato',
+            'permanente': 'Permanente',
+            'temporal': 'Temporal',
+            'indefinido': 'Indefinido',
+            'determinado': 'Determinado',
+            'freelance': 'Freelance',
+            'independiente': 'Independiente'
+        }
+        
+        text_lower = text.lower()
+        for keyword, value in contract_keywords.items():
+            if keyword in text_lower:
+                return value
+        
+        return ""
 
-            for pattern in date_patterns:
-                match = re.search(pattern, date_string, re.IGNORECASE)
-                if match:
-                    if 'hace' in pattern:
-                        # Handle relative dates
-                        return datetime.today().date().isoformat()
-                    elif len(match.groups()) == 3:
-                        # Handle absolute dates
-                        if pattern == r'Publicado (\d{1,2}) (\w+) (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2}) (\w+) (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2}) de (\w+) de (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2})/(\d{1,2})/(\d{2})':
-                            day, month, year = match.groups()
-                            # Convert 2-digit year to 4-digit
-                            year = f"20{year}" if int(year) < 50 else f"19{year}"
-                        else:
-                            day, month, year = match.groups()
-
-                        # Convert month name to number
-                        month_lower = month.lower()[:3]
-                        if month_lower in month_map:
-                            month_num = month_map[month_lower]
-                            return f"{year}-{month_num}-{day.zfill(2)}"
-
-            # If no pattern matches, return today's date
-            return datetime.today().date().isoformat()
-
-        except Exception as e:
-            logger.warning(f"Could not parse date '{date_string}': {e}")
-            return datetime.today().date().isoformat()
+    def extract_remote_from_text(self, text: str) -> str:
+        """Extract remote work type from text heuristically."""
+        if not text:
+            return ""
+        
+        # Look for remote work keywords
+        remote_keywords = {
+            'remoto': 'Remoto',
+            'teletrabajo': 'Remoto',
+            'home office': 'Remoto',
+            'presencial': 'Presencial',
+            'híbrido': 'Híbrido',
+            'hibrido': 'Híbrido',
+            'mixto': 'Híbrido'
+        }
+        
+        text_lower = text.lower()
+        for keyword, value in remote_keywords.items():
+            if keyword in text_lower:
+                return value
+        
+        return ""
