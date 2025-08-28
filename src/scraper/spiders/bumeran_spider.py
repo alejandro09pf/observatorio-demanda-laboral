@@ -11,6 +11,14 @@ from .base_spider import BaseSpider
 from ..items import JobItem
 from typing import Optional
 import logging
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -77,261 +85,510 @@ class BumeranSpider(BaseSpider):
             'DOWNLOAD_DELAY': 2,
             'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
         })
+        
+        # Selenium setup
+        self.driver = None
+        self.wait_timeout = 15
+        self.page_load_timeout = 30
+        self.scraped_urls = set()
+        
+        # Set start URL for search functionality - use the correct URL that works
+        self.start_url = "https://www.bumeran.com.mx/empleos.html"
     
-    def parse_search_results(self, response):
-        """Parse search results page."""
-        logger.info(f"Parsing search results: {response.url}")
+    def setup_driver(self):
+        """Setup Chrome WebDriver with appropriate options."""
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
         
-        # Extract job listings - based on the actual HTML structure
-        job_cards = response.css("div[class*='job-card'], article[class*='job-item'], div[class*='offer'], .job-listing")
+        # Anti-detection flags
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
         
-        if not job_cards:
-            # Try alternative selectors based on the actual structure
-            job_cards = response.css("div:has(h2), article:has(h2), .job-result")
-            logger.info(f"Trying alternative selectors, found {len(job_cards)} cards")
-        
-        if not job_cards:
-            logger.warning("No job cards found on page")
+        try:
+            self.driver = webdriver.Chrome(options=chrome_options)
+            self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            self.driver.set_page_load_timeout(self.page_load_timeout)
+            return True
+        except Exception as e:
+            logger.error(f"Error setting up Chrome driver: {e}")
+            return False
+    
+    def start_requests(self):
+        """Start requests by initializing Selenium and navigating to the start URL."""
+        if not self.setup_driver():
+            logger.error("Failed to setup Selenium driver")
             return
         
-        logger.info(f"Found {len(job_cards)} job cards")
+        logger.info(f"Starting Bumeran spider for country: {self.country}")
+        logger.info(f"Start URL: {self.start_url}")
         
-        for i, job_card in enumerate(job_cards):
-            try:
-                # Extract job URL - try multiple selectors
-                job_url = (
-                    job_card.css("h2 a::attr(href)").get() or
-                    job_card.css("a[href*='/empleo/']::attr(href)").get() or
-                    job_card.css("a[href*='/trabajo/']::attr(href)").get() or
-                    job_card.css("a[href*='/job/']::attr(href)").get() or
-                    job_card.css("a::attr(href)").get()
-                )
-                
-                if not job_url:
-                    continue
-                
-                job_url = self.build_absolute_url(job_url, response.url)
-                
-                # Skip if not a job detail URL
-                if not any(keyword in job_url for keyword in ['/empleo/', '/trabajo/', '/job/', '/oferta/']):
-                    continue
-                
-                # Follow job detail page
-                yield scrapy.Request(
-                    url=job_url,
-                    callback=self.parse_job,
-                    meta={'job_card': job_card}
-                )
-                
-                # Log progress
-                self.log_progress(i + 1, len(job_cards))
-                
-            except Exception as e:
-                logger.error(f"Error processing job card {i}: {e}")
-                continue
-        
-        # Handle pagination
-        next_page = self.handle_pagination(response, "a[rel='next']::attr(href), a:contains('Siguiente')::attr(href), .pagination a:last-child::attr(href)")
-        if next_page:
-            yield next_page
-    
-    def parse_job(self, response):
-        """Parse individual job posting."""
+        # Navigate to start URL
         try:
-            logger.info(f"Parsing job: {response.url}")
+            self.driver.get(self.start_url)
+            time.sleep(5)  # Wait for initial load
             
-            # Create job item
-            item = JobItem()
-            
-            # Basic information
-            item['portal'] = 'bumeran'
-            item['country'] = self.country
-            item['url'] = response.url
-            
-            # Extract title - try multiple selectors
-            title_selectors = [
-                "h1::text",
-                "h1.job-title::text",
-                ".job-title::text",
-                "h2::text",
-                ".title::text",
-                ".job-name::text"
-            ]
-            
-            title = None
-            for selector in title_selectors:
-                title = response.css(selector).get()
-                if title:
-                    break
-            
-            item['title'] = self.clean_text(title) if title else ""
-            
-            # Extract company - try multiple selectors
-            company_selectors = [
-                ".company-name::text",
-                ".company::text",
-                ".employer::text",
-                "span:contains('Empresa') + span::text",
-                ".business-name::text",
-                ".company-info::text"
-            ]
-            
-            company = None
-            for selector in company_selectors:
-                company = response.css(selector).get()
-                if company:
-                    break
-            
-            item['company'] = self.clean_text(company) if company else ""
-            
-            # Extract location - try multiple selectors
-            location_selectors = [
-                ".location::text",
-                ".place::text",
-                ".city::text",
-                "span:contains('Ubicación') + span::text",
-                ".job-location::text",
-                ".location-info::text"
-            ]
-            
-            location = None
-            for selector in location_selectors:
-                location = response.css(selector).get()
-                if location:
-                    break
-            
-            item['location'] = self.clean_text(location) if location else ""
-            
-            # Extract description - try multiple selectors
-            description_selectors = [
-                ".description::text",
-                ".job-description::text",
-                ".content-description::text",
-                ".offer-description::text",
-                "div[class*='description']::text",
-                "div[class*='content']::text",
-                ".job-details::text"
-            ]
-            
-            description_parts = []
-            for selector in description_selectors:
-                text = response.css(selector).get()
-                if text:
-                    description_parts.append(self.clean_text(text))
-            
-            # If no specific description found, try to get all text content
-            if not description_parts:
-                all_text = response.css("body *::text").getall()
-                description_parts = [self.clean_text(text) for text in all_text if text.strip()]
-            
-            item['description'] = " ".join(description_parts) if description_parts else ""
-            
-            # Extract requirements - try multiple selectors
-            requirements_selectors = [
-                ".requirements::text",
-                ".skills::text",
-                ".profile::text",
-                ".qualifications::text",
-                "div:contains('Requisitos') *::text",
-                "div:contains('Perfil') *::text",
-                ".job-requirements::text"
-            ]
-            
-            requirements_parts = []
-            for selector in requirements_selectors:
-                text = response.css(selector).get()
-                if text:
-                    requirements_parts.append(self.clean_text(text))
-            
-            item['requirements'] = " ".join(requirements_parts) if requirements_parts else ""
-            
-            # Extract salary - try multiple selectors
-            salary_selectors = [
-                ".salary::text",
-                ".wage::text",
-                ".payment::text",
-                "span:contains('Salario') + span::text",
-                ".job-salary::text",
-                ".salary-info::text"
-            ]
-            
-            salary = None
-            for selector in salary_selectors:
-                salary = response.css(selector).get()
-                if salary:
-                    break
-            
-            item['salary_raw'] = self.clean_text(salary) if salary else ""
-            
-            # Extract contract type - try multiple selectors
-            contract_selectors = [
-                ".contract-type::text",
-                ".type::text",
-                ".contract::text",
-                "span:contains('Tipo de contrato') + span::text",
-                ".job-type::text"
-            ]
-            
-            contract_type = None
-            for selector in contract_selectors:
-                contract_type = response.css(selector).get()
-                if contract_type:
-                    break
-            
-            item['contract_type'] = self.clean_text(contract_type) if contract_type else ""
-            
-            # Extract remote type - try multiple selectors
-            remote_selectors = [
-                ".remote::text",
-                ".work-mode::text",
-                ".modality::text",
-                "span:contains('Modalidad') + span::text",
-                "span:contains('Trabajo') + span::text",
-                ".work-type::text"
-            ]
-            
-            remote_info = None
-            for selector in remote_selectors:
-                remote_info = response.css(selector).get()
-                if remote_info:
-                    break
-            
-            item['remote_type'] = self.clean_text(remote_info) if remote_info else ""
-            
-            # Extract posted date - try multiple selectors
-            date_selectors = [
-                ".date::text",
-                ".posted::text",
-                ".publication-date::text",
-                "span:contains('Publicado') + span::text",
-                ".job-date::text",
-                ".posting-date::text"
-            ]
-            
-            date_text = None
-            for selector in date_selectors:
-                date_text = response.css(selector).get()
-                if date_text:
-                    break
-            
-            item['posted_date'] = self.parse_date(date_text) if date_text else None
-            
-            # Validate item
-            if not self.validate_job_item(item):
-                logger.warning(f"Invalid job item: {item['title']}")
-                return
-            
-            # Clean and normalize all text fields
-            for field in ['title', 'company', 'location', 'description', 'requirements']:
-                if item.get(field):
-                    item[field] = self.clean_text(item[field])
-            
-            logger.info(f"Successfully parsed job: {item['title']}")
-            yield item
+            # Start scraping from page 1
+            for item in self.parse_search_results_page(1):
+                yield item
             
         except Exception as e:
-            logger.error(f"Error parsing job {response.url}: {e}")
-            return
+            logger.error(f"Error navigating to start URL: {e}")
+            self.cleanup_driver()
+    
+    def cleanup_driver(self):
+        """Clean up Selenium WebDriver."""
+        if self.driver:
+            try:
+                self.driver.quit()
+            except Exception as e:
+                logger.error(f"Error quitting driver: {e}")
+            finally:
+                self.driver = None
+    
+    def closed(self, reason):
+        """Called when spider is closed."""
+        self.cleanup_driver()
+        self.save_scraping_summary()
+    
+    def save_scraping_summary(self):
+        """Save scraping summary to JSON file."""
+        summary = {
+            "spider": self.name,
+            "country": self.country,
+            "start_time": getattr(self, 'start_time', None),
+            "end_time": datetime.now().isoformat(),
+            "total_jobs_scraped": len(self.scraped_urls),
+            "scraped_urls": list(self.scraped_urls)
+        }
+        
+        try:
+            with open(f"outputs/bumeran_scraping_summary.json", "w", encoding="utf-8") as f:
+                json.dump(summary, f, indent=2, ensure_ascii=False)
+            logger.info(f"Scraping summary saved to outputs/bumeran_scraping_summary.json")
+        except Exception as e:
+            logger.error(f"Error saving scraping summary: {e}")
+    
+    def parse_search_results_page(self, page):
+        """Parse search results page using Selenium."""
+        logger.info(f"Parsing search results page {page}")
+        
+        try:
+            # Navigate to the page
+            if page == 1:
+                url = self.start_url
+            else:
+                url = f"{self.start_url}?page={page}"
+            
+            self.driver.get(url)
+            time.sleep(5)  # Wait for page load
+            
+            # If this is page 1 and no job cards found, try to perform a search
+            if page == 1:
+                logger.info("Attempting to perform search to find job listings...")
+                if self.perform_search():
+                    time.sleep(5)  # Wait for search results to load
+            
+            # Wait for content to load
+            wait = WebDriverWait(self.driver, self.wait_timeout)
+            
+            # Find job links directly - simpler approach based on actual site structure
+            job_links = []
+            
+            # First try to find all links with job-related hrefs
+            all_links = self.driver.find_elements(By.CSS_SELECTOR, "a[href*='empleo']")
+            logger.info(f"Found {len(all_links)} total links with 'empleo'")
+            
+            # Filter for actual job postings
+            for link in all_links:
+                try:
+                    href = link.get_attribute('href')
+                    text = link.text.strip()
+                    
+                    # Skip navigation/filter links
+                    if any(nav_pattern in href for nav_pattern in [
+                        'seniority-', 'landing-', 'relevantes=true', 'recientes=true',
+                        'empleos-seniority-', 'empleos.html?', 'page='
+                    ]):
+                        continue
+                    
+                    # Only include actual job postings
+                    if (href.endswith('.html') and 
+                        '/empleos/' in href and 
+                        len(text) > 10 and
+                        not href.endswith('empleos.html')):
+                        job_links.append(link)
+                
+                except Exception as e:
+                    logger.debug(f"Error processing link: {e}")
+                    continue
+            
+            logger.info(f"Found {len(job_links)} actual job postings")
+            
+            if not job_links:
+                logger.warning(f"No job links found on page {page}")
+                return
+            
+            # Process job links
+            job_data_list = []
+            for i, job_link in enumerate(job_links):
+                try:
+                    # Extract job URL and title directly from the link
+                    job_url = job_link.get_attribute('href')
+                    job_title = job_link.text.strip()
+                    
+                    if not job_url or not job_title:
+                        continue
+                    
+                    # Skip if already scraped
+                    if job_url in self.scraped_urls:
+                        continue
+                    
+                    # Extract basic info from the link text (which contains the job info)
+                    # The link text contains: "Publicado X días\nJob Title\nCompany\nDescription..."
+                    lines = job_title.split('\n')
+                    
+                    # Extract company and location from the text
+                    company = ""
+                    location = ""
+                    description = ""
+                    
+                    if len(lines) >= 3:
+                        # Skip the first line (posted date)
+                        job_title_clean = lines[1] if len(lines) > 1 else job_title
+                        company = lines[2] if len(lines) > 2 else ""
+                        
+                        # Look for location in the text (usually at the end)
+                        for line in lines:
+                            if any(loc_indicator in line.lower() for loc_indicator in ['mexico', 'cdmx', 'distrito federal', 'estado de mexico', 'jalisco', 'nuevo leon']):
+                                location = line.strip()
+                                break
+                        
+                        # Description is usually the longer text
+                        description_lines = [line for line in lines if len(line) > 50]
+                        if description_lines:
+                            description = description_lines[0][:200] + "..." if len(description_lines[0]) > 200 else description_lines[0]
+                    
+                    job_data = {
+                        'url': job_url,
+                        'title': job_title_clean if 'job_title_clean' in locals() else job_title,
+                        'company': company,
+                        'location': location,
+                        'description': description
+                    }
+                    
+                    job_data_list.append(job_data)
+                    self.scraped_urls.add(job_url)
+                    
+                except Exception as e:
+                    logger.error(f"Error processing job card {i}: {e}")
+                    continue
+            
+            # Process each job to get detailed information
+            for job_data in job_data_list:
+                try:
+                    detailed_job = self.get_job_details(job_data['url'])
+                    if detailed_job:
+                        # Merge basic and detailed info
+                        job_data.update(detailed_job)
+                        
+                        # Create JobItem
+                        item = JobItem()
+                        item['portal'] = 'bumeran'
+                        item['country'] = self.country
+                        item['url'] = job_data['url']
+                        item['title'] = job_data.get('title', '')
+                        item['company'] = job_data.get('company', '')
+                        item['location'] = job_data.get('location', '')
+                        item['description'] = job_data.get('description', '')
+                        item['requirements'] = job_data.get('requirements', '')
+                        item['salary_raw'] = job_data.get('salary_raw', '')
+                        item['contract_type'] = job_data.get('contract_type', '')
+                        item['remote_type'] = job_data.get('remote_type', '')
+                        item['posted_date'] = job_data.get('posted_date')
+                        
+                        # Validate item
+                        if self.validate_job_item(item):
+                            yield item
+                        else:
+                            logger.warning(f"Invalid job item: {item['title']}")
+                    
+                except Exception as e:
+                    logger.error(f"Error getting job details for {job_data['url']}: {e}")
+                    continue
+            
+            # Check for next page
+            if page < self.max_pages:
+                next_page = page + 1
+                logger.info(f"Moving to page {next_page}")
+                for item in self.parse_search_results_page(next_page):
+                    yield item
+            
+        except Exception as e:
+            logger.error(f"Error parsing search results page {page}: {e}")
+    
+    def perform_search(self):
+        """Perform a search to find job listings."""
+        try:
+            logger.info("Looking for search input...")
+            
+            # Look for search input
+            search_selectors = [
+                "input[type='text']",
+                "input[placeholder*='empleo']",
+                "input[placeholder*='trabajo']",
+                "input[placeholder*='puesto']",
+                "input[placeholder*='buscar']",
+                ".search-input",
+                "#busqueda",
+                "input"
+            ]
+            
+            search_input = None
+            for selector in search_selectors:
+                try:
+                    inputs = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    if inputs:
+                        for inp in inputs:
+                            try:
+                                placeholder = inp.get_attribute('placeholder')
+                                if placeholder and any(keyword in placeholder.lower() for keyword in ['empleo', 'trabajo', 'puesto', 'buscar']):
+                                    search_input = inp
+                                    logger.info(f"Found search input: {placeholder}")
+                                    break
+                            except:
+                                continue
+                        if search_input:
+                            break
+                except Exception as e:
+                    logger.debug(f"Selector '{selector}' failed: {e}")
+                    continue
+            
+            if not search_input:
+                logger.warning("No search input found")
+                return False
+            
+            # Perform search
+            try:
+                # Clear the input
+                search_input.clear()
+                time.sleep(1)
+                
+                # Type a search term
+                search_term = "desarrollador"
+                search_input.send_keys(search_term)
+                logger.info(f"Typed search term: {search_term}")
+                time.sleep(2)
+                
+                # Press Enter to search
+                from selenium.webdriver.common.keys import Keys
+                search_input.send_keys(Keys.RETURN)
+                logger.info("Pressed Enter to search")
+                time.sleep(5)
+                
+                # Check if URL changed
+                logger.info(f"URL after search: {self.driver.current_url}")
+                return True
+                
+            except Exception as e:
+                logger.error(f"Error performing search: {e}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error in perform_search: {e}")
+            return False
+    
+    def extract_company_from_card(self, job_card):
+        """Extract company name from job card."""
+        company_selectors = [
+            "div:nth-of-type(2) span",
+            "a[href*='/empresas/']",
+            ".company",
+            ".employer",
+            "span[class*='company']",
+            "span"
+        ]
+        
+        for selector in company_selectors:
+            try:
+                company_elem = job_card.find_element(By.CSS_SELECTOR, selector)
+                company_text = company_elem.text.strip()
+                if company_text and len(company_text) > 2:
+                    return company_text
+            except NoSuchElementException:
+                continue
+        
+        return ""
+    
+    def extract_location_from_card(self, job_card):
+        """Extract location from job card."""
+        location_selectors = [
+            "[aria-label='location']",
+            ".location",
+            ".place",
+            ".city",
+            "span[class*='location']",
+            "span"
+        ]
+        
+        for selector in location_selectors:
+            try:
+                location_elem = job_card.find_element(By.CSS_SELECTOR, selector)
+                location_text = location_elem.text.strip()
+                if location_text and len(location_text) > 2:
+                    return location_text
+            except NoSuchElementException:
+                continue
+        
+        return ""
+    
+    def extract_description_from_card(self, job_card):
+        """Extract description from job card."""
+        desc_selectors = [
+            "p",
+            ".description",
+            ".summary",
+            "div[class*='description']"
+        ]
+        
+        for selector in desc_selectors:
+            try:
+                desc_elem = job_card.find_element(By.CSS_SELECTOR, selector)
+                desc_text = desc_elem.text.strip()
+                if desc_text and len(desc_text) > 20:
+                    return desc_text
+            except NoSuchElementException:
+                continue
+        
+        return ""
+    
+    def get_job_details(self, job_url):
+        """Get detailed job information from job detail page."""
+        try:
+            logger.info(f"Getting job details: {job_url}")
+            
+            self.driver.get(job_url)
+            time.sleep(3)  # Wait for page load
+            
+            job_details = {}
+            
+            # Extract title
+            title_selectors = ["h1", ".job-title", ".title"]
+            for selector in title_selectors:
+                try:
+                    title_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    job_details['title'] = title_elem.text.strip()
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            # Extract company
+            company_selectors = ["h1 + div span", ".company", ".employer"]
+            for selector in company_selectors:
+                try:
+                    company_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    job_details['company'] = company_elem.text.strip()
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            # Extract posted date
+            date_selectors = ["time", "span[aria-label='Publicado']", ".date", ".posted"]
+            for selector in date_selectors:
+                try:
+                    date_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    date_text = date_elem.text.strip()
+                    job_details['posted_date'] = self.parse_date(date_text)
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            # Extract location
+            location_selectors = ["div[aria-label='location']", ".location", ".place"]
+            for selector in location_selectors:
+                try:
+                    location_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    job_details['location'] = location_elem.text.strip()
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            # Extract description
+            desc_selectors = [
+                ".description",
+                ".job-description",
+                "div[class*='description']",
+                "section h2 + div",
+                "div[class*='desc']"
+            ]
+            for selector in desc_selectors:
+                try:
+                    desc_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    job_details['description'] = desc_elem.text.strip()
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            # Extract requirements
+            req_selectors = [
+                ".requirements",
+                ".skills",
+                "section h2 + ul",
+                "ul[class*='requirement']",
+                "ul[class*='skill']"
+            ]
+            requirements_parts = []
+            for selector in req_selectors:
+                try:
+                    req_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    requirements_parts.append(req_elem.text.strip())
+                except NoSuchElementException:
+                    continue
+            
+            if requirements_parts:
+                job_details['requirements'] = " ".join(requirements_parts)
+            
+            # Extract contract type
+            contract_selectors = [
+                ".contract-type",
+                ".type",
+                "section li",
+                "li[class*='contract']",
+                "li[class*='type']"
+            ]
+            for selector in contract_selectors:
+                try:
+                    contract_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    job_details['contract_type'] = contract_elem.text.strip()
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            # Extract remote type
+            remote_selectors = [
+                ".remote",
+                ".modality",
+                "section li",
+                "li[class*='remote']",
+                "li[class*='modality']"
+            ]
+            for selector in remote_selectors:
+                try:
+                    remote_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    job_details['remote_type'] = remote_elem.text.strip()
+                    break
+                except NoSuchElementException:
+                    continue
+            
+            return job_details
+            
+        except Exception as e:
+            logger.error(f"Error getting job details from {job_url}: {e}")
+            return None
     
     def parse_date(self, date_string: str) -> Optional[str]:
         """Parse Bumeran date format."""
