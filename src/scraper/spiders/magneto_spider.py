@@ -1,404 +1,345 @@
 """
 Magneto spider for Labor Market Observatory.
-Scrapes job postings from magneto365.com
+Scrapes job postings from Magneto365 Colombia using JSON-LD structured data.
 """
 
 import scrapy
+import json
+import re
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
-import re
+from typing import Optional, Dict, Any
 from .base_spider import BaseSpider
 from ..items import JobItem
-from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)
 
 
 class MagnetoSpider(BaseSpider):
-    """Spider for Magneto job portal."""
+    """Spider for Magneto365 job portal using JSON-LD structured data."""
 
     name = "magneto"
-    allowed_domains = ["magneto365.com", "jobs.magneto365.com", "magneto.com.co"]
+    allowed_domains = ["magneto365.com"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.portal = "magneto"
-
-        # Set start URLs based on country with specific job categories
+        self.max_pages = int(kwargs.get('max_pages', 10))
+        self.current_page = 0
+        
+        # Set start URL based on country
         if self.country == "CO":
-            self.start_urls = [
-                "https://www.magneto365.com/es",
-                "https://www.magneto365.com/es/empleos",
-                "https://www.magneto365.com/es/empleos/tecnologia",
-                "https://www.magneto365.com/es/empleos/administracion",
-                "https://www.magneto365.com/es/empleos/ventas"
-            ]
+            self.start_url = "https://www.magneto365.com/co/empleos"
         elif self.country == "MX":
-            self.start_urls = [
-                "https://www.magneto365.com/mx",
-                "https://www.magneto365.com/mx/empleos",
-                "https://www.magneto365.com/mx/empleos/tecnologia"
-            ]
+            self.start_url = "https://www.magneto365.com/mx/empleos"
         elif self.country == "AR":
-            self.start_urls = [
-                "https://www.magneto365.com/ar",
-                "https://www.magneto365.com/ar/empleos",
-                "https://www.magneto365.com/ar/empleos/tecnologia"
-            ]
+            self.start_url = "https://www.magneto365.com/ar/empleos"
         else:
             # Default to Colombia
-            self.start_urls = [
-                "https://www.magneto365.com/es",
-                "https://www.magneto365.com/es/empleos"
-            ]
+            self.start_url = "https://www.magneto365.com/co/empleos"
 
         # Override custom settings for this spider
         self.custom_settings.update({
-            'DOWNLOAD_DELAY': 2,
+            'DOWNLOAD_DELAY': 1.5,
             'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+            'ROBOTSTXT_OBEY': False,
         })
 
-    def parse_search_results(self, response):
-        """Parse search results page."""
-        logger.info(f"Parsing search results: {response.url}")
+    def start_requests(self):
+        """Start requests for listing pages."""
+        logger.info(f"Starting Magneto spider for country: {self.country}")
+        logger.info(f"Max pages: {self.max_pages}")
+        
+        # Start with the first page
+        yield scrapy.Request(
+            url=self.start_url,
+            callback=self.parse_listing_page,
+            meta={'page': 1}
+        )
 
-        # Extract job listings - Magneto specific selectors
-        job_cards = response.css("article, div[class*='job'], div[class*='card'], div[class*='item']")
+    def parse_listing_page(self, response):
+        """Parse listing page and extract job URLs from JSON-LD ItemList."""
+        current_page = response.meta.get('page', 1)
+        logger.info(f"Parsing listing page {current_page}: {response.url}")
 
-        if not job_cards:
-            # Try alternative selectors for Magneto structure
-            job_cards = response.css("div:has(h2), article:has(h2), .job-listing, .job-result")
-            logger.info(f"Trying alternative selectors, found {len(job_cards)} cards")
-
-        if not job_cards:
-            # Try more generic selectors
-            job_cards = response.css("div[class*='listing'], div[class*='result'], div[class*='offer']")
-            logger.info(f"Trying generic selectors, found {len(job_cards)} cards")
-
-        if not job_cards:
-            logger.warning("No job cards found on page")
-            return
-
-        logger.info(f"Found {len(job_cards)} job cards")
-
-        for i, job_card in enumerate(job_cards):
+        # Find JSON-LD scripts
+        json_ld_scripts = response.css('script[type="application/ld+json"]')
+        
+        job_urls = []
+        
+        for script in json_ld_scripts:
             try:
-                # Extract job URL - Magneto specific patterns
-                job_url = (
-                    job_card.css("h2 a::attr(href)").get() or
-                    job_card.css("a[href*='/empleo/']::attr(href)").get() or
-                    job_card.css("a[href*='/trabajo/']::attr(href)").get() or
-                    job_card.css("a[href*='/job/']::attr(href)").get() or
-                    job_card.css("a[href*='/oferta/']::attr(href)").get() or
-                    job_card.css("a::attr(href)").get()
-                )
-
-                if not job_url:
+                # Get script content - extract text from within script tags
+                script_content = script.xpath('text()').get()
+                if not script_content:
                     continue
-
-                job_url = self.build_absolute_url(job_url, response.url)
-
-                # Skip if not a job detail URL
-                if not any(keyword in job_url for keyword in ['/empleo/', '/trabajo/', '/job/', '/oferta/', '/puesto/']):
-                    continue
-
-                # Follow job detail page
-                yield scrapy.Request(
-                    url=job_url,
-                    callback=self.parse_job,
-                    meta={'job_card': job_card}
-                )
-
-                # Log progress
-                self.log_progress(i + 1, len(job_cards))
-
-            except Exception as e:
-                logger.error(f"Error processing job card {i}: {e}")
+                
+                json_data = json.loads(script_content)
+                
+                # Look for ItemList with job URLs
+                if json_data.get('@type') == 'ItemList':
+                    item_list = json_data.get('itemListElement', [])
+                    logger.info(f"Found ItemList with {len(item_list)} items")
+                    
+                    for item in item_list:
+                        if isinstance(item, dict) and item.get('@type') == 'ListItem':
+                            job_url = item.get('url')
+                            if job_url:
+                                job_urls.append(job_url)
+                                logger.debug(f"Found job URL: {job_url}")
+                    
+                    break  # Found ItemList, no need to check other scripts
+                    
+            except json.JSONDecodeError as e:
+                logger.warning(f"Error parsing JSON-LD script: {e}")
                 continue
 
-        # Handle pagination - Magneto specific patterns
-        next_page = self.handle_pagination(response, "a[rel='next']::attr(href), a:contains('Siguiente')::attr(href), .pagination a:last-child::attr(href), a[href*='page=']::attr(href)")
-        if next_page:
-            yield next_page
+        logger.info(f"Extracted {len(job_urls)} job URLs from page {current_page}")
 
-    def parse_job(self, response):
-        """Parse individual job posting."""
-        try:
-            logger.info(f"Parsing job: {response.url}")
+        # Follow each job URL to get detailed information
+        for job_url in job_urls:
+            yield scrapy.Request(
+                url=job_url,
+                callback=self.parse_job_detail,
+                meta={'source_page': current_page}
+            )
 
-            # Create job item
-            item = JobItem()
+        # Handle pagination
+        if current_page < self.max_pages and job_urls:
+            next_page = current_page + 1
+            next_url = f"{self.start_url}?page={next_page}"
+            
+            logger.info(f"Following to page {next_page}: {next_url}")
+            yield scrapy.Request(
+                url=next_url,
+                callback=self.parse_listing_page,
+                meta={'page': next_page}
+            )
 
-            # Basic information
-            item['portal'] = 'magneto'
-            item['country'] = self.country
-            item['url'] = response.url
+    def parse_job_detail(self, response):
+        """Parse job detail page and extract information from JSON-LD JobPosting."""
+        source_page = response.meta.get('source_page', 1)
+        logger.info(f"Parsing job detail: {response.url} (from page {source_page})")
 
-            # Extract title - Magneto specific selectors
-            title_selectors = [
-                "h1::text",
-                "h1.job-title::text",
-                ".job-title::text",
-                "h2::text",
-                ".title::text",
-                ".job-name::text",
-                ".position-title::text",
-                "h1[class*='title']::text"
-            ]
-
-            title = None
-            for selector in title_selectors:
-                title = response.css(selector).get()
-                if title:
+        # Find JSON-LD JobPosting script
+        json_ld_scripts = response.css('script[type="application/ld+json"]')
+        
+        job_data = None
+        
+        for script in json_ld_scripts:
+            try:
+                # Get script content - extract text from within script tags
+                script_content = script.xpath('text()').get()
+                if not script_content:
+                    continue
+                
+                json_data = json.loads(script_content)
+                
+                # Look for JobPosting
+                if json_data.get('@type') == 'JobPosting':
+                    job_data = json_data
+                    logger.debug(f"Found JobPosting: {job_data.get('title', 'No title')}")
                     break
+                    
+            except json.JSONDecodeError as e:
+                logger.warning(f"Error parsing JSON-LD script: {e}")
+                continue
 
-            item['title'] = self.clean_text(title) if title else ""
-
-            # Extract company - Magneto specific selectors
-            company_selectors = [
-                ".company::text",
-                ".empresa::text",
-                ".company-name::text",
-                ".employer::text",
-                "span:contains('Empresa') + span::text",
-                ".business-name::text",
-                ".company-info::text",
-                ".employer-name::text",
-                "div[class*='company']::text"
-            ]
-
-            company = None
-            for selector in company_selectors:
-                company = response.css(selector).get()
-                if company:
-                    break
-
-            item['company'] = self.clean_text(company) if company else ""
-
-            # Extract location - Magneto specific selectors
-            location_selectors = [
-                ".location::text",
-                ".ubicacion::text",
-                ".place::text",
-                ".city::text",
-                "span:contains('Ubicación') + span::text",
-                ".job-location::text",
-                ".location-info::text",
-                ".place-info::text",
-                "div[class*='location']::text"
-            ]
-
-            location = None
-            for selector in location_selectors:
-                location = response.css(selector).get()
-                if location:
-                    break
-
-            item['location'] = self.clean_text(location) if location else ""
-
-            # Extract description - Magneto specific selectors
-            description_selectors = [
-                ".description::text",
-                ".resumen::text",
-                ".job-description::text",
-                ".content-description::text",
-                ".offer-description::text",
-                "div[class*='description']::text",
-                "div[class*='content']::text",
-                ".job-details::text",
-                ".job-content::text",
-                "div[class*='job-details']::text"
-            ]
-
-            description_parts = []
-            for selector in description_selectors:
-                text = response.css(selector).get()
-                if text:
-                    description_parts.append(self.clean_text(text))
-
-            # If no specific description found, try to get all text content
-            if not description_parts:
-                all_text = response.css("body *::text").getall()
-                description_parts = [self.clean_text(text) for text in all_text if text.strip()]
-
-            item['description'] = " ".join(description_parts) if description_parts else ""
-
-            # Extract requirements - Magneto specific selectors
-            requirements_selectors = [
-                ".requirements::text",
-                ".skills::text",
-                ".profile::text",
-                ".qualifications::text",
-                "div:contains('Requisitos') *::text",
-                "div:contains('Perfil') *::text",
-                ".job-requirements::text",
-                ".requirements-list::text",
-                "div[class*='requirements']::text"
-            ]
-
-            requirements_parts = []
-            for selector in requirements_selectors:
-                text = response.css(selector).get()
-                if text:
-                    requirements_parts.append(self.clean_text(text))
-
-            item['requirements'] = " ".join(requirements_parts) if requirements_parts else ""
-
-            # Extract salary - Magneto specific selectors
-            salary_selectors = [
-                ".salary::text",
-                ".wage::text",
-                ".payment::text",
-                "span:contains('Salario') + span::text",
-                ".job-salary::text",
-                ".salary-info::text",
-                ".compensation::text",
-                "div[class*='salary']::text"
-            ]
-
-            salary = None
-            for selector in salary_selectors:
-                salary = response.css(selector).get()
-                if salary:
-                    break
-
-            item['salary_raw'] = self.clean_text(salary) if salary else ""
-
-            # Extract contract type - Magneto specific selectors
-            contract_selectors = [
-                ".contract-type::text",
-                ".type::text",
-                ".contract::text",
-                "span:contains('Tipo de contrato') + span::text",
-                ".job-type::text",
-                ".employment-type::text",
-                "div[class*='contract']::text"
-            ]
-
-            contract_type = None
-            for selector in contract_selectors:
-                contract_type = response.css(selector).get()
-                if contract_type:
-                    break
-
-            item['contract_type'] = self.clean_text(contract_type) if contract_type else ""
-
-            # Extract remote type - Magneto specific selectors
-            remote_selectors = [
-                ".remote::text",
-                ".work-mode::text",
-                ".modality::text",
-                "span:contains('Modalidad') + span::text",
-                "span:contains('Trabajo') + span::text",
-                ".work-type::text",
-                ".work-mode-info::text",
-                "div[class*='remote']::text"
-            ]
-
-            remote_info = None
-            for selector in remote_selectors:
-                remote_info = response.css(selector).get()
-                if remote_info:
-                    break
-
-            item['remote_type'] = self.clean_text(remote_info) if remote_info else ""
-
-            # Extract posted date - Magneto specific selectors
-            date_selectors = [
-                ".date::text",
-                ".posted::text",
-                ".publication-date::text",
-                "span:contains('Publicado') + span::text",
-                ".job-date::text",
-                ".posting-date::text",
-                ".date-info::text",
-                "div[class*='date']::text"
-            ]
-
-            date_text = None
-            for selector in date_selectors:
-                date_text = response.css(selector).get()
-                if date_text:
-                    break
-
-            item['posted_date'] = self.parse_date(date_text) if date_text else None
-
-            # Validate item
-            if not self.validate_job_item(item):
-                logger.warning(f"Invalid job item: {item['title']}")
-                return
-
-            # Clean and normalize all text fields
-            for field in ['title', 'company', 'location', 'description', 'requirements']:
-                if item.get(field):
-                    item[field] = self.clean_text(item[field])
-
-            logger.info(f"Successfully parsed job: {item['title']}")
-            yield item
-
-        except Exception as e:
-            logger.error(f"Error parsing job {response.url}: {e}")
+        if not job_data:
+            logger.warning(f"No JobPosting JSON-LD found for: {response.url}")
             return
 
+        # Create job item
+        item = JobItem()
+        
+        # Basic information
+        item['portal'] = 'magneto'
+        item['country'] = self.country
+        item['url'] = response.url
+
+        # Extract title
+        item['title'] = self.clean_text(job_data.get('title', ''))
+
+        # Extract company
+        hiring_org = job_data.get('hiringOrganization', {})
+        item['company'] = self.clean_text(hiring_org.get('name', ''))
+
+        # Extract location
+        job_location = job_data.get('jobLocation', {})
+        
+        # Handle case where jobLocation might be a list
+        if isinstance(job_location, list):
+            job_location = job_location[0] if job_location else {}
+        
+        address = job_location.get('address', {})
+        
+        # Handle location arrays (Magneto sometimes uses arrays for location)
+        city = address.get('addressLocality', '')
+        region = address.get('addressRegion', '')
+        
+        if isinstance(city, list):
+            city = ', '.join(city) if city else ''
+        if isinstance(region, list):
+            region = ', '.join(region) if region else ''
+        
+        # Combine city and region
+        location_parts = []
+        if city:
+            location_parts.append(city)
+        if region:
+            location_parts.append(region)
+        
+        item['location'] = ', '.join(location_parts) if location_parts else ''
+
+        # Extract description
+        description = job_data.get('description', '')
+        if description:
+            # Clean HTML tags from description
+            description = self.clean_html(description)
+        item['description'] = description
+
+        # Extract requirements (from qualifications field)
+        requirements = job_data.get('qualifications', '')
+        if requirements:
+            requirements = self.clean_text(requirements)
+        item['requirements'] = requirements
+
+        # Extract salary information
+        salary_raw = self.extract_salary_from_json(job_data)
+        item['salary_raw'] = salary_raw
+
+        # Extract contract type
+        employment_type = job_data.get('employmentType', '')
+        contract_type = self.map_employment_type(employment_type)
+        item['contract_type'] = contract_type
+
+        # Extract remote type from description
+        remote_type = self.extract_remote_type_from_description(description)
+        item['remote_type'] = remote_type
+
+        # Extract posted date
+        posted_date = job_data.get('datePosted', '')
+        if posted_date:
+            # Convert to ISO format if needed
+            posted_date = self.parse_date(posted_date)
+        item['posted_date'] = posted_date
+
+        # Validate item
+        if not self.validate_job_item(item):
+            logger.warning(f"Invalid job item: {item['title']}")
+            return
+
+        logger.info(f"Successfully parsed job: {item['title']} at {item['company']}")
+        yield item
+
+    def extract_salary_from_json(self, job_data: Dict[str, Any]) -> str:
+        """Extract salary information from JobPosting JSON-LD."""
+        base_salary = job_data.get('baseSalary', {})
+        if not base_salary:
+            return ''
+
+        currency = base_salary.get('currency', '')
+        value = base_salary.get('value', {})
+        unit_text = base_salary.get('unitText', '')
+
+        if not value:
+            return ''
+
+        # Extract min and max values
+        min_value = value.get('minValue', '')
+        max_value = value.get('maxValue', '')
+        
+        # Build salary string
+        salary_parts = []
+        
+        if min_value and max_value:
+            if min_value == max_value:
+                salary_parts.append(str(min_value))
+            else:
+                salary_parts.append(f"{min_value} - {max_value}")
+        elif min_value:
+            salary_parts.append(f"{min_value}+")
+        elif max_value:
+            salary_parts.append(f"Up to {max_value}")
+        
+        if currency:
+            salary_parts.append(currency)
+        
+        if unit_text:
+            salary_parts.append(f"per {unit_text.lower()}")
+
+        return ' '.join(salary_parts) if salary_parts else ''
+
+    def map_employment_type(self, employment_type: str) -> str:
+        """Map employment type from JSON-LD to standardized format."""
+        if not employment_type:
+            return ''
+        
+        employment_type = employment_type.upper()
+        
+        mapping = {
+            'FULL_TIME': 'Tiempo completo',
+            'PART_TIME': 'Tiempo parcial',
+            'CONTRACTOR': 'Contrato',
+            'TEMPORARY': 'Temporal',
+            'INTERN': 'Pasantía',
+            'VOLUNTEER': 'Voluntario',
+            'PER_DIEM': 'Por día',
+            'OTHER': 'Otro'
+        }
+        
+        return mapping.get(employment_type, employment_type)
+
+    def extract_remote_type_from_description(self, description: str) -> str:
+        """Extract remote work type from job description."""
+        if not description:
+            return ''
+        
+        description_lower = description.lower()
+        
+        # Check for remote work indicators
+        if any(term in description_lower for term in ['remoto', 'remote', 'teletrabajo', 'home office']):
+            return 'Remoto'
+        elif any(term in description_lower for term in ['híbrido', 'hybrid', 'mixto']):
+            return 'Híbrido'
+        elif any(term in description_lower for term in ['presencial', 'on-site', 'oficina']):
+            return 'Presencial'
+        else:
+            return ''
+
+    def clean_html(self, html_text: str) -> str:
+        """Clean HTML tags from text while preserving line breaks."""
+        if not html_text:
+            return ''
+        
+        # Replace common HTML tags with appropriate text
+        html_text = re.sub(r'<br\s*/?>', '\n', html_text, flags=re.IGNORECASE)
+        html_text = re.sub(r'<p[^>]*>', '\n', html_text, flags=re.IGNORECASE)
+        html_text = re.sub(r'</p>', '\n', html_text, flags=re.IGNORECASE)
+        html_text = re.sub(r'<[^>]+>', '', html_text)
+        
+        # Clean up extra whitespace and line breaks
+        html_text = re.sub(r'\n\s*\n', '\n\n', html_text)
+        html_text = html_text.strip()
+        
+        return html_text
+
     def parse_date(self, date_string: str) -> Optional[str]:
-        """Parse Magneto date format."""
+        """Parse date from various formats to ISO format."""
         if not date_string:
             return None
-
+        
         try:
-            # Common date patterns in Magneto
-            date_patterns = [
-                r'Publicado (\d{1,2}) (\w+) (\d{4})',  # "Publicado 23 Ago 2025"
-                r'(\d{1,2})/(\d{1,2})/(\d{4})',  # DD/MM/YYYY
-                r'(\d{1,2})-(\d{1,2})-(\d{4})',  # DD-MM-YYYY
-                r'hace (\d+) días?',  # "hace X días"
-                r'hace (\d+) horas?',  # "hace X horas"
-                r'(\d{1,2}) (\w+) (\d{4})',  # "23 Ago 2025"
-                r'(\d{1,2}) de (\w+) de (\d{4})',  # "23 de Agosto de 2025"
-                r'(\d{1,2})/(\d{1,2})/(\d{2})',  # DD/MM/YY
-            ]
-
-            # Spanish month mappings
-            month_map = {
-                'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04',
-                'may': '05', 'jun': '06', 'jul': '07', 'ago': '08',
-                'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12',
-                'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
-                'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
-                'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
-            }
-
-            for pattern in date_patterns:
-                match = re.search(pattern, date_string, re.IGNORECASE)
-                if match:
-                    if 'hace' in pattern:
-                        # Handle relative dates
-                        return datetime.today().date().isoformat()
-                    elif len(match.groups()) == 3:
-                        # Handle absolute dates
-                        if pattern == r'Publicado (\d{1,2}) (\w+) (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2}) (\w+) (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2}) de (\w+) de (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2})/(\d{1,2})/(\d{2})':
-                            day, month, year = match.groups()
-                            # Convert 2-digit year to 4-digit
-                            year = f"20{year}" if int(year) < 50 else f"19{year}"
-                        else:
-                            day, month, year = match.groups()
-
-                        # Convert month name to number
-                        month_lower = month.lower()[:3]
-                        if month_lower in month_map:
-                            month_num = month_map[month_lower]
-                            return f"{year}-{month_num}-{day.zfill(2)}"
-
-            # If no pattern matches, return today's date
-            return datetime.today().date().isoformat()
-
+            # If it's already in ISO format (YYYY-MM-DD)
+            if re.match(r'^\d{4}-\d{2}-\d{2}$', date_string):
+                return date_string
+            
+            # Try to parse other formats
+            # Add more date parsing logic here if needed
+            # For now, return as is if it's a valid date string
+            return date_string
+            
         except Exception as e:
             logger.warning(f"Could not parse date '{date_string}': {e}")
-            return datetime.today().date().isoformat()
+            return None
