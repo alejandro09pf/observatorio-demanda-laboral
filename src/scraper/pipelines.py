@@ -14,14 +14,16 @@ class JobPostgresPipeline:
         try:
             self.connection = psycopg2.connect(**DB_PARAMS)
             self.cursor = self.connection.cursor()
+            self.db_connected = True
             logger.info(f"Connected to PostgreSQL database: {DB_PARAMS['database']}")
         except Exception as e:
-            logger.error(f"Failed to connect to database: {e}")
-            raise
+            logger.warning(f"Failed to connect to database: {e}")
+            logger.warning("Spider will run without database storage")
+            self.db_connected = False
 
     def close_spider(self, spider):
         """Close database connection when spider finishes."""
-        if hasattr(self, 'connection'):
+        if hasattr(self, 'connection') and getattr(self, 'db_connected', False):
             self.connection.commit()
             self.cursor.close()
             self.connection.close()
@@ -29,6 +31,10 @@ class JobPostgresPipeline:
 
     def process_item(self, item, spider):
         """Process job item and insert into database."""
+        if not getattr(self, 'db_connected', False):
+            logger.debug(f"Database not connected, skipping storage for: {item.get('title', 'Unknown')}")
+            return item
+            
         # Create content hash for deduplication
         content_string = f"{item.get('title', '')}{item.get('description', '')}{item.get('requirements', '')}"
         content_hash = hashlib.sha256(content_string.encode("utf-8")).hexdigest()
