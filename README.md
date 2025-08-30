@@ -78,15 +78,72 @@ The system follows a **linear pipeline architecture** where each module processe
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-### **Core Modules**
+### **Core Components**
 
-| Module | Purpose | Technology | Output |
-|--------|---------|------------|---------|
-| **Scraper** | Extract job postings from portals | Scrapy + BeautifulSoup | Raw job data |
-| **Extractor** | Identify technical skills | spaCy NER + Regex + ESCO | Skill entities |
-| **LLM Processor** | Enhance and normalize skills | Mistral 7B + OpenAI | Enhanced skills |
-| **Embedder** | Generate skill vectors | E5 Multilingual | 768D embeddings |
-| **Analyzer** | Cluster and analyze skills | UMAP + HDBSCAN | Skill clusters |
+| Component | Purpose | Status | How to Use |
+|-----------|---------|---------|------------|
+| **Orchestrator** | Main CLI controller | ✅ Working | `python -m src.orchestrator` |
+| **Intelligent Scheduler** | Auto-run spiders | ✅ Working | `start-automation` command |
+| **Pipeline Automator** | Auto-process jobs | ✅ Working | Runs automatically |
+| **Scrapy Spiders** | Extract job data | ✅ Working | `run` or `run-once` commands |
+| **ESCO Taxonomy** | Skill classification | ✅ Working | 13,000+ skills loaded |
+| **Skill Extraction** | NER + Regex | ✅ Working | Automatic pipeline |
+| **Database** | PostgreSQL + pgvector | ✅ Working | 123+ jobs stored, 3 migrations applied |
+
+## 🔄 Complete Pipeline Components
+
+| Stage | Component | Status | Implementation | How to Use |
+|-------|-----------|---------|----------------|------------|
+| **1. Scraping** | Scrapy Spiders | ✅ **Complete** | All spiders working, anti-detection | `run-once` or `run` commands |
+| **2. Extraction** | NER + Regex + ESCO | ✅ **Complete** | Automatic pipeline, 123+ jobs processed | `process-jobs` command |
+| **3. LLM Processing** | Mistral 7B + OpenAI | 🔄 **In Development** | Framework ready, models pending | Not yet available |
+| **4. Embedding** | E5 Multilingual | 🔄 **In Development** | Architecture ready, model loading pending | Not yet available |
+| **5. Dimension Reduction** | UMAP | 🔄 **In Development** | Framework ready, implementation pending | Not yet available |
+| **6. Clustering** | HDBSCAN | 🔄 **In Development** | Framework ready, algorithm pending | Not yet available |
+| **7. Visualization** | Static Web Pages | 🔄 **In Development** | Framework ready, templates pending | Not yet available |
+| **8. Reports** | PDF/PNG/CSV | 🔄 **In Development** | Framework ready, generation pending | Not yet available |
+
+## 🔄 Complete Data Pipeline
+
+Your system implements a **comprehensive 8-stage pipeline** for labor market analysis:
+
+```
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│    1.       │ │    2.       │ │    3.       │ │    4.       │
+│  SCRAPING   │ │  EXTRACTION │ │    LLM      │ │  EMBEDDING  │
+│             │ │             │ │ PROCESSING  │ │             │
+│ • Scrapy    │ │ • NER       │ │ • Mistral   │ │ • E5 Model  │
+│ • Selenium  │ │ • Regex     │ │ • OpenAI    │ │ • 768D      │
+│ • Anti-det  │ │ • ESCO Map  │ │ • Normalize │ │ • Batch     │
+└─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
+       │               │               │               │
+       ▼               ▼               ▼               ▼
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│    5.       │ │    6.       │ │    7.       │ │    8.       │
+│ DIMENSION   │ │ CLUSTERING  │ │VISUALIZATION│ │   REPORTS   │
+│ REDUCTION   │ │             │ │             │ │             │
+│ • UMAP      │ │ • HDBSCAN   │ │ • Static    │ │ • PDF/PNG   │
+│ • 2D/3D     │ │ • Skill     │ │ • Web Pages │ │ • CSV/JSON  │
+│ • Preserve  │ │ • Groups    │ │ • Charts    │ │ • Insights  │
+└─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
+```
+
+### **What's Actually Working Right Now**
+
+✅ **Stages 1-2 Complete**: You can scrape jobs and extract skills automatically  
+✅ **Database Ready**: All data structures in place for the full pipeline  
+✅ **Database Schema**: 3 migrations applied (001, 004, 005)  
+✅ **Automation Ready**: System can run 24/7 and process new jobs automatically  
+✅ **ESCO Integration**: 13,000+ skills mapped and searchable  
+
+### **What's Next to Implement**
+
+🔄 **Stage 3**: LLM model loading and skill enhancement  
+🔄 **Stage 4**: E5 embedding model integration  
+🔄 **Stage 5**: UMAP dimension reduction  
+🔄 **Stage 6**: HDBSCAN clustering algorithm  
+🔄 **Stage 7**: Web visualization templates  
+🔄 **Stage 8**: Report generation engine
 
 ## 🚀 Quick Start
 
@@ -115,11 +172,28 @@ pip install -r requirements.txt
 ### **2. Database Setup**
 
 ```bash
+# Start PostgreSQL with Docker (recommended)
+docker-compose up -d postgres
+
+# Wait for database to be ready, then setup schema
+python scripts/setup_database.py
+
+# Import ESCO taxonomy (13,000+ skills)
+python scripts/import_real_esco.py
+```
+
+**Alternative Manual Setup:**
+```bash
 # Install PostgreSQL extensions
 psql -U postgres -c "CREATE EXTENSION IF NOT EXISTS pgvector;"
 
-# Create database and run migrations
+# Run all 3 migrations in order
 psql -U postgres -f src/database/migrations/001_initial_schema.sql
+psql -U postgres -f src/database/migrations/004_add_esco_taxonomy.sql
+psql -U postgres -f src/database/migrations/005_fix_esco_function.sql
+
+# Import ESCO taxonomy data
+python scripts/import_real_esco.py
 ```
 
 ### **3. Environment Configuration**
@@ -132,24 +206,64 @@ cp .env.example .env
 nano .env
 ```
 
-### **4. Run Your First Pipeline**
+### **4. Test the System**
 
 ```bash
-# Scrape jobs from Computrabajo Colombia
-python src/orchestrator.py scrape CO computrabajo --pages 5
+# Check system status
+python -m src.orchestrator status
 
-# Extract skills from scraped jobs
-python src/orchestrator.py extract --batch-size 100
+# List available spiders
+python -m src.orchestrator list-spiders
 
-# Enhance skills using LLM
-python src/orchestrator.py enhance --batch-size 50
+# Test a single spider
+python -m src.orchestrator run-once bumeran CO --limit 5 --max-pages 2
 
-# Generate embeddings
-python src/orchestrator.py embed
+# Check automation system
+python -m src.orchestrator automation-status
+```
 
-# Run analysis and generate reports
-python src/orchestrator.py analyze
-python src/orchestrator.py report --country CO
+## 💻 How to Use the System
+
+### **Manual Spider Execution**
+
+```bash
+# Run a single spider once
+python -m src.orchestrator run-once bumeran CO --limit 10 --max-pages 3
+
+# Run multiple spiders
+python -m src.orchestrator run "bumeran,computrabajo" CO --limit 50 --max-pages 5
+
+# Run with specific parameters
+python -m src.orchestrator run-once infojobs MX --limit 20 --max-pages 2
+```
+
+### **Automated System**
+
+```bash
+# Start the complete automation system
+python -m src.orchestrator start-automation
+
+# Check automation status
+python -m src.orchestrator automation-status
+
+# List scheduled jobs
+python -m src.orchestrator list-jobs
+
+# Check system health
+python -m src.orchestrator health
+
+# Force run a specific job
+python -m src.orchestrator force-job bumeran_CO_cron
+```
+
+### **Pipeline Processing**
+
+```bash
+# Manually process pending jobs through the pipeline
+python -m src.orchestrator process-jobs
+
+# Check what's in the pipeline
+python -m src.orchestrator status
 ```
 
 ## 📚 Documentation
@@ -204,14 +318,14 @@ The system provides a comprehensive CLI through the orchestrator:
 
 ```bash
 # Check system status
-python src/orchestrator.py status
+python -m src.orchestrator status
 
 # Run complete pipeline for a country
-python src/orchestrator.py pipeline CO computrabajo --full
+python -m src.orchestrator run "computrabajo" CO --limit 100 --max-pages 5
 
 # Generate specific analysis
-python src/orchestrator.py analyze --method hdbscan
-python src/orchestrator.py report --format pdf --country MX
+python -m src.orchestrator process-jobs
+python -m src.orchestrator health
 ```
 
 ### **Python API**
