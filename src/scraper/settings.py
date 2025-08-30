@@ -26,8 +26,8 @@ except ImportError:
 # Scrapy project settings
 BOT_NAME = 'labor_observatory'
 
-SPIDER_MODULES = ['scraper.spiders']
-NEWSPIDER_MODULE = 'scraper.spiders'
+SPIDER_MODULES = ['src.scraper.spiders']
+NEWSPIDER_MODULE = 'src.scraper.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -49,8 +49,8 @@ DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 20))
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scraper.middlewares.UserAgentRotationMiddleware': 400,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
-    'scraper.middlewares.ProxyRotationMiddleware': 760,
+    # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
+    # 'scraper.middlewares.ProxyRotationMiddleware': 760,
     'scraper.middlewares.RetryWithBackoffMiddleware': 770,
 }
 
@@ -93,7 +93,7 @@ AUTOTHROTTLE_DEBUG = False
 # Database connection parameters for pipeline
 DB_PARAMS = {
     'host': os.getenv('DB_HOST', 'localhost'),
-    'port': int(os.getenv('DB_PORT', 5432)),
+    'port': int(os.getenv('DB_PORT', 5433)),
     'database': os.getenv('DB_NAME', 'labor_observatory'),
     'user': os.getenv('DB_USER', 'labor_user'),
     'password': os.getenv('DB_PASSWORD', 'your_password'),

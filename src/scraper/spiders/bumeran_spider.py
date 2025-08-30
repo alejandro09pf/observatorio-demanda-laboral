@@ -93,7 +93,24 @@ class BumeranSpider(BaseSpider):
         self.scraped_urls = set()
         
         # Set start URL for search functionality - use the correct URL that works
-        self.start_url = "https://www.bumeran.com.mx/empleos.html"
+        if self.country == "CO":
+            self.start_url = "https://www.bumeran.com.co/empleos.html"
+        elif self.country == "MX":
+            self.start_url = "https://www.bumeran.com.mx/empleos.html"
+        elif self.country == "AR":
+            self.start_url = "https://www.bumeran.com.ar/empleos.html"
+        elif self.country == "CL":
+            self.start_url = "https://www.bumeran.cl/empleos.html"
+        elif self.country == "PE":
+            self.start_url = "https://www.bumeran.com.pe/empleos.html"
+        elif self.country == "EC":
+            self.start_url = "https://www.bumeran.com.ec/empleos.html"
+        elif self.country == "PA":
+            self.start_url = "https://www.bumeran.com.pa/empleos.html"
+        elif self.country == "UY":
+            self.start_url = "https://www.bumeran.com.uy/empleos.html"
+        else:
+            self.start_url = "https://www.bumeran.com.co/empleos.html"
     
     def setup_driver(self):
         """Setup Chrome WebDriver with appropriate options."""
