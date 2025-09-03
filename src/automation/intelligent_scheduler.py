@@ -291,12 +291,19 @@ class IntelligentScheduler:
             project_dir = Path(__file__).parent.parent.parent
             os.chdir(project_dir)
             
+            # Set orchestrator execution flags
+            env = os.environ.copy()
+            env["ORCHESTRATOR_EXECUTION"] = "1"
+            env["SCRAPY_ORCHESTRATOR_RUN"] = "1"
+            env["ORCHESTRATOR_MODE"] = "1"
+            
             # Start subprocess
             process = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                env=env
             )
             
             # Store running job

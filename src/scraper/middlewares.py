@@ -63,13 +63,16 @@ class UserAgentRotationMiddleware(UserAgentMiddleware):
 
 
 class ProxyRotationMiddleware:
-    """Proxy rotation middleware with authentication support."""
+    """Enhanced proxy rotation middleware with portal-specific strategies."""
     
     def __init__(self):
         self.proxies = self._load_proxies()
         self.current_index = 0
         self.rotation_strategy = os.getenv('PROXY_ROTATION_STRATEGY', 'round_robin')
-    
+        self.proxy_config = self._load_proxy_config()
+        self.proxy_failures = {}  # Track failures per proxy
+        self.portal_stats = {}    # Track usage per portal
+        
     def _load_proxies(self):
         """Load proxies from environment variable."""
         proxy_pool = os.getenv('PROXY_POOL', '')
@@ -77,24 +80,127 @@ class ProxyRotationMiddleware:
             return [proxy.strip() for proxy in proxy_pool.split(',') if proxy.strip()]
         return []
     
-    def process_request(self, request, spider):
-        """Set proxy for request if available."""
-        if not self.proxies:
+    def _load_proxy_config(self):
+        """Load proxy configuration from YAML file."""
+        try:
+            import yaml
+            config_file = os.getenv('PROXY_CONFIG_PATH', './config/proxies.yaml')
+            if os.path.exists(config_file):
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    return yaml.safe_load(f)
+        except Exception as e:
+            logger.warning(f"Could not load proxy config: {e}")
+        return {}
+    
+    def _get_portal_config(self, spider):
+        """Get portal-specific proxy configuration."""
+        portal = getattr(spider, 'portal', getattr(spider, 'name', 'default'))
+        portal_config = self.proxy_config.get('portal_config', {}).get(portal, {})
+        
+        if not portal_config:
+            # Use default configuration
+            global_settings = self.proxy_config.get('global_settings', {})
+            portal_config = {
+                'pool': global_settings.get('default_pool', 'standard'),
+                'rotation_strategy': global_settings.get('default_rotation', 'per_request'),
+                'timeout': global_settings.get('default_timeout', 20),
+                'max_retries': global_settings.get('default_max_retries', 3)
+            }
+        
+        return portal_config
+    
+    def _get_proxy_pool(self, pool_name):
+        """Get proxy pool by name."""
+        pools = self.proxy_config.get('proxy_pools', {})
+        if pool_name in pools:
+            return pools[pool_name]['proxies']
+        return self.proxies  # Fallback to environment variable
+    
+    def _select_proxy(self, spider, request):
+        """Select appropriate proxy based on portal configuration."""
+        portal_config = self._get_portal_config(spider)
+        pool_name = portal_config.get('pool', 'standard')
+        rotation_strategy = portal_config.get('rotation_strategy', 'per_request')
+        
+        # Get available proxies for this pool
+        available_proxies = self._get_proxy_pool(pool_name)
+        if not available_proxies:
             return None
         
-        if self.rotation_strategy == 'round_robin':
-            proxy = self.proxies[self.current_index % len(self.proxies)]
-            self.current_index += 1
-        else:  # random
-            proxy = random.choice(self.proxies)
+        # Filter out failed proxies
+        working_proxies = [p for p in available_proxies if self.proxy_failures.get(p, 0) < 3]
+        if not working_proxies:
+            working_proxies = available_proxies  # Reset if all failed
         
-        request.meta['proxy'] = proxy
-        logger.debug(f"Using proxy: {proxy}")
+        # Select proxy based on rotation strategy
+        if rotation_strategy == 'per_request':
+            # Random selection for each request
+            proxy = random.choice(working_proxies)
+        elif rotation_strategy == 'per_page':
+            # Round-robin per page
+            page = request.meta.get('page', 1)
+            proxy = working_proxies[page % len(working_proxies)]
+        else:
+            # Default round-robin
+            proxy = working_proxies[self.current_index % len(working_proxies)]
+            self.current_index += 1
+        
+        # Track usage
+        self._track_proxy_usage(spider, proxy)
+        return proxy
+    
+    def _track_proxy_usage(self, spider, proxy):
+        """Track proxy usage statistics."""
+        portal = getattr(spider, 'portal', getattr(spider, 'name', 'unknown'))
+        if portal not in self.portal_stats:
+            self.portal_stats[portal] = {'total_requests': 0, 'proxy_usage': {}}
+        
+        self.portal_stats[portal]['total_requests'] += 1
+        if proxy not in self.portal_stats[portal]['proxy_usage']:
+            self.portal_stats[portal]['proxy_usage'][proxy] = 0
+        self.portal_stats[portal]['proxy_usage'][proxy] += 1
+    
+    def process_request(self, request, spider):
+        """Set proxy for request based on portal configuration."""
+        if not self.proxies and not self.proxy_config:
+            return None
+        
+        proxy = self._select_proxy(spider, request)
+        if proxy:
+            request.meta['proxy'] = proxy
+            request.meta['proxy_config'] = self._get_portal_config(spider)
+            logger.debug(f"Using proxy {proxy} for {spider.name}")
+        
         return None
+    
+    def process_response(self, request, response, spider):
+        """Handle proxy failures and retries."""
+        proxy = request.meta.get('proxy')
+        if proxy and response.status in [403, 407, 429, 500, 502, 503, 504]:
+            # Proxy failed, mark it
+            self.proxy_failures[proxy] = self.proxy_failures.get(proxy, 0) + 1
+            logger.warning(f"Proxy {proxy} failed for {spider.name}, status: {response.status}")
+            
+            # Check if we should retry with new proxy
+            portal_config = self._get_portal_config(spider)
+            if portal_config.get('retry_with_new_proxy', True):
+                # Create retry request with new proxy
+                retry_req = request.copy()
+                retry_req.dont_filter = True
+                retry_req.meta['proxy'] = self._select_proxy(spider, request)
+                if retry_req.meta['proxy']:
+                    logger.info(f"Retrying request with new proxy: {retry_req.meta['proxy']}")
+                    return retry_req
+        
+        return response
 
 
 class RetryWithBackoffMiddleware(RetryMiddleware):
     """Custom retry middleware with exponential backoff."""
+    
+    # Define exceptions that should trigger retries
+    EXCEPTIONS_TO_RETRY = (IOError, OSError, ConnectionError, ConnectionRefusedError, 
+                           ConnectionAbortedError, ConnectionResetError, TimeoutError)
     
     def __init__(self, settings):
         super().__init__(settings)

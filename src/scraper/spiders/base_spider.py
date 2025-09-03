@@ -37,6 +37,15 @@ class BaseSpider(scrapy.Spider, ABC):
         if self.country not in ['CO', 'MX', 'AR', 'CL', 'PE', 'EC', 'PA', 'UY']:
             raise ValueError(f"Unsupported country: {self.country}")
     
+    def _is_orchestrator_execution(self):
+        """Check if spider is running through orchestrator."""
+        import os
+        return (
+            'ORCHESTRATOR_EXECUTION' in os.environ or
+            'SCRAPY_ORCHESTRATOR_RUN' in os.environ or
+            'ORCHESTRATOR_MODE' in os.environ
+        )
+    
     def parse_job(self, response) -> JobItem:
         """Parse individual job posting. Must be implemented by subclasses."""
         raise NotImplementedError("Subclasses must implement parse_job method")
@@ -123,6 +132,14 @@ class BaseSpider(scrapy.Spider, ABC):
     
     def start_requests(self):
         """Start requests for the spider."""
+        # Check execution lock BEFORE starting requests
+        if not self._is_orchestrator_execution():
+            raise RuntimeError(
+                f"This spider '{self.__class__.__name__}' can only be executed through the orchestrator.\n"
+                f"Use: python -m src.orchestrator run-once {self.__class__.__name__.lower()} --country <COUNTRY>\n"
+                f"Or: python -m src.orchestrator run {self.__class__.__name__.lower()} --country <COUNTRY>"
+            )
+        
         logger.info(f"Starting {self.name} spider for {self.country}/{self.portal}")
         
         for url in self.start_urls:

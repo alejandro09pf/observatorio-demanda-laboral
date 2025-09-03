@@ -154,6 +154,11 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int) -> 
         # Set PYTHONPATH to include src/
         env = os.environ.copy()
         env["PYTHONPATH"] = str(project_dir / "src")
+        
+        # Set orchestrator execution flags
+        env["ORCHESTRATOR_EXECUTION"] = "1"
+        env["SCRAPY_ORCHESTRATOR_RUN"] = "1"
+        env["ORCHESTRATOR_MODE"] = "1"
 
         # Run scrapy command and capture output
         result = subprocess.run(

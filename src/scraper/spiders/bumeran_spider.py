@@ -1,6 +1,6 @@
 """
 Bumeran spider for Labor Market Observatory.
-Scrapes job postings from bumeran.com
+Scrapes job listings from https://www.bumeran.com.mx/empleos.html using Selenium for React rendering.
 """
 
 import scrapy
@@ -18,73 +18,26 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
-import json
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 logger = logging.getLogger(__name__)
 
 class BumeranSpider(BaseSpider):
-    """Spider for Bumeran job portal."""
+    """Spider for Bumeran job portal - Mexico jobs."""
     
     name = "bumeran"
-    allowed_domains = ["bumeran.com"]
+    allowed_domains = ["bumeran.com.mx"]
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.portal = "bumeran"
         
-        # Set start URLs based on country with specific job categories
-        if self.country == "CO":
-            self.start_urls = [
-                "https://www.bumeran.com.co/empleos",
-                "https://www.bumeran.com.co/empleos/sistemas-y-tecnologia",
-                "https://www.bumeran.com.co/empleos/administracion",
-                "https://www.bumeran.com.co/empleos/ventas"
-            ]
-        elif self.country == "MX":
-            self.start_urls = [
-                "https://www.bumeran.com.mx/empleos",
-                "https://www.bumeran.com.mx/empleos/sistemas-y-tecnologia",
-                "https://www.bumeran.com.mx/empleos/administracion",
-                "https://www.bumeran.com.mx/empleos/ventas"
-            ]
-        elif self.country == "AR":
-            self.start_urls = [
-                "https://www.bumeran.com.ar/empleos",
-                "https://www.bumeran.com.ar/empleos/sistemas-y-tecnologia",
-                "https://www.bumeran.com.ar/empleos/administracion",
-                "https://www.bumeran.com.ar/empleos/ventas"
-            ]
-        elif self.country == "CL":
-            self.start_urls = [
-                "https://www.bumeran.cl/empleos",
-                "https://www.bumeran.cl/empleos/sistemas-y-tecnologia"
-            ]
-        elif self.country == "PE":
-            self.start_urls = [
-                "https://www.bumeran.com.pe/empleos",
-                "https://www.bumeran.com.pe/empleos/sistemas-y-tecnologia"
-            ]
-        elif self.country == "EC":
-            self.start_urls = [
-                "https://www.bumeran.com.ec/empleos",
-                "https://www.bumeran.com.ec/empleos/sistemas-y-tecnologia"
-            ]
-        elif self.country == "PA":
-            self.start_urls = [
-                "https://www.bumeran.com.pa/empleos",
-                "https://www.bumeran.com.pa/empleos/sistemas-y-tecnologia"
-            ]
-        elif self.country == "UY":
-            self.start_urls = [
-                "https://www.bumeran.com.uy/empleos",
-                "https://www.bumeran.com.uy/empleos/sistemas-y-tecnologia"
-            ]
+        # Force Mexico as specified
+        self.country = "MX"
         
-        # Override custom settings for this spider
-        self.custom_settings.update({
-            'DOWNLOAD_DELAY': 2,
-            'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
-        })
+        # Base URL for Mexico
+        self.base_url = "https://www.bumeran.com.mx/empleos.html"
         
         # Selenium setup
         self.driver = None
@@ -92,70 +45,104 @@ class BumeranSpider(BaseSpider):
         self.page_load_timeout = 30
         self.scraped_urls = set()
         
-        # Set start URL for search functionality - use the correct URL that works
-        if self.country == "CO":
-            self.start_url = "https://www.bumeran.com.co/empleos.html"
-        elif self.country == "MX":
-            self.start_url = "https://www.bumeran.com.mx/empleos.html"
-        elif self.country == "AR":
-            self.start_url = "https://www.bumeran.com.ar/empleos.html"
-        elif self.country == "CL":
-            self.start_url = "https://www.bumeran.cl/empleos.html"
-        elif self.country == "PE":
-            self.start_url = "https://www.bumeran.com.pe/empleos.html"
-        elif self.country == "EC":
-            self.start_url = "https://www.bumeran.com.ec/empleos.html"
-        elif self.country == "PA":
-            self.start_url = "https://www.bumeran.com.pa/empleos.html"
-        elif self.country == "UY":
-            self.start_url = "https://www.bumeran.com.uy/empleos.html"
-        else:
-            self.start_url = "https://www.bumeran.com.co/empleos.html"
+        # Override custom settings for this spider
+        self.custom_settings.update({
+            'DOWNLOAD_DELAY': 3,  # Conservative delay to avoid detection
+            'CONCURRENT_REQUESTS_PER_DOMAIN': 1,  # Single request at a time for Selenium
+        })
     
     def setup_driver(self):
-        """Setup Chrome WebDriver with appropriate options."""
+        """Setup Chrome WebDriver with advanced anti-detection for Cloudflare bypass."""
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        
+        # Advanced anti-detection options
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-plugins-discovery")
+        chrome_options.add_argument("--disable-web-security")
+        chrome_options.add_argument("--allow-running-insecure-content")
+        chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+        chrome_options.add_argument("--disable-ipc-flooding-protection")
+        
+        # User agent that looks more human
         chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
         
         # Anti-detection flags
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
+        chrome_options.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.notifications": 2,
+            "profile.managed_default_content_settings.images": 2,
+            "profile.default_content_setting_values.media_stream": 2,
+        })
+        
+        # Get proxy from orchestrator
+        proxy = self.get_proxy()
+        if proxy:
+            chrome_options.add_argument(f'--proxy-server={proxy}')
+            logger.info(f"Using proxy: {proxy}")
         
         try:
-            self.driver = webdriver.Chrome(options=chrome_options)
+            # Use webdriver-manager for automatic ChromeDriver management
+            service = Service(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            
+            # Execute advanced anti-detection scripts
             self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            self.driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]})")
+            self.driver.execute_script("Object.defineProperty(navigator, 'languages', {get: () => ['es-MX', 'es', 'en']})")
+            self.driver.execute_script("Object.defineProperty(navigator, 'permissions', {get: () => {query: () => Promise.resolve({state: 'granted'})}})")
+            self.driver.execute_script("Object.defineProperty(navigator, 'platform', {get: () => 'Win32'})")
+            self.driver.execute_script("Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8})")
+            self.driver.execute_script("Object.defineProperty(navigator, 'deviceMemory', {get: () => 8})")
+            
+            # Set window properties
+            self.driver.execute_script("Object.defineProperty(screen, 'width', {get: () => 1920})")
+            self.driver.execute_script("Object.defineProperty(screen, 'height', {get: () => 1080})")
+            self.driver.execute_script("Object.defineProperty(screen, 'availWidth', {get: () => 1920})")
+            self.driver.execute_script("Object.defineProperty(screen, 'availHeight', {get: () => 1040})")
+            
             self.driver.set_page_load_timeout(self.page_load_timeout)
             return True
+            
         except Exception as e:
             logger.error(f"Error setting up Chrome driver: {e}")
             return False
     
+    def get_proxy(self):
+        """Get proxy from orchestrator's proxy service."""
+        try:
+            # This should call your orchestrator's proxy service
+            # For now, we'll use the proxy middleware
+            return None  # Let middleware handle proxy rotation
+        except Exception as e:
+            logger.warning(f"Could not get proxy: {e}")
+            return None
+    
     def start_requests(self):
         """Start requests by initializing Selenium and navigating to the start URL."""
+        # Check execution lock BEFORE starting requests
+        if not self._is_orchestrator_execution():
+            raise RuntimeError(
+                f"This spider '{self.__class__.__name__}' can only be executed through the orchestrator.\n"
+                f"Use: python -m src.orchestrator run-once {self.__class__.__name__.lower()} --country <COUNTRY>\n"
+                f"Or: python -m src.orchestrator run {self.__class__.__name__.lower()} --country <COUNTRY>"
+            )
+        
         if not self.setup_driver():
             logger.error("Failed to setup Selenium driver")
             return
         
-        logger.info(f"Starting Bumeran spider for country: {self.country}")
-        logger.info(f"Start URL: {self.start_url}")
+        logger.info(f"Starting Bumeran spider for Mexico")
+        logger.info(f"Base URL: {self.base_url}")
         
-        # Navigate to start URL
-        try:
-            self.driver.get(self.start_url)
-            time.sleep(5)  # Wait for initial load
-            
-            # Start scraping from page 1
-            for item in self.parse_search_results_page(1):
-                yield item
-            
-        except Exception as e:
-            logger.error(f"Error navigating to start URL: {e}")
-            self.cleanup_driver()
+        # Start scraping from page 1
+        for item in self.parse_search_results_page(1):
+            yield item
     
     def cleanup_driver(self):
         """Clean up Selenium WebDriver."""
@@ -170,25 +157,6 @@ class BumeranSpider(BaseSpider):
     def closed(self, reason):
         """Called when spider is closed."""
         self.cleanup_driver()
-        self.save_scraping_summary()
-    
-    def save_scraping_summary(self):
-        """Save scraping summary to JSON file."""
-        summary = {
-            "spider": self.name,
-            "country": self.country,
-            "start_time": getattr(self, 'start_time', None),
-            "end_time": datetime.now().isoformat(),
-            "total_jobs_scraped": len(self.scraped_urls),
-            "scraped_urls": list(self.scraped_urls)
-        }
-        
-        try:
-            with open(f"outputs/bumeran_scraping_summary.json", "w", encoding="utf-8") as f:
-                json.dump(summary, f, indent=2, ensure_ascii=False)
-            logger.info(f"Scraping summary saved to outputs/bumeran_scraping_summary.json")
-        except Exception as e:
-            logger.error(f"Error saving scraping summary: {e}")
     
     def parse_search_results_page(self, page):
         """Parse search results page using Selenium."""
@@ -197,145 +165,74 @@ class BumeranSpider(BaseSpider):
         try:
             # Navigate to the page
             if page == 1:
-                url = self.start_url
+                url = self.base_url
             else:
-                url = f"{self.start_url}?page={page}"
+                url = f"{self.base_url}?page={page}"
             
+            logger.info(f"Navigating to: {url}")
             self.driver.get(url)
-            time.sleep(5)  # Wait for page load
             
-            # If this is page 1 and no job cards found, try to perform a search
-            if page == 1:
-                logger.info("Attempting to perform search to find job listings...")
-                if self.perform_search():
-                    time.sleep(5)  # Wait for search results to load
-            
-            # Wait for content to load
-            wait = WebDriverWait(self.driver, self.wait_timeout)
-            
-            # Find job links directly - simpler approach based on actual site structure
-            job_links = []
-            
-            # First try to find all links with job-related hrefs
-            all_links = self.driver.find_elements(By.CSS_SELECTOR, "a[href*='empleo']")
-            logger.info(f"Found {len(all_links)} total links with 'empleo'")
-            
-            # Filter for actual job postings
-            for link in all_links:
-                try:
-                    href = link.get_attribute('href')
-                    text = link.text.strip()
-                    
-                    # Skip navigation/filter links
-                    if any(nav_pattern in href for nav_pattern in [
-                        'seniority-', 'landing-', 'relevantes=true', 'recientes=true',
-                        'empleos-seniority-', 'empleos.html?', 'page='
-                    ]):
-                        continue
-                    
-                    # Only include actual job postings
-                    if (href.endswith('.html') and 
-                        '/empleos/' in href and 
-                        len(text) > 10 and
-                        not href.endswith('empleos.html')):
-                        job_links.append(link)
-                
-                except Exception as e:
-                    logger.debug(f"Error processing link: {e}")
-                    continue
-            
-            logger.info(f"Found {len(job_links)} actual job postings")
-            
-            if not job_links:
-                logger.warning(f"No job links found on page {page}")
+            # Handle Cloudflare challenge and wait for page to load
+            if not self.wait_for_page_load():
+                logger.error(f"Failed to load page {page} - Cloudflare protection or timeout")
                 return
             
-            # Process job links
-            job_data_list = []
-            for i, job_link in enumerate(job_links):
+            # Wait for job cards to load
+            wait = WebDriverWait(self.driver, self.wait_timeout)
+            
+            try:
+                # Wait for article elements (job cards) to appear
+                job_cards = wait.until(
+                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "article"))
+                )
+                logger.info(f"Found {len(job_cards)} job cards on page {page}")
+                
+            except TimeoutException:
+                logger.warning(f"No job cards found on page {page} - page may be empty")
+                return
+            
+            if not job_cards:
+                logger.warning(f"No job cards found on page {page}")
+                return
+            
+            # Process each job card
+            for i, job_card in enumerate(job_cards):
                 try:
-                    # Extract job URL and title directly from the link
-                    job_url = job_link.get_attribute('href')
-                    job_title = job_link.text.strip()
-                    
-                    if not job_url or not job_title:
-                        continue
-                    
-                    # Skip if already scraped
-                    if job_url in self.scraped_urls:
-                        continue
-                    
-                    # Extract basic info from the link text (which contains the job info)
-                    # The link text contains: "Publicado X días\nJob Title\nCompany\nDescription..."
-                    lines = job_title.split('\n')
-                    
-                    # Extract company and location from the text
-                    company = ""
-                    location = ""
-                    description = ""
-                    
-                    if len(lines) >= 3:
-                        # Skip the first line (posted date)
-                        job_title_clean = lines[1] if len(lines) > 1 else job_title
-                        company = lines[2] if len(lines) > 2 else ""
+                    job_data = self.extract_job_from_card(job_card)
+                    if job_data and job_data['url'] not in self.scraped_urls:
+                        # Mark as scraped
+                        self.scraped_urls.add(job_data['url'])
                         
-                        # Look for location in the text (usually at the end)
-                        for line in lines:
-                            if any(loc_indicator in line.lower() for loc_indicator in ['mexico', 'cdmx', 'distrito federal', 'estado de mexico', 'jalisco', 'nuevo leon']):
-                                location = line.strip()
-                                break
+                        # Get detailed job information
+                        detailed_job = self.get_job_details(job_data['url'])
+                        if detailed_job:
+                            # Merge basic and detailed info
+                            job_data.update(detailed_job)
+                            
+                            # Create JobItem
+                            item = JobItem()
+                            item['portal'] = self.portal
+                            item['country'] = self.country
+                            item['url'] = job_data['url']
+                            item['title'] = job_data.get('title', '')
+                            item['company'] = job_data.get('company', '')
+                            item['location'] = job_data.get('location', '')
+                            item['description'] = job_data.get('description', '')
+                            item['requirements'] = job_data.get('requirements', '')
+                            item['salary_raw'] = job_data.get('salary_raw', None)
+                            item['contract_type'] = job_data.get('contract_type', '')
+                            item['remote_type'] = job_data.get('remote_type', '')
+                            item['posted_date'] = job_data.get('posted_date')
+                            
+                            # Validate item
+                            if self.validate_job_item(item):
+                                yield item
+                                logger.info(f"✅ Successfully scraped job: {item['title'][:50]}...")
+                            else:
+                                logger.warning(f"Invalid job item: {item['title']}")
                         
-                        # Description is usually the longer text
-                        description_lines = [line for line in lines if len(line) > 50]
-                        if description_lines:
-                            description = description_lines[0][:200] + "..." if len(description_lines[0]) > 200 else description_lines[0]
-                    
-                    job_data = {
-                        'url': job_url,
-                        'title': job_title_clean if 'job_title_clean' in locals() else job_title,
-                        'company': company,
-                        'location': location,
-                        'description': description
-                    }
-                    
-                    job_data_list.append(job_data)
-                    self.scraped_urls.add(job_url)
-                    
                 except Exception as e:
                     logger.error(f"Error processing job card {i}: {e}")
-                    continue
-            
-            # Process each job to get detailed information
-            for job_data in job_data_list:
-                try:
-                    detailed_job = self.get_job_details(job_data['url'])
-                    if detailed_job:
-                        # Merge basic and detailed info
-                        job_data.update(detailed_job)
-                        
-                        # Create JobItem
-                        item = JobItem()
-                        item['portal'] = 'bumeran'
-                        item['country'] = self.country
-                        item['url'] = job_data['url']
-                        item['title'] = job_data.get('title', '')
-                        item['company'] = job_data.get('company', '')
-                        item['location'] = job_data.get('location', '')
-                        item['description'] = job_data.get('description', '')
-                        item['requirements'] = job_data.get('requirements', '')
-                        item['salary_raw'] = job_data.get('salary_raw', '')
-                        item['contract_type'] = job_data.get('contract_type', '')
-                        item['remote_type'] = job_data.get('remote_type', '')
-                        item['posted_date'] = job_data.get('posted_date')
-                        
-                        # Validate item
-                        if self.validate_job_item(item):
-                            yield item
-                        else:
-                            logger.warning(f"Invalid job item: {item['title']}")
-                    
-                except Exception as e:
-                    logger.error(f"Error getting job details for {job_data['url']}: {e}")
                     continue
             
             # Check for next page
@@ -348,269 +245,145 @@ class BumeranSpider(BaseSpider):
         except Exception as e:
             logger.error(f"Error parsing search results page {page}: {e}")
     
-    def perform_search(self):
-        """Perform a search to find job listings."""
+    def extract_job_from_card(self, job_card):
+        """Extract basic job information from job card."""
         try:
-            logger.info("Looking for search input...")
+            job_data = {}
             
-            # Look for search input
-            search_selectors = [
-                "input[type='text']",
-                "input[placeholder*='empleo']",
-                "input[placeholder*='trabajo']",
-                "input[placeholder*='puesto']",
-                "input[placeholder*='buscar']",
-                ".search-input",
-                "#busqueda",
-                "input"
-            ]
-            
-            search_input = None
-            for selector in search_selectors:
-                try:
-                    inputs = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    if inputs:
-                        for inp in inputs:
-                            try:
-                                placeholder = inp.get_attribute('placeholder')
-                                if placeholder and any(keyword in placeholder.lower() for keyword in ['empleo', 'trabajo', 'puesto', 'buscar']):
-                                    search_input = inp
-                                    logger.info(f"Found search input: {placeholder}")
-                                    break
-                            except:
-                                continue
-                        if search_input:
-                            break
-                except Exception as e:
-                    logger.debug(f"Selector '{selector}' failed: {e}")
-                    continue
-            
-            if not search_input:
-                logger.warning("No search input found")
-                return False
-            
-            # Perform search
+            # Extract title and URL from article h2 a
             try:
-                # Clear the input
-                search_input.clear()
-                time.sleep(1)
-                
-                # Type a search term
-                search_term = "desarrollador"
-                search_input.send_keys(search_term)
-                logger.info(f"Typed search term: {search_term}")
-                time.sleep(2)
-                
-                # Press Enter to search
-                from selenium.webdriver.common.keys import Keys
-                search_input.send_keys(Keys.RETURN)
-                logger.info("Pressed Enter to search")
-                time.sleep(5)
-                
-                # Check if URL changed
-                logger.info(f"URL after search: {self.driver.current_url}")
-                return True
-                
-            except Exception as e:
-                logger.error(f"Error performing search: {e}")
-                return False
-                
+                title_link = job_card.find_element(By.CSS_SELECTOR, "h2 a")
+                job_data['title'] = title_link.text.strip()
+                job_data['url'] = title_link.get_attribute("href")
+            except NoSuchElementException:
+                logger.warning("Could not find title/link in job card")
+                return None
+            
+            # Extract company from article a[href*="/empresas/"]
+            try:
+                company_link = job_card.find_element(By.CSS_SELECTOR, "a[href*='/empresas/']")
+                job_data['company'] = company_link.text.strip()
+            except NoSuchElementException:
+                job_data['company'] = ""
+            
+            # Extract location from [aria-label="location"]
+            try:
+                location_elem = job_card.find_element(By.CSS_SELECTOR, "[aria-label='location']")
+                job_data['location'] = location_elem.text.strip()
+            except NoSuchElementException:
+                job_data['location'] = ""
+            
+            # Extract short description from first <p> inside the card
+            try:
+                desc_elem = job_card.find_element(By.CSS_SELECTOR, "p")
+                job_data['description'] = desc_elem.text.strip()
+            except NoSuchElementException:
+                job_data['description'] = ""
+            
+            logger.info(f"Extracted from card: {job_data['title'][:50]}... - {job_data['company']}")
+            return job_data
+            
         except Exception as e:
-            logger.error(f"Error in perform_search: {e}")
-            return False
-    
-    def extract_company_from_card(self, job_card):
-        """Extract company name from job card."""
-        company_selectors = [
-            "div:nth-of-type(2) span",
-            "a[href*='/empresas/']",
-            ".company",
-            ".employer",
-            "span[class*='company']",
-            "span"
-        ]
-        
-        for selector in company_selectors:
-            try:
-                company_elem = job_card.find_element(By.CSS_SELECTOR, selector)
-                company_text = company_elem.text.strip()
-                if company_text and len(company_text) > 2:
-                    return company_text
-            except NoSuchElementException:
-                continue
-        
-        return ""
-    
-    def extract_location_from_card(self, job_card):
-        """Extract location from job card."""
-        location_selectors = [
-            "[aria-label='location']",
-            ".location",
-            ".place",
-            ".city",
-            "span[class*='location']",
-            "span"
-        ]
-        
-        for selector in location_selectors:
-            try:
-                location_elem = job_card.find_element(By.CSS_SELECTOR, selector)
-                location_text = location_elem.text.strip()
-                if location_text and len(location_text) > 2:
-                    return location_text
-            except NoSuchElementException:
-                continue
-        
-        return ""
-    
-    def extract_description_from_card(self, job_card):
-        """Extract description from job card."""
-        desc_selectors = [
-            "p",
-            ".description",
-            ".summary",
-            "div[class*='description']"
-        ]
-        
-        for selector in desc_selectors:
-            try:
-                desc_elem = job_card.find_element(By.CSS_SELECTOR, selector)
-                desc_text = desc_elem.text.strip()
-                if desc_text and len(desc_text) > 20:
-                    return desc_text
-            except NoSuchElementException:
-                continue
-        
-        return ""
+            logger.error(f"Error extracting job from card: {e}")
+            return None
     
     def get_job_details(self, job_url):
         """Get detailed job information from job detail page."""
         try:
             logger.info(f"Getting job details: {job_url}")
             
+            # Navigate to job detail page
             self.driver.get(job_url)
             time.sleep(3)  # Wait for page load
             
+            # Wait for h1 to appear (main job title)
+            wait = WebDriverWait(self.driver, self.wait_timeout)
+            try:
+                h1_elem = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "h1")))
+            except TimeoutException:
+                logger.warning(f"Timeout waiting for h1 on {job_url}")
+                return {}
+            
             job_details = {}
             
-            # Extract title
-            title_selectors = ["h1", ".job-title", ".title"]
-            for selector in title_selectors:
-                try:
-                    title_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    job_details['title'] = title_elem.text.strip()
-                    break
-                except NoSuchElementException:
-                    continue
+            # Extract title from h1
+            job_details['title'] = h1_elem.text.strip()
             
-            # Extract company
-            company_selectors = ["h1 + div span", ".company", ".employer"]
-            for selector in company_selectors:
-                try:
-                    company_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    job_details['company'] = company_elem.text.strip()
-                    break
-                except NoSuchElementException:
-                    continue
+            # Extract company from h1 + div a
+            try:
+                company_elem = self.driver.find_element(By.CSS_SELECTOR, "h1 + div a")
+                job_details['company'] = company_elem.text.strip()
+            except NoSuchElementException:
+                job_details['company'] = ""
             
-            # Extract posted date
-            date_selectors = ["time", "span[aria-label='Publicado']", ".date", ".posted"]
-            for selector in date_selectors:
-                try:
-                    date_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    date_text = date_elem.text.strip()
-                    job_details['posted_date'] = self.parse_date(date_text)
-                    break
-                except NoSuchElementException:
-                    continue
+            # Extract posted date from span[aria-label="Publicado"]
+            try:
+                date_elem = self.driver.find_element(By.CSS_SELECTOR, "span[aria-label='Publicado']")
+                date_text = date_elem.text.strip()
+                job_details['posted_date'] = self.parse_date(date_text)
+            except NoSuchElementException:
+                job_details['posted_date'] = datetime.today().date().isoformat()
             
-            # Extract location
-            location_selectors = ["div[aria-label='location']", ".location", ".place"]
-            for selector in location_selectors:
-                try:
-                    location_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    job_details['location'] = location_elem.text.strip()
-                    break
-                except NoSuchElementException:
-                    continue
+            # Extract location from div[aria-label="location"]
+            try:
+                location_elem = self.driver.find_element(By.CSS_SELECTOR, "div[aria-label='location']")
+                job_details['location'] = location_elem.text.strip()
+            except NoSuchElementException:
+                job_details['location'] = ""
             
-            # Extract description
-            desc_selectors = [
-                ".description",
-                ".job-description",
-                "div[class*='description']",
-                "section h2 + div",
-                "div[class*='desc']"
-            ]
-            for selector in desc_selectors:
-                try:
-                    desc_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    job_details['description'] = desc_elem.text.strip()
-                    break
-                except NoSuchElementException:
-                    continue
+            # Extract description from section h2:contains("Descripción del puesto") + div
+            try:
+                desc_section = self.driver.find_element(By.XPATH, "//section//h2[contains(text(), 'Descripción del puesto')]")
+                desc_div = desc_section.find_element(By.XPATH, "following-sibling::div[1]")
+                job_details['description'] = desc_div.text.strip()
+            except NoSuchElementException:
+                job_details['description'] = ""
             
-            # Extract requirements
-            req_selectors = [
-                ".requirements",
-                ".skills",
-                "section h2 + ul",
-                "ul[class*='requirement']",
-                "ul[class*='skill']"
-            ]
-            requirements_parts = []
-            for selector in req_selectors:
-                try:
-                    req_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    requirements_parts.append(req_elem.text.strip())
-                except NoSuchElementException:
-                    continue
+            # Extract requirements from section h3:contains("Requisitos") + ul
+            try:
+                req_section = self.driver.find_element(By.XPATH, "//section//h3[contains(text(), 'Requisitos')]")
+                req_ul = req_section.find_element(By.XPATH, "following-sibling::ul[1]")
+                job_details['requirements'] = req_ul.text.strip()
+            except NoSuchElementException:
+                job_details['requirements'] = ""
             
-            if requirements_parts:
-                job_details['requirements'] = " ".join(requirements_parts)
+            # Extract contract type from section li:contains("Por")
+            try:
+                contract_li = self.driver.find_element(By.XPATH, "//section//li[contains(text(), 'Por')]")
+                job_details['contract_type'] = contract_li.text.strip()
+            except NoSuchElementException:
+                job_details['contract_type'] = ""
             
-            # Extract contract type
-            contract_selectors = [
-                ".contract-type",
-                ".type",
-                "section li",
-                "li[class*='contract']",
-                "li[class*='type']"
-            ]
-            for selector in contract_selectors:
-                try:
-                    contract_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    job_details['contract_type'] = contract_elem.text.strip()
-                    break
-                except NoSuchElementException:
-                    continue
+            # Extract remote type from section li:contains("Remoto"), "Presencial", "Híbrido"
+            remote_type = ""
+            try:
+                # Look for remote type indicators
+                remote_indicators = ["Remoto", "Presencial", "Híbrido"]
+                for indicator in remote_indicators:
+                    try:
+                        remote_li = self.driver.find_element(By.XPATH, f"//section//li[contains(text(), '{indicator}')]")
+                        remote_type = indicator
+                        break
+                    except NoSuchElementException:
+                        continue
+                job_details['remote_type'] = remote_type
+            except Exception:
+                job_details['remote_type'] = ""
             
-            # Extract remote type
-            remote_selectors = [
-                ".remote",
-                ".modality",
-                "section li",
-                "li[class*='remote']",
-                "li[class*='modality']"
-            ]
-            for selector in remote_selectors:
-                try:
-                    remote_elem = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    job_details['remote_type'] = remote_elem.text.strip()
-                    break
-                except NoSuchElementException:
-                    continue
+            # Set salary to None as specified (site asks candidates for salary expectations)
+            job_details['salary_raw'] = None
             
+            logger.info(f"Extracted details: {job_details['title'][:50]}...")
             return job_details
             
         except Exception as e:
             logger.error(f"Error getting job details from {job_url}: {e}")
-            return None
+            return {}
     
-    def parse_date(self, date_string: str) -> Optional[str]:
+    def parse_date(self, date_string: str) -> str:
         """Parse Bumeran date format."""
         if not date_string:
-            return None
+            return datetime.today().date().isoformat()
         
         try:
             # Common date patterns in Bumeran
@@ -663,3 +436,75 @@ class BumeranSpider(BaseSpider):
         except Exception as e:
             logger.warning(f"Could not parse date '{date_string}': {e}")
             return datetime.today().date().isoformat()
+    
+    def wait_for_page_load(self, timeout=60):
+        """Wait for page to fully load, handling Cloudflare challenges."""
+        start_time = time.time()
+        logger.info("Waiting for page to load and checking for Cloudflare challenges...")
+        
+        while time.time() - start_time < timeout:
+            try:
+                page_source = self.driver.page_source
+                current_url = self.driver.current_url
+                
+                # Check if we're still on the target page
+                if self.base_url not in current_url and "bumeran.com.mx" not in current_url:
+                    logger.warning(f"Redirected to unexpected URL: {current_url}")
+                    return False
+                
+                # Check for Cloudflare challenge
+                if self.check_cloudflare_challenge():
+                    logger.info("Cloudflare challenge detected, waiting for resolution...")
+                    time.sleep(5)
+                    continue
+                
+                # Check if page has substantial content
+                if len(page_source) > 50000:  # Page seems to have content
+                    logger.info("Page loaded successfully with substantial content")
+                    return True
+                
+                # Check for specific job-related content
+                if any(keyword in page_source.lower() for keyword in ['empleo', 'trabajo', 'puesto', 'vacante']):
+                    logger.info("Page loaded with job-related content")
+                    return True
+                
+                time.sleep(2)
+                
+            except Exception as e:
+                logger.debug(f"Error checking page load: {e}")
+                time.sleep(2)
+        
+        logger.warning("Page load timeout reached")
+        return False
+    
+    def check_cloudflare_challenge(self):
+        """Check if we're being challenged by Cloudflare."""
+        try:
+            page_source = self.driver.page_source
+            cloudflare_indicators = [
+                "Attention Required!",
+                "Cloudflare",
+                "__CF$cv$params",
+                "challenge-platform",
+                "Checking your browser",
+                "Please wait while we verify"
+            ]
+            
+            for indicator in cloudflare_indicators:
+                if indicator in page_source:
+                    return True
+            
+            return False
+            
+        except Exception as e:
+            logger.debug(f"Error checking Cloudflare challenge: {e}")
+            return False
+    
+    def validate_job_item(self, item: JobItem) -> bool:
+        """Validate job item has required fields."""
+        required_fields = ['title', 'company', 'portal', 'country']
+        for field in required_fields:
+            if not item.get(field):
+                logger.warning(f"Missing required field: {field}")
+                return False
+        return True
