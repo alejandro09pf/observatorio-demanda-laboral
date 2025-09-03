@@ -26,7 +26,17 @@ class ComputrabajoSpider(BaseSpider):
         
         # Get keyword and city parameters
         self.keyword = kwargs.get('keyword', 'sistemas')
-        self.city = kwargs.get('city', 'bogota-dc')
+        
+        # Set country-specific city defaults
+        if self.country == "CO":
+            self.city = kwargs.get('city', 'bogota-dc')
+        elif self.country == "MX":
+            self.city = kwargs.get('city', 'distrito-federal')
+        elif self.country == "AR":
+            self.city = kwargs.get('city', 'capital-federal')
+        else:
+            # Default to Colombia
+            self.city = kwargs.get('city', 'bogota-dc')
         
         # Build start URL using SEO-friendly format
         if self.country == "CO":
@@ -51,6 +61,17 @@ class ComputrabajoSpider(BaseSpider):
     
     def start_requests(self):
         """Start with the first page."""
+        # Check execution lock BEFORE starting requests
+        if not self._is_orchestrator_execution():
+            raise RuntimeError(
+                f"This spider '{self.__class__.__name__}' can only be executed through the orchestrator.\n"
+                f"Use: python -m src.orchestrator run-once {self.__class__.__name__.lower()} --country <COUNTRY>\n"
+                f"Or: python -m src.orchestrator run {self.__class__.__name__.lower()} --country <COUNTRY>"
+            )
+        
+        logger.info(f"Starting Computrabajo spider for {self.country}")
+        logger.info(f"Start URL: {self.start_url}")
+        
         yield scrapy.Request(
             url=self.start_url,
             callback=self.parse_search_results,
@@ -61,7 +82,7 @@ class ComputrabajoSpider(BaseSpider):
     def get_headers(self):
         """Get headers to avoid anti-bot detection."""
         return {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            # User agent will be handled by middleware - no hardcoded UA
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
             'Accept-Encoding': 'gzip, deflate, br',

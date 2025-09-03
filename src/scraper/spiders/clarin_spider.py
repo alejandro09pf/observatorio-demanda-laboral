@@ -63,7 +63,7 @@ class ClarinSpider(BaseSpider):
             chrome_options.add_argument("--disable-dev-shm-usage")
             chrome_options.add_argument("--disable-gpu")
             chrome_options.add_argument("--window-size=1920,1080")
-            chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            # User agent will be handled by middleware - no hardcoded UA
             
             # Anti-detection flags
             chrome_options.add_argument("--disable-blink-features=AutomationControlled")
@@ -289,7 +289,7 @@ class ClarinSpider(BaseSpider):
             logger.debug(f"Fetching JSON from: {detail_url}")
             
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                # User agent will be handled by middleware - no hardcoded UA
                 'Accept': 'application/json, text/plain, */*',
                 'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
                 'Referer': 'https://clasificados.clarin.com/',

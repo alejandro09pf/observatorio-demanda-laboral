@@ -1,0 +1,115 @@
+# Proxy Configuration for Labor Market Observatory
+# This file defines proxy pools and portal-specific strategies
+
+proxy_pools:
+  premium:
+    description: "High-quality proxies for JS-heavy sites"
+    proxies:
+      - http://user:pass@proxy1.example.com:8080
+      - http://user:pass@proxy2.example.com:8080
+      - http://user:pass@proxy3.example.com:8080
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    max_failures: 3
+  
+  standard:
+    description: "Standard proxies for regular sites"
+    proxies:
+      - http://user:pass@proxy4.example.com:8080
+      - http://user:pass@proxy5.example.com:8080
+      - http://user:pass@proxy6.example.com:8080
+    rotation_strategy: "per_page"
+    retry_with_new_proxy: true
+    max_failures: 5
+  
+  fallback:
+    description: "Fallback proxies when others fail"
+    proxies:
+      - http://user:pass@fallback1.example.com:8080
+      - http://user:pass@fallback2.example.com:8080
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: false
+    max_failures: 10
+
+portal_config:
+  elempleo:
+    description: "JS-heavy site, requires premium proxies"
+    pool: "premium"
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    timeout: 30
+    max_retries: 3
+  
+  magneto:
+    description: "JS-heavy site, requires premium proxies"
+    pool: "premium"
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    timeout: 30
+    max_retries: 3
+  
+  bumeran:
+    description: "Selenium-based, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_page"
+    retry_with_new_proxy: true
+    timeout: 20
+    max_retries: 2
+  
+  zonajobs:
+    description: "Selenium-based, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_page"
+    retry_with_new_proxy: true
+    timeout: 20
+    max_retries: 2
+  
+  clarin:
+    description: "Selenium-based, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_page"
+    retry_with_new_proxy: true
+    timeout: 20
+    max_retries: 2
+  
+  computrabajo:
+    description: "Standard Scrapy site, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    timeout: 15
+    max_retries: 2
+  
+  infojobs:
+    description: "Standard Scrapy site, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    timeout: 15
+    max_retries: 2
+  
+  occmundial:
+    description: "Standard Scrapy site, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    timeout: 15
+    max_retries: 2
+  
+  hiring_cafe:
+    description: "API-based site, standard proxies sufficient"
+    pool: "standard"
+    rotation_strategy: "per_request"
+    retry_with_new_proxy: true
+    timeout: 15
+    max_retries: 2
+
+global_settings:
+  default_pool: "standard"
+  default_rotation: "per_request"
+  default_timeout: 20
+  default_max_retries: 3
+  health_check_interval: 300  # 5 minutes
+  proxy_failure_threshold: 5
+  automatic_fallback: true
+  log_proxy_usage: true

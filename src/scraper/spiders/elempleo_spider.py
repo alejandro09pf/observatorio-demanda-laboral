@@ -1,6 +1,6 @@
 """
 Elempleo spider for Labor Market Observatory.
-Scrapes job postings from elempleo.com using individual job detail pages
+Scrapes job listings from https://www.elempleo.com/co using server-rendered HTML.
 """
 
 import scrapy
@@ -9,13 +9,13 @@ from datetime import datetime
 import re
 from .base_spider import BaseSpider
 from ..items import JobItem
-from typing import Optional
+from typing import Optional, List
 import logging
 
 logger = logging.getLogger(__name__)
 
 class ElempleoSpider(BaseSpider):
-    """Spider for Elempleo job portal using individual job detail pages."""
+    """Spider for Elempleo job portal - Colombia jobs."""
     
     name = "elempleo"
     allowed_domains = ["elempleo.com"]
@@ -24,84 +24,76 @@ class ElempleoSpider(BaseSpider):
         super().__init__(*args, **kwargs)
         self.portal = "elempleo"
         
-        # Real job detail URLs discovered from Elempleo website
-        if self.country == "CO":
-            self.start_urls = [
-                "https://www.elempleo.com/co/ofertas-trabajo/medico-general-medellin-1886557410",
-                "https://www.elempleo.com/co/ofertas-trabajo/condcutor-domiciliario-bogota-1886557367",
-                "https://www.elempleo.com/co/ofertas-trabajo/jefe-unidad-de-seguridad-de-la-informacion-1886557309",
-                "https://www.elempleo.com/co/ofertas-trabajo/coordinador-centro-universitario-mitu-presencial-1886557312",
-                "https://www.elempleo.com/co/ofertas-trabajo/vendedor-1886423696",
-                "https://www.elempleo.com/co/ofertas-trabajo/asistente-comercial-las-ferias-1886557311",
-                "https://www.elempleo.com/co/ofertas-trabajo/tecnicos-de-control-interno-1886557341",
-                "https://www.elempleo.com/co/ofertas-trabajo/ingeniero-de-sistemas-cota-fontibon-suba-calle-80-engativa-1886557350",
-                "https://www.elempleo.com/co/ofertas-trabajo/16264856062-analista-de-la-seguridad-de-la-informacion-1886557372",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-integral-de-admisiones-zona-norte-de-bogota-1886557330",
-                "https://www.elempleo.com/co/ofertas-trabajo/tecnico-en-suspensiones-y-reconexion-motorizado-boyaca-1886557339",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-de-enfermeria-medellin-envigado-1886557322",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-de-laboratorio-facultad-de-ciencias-1886557368",
-                "https://www.elempleo.com/co/ofertas-trabajo/camillero-clinica-oncologica-1886557394",
-                "https://www.elempleo.com/co/ofertas-trabajo/gerente-comercial-1886557415",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-de-servicios-generales-1886557315",
-                "https://www.elempleo.com/co/ofertas-trabajo/residente-de-control-de-programacion-y-presupuesto-1886557307",
-                "https://www.elempleo.com/co/ofertas-trabajo/pitalitoelectricistas-o-electronicos-o-afines-1886557335",
-                "https://www.elempleo.com/co/ofertas-trabajo/comerciales-sin-experiencia-con-disponibilidad-inmediata-md-1886557359",
-                "https://www.elempleo.com/co/ofertas-trabajo/coordinador-de-abastecimiento-experiencia-sector-contruccion-oil-gas-1886557305",
-                "https://www.elempleo.com/co/ofertas-trabajo/analista-gestion-documental-archivo-que-viva-por-la-calle-80-1886557377",
-                "https://www.elempleo.com/co/ofertas-trabajo/asesor-de-negociacion-gestor-de-cobranza-call-center-y-en-sitio-motorizado-en-florencia-caqueta-1886557310",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-logistico-quindio-1886557349",
-                "https://www.elempleo.com/co/ofertas-trabajo/recepcionista-asistente-administrativa-1886557323",
-                "https://www.elempleo.com/co/ofertas-trabajo/coordinacion-de-prevencion-de-riesgos-chia-cajica-sopo-tocancipa-gachancipa-1886557346",
-                "https://www.elempleo.com/co/ofertas-trabajo/coordinador-de-operaciones-bogota-1886557374",
-                "https://www.elempleo.com/co/ofertas-trabajo/mecanico-automotriz-con-moto-cartagena-1886557352",
-                "https://www.elempleo.com/co/ofertas-trabajo/asesor-comercial-jornada-adicional-cartago-1886557389",
-                "https://www.elempleo.com/co/ofertas-trabajo/analista-de-calidad-call-center-1886557301",
-                "https://www.elempleo.com/co/ofertas-trabajo/agente-de-televentas-bilingue-1886557380",
-                "https://www.elempleo.com/co/ofertas-trabajo/analista-operativo-digitador-de-declaraciones-auxiliar-de-aduanas-1886557401",
-                "https://www.elempleo.com/co/ofertas-trabajo/jardinero-1886557398",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-punto-de-venta-y-oficios-varios-bucaramanga-1886460783",
-                "https://www.elempleo.com/co/ofertas-trabajo/impulsador-a-promotor-a-consumo-masivo-bello-1886557292",
-                "https://www.elempleo.com/co/ofertas-trabajo/auxiliar-logistico-puerto-berrio-1886557369",
-                "https://www.elempleo.com/co/ofertas-trabajo/tecnico-de-admisiones-y-autorizaciones-1886557299",
-                "https://www.elempleo.com/co/ofertas-trabajo/hunter-especialista-venta-pauta-o-publicidad-digital-1886536299",
-                "https://www.elempleo.com/co/ofertas-trabajo/desarrollador-a-frontend-1886557414"
-            ]
-        elif self.country == "MX":
-            self.start_urls = [
-                "https://www.elempleo.com/mx/ofertas-trabajo/desarrollador-software-mexico-825434",
-                "https://www.elempleo.com/mx/ofertas-trabajo/ingeniero-sistemas-guadalajara-825435"
-            ]
-        elif self.country == "AR":
-            self.start_urls = [
-                "https://www.elempleo.com/ar/ofertas-trabajo/desarrollador-software-buenos-aires-825436",
-                "https://www.elempleo.com/ar/ofertas-trabajo/analista-sistemas-cordoba-825437"
-            ]
+        # Force Colombia as Elempleo only works for Colombia
+        self.country = "CO"
+        
+        # Start URLs for different cities and modalities
+        self.start_urls = [
+            "https://www.elempleo.com/co/ofertas-empleo/bogota",
+            "https://www.elempleo.com/co/ofertas-empleo/medellin",
+            "https://www.elempleo.com/co/ofertas-empleo/cali",
+            "https://www.elempleo.com/co/ofertas-empleo/barranquilla",
+            "https://www.elempleo.com/co/ofertas-empleo/remoto",
+            "https://www.elempleo.com/co/ofertas-empleo/modalidad-remoto"
+        ]
+        
+        # Track scraped URLs to avoid duplicates
+        self.scraped_urls = set()
         
         # Override custom settings for this spider
         self.custom_settings.update({
-            'DOWNLOAD_DELAY': 1.5,
-            'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
-            'ROBOTSTXT_OBEY': False,  # Disable robots.txt for anti-bot protection
+            'DOWNLOAD_DELAY': 2.0,  # Respect rate limits
+            'CONCURRENT_REQUESTS_PER_DOMAIN': 2,  # Conservative concurrency
+            'ROBOTSTXT_OBEY': False,  # Disable robots.txt
+            'AUTOTHROTTLE_ENABLED': True,  # Enable autothrottle
+            'AUTOTHROTTLE_START_DELAY': 1,
+            'AUTOTHROTTLE_MAX_DELAY': 10,
             'DOWNLOADER_MIDDLEWARES': {
                 'scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware': None,
             }
         })
     
     def start_requests(self):
-        """Start with the job detail URLs."""
+        """Start requests with execution lock check and proxy support."""
+        # Check execution lock BEFORE starting requests
+        if not self._is_orchestrator_execution():
+            raise RuntimeError(
+                f"This spider '{self.__class__.__name__}' can only be executed through the orchestrator.\n"
+                f"Use: python -m src.orchestrator run-once {self.__class__.__name__.lower()} --country <COUNTRY>\n"
+                f"Or: python -m src.orchestrator run {self.__class__.__name__.lower()} --country <COUNTRY>"
+            )
+        
+        logger.info(f"Starting Elempleo spider for {self.country}")
+        logger.info(f"Start URLs: {len(self.start_urls)} listing pages")
+        
         for url in self.start_urls:
             yield scrapy.Request(
                 url=url,
-                callback=self.parse_job,
-                headers=self.get_headers()
+                callback=self.parse_listing_page,
+                meta={
+                    'page': 1,
+                    'proxy': self.get_proxy(),  # Get proxy from orchestrator
+                    'dont_cache': True
+                },
+                headers=self.get_headers(),
+                errback=self.handle_error
             )
     
+    def get_proxy(self):
+        """Get proxy from orchestrator's proxy service."""
+        try:
+            # This should call your orchestrator's proxy service
+            # For now, we'll use the proxy middleware
+            return None  # Let middleware handle proxy rotation
+        except Exception as e:
+            logger.warning(f"Could not get proxy: {e}")
+            return None
+    
     def get_headers(self):
-        """Get headers to avoid anti-bot detection."""
+        """Get headers with Colombian browser simulation."""
         return {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+            'Accept-Language': 'es-CO,es;q=0.9,en;q=0.8',  # Colombian Spanish
             'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
@@ -109,196 +101,382 @@ class ElempleoSpider(BaseSpider):
             'Sec-Fetch-Mode': 'navigate',
             'Sec-Fetch-Site': 'none',
             'Cache-Control': 'max-age=0',
+            'Referer': 'https://www.elempleo.com/co/'
         }
     
-    def parse_job(self, response):
-        """Parse individual job posting using specific CSS selectors."""
+    def parse_listing_page(self, response):
+        """Parse job listing page to extract job links."""
+        current_page = response.meta.get('page', 1)
+        logger.info(f"Parsing listing page {current_page}: {response.url}")
+        
+        # Extract job links from the page
+        job_links = response.css("a[href^='/co/ofertas-trabajo/']")
+        logger.info(f"Found {len(job_links)} job links on page {current_page}")
+        
+        # Debug: Log first few job links to see their structure
+        for i, link in enumerate(job_links[:3]):
+            href = link.attrib.get('href', 'NO_HREF')
+            text = link.css("::text").get() or 'NO_TEXT'
+            logger.info(f"Job link {i+1}: href='{href}', text='{text[:50]}...'")
+        
+        if not job_links:
+            logger.warning(f"No job links found on page {current_page}")
+            return
+        
+        # Process each job link
+        for job_link in job_links:
+            try:
+                # FIXED: Extract href attribute properly, not the entire element
+                job_url = job_link.attrib.get('href')
+                if not job_url:
+                    continue
+                
+                # Build absolute URL
+                absolute_url = urljoin(response.url, job_url)
+                
+                # Skip if already scraped
+                if absolute_url in self.scraped_urls:
+                    continue
+                
+                # Mark as scraped
+                self.scraped_urls.add(absolute_url)
+                
+                # Extract basic info from listing
+                job_title = job_link.css("::text").get()
+                
+                # Follow to job detail page
+                yield scrapy.Request(
+                    url=absolute_url,
+                    callback=self.parse_job_detail,
+                    meta={
+                        'proxy': self.get_proxy(),
+                        'listing_title': job_title,
+                        'source_page': response.url
+                    },
+                    headers=self.get_headers(),
+                    errback=self.handle_error
+                )
+                
+            except Exception as e:
+                logger.error(f"Error processing job link: {e}")
+                continue
+        
+        # Handle pagination
+        if current_page < self.max_pages:
+            next_page = current_page + 1
+            next_url = self.get_next_page_url(response.url, next_page)
+            
+            if next_url:
+                logger.info(f"Following to page {next_page}: {next_url}")
+                yield scrapy.Request(
+                    url=next_url,
+                    callback=self.parse_listing_page,
+                    meta={
+                        'page': next_page,
+                        'proxy': self.get_proxy(),
+                        'dont_cache': True
+                    },
+                    headers=self.get_headers(),
+                    errback=self.handle_error
+                )
+    
+    def get_next_page_url(self, current_url: str, next_page: int) -> Optional[str]:
+        """Generate next page URL based on current URL pattern."""
+        # Try different pagination patterns
+        pagination_patterns = [
+            f"{current_url}?page={next_page}",
+            f"{current_url}?pagina={next_page}",
+            f"{current_url}?p={next_page}",
+            f"{current_url}/page/{next_page}"
+        ]
+        
+        # For now, return the first pattern
+        # In a real implementation, you'd test which one works
+        return pagination_patterns[0]
+    
+    def parse_job_detail(self, response):
+        """Parse individual job detail page."""
         try:
-            logger.info(f"Parsing job: {response.url}")
+            logger.info(f"Parsing job detail: {response.url}")
             
             # Create job item
             item = JobItem()
-            
-            # Basic information
-            item['portal'] = 'elempleo'
+            item['portal'] = self.portal
             item['country'] = self.country
             item['url'] = response.url
             
-            # Extract title using specific selector
-            title = response.css("h1.ee-offer-title .js-jobOffer-title::text").get()
+            # Extract job title - FIXED: Use correct Elempleo selectors
+            title = response.css("h1.ee-offer-title .js-jobOffer-title::text, .js-jobOffer-title::text, h1.ee-offer-title::text").get()
             if not title:
-                # Fallback to general h1
-                title = response.css("h1::text").get()
+                title = response.meta.get('listing_title', '')
             item['title'] = self.clean_text(title) if title else ""
             
-            # Extract company using specific selector
-            company = response.css("h2.ee-company-title strong::text").get()
+            # Extract company name - FIXED: Use correct Elempleo selectors with nested text
+            # Try different approaches for Scrapy CSS selectors
+            company = ""
+            
+            # Method 1: Try to get text from spans
+            company_spans = response.css(".js-company-name span, .joboffer-companyname span, .ee-company-title span")
+            if company_spans:
+                company_texts = [span.get() for span in company_spans if span.get()]
+                company = " ".join(company_texts)
+                logger.info(f"Company from spans: '{company}'")
+            
+            # Method 2: If no spans, try direct text
             if not company:
-                # Fallback selectors
-                company = (
-                    response.css("h2.ee-company-title::text").get() or
-                    response.css(".company-name::text").get() or
-                    response.css(".employer::text").get()
-                )
+                company = response.css(".js-company-name::text, .joboffer-companyname::text").get()
+                logger.info(f"Company from direct text: '{company}'")
+            
+            # Method 3: Try getting all text from company elements
+            if not company:
+                company_elements = response.css(".js-company-name, .joboffer-companyname")
+                if company_elements:
+                    company = company_elements[0].get()
+                    logger.info(f"Company from element: '{company}'")
+            
+            # Clean company name by removing HTML tags and duplicates
+            if company:
+                # Remove HTML tags
+                company = re.sub(r'<[^>]+>', '', company)
+                # Remove extra whitespace
+                company = re.sub(r'\s+', ' ', company).strip()
+                # Remove duplicate company names (common in Elempleo)
+                companies = company.split()
+                unique_companies = []
+                for comp in companies:
+                    if comp not in unique_companies and len(comp) > 2:  # Filter out short words
+                        unique_companies.append(comp)
+                company = " ".join(unique_companies[:3])  # Take first 3 unique companies
+            
             item['company'] = self.clean_text(company) if company else ""
             
-            # Extract salary using specific selector
-            salary_raw = response.css("span.js-joboffer-salary::text").get()
-            if not salary_raw:
-                # Fallback selectors
-                salary_raw = (
-                    response.css(".salary::text").get() or
-                    response.css(".wage::text").get() or
-                    response.css("[class*='salary']::text").get()
-                )
-            item['salary_raw'] = self.clean_text(salary_raw) if salary_raw else ""
+            # Extract salary - Look for salary in JavaScript data first, then visible text
+            salary = ""
             
-            # Extract location using specific selector
-            location = response.css("span.js-joboffer-city::text").get()
+            # Method 1: Look for salary in JavaScript data (most reliable)
+            # Try to get all script content and search for salary
+            script_contents = response.xpath("//script/text()").getall()
+            salary = ""
+            
+            for script_content in script_contents:
+                if script_content and 'salary' in script_content:
+                    salary_match = re.search(r"salary:\s*['\"]([^'\"]+)['\"]", script_content)
+                    if salary_match:
+                        salary = salary_match.group(1)
+                        logger.info(f"Salary from JavaScript: '{salary}'")
+                        break
+            
+            # Method 2: Look for visible salary text
+            if not salary:
+                salary = response.xpath("//*[contains(., 'COP') or contains(., '$') or contains(., 'Salario confidencial')][1]//text()").get(default='').strip()
+                if salary:
+                    logger.info(f"Salary from visible text: '{salary}'")
+            
+            # Method 3: Fallback to CSS selectors
+            if not salary:
+                salary = response.css("[class*='salary']::text, [class*='salario']::text, .salary-info::text").get()
+                if salary:
+                    logger.info(f"Salary from CSS: '{salary}'")
+            
+            item['salary_raw'] = self.clean_text(salary) if salary else None
+            
+            # Extract location/city - Look for location in JavaScript data first, then visible text
+            location = ""
+            
+            # Method 1: Look for location in JavaScript data (most reliable)
+            # Try to get all script content and search for location
+            script_contents = response.xpath("//script/text()").getall()
+            location = ""
+            
+            for script_content in script_contents:
+                if script_content and 'location' in script_content:
+                    # Look for location in offerData or _objectDataJob
+                    location_match = re.search(r"location:\s*['\"]([^'\"]+)['\"]", script_content)
+                    if location_match:
+                        location = location_match.group(1)
+                        logger.info(f"Location from JavaScript: '{location}'")
+                        break
+                    else:
+                        # Try alternative patterns
+                        location_match = re.search(r"'location':\s*['\"]([^'\"]+)['\"]", script_content)
+                        if location_match:
+                            location = location_match.group(1)
+                            logger.info(f"Location from JavaScript (alt): '{location}'")
+                            break
+            
+            # Method 2: Look for "Ciudades de la oferta" section
             if not location:
-                # Fallback selectors
-                location = (
-                    response.css(".location::text").get() or
-                    response.css(".city::text").get() or
-                    response.css("[class*='location']::text").get()
-                )
-            item['location'] = self.clean_text(location) if location else ""
+                ciudades_h3 = response.xpath("//h3[contains(., 'Ciudades de la oferta')]")
+                if ciudades_h3:
+                    # Look for next sibling or nearby text
+                    next_elem = ciudades_h3.xpath("following-sibling::*[1]//text()").get()
+                    if next_elem:
+                        location = next_elem.strip()
+                        logger.info(f"Location from Ciudades section: '{location}'")
             
-            # Extract posted date using specific selector
-            posted_date = response.css("span.js-publish-date::text").get()
-            if not posted_date:
-                # Fallback selectors
-                posted_date = (
-                    response.css(".date::text").get() or
-                    response.css(".posted::text").get() or
-                    response.css("[class*='date']::text").get()
-                )
-            item['posted_date'] = self.parse_date(posted_date) if posted_date else None
+            # Method 3: Look for joboffer__city class
+            if not location:
+                location = response.xpath("//*[contains(@class, 'joboffer__city')]//text()").get(default='').strip()
+                if location:
+                    logger.info(f"Location from joboffer__city: '{location}'")
             
-            # Extract additional fields for potential future use (not stored in JobItem)
-            category = response.css("span.js-position-area::text").get()
-            profession = response.css("span.js-profession::text").get()
-            education_level = response.css("span.js-education-level::text").get()
-            sector = response.css("span.js-sector::text").get()
+            # Method 4: Try to extract from title or URL (only if it looks like a city)
+            if not location:
+                title_text = item.get('title', '')
+                if title_text and 'en' in title_text.lower():
+                    # Extract city from title like "Asistente en Medellín"
+                    parts = title_text.split('en')
+                    if len(parts) > 1:
+                        potential_city = parts[-1].strip()
+                        # Only use if it looks like a city name (not too long, contains common city indicators)
+                        if (len(potential_city) < 30 and 
+                            any(city_indicator in potential_city.lower() for city_indicator in 
+                                ['bogotá', 'medellín', 'cali', 'barranquilla', 'cartagena', 'bucaramanga', 'pereira', 'manizales', 'ibagué', 'villavicencio', 'neiva', 'popayán', 'montería', 'valledupar', 'tunja', 'florencia', 'mocoa', 'leticia', 'mitú', 'puerto carreño'])):
+                            location = potential_city
+                            logger.info(f"Location from title (city): '{location}'")
+                        else:
+                            logger.info(f"Location from title (not a city): '{potential_city}'")
             
-            # Log additional fields for debugging
-            if category or profession or education_level or sector:
-                logger.info(f"Additional fields found - Category: {category}, Profession: {profession}, Education: {education_level}, Sector: {sector}")
+            # Method 5: Fallback to CSS selectors
+            if not location:
+                location = response.css("[class*='location']::text, [class*='city']::text, .city-info::text").get()
+                if location:
+                    logger.info(f"Location from CSS: '{location}'")
             
-            # Extract description using specific selector
-            description_parts = response.css("div.description-block p span::text").getall()
-            if not description_parts:
-                # Fallback selectors
-                description_parts = (
-                    response.css("div.description-block p::text").getall() or
-                    response.css(".description::text").getall() or
-                    response.css(".job-description::text").getall() or
-                    response.css("[class*='description']::text").getall()
-                )
+            item['location'] = self.clean_text(location) if location else None
             
-            item['description'] = " ".join([self.clean_text(part) for part in description_parts if part]) if description_parts else ""
+            # Extract posting date - Look for date information
+            posted_date = response.css("[class*='date']::text, [class*='posted']::text, .posting-date::text").get()
+            item['posted_date'] = self.parse_date(posted_date) if posted_date else datetime.today().date().isoformat()
             
-            # Extract requirements using specific selector
-            requirements = response.xpath("//h2[contains(text(), 'Requisitos para postularse')]/following-sibling::p[1]/span/text()").get()
+            # Extract job description - Use XPath to find description under "Descripción general" heading
+            description = ' '.join(t.strip() for t in response.xpath("//h2[contains(., 'Descripción general')]/following-sibling::*[self::p or self::div][1]//text()").getall())
+            if not description:
+                # Fallback: Try CSS selectors
+                description = response.css(".js-description::text, .description-block p::text, .job-description::text").get()
+            if not description:
+                # Fallback: Try to get description from multiple elements with nested text
+                desc_elements = response.css(".description-block p, .js-description, .job-content")
+                description = " ".join([elem.get() for elem in desc_elements if elem.get()])
+            if not description:
+                # Fallback: Try alternative selectors for description
+                description = response.css(".description-block p span::text, .js-description span::text").get()
+            item['description'] = self.clean_text(description) if description else None
+            
+            # Extract requirements - Use XPath to find requirements under "Requisitos" heading
+            requirements = ' '.join(t.strip() for t in response.xpath("//h2[contains(., 'Requisitos')]/following-sibling::*[self::p or self::ul][1]//text()").getall())
             if not requirements:
-                # Fallback selectors
-                requirements = (
-                    response.css(".requirements::text").get() or
-                    response.css(".skills::text").get() or
-                    response.css("[class*='requirement']::text").get()
-                )
-            item['requirements'] = self.clean_text(requirements) if requirements else ""
+                # Fallback: Look for requirements-related CSS classes
+                requirements = response.css("[class*='requirements']::text, [class*='requisitos']::text, .job-requirements::text").get()
+            item['requirements'] = self.clean_text(requirements) if requirements else None
             
-            # Extract contract type and remote type from description or requirements
-            contract_type = self.extract_contract_from_text(item['description'] + " " + item['requirements'])
-            item['contract_type'] = contract_type
+            # Extract contract type - Look for contract in JavaScript data first, then visible text
+            contract_type = ""
             
-            remote_type = self.extract_remote_from_text(item['description'] + " " + item['requirements'])
-            item['remote_type'] = remote_type
+            # Method 1: Look for contract in JavaScript data (most reliable)
+            # Try to get all script content and search for contract
+            script_contents = response.xpath("//script/text()").getall()
+            contract_type = ""
             
-            # Validate item
-            if not self.validate_job_item(item):
-                logger.warning(f"Invalid job item: {item.get('title', 'No title')}")
-                return
+            for script_content in script_contents:
+                if script_content and 'contract' in script_content:
+                    contract_match = re.search(r"contract:\s*['\"]([^'\"]+)['\"]", script_content)
+                    if contract_match:
+                        contract_type = contract_match.group(1)
+                        logger.info(f"Contract from JavaScript: '{contract_type}'")
+                        break
             
-            logger.info(f"Successfully parsed job: {item.get('title', 'No title')}")
-            yield item
+            # Method 2: Look for contract in "Datos complementarios" section
+            if not contract_type:
+                contract_type = response.xpath("//h2[contains(., 'Datos complementarios')]/following::*[contains(., 'Contrato')][1]//text()").get(default='').strip()
+                if contract_type:
+                    logger.info(f"Contract from Datos complementarios: '{contract_type}'")
             
+            # Method 3: Fallback to CSS selectors
+            if not contract_type:
+                contract_type = response.css("[class*='contract']::text, [class*='contrato']::text, .contract-type::text").get()
+                if contract_type:
+                    logger.info(f"Contract from CSS: '{contract_type}'")
+            
+            item['contract_type'] = self.clean_text(contract_type) if contract_type else None
+            
+            # Extract remote type (modality) - Look for remote/hybrid/presential in JavaScript data first, then visible text
+            remote_type = ""
+            
+            # Method 1: Look for remote type in JavaScript data (most reliable)
+            # Try to get all script content and search for location to extract remote type
+            script_contents = response.xpath("//script/text()").getall()
+            remote_type = ""
+            
+            for script_content in script_contents:
+                if script_content and 'location' in script_content:
+                    # Look for hybrid/remote/presential in location field
+                    location_match = re.search(r"location:\s*['\"]([^'\"]+)['\"]", script_content)
+                    if location_match:
+                        location_text = location_match.group(1)
+                        if 'Hibrido' in location_text or 'Híbrido' in location_text:
+                            remote_type = "Híbrido"
+                            logger.info(f"Remote type from JavaScript location (Híbrido): '{remote_type}'")
+                            break
+                        elif 'Remoto' in location_text:
+                            remote_type = "Remoto"
+                            logger.info(f"Remote type from JavaScript location (Remoto): '{remote_type}'")
+                            break
+                        elif 'Presencial' in location_text:
+                            remote_type = "Presencial"
+                            logger.info(f"Remote type from JavaScript location (Presencial): '{remote_type}'")
+                            break
+            
+            # Method 2: Look for visible remote type tags
+            if not remote_type:
+                remote_type = response.xpath("//*[contains(., 'Remoto') or contains(., 'Híbrido') or contains(., 'Presencial')][1]//text()").get(default='').strip()
+                if remote_type:
+                    logger.info(f"Remote type from visible text: '{remote_type}'")
+            
+            # Method 3: Fallback to CSS selectors
+            if not remote_type:
+                remote_type = response.css("[class*='modality']::text, [class*='modalidad']::text, .remote-type::text").get()
+                if remote_type:
+                    logger.info(f"Remote type from CSS: '{remote_type}'")
+            
+            item['remote_type'] = self.clean_text(remote_type) if remote_type else None
+            
+            # Debug: Log what was extracted
+            logger.info(f"Extracted data for {response.url}:")
+            logger.info(f"  Title: '{item.get('title', 'NO_TITLE')}'")
+            logger.info(f"  Company: '{item.get('company', 'NO_COMPANY')}'")
+            logger.info(f"  Location: '{item.get('location', 'NO_LOCATION')}'")
+            logger.info(f"  Salary: '{item.get('salary_raw', 'NO_SALARY')}'")
+            logger.info(f"  Description length: {len(item.get('description', '') or '')}")
+            logger.info(f"  Requirements length: {len(item.get('requirements', '') or '')}")
+            logger.info(f"  Contract Type: '{item.get('contract_type', 'NO_CONTRACT')}'")
+            logger.info(f"  Remote Type: '{item.get('remote_type', 'NO_REMOTE')}'")
+            
+            # Validate and yield item
+            if self.validate_job_item(item):
+                yield item
+                logger.info(f"✅ Successfully scraped job: {item['title'][:50]}...")
+            else:
+                logger.warning(f"Invalid job item - missing fields:")
+                for field in ['title', 'company', 'portal', 'country']:
+                    if not item.get(field):
+                        logger.warning(f"    Missing: {field}")
+                
         except Exception as e:
-            logger.error(f"Error parsing job {response.url}: {e}")
-            return
+            logger.error(f"Error parsing job detail {response.url}: {e}")
     
-    def extract_contract_from_text(self, text: str) -> str:
-        """Extract contract type from text heuristically."""
-        if not text:
-            return ""
-        
-        # Look for contract type keywords
-        contract_keywords = {
-            'tiempo completo': 'Tiempo completo',
-            'tiempo parcial': 'Tiempo parcial',
-            'contrato': 'Contrato',
-            'permanente': 'Permanente',
-            'temporal': 'Temporal',
-            'indefinido': 'Indefinido',
-            'determinado': 'Determinado',
-            'freelance': 'Freelance',
-            'independiente': 'Independiente',
-            'plazo fijo': 'Plazo fijo',
-            'obra labor': 'Obra labor',
-            'termino fijo': 'Término fijo',
-            'termino indefinido': 'Término indefinido'
-        }
-        
-        text_lower = text.lower()
-        for keyword, value in contract_keywords.items():
-            if keyword in text_lower:
-                return value
-        
-        return ""
-    
-    def extract_remote_from_text(self, text: str) -> str:
-        """Extract remote work type from text heuristically."""
-        if not text:
-            return ""
-        
-        # Look for remote work keywords
-        remote_keywords = {
-            'remoto': 'Remoto',
-            'teletrabajo': 'Remoto',
-            'home office': 'Remoto',
-            'presencial': 'Presencial',
-            'híbrido': 'Híbrido',
-            'hibrido': 'Híbrido',
-            'mixto': 'Híbrido',
-            'a distancia': 'Remoto',
-            'trabajo desde casa': 'Remoto',
-            'modalidad remota': 'Remoto',
-            'modalidad presencial': 'Presencial',
-            'modalidad hibrida': 'Híbrido'
-        }
-        
-        text_lower = text.lower()
-        for keyword, value in remote_keywords.items():
-            if keyword in text_lower:
-                return value
-        
-        return ""
-    
-    def parse_date(self, date_string: str) -> Optional[str]:
+    def parse_date(self, date_string: str) -> str:
         """Parse Elempleo date format."""
         if not date_string:
-            return None
+            return datetime.today().date().isoformat()
         
         try:
-            # Common date patterns in Elempleo
+            # Common Spanish date patterns
             date_patterns = [
-                r'Publicado (\d{1,2}) (\w+) (\d{4})',  # "Publicado 23 Ago 2025"
                 r'(\d{1,2})/(\d{1,2})/(\d{4})',  # DD/MM/YYYY
                 r'(\d{1,2})-(\d{1,2})-(\d{4})',  # DD-MM-YYYY
                 r'hace (\d+) días?',  # "hace X días"
                 r'hace (\d+) horas?',  # "hace X horas"
-                r'(\d{1,2}) (\w+) (\d{4})',  # "23 Ago 2025"
                 r'(\d{1,2}) de (\w+) de (\d{4})',  # "23 de Agosto de 2025"
             ]
             
@@ -316,15 +494,11 @@ class ElempleoSpider(BaseSpider):
                 match = re.search(pattern, date_string, re.IGNORECASE)
                 if match:
                     if 'hace' in pattern:
-                        # Handle relative dates - return today's date
+                        # Handle relative dates
                         return datetime.today().date().isoformat()
                     elif len(match.groups()) == 3:
                         # Handle absolute dates
-                        if pattern == r'Publicado (\d{1,2}) (\w+) (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2}) (\w+) (\d{4})':
-                            day, month, year = match.groups()
-                        elif pattern == r'(\d{1,2}) de (\w+) de (\d{4})':
+                        if pattern == r'(\d{1,2}) de (\w+) de (\d{4})':
                             day, month, year = match.groups()
                         else:
                             day, month, year = match.groups()
@@ -334,10 +508,6 @@ class ElempleoSpider(BaseSpider):
                         if month_lower in month_map:
                             month_num = month_map[month_lower]
                             return f"{year}-{month_num}-{day.zfill(2)}"
-                        # Try full month name
-                        elif month.lower() in month_map:
-                            month_num = month_map[month.lower()]
-                            return f"{year}-{month_num}-{day.zfill(2)}"
             
             # If no pattern matches, return today's date
             return datetime.today().date().isoformat()
@@ -345,3 +515,47 @@ class ElempleoSpider(BaseSpider):
         except Exception as e:
             logger.warning(f"Could not parse date '{date_string}': {e}")
             return datetime.today().date().isoformat()
+    
+    def handle_error(self, failure):
+        """Handle request errors and retry with different proxy if needed."""
+        request = failure.request
+        response = failure.value
+        
+        if hasattr(response, 'status'):
+            if response.status in [429, 403]:  # Rate limited or forbidden
+                logger.warning(f"Request failed with status {response.status}, retrying with new proxy")
+                
+                # Retry with new proxy
+                yield scrapy.Request(
+                    url=request.url,
+                    callback=request.callback,
+                    meta={
+                        **request.meta,
+                        'proxy': self.get_proxy(),
+                        'dont_cache': True
+                    },
+                    headers=request.headers,
+                    errback=self.handle_error
+                )
+            else:
+                logger.error(f"Request failed: {response.status} - {request.url}")
+        else:
+            logger.error(f"Request failed: {failure.value} - {request.url}")
+    
+    def clean_text(self, text: str) -> str:
+        """Clean and normalize text content."""
+        if not text:
+            return ""
+        
+        # Remove extra whitespace and normalize
+        cleaned = re.sub(r'\s+', ' ', text.strip())
+        return cleaned
+    
+    def validate_job_item(self, item: JobItem) -> bool:
+        """Validate job item has required fields."""
+        required_fields = ['title', 'company', 'portal', 'country']
+        for field in required_fields:
+            if not item.get(field):
+                logger.warning(f"Missing required field: {field}")
+                return False
+        return True

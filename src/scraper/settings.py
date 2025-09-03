@@ -59,6 +59,22 @@ SPIDER_MIDDLEWARES = {
     'scrapy.spidermiddlewares.httperror.HttpErrorMiddleware': True,
 }
 
+# Enable or disable extensions here
+EXTENSIONS = {
+    'scrapy.extensions.telnet.TelnetConsole': None,
+}
+
+# Feed export settings - save items to JSON files
+FEEDS = {
+    'outputs/%(name)s_real.json': {
+        'format': 'json',
+        'encoding': 'utf8',
+        'store_empty': False,
+        'overwrite': True,
+        'indent': 2,
+    }
+}
+
 # Configure item pipelines
 ITEM_PIPELINES = {
     'scraper.pipelines.JobPostgresPipeline': 300,

@@ -98,7 +98,7 @@ class ZonaJobsSpider(BaseSpider):
         chrome_options.add_argument("--window-size=1920,1080")
         
         # User agent rotation (will be handled by middleware)
-        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        # chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
         
         # Additional options for stability
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
@@ -122,34 +122,82 @@ class ZonaJobsSpider(BaseSpider):
         try:
             # Navigate to the page
             page_url = f"{self.start_url}?page={page}" if page > 1 else self.start_url
+            logger.info(f"Navigating to: {page_url}")
             self.driver.get(page_url)
             
-            # Wait for job links to load
-            wait = WebDriverWait(self.driver, self.wait_timeout)
+            # Increased wait time for React SPA to load
+            time.sleep(10)  # Increased wait time
             
-            try:
-                # Wait for job links to appear
-                wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='empleos/']")))
-                logger.info("Job links found on page")
-            except TimeoutException:
-                logger.warning(f"No job links found on page {page} - stopping pagination")
+            # Check if page loaded properly (not blocked)
+            page_source = self.driver.page_source
+            if "Attention Required!" in page_source or "Cloudflare" in page_source:
+                logger.warning("Cloudflare protection detected - waiting longer...")
+                time.sleep(20)
+                self.driver.refresh()
+                time.sleep(10)
+                page_source = self.driver.page_source
+                if "Attention Required!" in page_source or "Cloudflare" in page_source:
+                    logger.error("Still blocked by Cloudflare")
+                    return
+            
+            # Wait for content to load with multiple selector attempts
+            wait = WebDriverWait(self.driver, 30)  # Increased timeout
+            
+            # Try multiple selectors to find job content
+            job_selectors = [
+                "a[href*='empleos/']",
+                "a[href*='/empleos/']", 
+                "a[href*='empleo']",
+                "div[class*='job'] a",
+                "div[class*='empleo'] a",
+                "[class*='job-card'] a",
+                "[class*='job-listing'] a",
+                "article a",
+                ".job-item a",
+                "[data-testid*='job'] a"
+            ]
+            
+            job_links_found = False
+            job_links = []
+            
+            for selector in job_selectors:
+                try:
+                    logger.info(f"Trying selector: {selector}")
+                    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+                    
+                    # Find job links
+                    found_links = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    logger.info(f"Found {len(found_links)} links with selector: {selector}")
+                    
+                    # Filter for actual job postings
+                    for link in found_links:
+                        href = link.get_attribute("href")
+                        if href and '/empleos/' in href and not any(nav in href for nav in ['seniority', 'relevantes', 'recientes']):
+                            job_links.append(link)
+                    
+                    if job_links:
+                        job_links_found = True
+                        logger.info(f"Found {len(job_links)} actual job postings")
+                        break
+                        
+                except TimeoutException:
+                    logger.debug(f"Selector '{selector}' timed out")
+                    continue
+                except Exception as e:
+                    logger.debug(f"Selector '{selector}' failed: {e}")
+                    continue
+            
+            if not job_links_found:
+                logger.warning(f"No job links found on page {page} after trying all selectors")
+                # Log page source for debugging
+                page_source = self.driver.page_source
+                logger.info(f"Page source length: {len(page_source)} characters")
+                logger.info(f"Page source preview: {page_source[:500]}...")
                 return
-            
-            # Find job links (actual job postings, not navigation links)
-            job_links = self.driver.find_elements(By.CSS_SELECTOR, "a[href*='empleos/']")
-            
-            # Filter out navigation links and get actual job postings
-            actual_job_links = []
-            for link in job_links:
-                href = link.get_attribute("href")
-                if href and '/empleos/' in href and not any(nav in href for nav in ['seniority', 'relevantes', 'recientes']):
-                    actual_job_links.append(link)
-            
-            logger.info(f"Found {len(actual_job_links)} actual job postings on page {page}")
             
             # Extract data from all job links immediately to avoid stale element issues
             job_data_list = []
-            for i, job_link in enumerate(actual_job_links):
+            for i, job_link in enumerate(job_links):
                 try:
                     # Extract data immediately before DOM changes
                     job_url = job_link.get_attribute("href")
