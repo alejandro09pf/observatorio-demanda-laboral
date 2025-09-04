@@ -40,6 +40,15 @@ class ElempleoSpider(BaseSpider):
         # Track scraped URLs to avoid duplicates
         self.scraped_urls = set()
         
+        # Statistics tracking
+        self.stats = {
+            'total_jobs_found': 0,
+            'total_jobs_scraped': 0,
+            'duplicates_skipped': 0,
+            'pages_processed': 0,
+            'errors': 0
+        }
+        
         # Override custom settings for this spider
         self.custom_settings.update({
             'DOWNLOAD_DELAY': 2.0,  # Respect rate limits
@@ -72,7 +81,7 @@ class ElempleoSpider(BaseSpider):
                 callback=self.parse_listing_page,
                 meta={
                     'page': 1,
-                    'proxy': self.get_proxy(),  # Get proxy from orchestrator
+                    # 'proxy': self.get_proxy(),  # Temporarily disabled for testing
                     'dont_cache': True
                 },
                 headers=self.get_headers(),
@@ -134,12 +143,18 @@ class ElempleoSpider(BaseSpider):
                 # Build absolute URL
                 absolute_url = urljoin(response.url, job_url)
                 
-                # Skip if already scraped
+                # Update statistics
+                self.stats['total_jobs_found'] += 1
+                
+                # Skip if already scraped (DUPLICATE PREVENTION)
                 if absolute_url in self.scraped_urls:
+                    self.stats['duplicates_skipped'] += 1
+                    logger.debug(f"⏭️ Skipping duplicate job: {absolute_url}")
                     continue
                 
-                # Mark as scraped
+                # Mark as scraped to prevent future duplicates
                 self.scraped_urls.add(absolute_url)
+                logger.info(f"🔍 New job found: {absolute_url}")
                 
                 # Extract basic info from listing
                 job_title = job_link.css("::text").get()
@@ -149,17 +164,22 @@ class ElempleoSpider(BaseSpider):
                     url=absolute_url,
                     callback=self.parse_job_detail,
                     meta={
-                        'proxy': self.get_proxy(),
+                        'proxy': self.get_proxy(),  # Re-enabled proxy support
                         'listing_title': job_title,
-                        'source_page': response.url
+                        'source_page': response.url,
+                        'is_new_job': True  # Flag to track new jobs
                     },
                     headers=self.get_headers(),
                     errback=self.handle_error
                 )
                 
             except Exception as e:
+                self.stats['errors'] += 1
                 logger.error(f"Error processing job link: {e}")
                 continue
+        
+        # Update page statistics
+        self.stats['pages_processed'] += 1
         
         # Handle pagination
         if current_page < self.max_pages:
@@ -167,18 +187,20 @@ class ElempleoSpider(BaseSpider):
             next_url = self.get_next_page_url(response.url, next_page)
             
             if next_url:
-                logger.info(f"Following to page {next_page}: {next_url}")
+                logger.info(f"📄 Following to page {next_page}: {next_url}")
                 yield scrapy.Request(
                     url=next_url,
                     callback=self.parse_listing_page,
                     meta={
                         'page': next_page,
-                        'proxy': self.get_proxy(),
+                        'proxy': self.get_proxy(),  # Re-enabled proxy support
                         'dont_cache': True
                     },
                     headers=self.get_headers(),
                     errback=self.handle_error
                 )
+        else:
+            logger.info(f"🏁 Reached max pages limit ({self.max_pages})")
     
     def get_next_page_url(self, current_url: str, next_page: int) -> Optional[str]:
         """Generate next page URL based on current URL pattern."""
@@ -454,15 +476,25 @@ class ElempleoSpider(BaseSpider):
             
             # Validate and yield item
             if self.validate_job_item(item):
+                # Update statistics for successful scraping
+                self.stats['total_jobs_scraped'] += 1
+                
+                # Check if this is a new job (not a duplicate)
+                is_new_job = response.meta.get('is_new_job', False)
+                if is_new_job:
+                    logger.info(f"✅ Successfully scraped NEW job: {item['title'][:50]}...")
+                else:
+                    logger.info(f"✅ Successfully scraped job: {item['title'][:50]}...")
+                
                 yield item
-                logger.info(f"✅ Successfully scraped job: {item['title'][:50]}...")
             else:
-                logger.warning(f"Invalid job item - missing fields:")
+                logger.warning(f"❌ Invalid job item - missing fields:")
                 for field in ['title', 'company', 'portal', 'country']:
                     if not item.get(field):
                         logger.warning(f"    Missing: {field}")
                 
         except Exception as e:
+            self.stats['errors'] += 1
             logger.error(f"Error parsing job detail {response.url}: {e}")
     
     def parse_date(self, date_string: str) -> str:
@@ -559,3 +591,25 @@ class ElempleoSpider(BaseSpider):
                 logger.warning(f"Missing required field: {field}")
                 return False
         return True
+    
+    def closed(self, reason):
+        """Called when spider is closed - log final statistics."""
+        logger.info("=" * 60)
+        logger.info("🏁 ELEMPLEO SPIDER FINAL STATISTICS")
+        logger.info("=" * 60)
+        logger.info(f"📊 Total jobs found: {self.stats['total_jobs_found']}")
+        logger.info(f"✅ Total jobs scraped: {self.stats['total_jobs_scraped']}")
+        logger.info(f"⏭️ Duplicates skipped: {self.stats['duplicates_skipped']}")
+        logger.info(f"📄 Pages processed: {self.stats['pages_processed']}")
+        logger.info(f"❌ Errors encountered: {self.stats['errors']}")
+        logger.info(f"🔗 Unique URLs tracked: {len(self.scraped_urls)}")
+        logger.info("=" * 60)
+        
+        # Calculate efficiency metrics
+        if self.stats['total_jobs_found'] > 0:
+            duplicate_rate = (self.stats['duplicates_skipped'] / self.stats['total_jobs_found']) * 100
+            success_rate = (self.stats['total_jobs_scraped'] / self.stats['total_jobs_found']) * 100
+            logger.info(f"📈 Duplicate rate: {duplicate_rate:.1f}%")
+            logger.info(f"📈 Success rate: {success_rate:.1f}%")
+        
+        logger.info("=" * 60)

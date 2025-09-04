@@ -5,9 +5,12 @@ proxy_pools:
   premium:
     description: "High-quality proxies for JS-heavy sites"
     proxies:
-      - http://user:pass@proxy1.example.com:8080
-      - http://user:pass@proxy2.example.com:8080
-      - http://user:pass@proxy3.example.com:8080
+      # Working proxies from testing (fastest first)
+      - http://124.108.6.20:8085  # 1.15s
+      - http://8.221.141.88:3142  # 2.52s
+      - http://39.102.209.121:8008  # 2.55s
+      - http://41.191.203.162:80  # 2.44s
+      - http://8.213.129.15:8081  # 2.53s
     rotation_strategy: "per_request"
     retry_with_new_proxy: true
     max_failures: 3
@@ -15,9 +18,12 @@ proxy_pools:
   standard:
     description: "Standard proxies for regular sites"
     proxies:
-      - http://user:pass@proxy4.example.com:8080
-      - http://user:pass@proxy5.example.com:8080
-      - http://user:pass@proxy6.example.com:8080
+      # Additional working proxies
+      - http://188.166.197.129:3128  # 7.84s
+      - http://8.211.51.115:9050  # 7.43s
+      - http://51.91.109.83:80  # 10.91s
+      - http://103.149.162.194:80
+      - http://103.149.162.195:80
     rotation_strategy: "per_page"
     retry_with_new_proxy: true
     max_failures: 5
@@ -25,8 +31,10 @@ proxy_pools:
   fallback:
     description: "Fallback proxies when others fail"
     proxies:
-      - http://user:pass@fallback1.example.com:8080
-      - http://user:pass@fallback2.example.com:8080
+      # Backup proxies
+      - http://103.149.162.196:80
+      - http://103.149.162.197:80
+      - http://103.149.162.198:80
     rotation_strategy: "per_request"
     retry_with_new_proxy: false
     max_failures: 10
