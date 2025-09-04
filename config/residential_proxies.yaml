@@ -1,0 +1,47 @@
+# Residential Proxy Configuration for Enhanced Anti-Detection
+# This file contains high-quality residential proxies for bypassing Cloudflare protection
+
+proxy_pools:
+  # Premium residential proxies (highest quality, lowest detection rate)
+  premium_residential:
+    - "http://username:password@proxy1.residential.com:8080"
+    - "http://username:password@proxy2.residential.com:8080"
+    - "http://username:password@proxy3.residential.com:8080"
+    - "http://username:password@proxy4.residential.com:8080"
+    - "http://username:password@proxy5.residential.com:8080"
+  
+  # Standard residential proxies (good quality, moderate cost)
+  standard_residential:
+    - "http://username:password@proxy6.residential.com:8080"
+    - "http://username:password@proxy7.residential.com:8080"
+    - "http://username:password@proxy8.residential.com:8080"
+    - "http://username:password@proxy9.residential.com:8080"
+    - "http://username:password@proxy10.residential.com:8080"
+  
+  # Datacenter proxies (fallback, lower cost but higher detection risk)
+  datacenter:
+    - "http://username:password@proxy11.datacenter.com:8080"
+    - "http://username:password@proxy12.datacenter.com:8080"
+    - "http://username:password@proxy13.datacenter.com:8080"
+
+# Proxy rotation strategy
+rotation_strategy: "round_robin"  # Options: round_robin, random, failover
+
+# Proxy health check settings
+health_check:
+  enabled: true
+  timeout: 10
+  max_failures: 3
+  check_interval: 300  # seconds
+
+# Geographic distribution (optional)
+geographic:
+  mexico: ["premium_residential", "standard_residential"]
+  fallback: ["datacenter"]
+
+# Usage notes:
+# 1. Replace username:password with actual proxy credentials
+# 2. Replace proxy URLs with actual residential proxy endpoints
+# 3. Premium residential proxies are recommended for Cloudflare bypass
+# 4. Test proxies before using in production
+# 5. Rotate proxies regularly to avoid detection

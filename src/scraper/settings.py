@@ -43,7 +43,7 @@ RANDOMIZE_DOWNLOAD_DELAY = True
 DOWNLOAD_DELAY_RANGE = (0.5, 2.0)
 
 # Download timeout
-DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 20))
+DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 10))
 
 # Enable or disable downloader middlewares
 DOWNLOADER_MIDDLEWARES = {
