@@ -80,7 +80,8 @@ def run(
     spiders: str = typer.Argument(..., help="Comma-separated list of spiders to run"),
     country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR, CL, PE, EC, PA, UY)"),
     limit: int = typer.Option(500, "--limit", "-l", help="Maximum number of jobs per spider"),
-    max_pages: int = typer.Option(10, "--max-pages", "-p", help="Maximum pages to scrape per spider")
+    max_pages: int = typer.Option(10, "--max-pages", "-p", help="Maximum pages to scrape per spider"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show real-time console output")
 ):
     """Run multiple spiders with specified parameters."""
     spider_list = [s.strip() for s in spiders.split(",")]
@@ -92,7 +93,7 @@ def run(
     results = {}
     for spider in spider_list:
         try:
-            result = run_single_spider(spider, country, limit, max_pages)
+            result = run_single_spider(spider, country, limit, max_pages, verbose)
             results[spider] = result
         except Exception as e:
             logger.error(f"Error running spider {spider}: {e}")
@@ -116,7 +117,8 @@ def run_once(
     spider: str = typer.Argument(..., help="Spider name to run"),
     country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR, CL, PE, EC, PA, UY)"),
     limit: int = typer.Option(100, "--limit", "-l", help="Maximum number of jobs to scrape"),
-    max_pages: int = typer.Option(5, "--max-pages", "-p", help="Maximum pages to scrape")
+    max_pages: int = typer.Option(5, "--max-pages", "-p", help="Maximum pages to scrape"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show real-time console output")
 ):
     """Run a single spider once."""
     validate_spiders([spider])
@@ -125,7 +127,7 @@ def run_once(
     logger.info(f"Running single spider: {spider} for {country}")
     
     try:
-        result = run_single_spider(spider, country, limit, max_pages)
+        result = run_single_spider(spider, country, limit, max_pages, verbose)
         typer.echo(f" {spider} completed: {result.get('items_scraped', 0)} items scraped")
         return result
         
@@ -135,7 +137,7 @@ def run_once(
         raise typer.Exit(1)
 
 
-def run_single_spider(spider: str, country: str, limit: int, max_pages: int) -> dict:
+def run_single_spider(spider: str, country: str, limit: int, max_pages: int, verbose: bool = False) -> dict:
     """Run a single spider and return results."""
     try:
         # Build scrapy command
@@ -160,39 +162,54 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int) -> 
         env["SCRAPY_ORCHESTRATOR_RUN"] = "1"
         env["ORCHESTRATOR_MODE"] = "1"
 
-        # Run scrapy command and capture output
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=3600,
-            env=env,
-            cwd=project_dir
-        )
+        # Run scrapy command with conditional output capture
+        if verbose:
+            # Show real-time console output
+            result = subprocess.run(
+                cmd,
+                env=env,
+                cwd=project_dir,
+                timeout=3600
+            )
+        else:
+            # Capture output for parsing (original behavior)
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=3600,
+                env=env,
+                cwd=project_dir
+            )
 
         
         if result.returncode != 0:
-            logger.error(f"Scrapy command failed: {result.stderr}")
-            raise Exception(f"Scrapy command failed: {result.stderr}")
+            if verbose:
+                logger.error(f"Scrapy command failed with return code: {result.returncode}")
+                raise Exception(f"Scrapy command failed with return code: {result.returncode}")
+            else:
+                logger.error(f"Scrapy command failed: {result.stderr}")
+                raise Exception(f"Scrapy command failed: {result.stderr}")
         
         # Parse output to get item count from Scrapy stats and logs
         items_scraped = 0
         
-        # Look for Scrapy stats in stderr (Scrapy logs to stderr)
-        for line in result.stderr.split('\n'):
-            if "'item_scraped_count':" in line:
-                try:
-                    # Extract the number from the stats line
-                    count_str = line.split("'item_scraped_count':")[1].strip().split(',')[0]
-                    items_scraped = int(count_str)
-                    logger.info(f"Found item count in stats: {items_scraped}")
-                    break
-                except Exception as e:
-                    logger.warning(f"Failed to parse item count from line: {line}, error: {e}")
-                    pass
+        if not verbose:
+            # Look for Scrapy stats in stderr (Scrapy logs to stderr)
+            for line in result.stderr.split('\n'):
+                if "'item_scraped_count':" in line:
+                    try:
+                        # Extract the number from the stats line
+                        count_str = line.split("'item_scraped_count':")[1].strip().split(',')[0]
+                        items_scraped = int(count_str)
+                        logger.info(f"Found item count in stats: {items_scraped}")
+                        break
+                    except Exception as e:
+                        logger.warning(f"Failed to parse item count from line: {line}, error: {e}")
+                        pass
         
         # Look for Bumeran-specific indicators (Selenium-based spider)
-        if items_scraped == 0:
+        if items_scraped == 0 and not verbose and result.stderr:
             for line in result.stderr.split('\n'):
                 if any(indicator in line for indicator in [
                     'Found job cards:', 
@@ -307,7 +324,7 @@ def status():
         typer.echo("\n" + "="*50)
         typer.echo("SYSTEM STATUS")
         typer.echo("="*50)
-        typer.echo(f"Database: ✅ Connected successfully")
+        typer.echo(f"Database:  Connected successfully")
         
         if results:
             typer.echo("\nJob Statistics:")
@@ -341,21 +358,21 @@ def start_automation():
     try:
         from automation.master_controller import MasterController
         
-        typer.echo("🚀 Starting Labor Market Observatory Automation System...")
+        typer.echo(" Starting Labor Market Observatory Automation System...")
         
         # Initialize master controller
         controller = MasterController()
         
         # Start the system
         if controller.start_system():
-            typer.echo("✅ Automation system started successfully!")
+            typer.echo(" Automation system started successfully!")
             typer.echo("\nComponents running:")
-            typer.echo("  - Intelligent Scheduler: ✅")
-            typer.echo("  - Pipeline Automator: ✅")
-            typer.echo("  - Health Monitoring: ✅")
+            typer.echo("  - Intelligent Scheduler: ")
+            typer.echo("  - Pipeline Automator: ")
+            typer.echo("  - Health Monitoring: ")
             
             # Keep the process running
-            typer.echo("\n🔄 System is now running automatically...")
+            typer.echo("\n System is now running automatically...")
             typer.echo("Press Ctrl+C to stop")
             
             try:
@@ -365,7 +382,7 @@ def start_automation():
             except KeyboardInterrupt:
                 typer.echo("\n🛑 Stopping automation system...")
                 controller.stop_system()
-                typer.echo("✅ Automation system stopped")
+                typer.echo(" Automation system stopped")
         else:
             typer.echo("❌ Failed to start automation system")
             
@@ -418,9 +435,9 @@ def automation_status():
         typer.echo(f"  Extraction Queue: {pipeline_details['queue_sizes']['extraction']}")
         
     except ImportError as e:
-        typer.echo(f"❌ Automation system not available: {e}")
+        typer.echo(f" Automation system not available: {e}")
     except Exception as e:
-        typer.echo(f"❌ Error getting automation status: {e}")
+        typer.echo(f" Error getting automation status: {e}")
 
 
 @app.command()
@@ -431,25 +448,25 @@ def process_jobs(
     try:
         from automation.master_controller import MasterController
         
-        typer.echo(f"🔄 Processing {batch_size} jobs manually...")
+        typer.echo(f" Processing {batch_size} jobs manually...")
         
         controller = MasterController()
         results = controller.process_jobs_manually(batch_size)
         
         if 'error' not in results:
-            typer.echo(f"✅ Manual processing completed:")
+            typer.echo(f" Manual processing completed:")
             typer.echo(f"  Processed: {results.get('processed', 0)}")
             typer.echo(f"  Success: {results.get('success', 0)}")
             typer.echo(f"  Errors: {results.get('errors', 0)}")
             typer.echo(f"  Total Skills: {results.get('total_skills', 0)}")
             typer.echo(f"  ESCO Matches: {results.get('esco_matches', 0)}")
         else:
-            typer.echo(f"❌ Manual processing failed: {results['error']}")
+            typer.echo(f" Manual processing failed: {results['error']}")
             
     except ImportError as e:
-        typer.echo(f"❌ Automation system not available: {e}")
+        typer.echo(f" Automation system not available: {e}")
     except Exception as e:
-        typer.echo(f"❌ Error processing jobs: {e}")
+        typer.echo(f" Error processing jobs: {e}")
 
 
 @app.command()
@@ -466,7 +483,7 @@ def list_jobs():
         typer.echo("="*60)
         
         # Scheduled jobs
-        typer.echo(f"\n📋 Scheduled Jobs ({len(jobs_info['scheduled_jobs'])}):")
+        typer.echo(f"\n Scheduled Jobs ({len(jobs_info['scheduled_jobs'])}):")
         for job in jobs_info['scheduled_jobs']:
             status_emoji = "🟢" if job['status'] == 'pending' else "🟡" if job['status'] == 'running' else "🔴"
             typer.echo(f"  {status_emoji} {job['spider']} ({job['country']}) - {job['status']}")
@@ -475,21 +492,21 @@ def list_jobs():
         
         # Running jobs
         if jobs_info['running_jobs']:
-            typer.echo(f"\n🔄 Currently Running ({len(jobs_info['running_jobs'])}):")
+            typer.echo(f"\n Currently Running ({len(jobs_info['running_jobs'])}):")
             for job_id in jobs_info['running_jobs']:
-                typer.echo(f"  🟡 {job_id}")
+                typer.echo(f"   {job_id}")
         
         # Recent history
         if jobs_info['recent_history']:
-            typer.echo(f"\n📊 Recent Job History:")
+            typer.echo(f"\n Recent Job History:")
             for job in jobs_info['recent_history'][-5:]:  # Last 5
-                status_emoji = "✅" if job['status'] == 'success' else "❌"
+                status_emoji = "1" if job['status'] == 'success' else "0"
                 typer.echo(f"  {status_emoji} {job['spider']} ({job['country']}) - {job['status']}")
                 
     except ImportError as e:
-        typer.echo(f"❌ Automation system not available: {e}")
+        typer.echo(f" Automation system not available: {e}")
     except Exception as e:
-        typer.echo(f"❌ Error listing jobs: {e}")
+        typer.echo(f" Error listing jobs: {e}")
 
 
 @app.command()
@@ -504,14 +521,14 @@ def force_job(
         
         controller = MasterController()
         if controller.force_run_job(job_id):
-            typer.echo(f"✅ Job {job_id} started successfully")
+            typer.echo(f" Job {job_id} started successfully")
         else:
-            typer.echo(f"❌ Failed to start job {job_id}")
+            typer.echo(f" Failed to start job {job_id}")
             
     except ImportError as e:
-        typer.echo(f"❌ Automation system not available: {e}")
+        typer.echo(f" Automation system not available: {e}")
     except Exception as e:
-        typer.echo(f"❌ Error force running job: {e}")
+        typer.echo(f" Error force running job: {e}")
 
 
 @app.command()
@@ -532,7 +549,7 @@ def health():
         
         # Scheduler status
         scheduler_status = health_info['scheduler_status']
-        typer.echo(f"\n📋 Scheduler Status:")
+        typer.echo(f"\n Scheduler Status:")
         typer.echo(f"  Running: {scheduler_status.get('scheduler', {}).get('is_running', False)}")
         typer.echo(f"  Total Jobs: {scheduler_status.get('scheduler', {}).get('total_jobs', 0)}")
         typer.echo(f"  Running Jobs: {scheduler_status.get('scheduler', {}).get('running_jobs', 0)}")
@@ -540,16 +557,16 @@ def health():
         
         # Pipeline status
         pipeline_status = health_info['pipeline_status']
-        typer.echo(f"\n🔄 Pipeline Status:")
+        typer.echo(f"\n Pipeline Status:")
         typer.echo(f"  Running: {pipeline_status.get('is_running', False)}")
         typer.echo(f"  Jobs Processed: {pipeline_status.get('jobs_processed', 0)}")
         typer.echo(f"  Jobs Failed: {pipeline_status.get('jobs_failed', 0)}")
         typer.echo(f"  Extraction Queue: {pipeline_status.get('queue_sizes', {}).get('extraction', 0)}")
         
     except ImportError as e:
-        typer.echo(f"❌ Automation system not available: {e}")
+        typer.echo(f" Automation system not available: {e}")
     except Exception as e:
-        typer.echo(f"❌ Error getting health metrics: {e}")
+        typer.echo(f" Error getting health metrics: {e}")
 
 
 if __name__ == "__main__":
