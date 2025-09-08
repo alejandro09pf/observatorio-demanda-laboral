@@ -14,3 +14,12 @@ class JobItem(scrapy.Item):
     contract_type = scrapy.Field()
     remote_type = scrapy.Field()
     posted_date = scrapy.Field()
+    
+    # Additional fields for hiring.cafe and other portals
+    job_id = scrapy.Field()
+    job_category = scrapy.Field()
+    role_activities = scrapy.Field()
+    compensation = scrapy.Field()
+    geolocation = scrapy.Field()
+    source_country = scrapy.Field()
+    scraped_at = scrapy.Field()
