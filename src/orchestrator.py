@@ -43,6 +43,70 @@ sys.path.insert(0, str(Path(__file__).parent))
 from config.settings import get_settings
 from config.logging_config import setup_logging
 
+def _parse_count_from_log(log_path: Path) -> int:
+    """Parse item count from Scrapy log file."""
+    try:
+        if not log_path.exists():
+            return 0
+        # read last lines first to get the most recent run
+        with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
+            lines = f.readlines()
+        for line in reversed(lines):
+            if "'item_scraped_count':" in line:
+                try:
+                    part = line.split("'item_scraped_count':", 1)[1]
+                    count = part.split(",", 1)[0].strip().strip("}").strip()
+                    return int(count)
+                except Exception:
+                    continue
+    except Exception:
+        pass
+    return 0
+
+
+def _guess_count_from_outputs(outputs_dir: Path, spider: str, started_at: datetime) -> int:
+    """Guess item count from output files modified after the run started."""
+    if not outputs_dir.exists():
+        return 0
+
+    # Prefer files that look related to the spider, else try any recent JSON
+    patterns = [f"{spider}*.json", f"*{spider}*.json", "*.json"]
+    candidates = []
+    for pat in patterns:
+        candidates.extend(outputs_dir.glob(pat))
+
+    # Keep files modified after the run started (with a small slack)
+    recent = []
+    slack = 5.0  # seconds
+    start_ts = started_at.timestamp() - slack
+    for p in set(candidates):
+        try:
+            if p.stat().st_mtime >= start_ts:
+                recent.append(p)
+        except Exception:
+            continue
+
+    # newest first
+    recent.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+
+    for path in recent:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                txt = f.read().strip()
+            if not txt:
+                continue
+            # JSON array
+            if txt.startswith("["):
+                data = json.loads(txt)
+                if isinstance(data, list):
+                    return len(data)
+            # NDJSON fallback
+            return sum(1 for line in txt.splitlines() if line.strip())
+        except Exception:
+            continue
+
+    return 0
+
 # Initialize Typer app
 app = typer.Typer(
     name="labor-observatory",
@@ -128,7 +192,7 @@ def run_once(
     
     try:
         result = run_single_spider(spider, country, limit, max_pages, verbose)
-        typer.echo(f" {spider} completed: {result.get('items_scraped', 0)} items scraped")
+        typer.echo(f" {spider} completed: {result.get('items_scraped', 0)} items scraped (see outputs/)")
         return result
         
     except Exception as e:
@@ -139,6 +203,7 @@ def run_once(
 
 def run_single_spider(spider: str, country: str, limit: int, max_pages: int, verbose: bool = False) -> dict:
     """Run a single spider and return results."""
+    started_at = datetime.now()
     try:
         # Build scrapy command
         cmd = [
@@ -254,6 +319,18 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
                             pass
                     else:
                         items_scraped += 1
+        
+        # Existing parsing above may set items_scraped for non-verbose runs.
+        # If we are verbose (no captured output) OR still at zero, try fallbacks.
+        if verbose or items_scraped == 0:
+            log_count = _parse_count_from_log(Path("logs") / "scrapy.log")
+            if log_count:
+                items_scraped = max(items_scraped, log_count)
+
+            if items_scraped == 0:
+                feed_count = _guess_count_from_outputs(Path("outputs"), spider, started_at)
+                if feed_count:
+                    items_scraped = feed_count
         
         return {
             "spider": spider,

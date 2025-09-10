@@ -60,20 +60,32 @@ class IndeedSpider(BaseSpider):
         self.country = "MX"
         self.scraped_urls: Set[str] = set()
         self.max_pages = int(kwargs.get('max_pages', 5))
+        self.limit = int(kwargs.get('limit', 0))  # 0 = unlimited
+        self._emitted = 0
         
-        # Search parameters
-        self.keyword = kwargs.get('keyword', 'ingeniero en sistemas')
+        # Set keyword and location from kwargs (optional)
+        self.keyword = kwargs.get('keyword', '')
         self.location = kwargs.get('location', '')
-        
-        # Build base search URL
-        self.base_search_url = f"https://mx.indeed.com/jobs?q={quote(self.keyword)}"
-        if self.location:
-            self.base_search_url += f"&l={quote(self.location)}"
+
+        # Build base search URL - Indeed requires a search term to show job listings
+        if self.keyword:
+            self.base_search_url = f"https://mx.indeed.com/jobs?q={quote(self.keyword)}"
+            if self.location:
+                self.base_search_url += f"&l={quote(self.location)}"
+        else:
+            # Use a more specific search term to get job listings
+            self.base_search_url = "https://mx.indeed.com/jobs?q=ingeniero"
+            if self.location:
+                self.base_search_url += f"&l={quote(self.location)}"
         
         # Proxy failure tracking
         self.proxy_failures = {}
         self.driver = None
         self.page_load_timeout = int(os.getenv("SELENIUM_PAGELOAD_TIMEOUT", "15"))
+        
+        # Fast test mode and detail fetching options
+        self.fast = os.getenv("FAST_TEST", "false").lower() == "true"
+        self.detail_via_selenium = os.getenv("DETAIL_VIA_SELENIUM", "false").lower() == "true"
         
         # Conservative settings for Indeed (using Selenium to bypass anti-bot protection)
         self.custom_settings.update({
@@ -114,6 +126,104 @@ class IndeedSpider(BaseSpider):
         except Exception as e:
             logger.warning(f"Could not get proxy: {e}")
             return None
+    
+    def _sleep(self, lo, hi):
+        """Sleep with fast test mode support."""
+        delay = random.uniform(lo, hi)
+        if self.fast:
+            delay = 0.3
+        time.sleep(delay)
+    
+    def _canonicalize_job_url(self, url: str) -> str:
+        """Normalize job URLs to canonical /viewjob?jk=... format"""
+        if not url:
+            return url
+        try:
+            m = re.search(r'[?&]jk=([a-f0-9]+)', url)
+            if m:
+                return f'https://mx.indeed.com/viewjob?jk={m.group(1)}'
+        except Exception:
+            pass
+        return url
+    
+    def first_text(self, el, css):
+        """Get first matching element's text, avoiding exceptions."""
+        try:
+            nodes = el.find_elements(By.CSS_SELECTOR, css)
+            return nodes[0].text.strip() if nodes else ""
+        except Exception:
+            return ""
+    
+    def safe_following_text(self, response, label_substring):
+        """Safely extract text following a label, avoiding scripts/styles."""
+        xp = (
+            f'//*[not(self::script or self::style) and '
+            f'contains(normalize-space(.), "{label_substring}")]'
+            f'/following-sibling::*[1][not(self::script or self::style)]//text()'
+        )
+        t = response.xpath(xp).get()
+        return self.clean_text(t) if t else ""
+    
+    def _handle_banners_and_geo(self):
+        """Handle OneTrust cookie banner and other modals that block interaction."""
+        # OneTrust cookie banner
+        try:
+            btns = self.driver.find_elements(By.CSS_SELECTOR, "#onetrust-accept-btn-handler, button#onetrust-accept-btn-handler, button[aria-label*='Aceptar'], button[aria-label*='Accept']")
+            if btns:
+                btns[0].click()
+                time.sleep(0.8)
+        except Exception:
+            pass
+
+        # Close any modal/overlay that blocks interaction (common on Indeed)
+        try:
+            close_btns = self.driver.find_elements(By.CSS_SELECTOR, "button[aria-label*='Cerrar'], button[aria-label*='close'], .icl-CloseButton")
+            if close_btns:
+                for b in close_btns:
+                    try:
+                        b.click()
+                        time.sleep(0.3)
+                    except Exception:
+                        continue
+        except Exception:
+            pass
+    
+    def _wait_for_results(self, timeout=20):
+        """Wait for job results to appear using current Indeed markers."""
+        wait = WebDriverWait(self.driver, timeout, poll_frequency=0.5)
+        # Wait for *either* of these to appear
+        try:
+            wait.until(
+                EC.any_of(
+                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "h2.jobTitle a.jcs-JobTitle")),
+                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.job_seen_beacon"))
+                )
+            )
+            return True
+        except TimeoutException:
+            return False
+    
+    def _stabilize_results(self):
+        """Stabilize results by triggering lazy loaded content."""
+        # small scrolls to trigger lazy content
+        for y in (400, 900, 1400):
+            try:
+                self.driver.execute_script(f"window.scrollTo(0,{y});")
+                time.sleep(0.6)
+            except Exception:
+                break
+        # final settle
+        time.sleep(0.8)
+    
+    def _blocked_by_indeed(self) -> bool:
+        """Detect if blocked by captcha or unusual activity detection."""
+        html = self.driver.page_source.lower()
+        needles = [
+            "unusual activity", "actividad inusual",
+            "are you a robot", "captcha", "verifica que no eres un robot",
+            "access denied"
+        ]
+        return any(n in html for n in needles)
 
     def _create_chrome_options(self, proxy: str = None) -> Options:
         """Create Chrome options with anti-detection measures."""
@@ -191,7 +301,7 @@ class IndeedSpider(BaseSpider):
                 self.driver = self._setup_standard_driver(proxy)
             
             self.driver.set_page_load_timeout(self.page_load_timeout)
-            self.driver.implicitly_wait(10)
+            self.driver.implicitly_wait(0)  # Disable implicit waits for speed
             
             # Apply anti-detection measures
             self._apply_stealth_measures()
@@ -278,7 +388,7 @@ class IndeedSpider(BaseSpider):
             pass
         logger.info(f"🔄 Indeed spider closed: {reason}")
         logger.info(f"📊 Total unique jobs found: {len(self.scraped_urls)}")
-        logger.info(f"📄 Total pages processed: {self.current_page}")
+        logger.info(f"📄 Total pages processed: {getattr(self, 'current_page', 0)}")
 
     def get_headers(self):
         """Get realistic headers to avoid detection."""
@@ -309,7 +419,10 @@ class IndeedSpider(BaseSpider):
             )
         
         logger.info(f"🚀 Starting Indeed spider for Mexico")
-        logger.info(f"🔍 Search query: {self.keyword}")
+        if self.keyword:
+            logger.info(f"🔍 Search query: {self.keyword}")
+        else:
+            logger.info(f"🔍 Using general search term: 'ingeniero'")
         logger.info(f"📍 Location: {self.location or 'All locations'}")
         logger.info(f"📄 Max pages: {self.max_pages}")
         
@@ -337,137 +450,192 @@ class IndeedSpider(BaseSpider):
                 self.driver.get(url)
                 
                 # Wait for page to load
-                time.sleep(random.uniform(3.0, 5.0))
+                self._sleep(3, 5)
                 
                 # Apply stealth measures after page load
                 self._apply_stealth_measures()
                 
-                # Wait for job cards to load
-                try:
-                    wait = WebDriverWait(self.driver, 10)
-                    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[data-jk]')))
-                except TimeoutException:
-                    logger.warning(f"⚠️ No job cards found on page {page}")
+                # Handle banners and geo modals
+                self._handle_banners_and_geo()
+                
+                # Wait for results to appear
+                if not self._wait_for_results(timeout=20):
+                    logger.warning(f"⚠️ Results not visible yet on page {page}")
+                    # Save the HTML for inspection
+                    debug_file = f"debug_indeed_page_{page}.html"
+                    with open(debug_file, 'w', encoding='utf-8') as f:
+                        f.write(self.driver.page_source)
+                    logger.info(f"🔍 Saved page source to {debug_file} for debugging")
+                    if self._blocked_by_indeed():
+                        logger.warning("⚠️ Looks like an anti-bot block (captcha/verification). Try proxies or wait & retry.")
                     break
                 
-                # Extract job cards
-                job_cards = self.driver.find_elements(By.CSS_SELECTOR, '[data-jk]')
-                logger.info(f"🔍 Found {len(job_cards)} job cards on page {page}")
+                # Stabilize results by triggering lazy loaded content
+                self._stabilize_results()
                 
-                if not job_cards:
-                    logger.warning(f"⚠️ No job cards found on page {page}")
+                # Primary card container
+                cards = self.driver.find_elements(By.CSS_SELECTOR, "div.job_seen_beacon")
+                if not cards:
+                    # Fallback: collect by title links and walk up to the card container
+                    title_links = self.driver.find_elements(By.CSS_SELECTOR, "h2.jobTitle a.jcs-JobTitle")
+                    cards = []
+                    for a in title_links:
+                        try:
+                            container = a.find_element(By.XPATH, "./ancestor::div[contains(@class,'job_seen_beacon')][1]")
+                            cards.append(container)
+                        except Exception:
+                            # fallback to the <article> if present
+                            try:
+                                container = a.find_element(By.XPATH, "./ancestor::article[1]")
+                                cards.append(container)
+                            except Exception:
+                                continue
+
+                logger.info(f"🔍 Found {len(cards)} job cards on page {page}")
+                if not cards:
+                    # Save and exit early
+                    debug_file = f"debug_indeed_page_{page}.html"
+                    with open(debug_file, 'w', encoding='utf-8') as f:
+                        f.write(self.driver.page_source)
+                    logger.info(f"🔍 Saved page source to {debug_file} for debugging")
                     break
                 
                 num_before = len(self.scraped_urls)
                 
-                for card in job_cards:
+                # Extract each card
+                job_data_list = []
+                for card in cards:
+                    # Hard stop before processing if limit reached
+                    if self.limit and self._emitted >= self.limit:
+                        logger.info(f"Reached limit={self.limit}, stopping.")
+                        break
+                    
                     try:
-                        # Extract job ID
-                        jk = card.get_attribute('data-jk')
-                        if not jk or jk in self.scraped_urls:
-                            continue
-                        
-                        self.scraped_urls.add(jk)
-                        
-                        # Extract job information - try multiple selectors for Indeed's structure
-                        title = ""
-                        job_link = ""
-                        
-                        # Try different selectors for job title
-                        title_selectors = [
-                            'h2 a[data-jk]',
-                            'h2 a',
-                            '.jobTitle a',
-                            'a[data-jk]',
-                            'a[href*="/viewjob"]'
-                        ]
-                        
-                        for selector in title_selectors:
+                        # title + link
+                        a = card.find_element(By.CSS_SELECTOR, "h2.jobTitle a.jcs-JobTitle")
+                        title = (a.get_attribute("aria-label") or a.text or "").strip()
+                        job_link = a.get_attribute("href") or ""
+
+                        # company
+                        company = ""
+                        for sel in ("span.companyName", "[data-testid='company-name']"):
                             try:
-                                title_elem = card.find_element(By.CSS_SELECTOR, selector)
-                                title = title_elem.text.strip()
-                                job_link = title_elem.get_attribute('href')
-                                if title and job_link:
-                                    break
-                            except NoSuchElementException:
-                                continue
-                        
-                        if not title:
-                            # Fallback: try to get any text from the card
-                            try:
-                                title = card.text.strip()[:100]  # First 100 chars
-                            except:
-                                title = f"Job {jk}"
-                        
-                        # Extract company - try multiple selectors
-                        company = "Company not specified"
-                        company_selectors = [
-                            '[data-testid="company-name"]',
-                            '.companyName',
-                            '.company',
-                            'span[title]'
-                        ]
-                        
-                        for selector in company_selectors:
-                            try:
-                                company_elem = card.find_element(By.CSS_SELECTOR, selector)
-                                company = company_elem.text.strip() or company_elem.get_attribute('title')
+                                company = card.find_element(By.CSS_SELECTOR, sel).text.strip()
                                 if company:
                                     break
                             except NoSuchElementException:
                                 continue
-                        
-                        # Extract location - try multiple selectors
-                        location = "Location not specified"
-                        location_selectors = [
-                            '[data-testid="job-location"]',
-                            '.companyLocation',
-                            '.location',
-                            '.jobLocation'
-                        ]
-                        
-                        for selector in location_selectors:
+                        if not company:
+                            company = "Company not specified"
+
+                        # location
+                        location = ""
+                        for sel in ("div.companyLocation", "[data-testid='job-location']"):
                             try:
-                                location_elem = card.find_element(By.CSS_SELECTOR, selector)
-                                location = location_elem.text.strip()
+                                location = card.find_element(By.CSS_SELECTOR, sel).text.strip()
                                 if location:
                                     break
                             except NoSuchElementException:
                                 continue
-                        
-                        # Extract snippet - try multiple selectors
+                        if not location:
+                            location = "Location not specified"
+
+                        # snippet
                         snippet = ""
-                        snippet_selectors = [
-                            '.summary',
-                            '.job-snippet',
-                            '.jobDescription',
-                            '.description'
-                        ]
-                        
-                        for selector in snippet_selectors:
+                        for sel in (".job-snippet", ".jobDescription", ".resultContent p"):
                             try:
-                                snippet_elem = card.find_element(By.CSS_SELECTOR, selector)
-                                snippet = snippet_elem.text.strip()
+                                snippet = card.find_element(By.CSS_SELECTOR, sel).text.strip()
                                 if snippet:
                                     break
                             except NoSuchElementException:
                                 continue
+
+                        if not job_link and title:
+                            # last resort: build from jk in href of any descendant link
+                            try:
+                                any_a = card.find_element(By.CSS_SELECTOR, "a[href*='viewjob']")
+                                job_link = any_a.get_attribute("href")
+                            except Exception:
+                                pass
+
+                        if not job_link:
+                            logger.debug("Skipping a card without link")
+                            continue
                         
-                        logger.info(f"➡️ Found job: {title[:50]}... at {company}")
+                        # Canonicalize job URL to avoid tracking redirects
+                        job_link = self._canonicalize_job_url(job_link)
+
+                        # Extract jk for deduplication
+                        import re
+                        jk = re.search(r"jk=([a-f0-9]+)", job_link).group(1) if "jk=" in job_link else job_link
                         
-                        # Fetch job detail page with Selenium
-                        yield from self._fetch_job_detail_with_selenium(job_link, title, company, location, snippet)
-                        
+                        if jk in self.scraped_urls:
+                            continue
+                        self.scraped_urls.add(jk)
+
+                        job_data_list.append({
+                            "jk": jk,
+                            "title": title,
+                            "job_link": job_link,
+                            "company": company,
+                            "location": location,
+                            "snippet": snippet
+                        })
+                        logger.info(f"➡️ {title[:60]} — {company} — {location}")
                     except Exception as e:
-                        logger.error(f"❌ Error processing job card: {e}")
+                        logger.debug(f"Card parse failed: {e}")
                         continue
+                
+                # Process each job's detail page
+                use_selenium_detail = os.getenv("DETAIL_VIA_SELENIUM", "true").lower() != "false"
+                
+                for jd in job_data_list:
+                    if use_selenium_detail:
+                        try:
+                            yield from self._fetch_job_detail_with_selenium(
+                                jd["job_link"], jd["title"], jd["company"], jd["location"], jd["snippet"]
+                            )
+                        except Exception as e:
+                            logger.error(f" Error fetching detail for job {jd['jk']}: {e}")
+                            # Yield basic item as fallback
+                            basic_item = JobItem()
+                            basic_item['portal'] = self.portal
+                            basic_item['country'] = self.country
+                            basic_item['url'] = jd['job_link']
+                            basic_item['title'] = jd['title']
+                            basic_item['company'] = jd['company']
+                            basic_item['location'] = jd['location']
+                            basic_item['description'] = jd['snippet'] or 'Description not available'
+                            basic_item['requirements'] = 'Requirements not available'
+                            basic_item['salary_raw'] = ''
+                            basic_item['contract_type'] = ''
+                            basic_item['remote_type'] = 'No especificado'
+                            basic_item['posted_date'] = None
+                            yield basic_item
+                    else:
+                        # Use Scrapy requests for faster processing
+                        canon = self._canonicalize_job_url(jd["job_link"])
+                        yield scrapy.Request(
+                            url=canon,
+                            callback=self.parse_job,
+                            meta={
+                                "title": jd["title"],
+                                "company": jd["company"],
+                                "location": jd["location"],
+                                "snippet": jd["snippet"],
+                                "dont_cache": True,
+                                "dont_proxy": True
+                            },
+                            headers=self.get_headers(),
+                            errback=self.handle_error
+                        )
                 
                 new_jobs_found = len(self.scraped_urls) > num_before
                 page += 1
                 
                 # Wait between pages
                 if page <= self.max_pages and new_jobs_found:
-                    time.sleep(random.uniform(5.0, 8.0))
+                    self._sleep(5, 8)
                 
             except Exception as e:
                 logger.error(f"❌ Error processing page {page}: {e}")
@@ -476,33 +644,71 @@ class IndeedSpider(BaseSpider):
     def _fetch_job_detail_with_selenium(self, job_url, title, company, location, snippet):
         """Fetch job detail page using Selenium and parse it."""
         try:
+            # Canonicalize job URL to avoid tracking redirects
+            job_url = self._canonicalize_job_url(job_url)
+            
+            # Validate URL
+            if not job_url or job_url.strip() == "":
+                logger.warning(f"⚠️ Empty job URL, skipping detail fetch")
+                # Yield basic item with available data
+                basic_item = JobItem()
+                basic_item['portal'] = self.portal
+                basic_item['country'] = self.country
+                basic_item['url'] = f"https://mx.indeed.com/viewjob?jk={list(self.scraped_urls)[-1]}" if self.scraped_urls else ""
+                basic_item['title'] = title or 'Indeed Job Position'
+                basic_item['company'] = company or 'Company Not Found'
+                basic_item['location'] = location or 'Location Not Found'
+                basic_item['description'] = snippet or 'Description not available'
+                basic_item['requirements'] = 'Requirements not available'
+                basic_item['salary_raw'] = ''
+                basic_item['contract_type'] = ''
+                basic_item['remote_type'] = 'No especificado'
+                basic_item['posted_date'] = None
+                yield basic_item
+                return
+            
             logger.info(f"🌐 Loading job detail: {job_url}")
             self.driver.get(job_url)
             
             # Wait for page to load
-            time.sleep(random.uniform(2.0, 4.0))
+            self._sleep(2, 4)
             
             # Apply stealth measures
             self._apply_stealth_measures()
             
+            # Remove noisy nodes (scripts, styles) to prevent JS contamination
+            self.driver.execute_script("""
+                for (const n of document.querySelectorAll('script,style,noscript')) n.remove();
+            """)
+            
             # Parse the detail page
             page_source = self.driver.page_source
-            from scrapy.http import HtmlResponse
-            response = HtmlResponse(url=job_url, body=page_source, encoding='utf-8')
+            from scrapy.http import HtmlResponse, Request
             
-            # Use the existing parse_job method
+            # Create a proper Request with meta data
+            req = Request(job_url, headers=self.get_headers(), dont_filter=True)
+            req.meta.update({'title': title, 'company': company, 'location': location, 'snippet': snippet})
+            
+            response = HtmlResponse(
+                url=job_url,
+                body=page_source.encode('utf-8'),
+                encoding='utf-8',
+                request=req
+            )
+            
+            # Use the existing parse_job method with pre-extracted data
             for item in self.parse_job(response, title, company, location, snippet):
                 yield item
                 
         except Exception as e:
             logger.error(f"❌ Error fetching job detail {job_url}: {e}")
             
-            # Yield fallback item
+            # Yield fallback item with proper URL
             try:
                 fallback_item = JobItem()
                 fallback_item['portal'] = self.portal
                 fallback_item['country'] = self.country
-                fallback_item['url'] = job_url
+                fallback_item['url'] = job_url if job_url else f"https://mx.indeed.com/viewjob?jk={list(self.scraped_urls)[-1]}" if self.scraped_urls else ""
                 fallback_item['title'] = title or 'Indeed Job Position'
                 fallback_item['company'] = company or 'Company Not Found'
                 fallback_item['location'] = location or 'Location Not Found'
@@ -632,15 +838,8 @@ class IndeedSpider(BaseSpider):
         try:
             logger.info(f"🔍 Parsing job detail: {response.url}")
             
-            # Get pre-extracted data from parameters or meta
-            if not title:
-                title = response.meta.get('title', '')
-            if not company:
-                company = response.meta.get('company', '')
-            if not location:
-                location = response.meta.get('location', '')
-            if not snippet:
-                snippet = response.meta.get('snippet', '')
+            # Use the pre-extracted data passed as parameters
+            # (No need to check response.meta since we pass data directly)
             
             # Create JobItem
             item = JobItem()
@@ -650,36 +849,98 @@ class IndeedSpider(BaseSpider):
             
             # Extract title (use pre-extracted or parse from page)
             if not title:
-                title = response.xpath('//main//h1/text()').get()
+                title_selectors = [
+                    '//main//h1/text()',
+                    '//h1/text()',
+                    '//*[@data-testid="job-title"]/text()',
+                    '//title/text()'
+                ]
+                for selector in title_selectors:
+                    title = response.xpath(selector).get()
+                    if title:
+                        break
                 title = self.clean_text(title) if title else "Job Title Not Found"
             item['title'] = title
             
+            # Clean up title - remove "detalles completos de" prefix
+            item['title'] = re.sub(r'^detalles completos de\s+', '', item['title'], flags=re.I).strip()
+            
             # Extract company (use pre-extracted or parse from page)
-            if not company:
-                company = response.xpath('//main//h1/following::*[self::a or self::span][1]/text()').get()
+            if not company or company == "Company not specified":
+                company_selectors = [
+                    '//main//h1/following::*[self::a or self::span][1]/text()',
+                    '//*[@data-testid="company-name"]/text()',
+                    '//*[contains(@class, "company")]//text()',
+                    '//*[contains(text(), "Company")]/following::text()[1]'
+                ]
+                for selector in company_selectors:
+                    company = response.xpath(selector).get()
+                    if company and company.strip():
+                        break
                 company = self.clean_text(company) if company else "Company Not Found"
             item['company'] = company
             
             # Extract location (use pre-extracted or parse from page)
-            if not location:
-                location = response.xpath('//main//h1/following::*[contains(text(), ",")][1]/text()').get()
+            if not location or location == "Location not specified":
+                location_selectors = [
+                    '//main//h1/following::*[contains(text(), ",")][1]/text()',
+                    '//*[@data-testid="job-location"]/text()',
+                    '//*[contains(@class, "location")]//text()',
+                    '//*[contains(text(), "Location")]/following::text()[1]'
+                ]
+                for selector in location_selectors:
+                    location = response.xpath(selector).get()
+                    if location and location.strip():
+                        break
                 location = self.clean_text(location) if location else "Location Not Found"
             item['location'] = location
             
-            # Extract salary
-            salary = response.xpath('//span[contains(text(), "$") and (contains(text(), "mes") or contains(text(), "semanal"))]/text()').get()
+            # Extract salary - prefer structured area and avoid scripts/styles
+            salary = response.xpath(
+                '//*[@id="salaryInfoAndJobType"]//*[self::span or self::div]'
+                '[contains(normalize-space(.), "$")]'
+                '[not(ancestor::script) and not(ancestor::style)]//text()'
+            ).get()
+
             if not salary:
-                # Try alternative selectors
-                salary = response.xpath('//*[contains(text(), "Sueldo")]/following::*[1]/text()').get()
-            item['salary_raw'] = self.clean_text(salary) if salary else ""
+                # Label-based fallback, but only to the next *sibling* and never scripts/styles
+                salary = response.xpath(
+                    '//*[not(self::script or self::style) and '
+                    '(contains(translate(normalize-space(.),"SALARIOSUELDO","salariosueldo"),"sueldo") or '
+                    ' contains(translate(normalize-space(.),"SALARIO","salario"),"salario"))]'
+                    '/following-sibling::*[1][not(self::script or self::style)]//text()'
+                ).get()
+
+            salary = self.clean_text(salary) if salary else ""
+
+            # Final sanity check: drop obviously bad values
+            if salary and (len(salary) > 120 or re.search(r'\b(window|mosaic|function)\b', salary)):
+                salary = ""
+
+            item['salary_raw'] = salary
             
             # Extract contract type
-            contract_type = response.xpath('//*[contains(text(), "Tipo de empleo")]/following::*[1]/text()').get()
-            item['contract_type'] = self.clean_text(contract_type) if contract_type else ""
+            contract_type = response.xpath(
+                '//*[contains(normalize-space(.),"Tipo de empleo")]'
+                '/following-sibling::*[1][not(self::script or self::style)]//text()'
+            ).get()
+
+            if not contract_type:
+                # Try to read from inline JSON (jobTypes labels) if present
+                script_blob = response.xpath('//script[contains(., "jobTypes")][1]/text()').get()
+                if script_blob:
+                    labels = re.findall(r'"jobTypes"\s*:\s*\[(.*?)\]', script_blob, flags=re.S)
+                    if labels:
+                        ct = re.findall(r'"label"\s*:\s*"([^"]+)"', labels[0])
+                        if ct:
+                            contract_type = "; ".join(ct)
+
+            contract_type = self.clean_text(contract_type) if contract_type else ""
+            item['contract_type'] = contract_type
             
-            # Extract schedule
+            # Extract schedule (not stored in JobItem, just for logging)
             schedule = response.xpath('//*[contains(text(), "Turno y horario")]/following::*[1]/text()').get()
-            item['schedule'] = self.clean_text(schedule) if schedule else ""
+            schedule = self.clean_text(schedule) if schedule else ""
             
             # Extract benefits
             benefits = response.xpath('//*[contains(text(), "Beneficios")]/following::ul[1]//li//text()').getall()
@@ -722,27 +983,33 @@ class IndeedSpider(BaseSpider):
                 remote_type = "No especificado"
             item['remote_type'] = remote_type
             
-            # Validate mandatory fields
-            if not item.get('title') or not item.get('company'):
-                logger.warning(f"⚠️ Missing mandatory fields for {response.url}")
+            # Ensure mandatory fields have fallbacks
+            if not item.get('title'):
+                item['title'] = title or 'Indeed Job Position'
+            if not item.get('company'):
+                item['company'] = company or 'Company Not Found'
+            
+            # Check limit before yielding
+            if self.limit and self._emitted >= self.limit:
                 return
             
             logger.info(f"✅ Successfully parsed job: {item['title']} at {item['company']}")
             yield item
+            self._emitted += 1
             
         except Exception as e:
             logger.error(f"❌ Error parsing job detail {response.url}: {e}")
             
-            # Yield fallback item
+            # Yield fallback item using passed parameters instead of response.meta
             try:
                 fallback_item = JobItem()
                 fallback_item['portal'] = self.portal
                 fallback_item['country'] = self.country
                 fallback_item['url'] = response.url
-                fallback_item['title'] = response.meta.get('title', 'Indeed Job Position')
-                fallback_item['company'] = response.meta.get('company', 'Company Not Found')
-                fallback_item['location'] = response.meta.get('location', 'Location Not Found')
-                fallback_item['description'] = f'Error parsing job details: {str(e)[:100]}'
+                fallback_item['title'] = title or 'Indeed Job Position'
+                fallback_item['company'] = company or 'Company Not Found'
+                fallback_item['location'] = location or 'Location Not Found'
+                fallback_item['description'] = (snippet or 'Description not available')[:1000]
                 fallback_item['requirements'] = 'Requirements not available'
                 fallback_item['salary_raw'] = ''
                 fallback_item['contract_type'] = ''
@@ -834,8 +1101,3 @@ class IndeedSpider(BaseSpider):
         except Exception:
             return datetime.today().date().isoformat()
 
-    def closed(self, reason):
-        """Called when spider is closed."""
-        logger.info(f"🔄 Indeed spider closed: {reason}")
-        logger.info(f"📊 Total unique jobs found: {len(self.scraped_urls)}")
-        logger.info(f"📄 Total pages processed: {self.current_page}")
