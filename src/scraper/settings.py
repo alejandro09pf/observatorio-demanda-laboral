@@ -49,8 +49,8 @@ DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 10))
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scraper.middlewares.UserAgentRotationMiddleware': 400,
-    # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
-    # 'scraper.middlewares.ProxyRotationMiddleware': 760,
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
+    'scraper.middlewares.ProxyRotationMiddleware': 760,
     'scraper.middlewares.RetryWithBackoffMiddleware': 770,
 }
 

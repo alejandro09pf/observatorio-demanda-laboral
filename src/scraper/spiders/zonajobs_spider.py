@@ -125,7 +125,7 @@ class ZonaJobsSpider(BaseSpider):
                 dont_filter=True
             )
         except Exception as e:
-            logger.error(f"❌ Failed to initialize Selenium driver: {e}")
+            logger.error(f" Failed to initialize Selenium driver: {e}")
             raise
     
     def get_proxy(self):

@@ -56,7 +56,7 @@ setup_logging(settings.log_level, settings.log_file)
 logger = logging.getLogger(__name__)
 
 # Available spiders
-AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo', 'zonajobs', 'magneto', 'occmundial', 'clarin', 'hiring_cafe']
+AVAILABLE_SPIDERS = ['infojobs', 'elempleo', 'bumeran', 'lego', 'computrabajo', 'zonajobs', 'magneto', 'occmundial', 'clarin', 'hiring_cafe', 'indeed']
 SUPPORTED_COUNTRIES = ['CO', 'MX', 'AR', 'CL', 'PE', 'EC', 'PA', 'UY']
 
 
@@ -194,7 +194,7 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
         # Parse output to get item count from Scrapy stats and logs
         items_scraped = 0
         
-        if not verbose:
+        if not verbose and result.stderr:
             # Look for Scrapy stats in stderr (Scrapy logs to stderr)
             for line in result.stderr.split('\n'):
                 if "'item_scraped_count':" in line:
@@ -237,7 +237,7 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
                             pass
         
         # Fallback: look for other general indicators
-        if items_scraped == 0:
+        if items_scraped == 0 and result.stderr:
             for line in result.stderr.split('\n'):
                 if any(indicator in line for indicator in [
                     'Inserted new job:', 
