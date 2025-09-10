@@ -59,8 +59,11 @@ python -m src.orchestrator run-once occmundial --country MX --limit 100
 # Clarín (Argentina)
 python -m src.orchestrator run-once clarin --country AR --limit 100
 
+# Indeed (Mexico)
+python -m src.orchestrator run-once indeed --country MX --limit 100
+
 # Multiple new spiders
-python -m src.orchestrator run magneto,occmundial,clarin --country CO --limit 200
+python -m src.orchestrator run magneto,occmundial,clarin,indeed --country MX --limit 200
 
 ### 7. Direct Scrapy Runs (Smoke Tests)
 
@@ -83,6 +86,7 @@ scrapy crawl clarin -a country=AR -o outputs/clarin.json
 | magneto | CO, MX, AR | Magneto job portal |
 | occmundial | MX, CO, AR | OCCMundial job portal |
 | clarin | AR, CO, MX | Empleos Clarín job portal |
+| indeed | MX | Indeed Mexico job portal |
 | lego | CO, MX, AR | LEGO careers (example) |
 
 ## Configuration
