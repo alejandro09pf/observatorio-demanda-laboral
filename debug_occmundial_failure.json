@@ -1,0 +1,23 @@
+{
+  "scraper": "occmundial",
+  "status": "❌ FAILING",
+  "timestamp": "2025-09-23T00:33:41",
+  "issue": "Database constraint violation and timeout",
+  "details": {
+    "primary_error": "new row for relation \"raw_jobs\" violates check constraint \"chk_portal\"",
+    "constraint_issue": "Spider uses 'occ' as portal name, but constraint only allows 'occmundial'",
+    "secondary_error": "XPath parsing errors in job detail extraction",
+    "timeout": "Spider execution timed out after 1 hour",
+    "jobs_found": 22,
+    "jobs_processed": 0,
+    "database_connection": "✅ Connected successfully",
+    "jobs_inserted": 0,
+    "output_file": "outputs/occmundial_real.json (not created)"
+  },
+  "recommendations": [
+    "Fix portal name in OCCMundial spider to use 'occmundial' instead of 'occ'",
+    "Fix XPath expressions for job detail parsing",
+    "Add 'occ' to database constraint if needed",
+    "Optimize spider performance to avoid timeouts"
+  ]
+}

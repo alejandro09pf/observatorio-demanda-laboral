@@ -1,0 +1,141 @@
+{
+  "timestamp": "2025-01-20T18:56:16.614195",
+  "analysis": "Scraper Data Format vs Database Schema Comparison",
+  "scraper_output_format": {
+    "description": "Scrapers produce JSON files with the following structure",
+    "fields": {
+      "portal": "string - portal name (bumeran, indeed, elempleo, etc.)",
+      "country": "string - country code (MX, CO, AR)",
+      "url": "string - job posting URL",
+      "title": "string - job title",
+      "company": "string - company name",
+      "location": "string - job location",
+      "description": "string - job description",
+      "requirements": "string - job requirements",
+      "salary_raw": "string - raw salary information",
+      "contract_type": "string - contract type",
+      "remote_type": "string - remote work type",
+      "posted_date": "string/date - when job was posted",
+      "job_id": "string - additional job ID (some scrapers)",
+      "job_category": "string - job category (some scrapers)",
+      "role_activities": "array - role activities (some scrapers)",
+      "compensation": "object - compensation details (some scrapers)",
+      "geolocation": "array - geolocation data (some scrapers)",
+      "source_country": "string - source country (some scrapers)",
+      "scraped_at": "string - when scraped (some scrapers)"
+    }
+  },
+  "database_schema": {
+    "table": "raw_jobs",
+    "fields": {
+      "job_id": "uuid - primary key, auto-generated",
+      "portal": "varchar(50) - portal name, NOT NULL",
+      "country": "char(2) - country code, NOT NULL",
+      "url": "text - job URL, NOT NULL",
+      "title": "text - job title, NOT NULL",
+      "company": "text - company name, nullable",
+      "location": "text - job location, nullable",
+      "description": "text - job description, NOT NULL",
+      "requirements": "text - job requirements, nullable",
+      "salary_raw": "text - raw salary, nullable",
+      "contract_type": "varchar(50) - contract type, nullable",
+      "remote_type": "varchar(50) - remote type, nullable",
+      "posted_date": "date - posted date, nullable",
+      "scraped_at": "timestamp - when scraped, auto-generated",
+      "content_hash": "varchar(64) - content hash for deduplication, unique",
+      "raw_html": "text - raw HTML, nullable",
+      "is_processed": "boolean - processing flag, default false"
+    },
+    "constraints": {
+      "portal_check": "portal IN ('computrabajo', 'bumeran', 'elempleo')",
+      "country_check": "country IN ('CO', 'MX', 'AR')",
+      "content_hash_unique": "content_hash must be unique"
+    }
+  },
+  "format_compatibility": {
+    "compatible_fields": [
+      "portal",
+      "country", 
+      "url",
+      "title",
+      "company",
+      "location",
+      "description",
+      "requirements",
+      "salary_raw",
+      "contract_type",
+      "remote_type",
+      "posted_date"
+    ],
+    "database_only_fields": [
+      "job_id",
+      "scraped_at",
+      "content_hash",
+      "raw_html",
+      "is_processed"
+    ],
+    "scraper_only_fields": [
+      "job_id",
+      "job_category",
+      "role_activities",
+      "compensation",
+      "geolocation",
+      "source_country",
+      "scraped_at"
+    ],
+    "potential_issues": [
+      {
+        "issue": "Portal constraint violation",
+        "description": "Database only allows 'computrabajo', 'bumeran', 'elempleo' but scrapers may produce other portal names",
+        "impact": "INSERT will fail with constraint violation",
+        "solution": "Update database constraint or normalize portal names in scrapers"
+      },
+      {
+        "issue": "Country constraint violation", 
+        "description": "Database only allows 'CO', 'MX', 'AR' but scrapers may produce other country codes",
+        "impact": "INSERT will fail with constraint violation",
+        "solution": "Update database constraint or normalize country codes in scrapers"
+      },
+      {
+        "issue": "Data type mismatches",
+        "description": "Some fields may have type mismatches (e.g., posted_date as string vs date)",
+        "impact": "INSERT may fail or data may be truncated",
+        "solution": "Ensure proper data type conversion in pipeline"
+      }
+    ]
+  },
+  "pipeline_analysis": {
+    "current_pipeline": "JobPostgresPipeline",
+    "insert_query": "INSERT INTO raw_jobs (portal, country, url, title, company, location, description, requirements, salary_raw, contract_type, remote_type, posted_date, content_hash) VALUES (...) ON CONFLICT (content_hash) DO NOTHING",
+    "deduplication": "Uses content_hash for deduplication",
+    "error_handling": "Drops items on database errors",
+    "connection_handling": "Connects on spider open, disconnects on spider close"
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "action": "Update database constraints",
+      "description": "Add support for all portal names used by scrapers (indeed, zonajobs, etc.)",
+      "sql": "ALTER TABLE raw_jobs DROP CONSTRAINT chk_portal; ALTER TABLE raw_jobs ADD CONSTRAINT chk_portal CHECK (portal IN ('computrabajo', 'bumeran', 'elempleo', 'indeed', 'zonajobs', 'hiring_cafe', 'magneto'));"
+    },
+    {
+      "priority": "HIGH", 
+      "action": "Update country constraints",
+      "description": "Add support for all country codes used by scrapers",
+      "sql": "ALTER TABLE raw_jobs DROP CONSTRAINT chk_country; ALTER TABLE raw_jobs ADD CONSTRAINT chk_country CHECK (country IN ('CO', 'MX', 'AR', 'US', 'CA'));"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Add data validation",
+      "description": "Add validation in pipeline to ensure data types match schema",
+      "implementation": "Add type conversion and validation before INSERT"
+    },
+    {
+      "priority": "LOW",
+      "action": "Store additional fields",
+      "description": "Consider storing scraper-only fields in a separate table or JSONB column",
+      "implementation": "Add job_metadata JSONB column to store additional scraper fields"
+    }
+  ]
+}
+

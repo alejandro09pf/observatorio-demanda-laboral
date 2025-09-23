@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code
 COPY src/ ./src/
 COPY config/ ./config/
+COPY scrapy.cfg ./
 
 # Create necessary directories
 RUN mkdir -p data/models data/cache data/esco outputs logs

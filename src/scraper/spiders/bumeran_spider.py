@@ -510,8 +510,31 @@ class BumeranSpider(BaseSpider):
                     # Extract job information from the card
                     job_data = self.extract_job_from_card(card)
                     if job_data:
-                        results.append(job_data)
-                        logger.info(f"✅ Card {i+1} processed successfully")
+                        # Create JobItem with required fields
+                        item = JobItem()
+                        item['portal'] = self.portal
+                        item['country'] = self.country
+                        item['url'] = job_data.get('url', '')
+                        item['title'] = job_data.get('title', '')
+                        item['company'] = job_data.get('company', '')
+                        item['location'] = job_data.get('location', '')
+                        item['description'] = job_data.get('description', '')
+                        item['requirements'] = job_data.get('requirements', '')
+                        item['salary_raw'] = job_data.get('salary_raw', '')
+                        item['contract_type'] = job_data.get('contract_type', '')
+                        item['remote_type'] = job_data.get('remote_type', '')
+                        # Handle posted_date - provide default if empty
+                        posted_date = job_data.get('posted_date', '')
+                        if not posted_date:
+                            posted_date = datetime.now().date().isoformat()
+                        item['posted_date'] = posted_date
+                        
+                        # Validate the item
+                        if self.validate_job_item(item):
+                            results.append(item)
+                            logger.info(f"✅ Card {i+1} processed successfully")
+                        else:
+                            logger.warning(f"⚠️ Card {i+1} failed validation")
                     else:
                         logger.warning(f"⚠️ Card {i+1} returned no data")
                         

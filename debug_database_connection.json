@@ -1,0 +1,784 @@
+{
+  "timestamp": "2025-09-20T18:56:16.614195",
+  "connection_tests": [
+    {
+      "config_name": "Docker PostgreSQL (port 5433)",
+      "success": true,
+      "error": null,
+      "tables": [
+        "analysis_results",
+        "country_skill_distribution",
+        "enhanced_skills",
+        "extracted_skills",
+        "raw_jobs",
+        "skill_embeddings",
+        "skill_frequency"
+      ],
+      "table_schemas": {
+        "analysis_results": [
+          {
+            "name": "result_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "analysis_type",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "country",
+            "type": "character",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "portal",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "result_data",
+            "type": "jsonb",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "country_skill_distribution": [
+          {
+            "name": "country",
+            "type": "character",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "frequency",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          }
+        ],
+        "enhanced_skills": [
+          {
+            "name": "enhanced_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "job_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "original_skill_id",
+            "type": "uuid",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "normalized_name",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "esco_code",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "esco_level",
+            "type": "integer",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "confidence_score",
+            "type": "double precision",
+            "nullable": true,
+            "default": "1.0"
+          },
+          {
+            "name": "enhancement_method",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "enhanced_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "extracted_skills": [
+          {
+            "name": "skill_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "job_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "skill_type",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "confidence_score",
+            "type": "double precision",
+            "nullable": true,
+            "default": "1.0"
+          },
+          {
+            "name": "extraction_method",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "extracted_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "raw_jobs": [
+          {
+            "name": "job_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "portal",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "country",
+            "type": "character",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "url",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "company",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "location",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "requirements",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "salary_raw",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "contract_type",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "remote_type",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "posted_date",
+            "type": "date",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "scraped_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          },
+          {
+            "name": "content_hash",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "raw_html",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "is_processed",
+            "type": "boolean",
+            "nullable": true,
+            "default": "false"
+          }
+        ],
+        "skill_embeddings": [
+          {
+            "name": "embedding_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "embedding_vector",
+            "type": "ARRAY",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "model_name",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "skill_frequency": [
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "frequency",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "job_count",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "country_count",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          }
+        ]
+      },
+      "postgres_version": "PostgreSQL 15.14 (Debian 15.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+      "raw_jobs_count": 2,
+      "sample_jobs": [
+        [
+          "b6fa2154-b6f4-4018-943a-6ca5abf57fa6",
+          "computrabajo",
+          "CO",
+          "https://example.com/job1",
+          "Desarrollador Python",
+          "TechCorp",
+          "Bogot\u00e1",
+          "Desarrollo de aplicaciones web con Python",
+          "Python, Django, PostgreSQL",
+          null,
+          null,
+          null,
+          null,
+          "2025-08-25 23:27:42.209851",
+          "hash1",
+          null,
+          false
+        ],
+        [
+          "a589da44-3555-4271-bb5e-2787db4546d9",
+          "computrabajo",
+          "CO",
+          "https://example.com/job2",
+          "Ingeniero de Datos",
+          "DataCorp",
+          "Medell\u00edn",
+          "An\u00e1lisis y procesamiento de datos",
+          "Python, SQL, Pandas",
+          null,
+          null,
+          null,
+          null,
+          "2025-08-25 23:27:42.209851",
+          "hash2",
+          null,
+          false
+        ]
+      ]
+    },
+    {
+      "config_name": "Docker PostgreSQL (port 5432)",
+      "success": false,
+      "error": "connection to server at \"localhost\" (::1), port 5432 failed: FATAL:  password authentication failed for user \"labor_user\"\n",
+      "tables": [],
+      "table_schemas": {}
+    },
+    {
+      "config_name": "Environment DATABASE_URL",
+      "success": true,
+      "error": null,
+      "tables": [
+        "analysis_results",
+        "country_skill_distribution",
+        "enhanced_skills",
+        "extracted_skills",
+        "raw_jobs",
+        "skill_embeddings",
+        "skill_frequency"
+      ],
+      "table_schemas": {
+        "analysis_results": [
+          {
+            "name": "result_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "analysis_type",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "country",
+            "type": "character",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "portal",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "result_data",
+            "type": "jsonb",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "country_skill_distribution": [
+          {
+            "name": "country",
+            "type": "character",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "frequency",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          }
+        ],
+        "enhanced_skills": [
+          {
+            "name": "enhanced_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "job_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "original_skill_id",
+            "type": "uuid",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "normalized_name",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "esco_code",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "esco_level",
+            "type": "integer",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "confidence_score",
+            "type": "double precision",
+            "nullable": true,
+            "default": "1.0"
+          },
+          {
+            "name": "enhancement_method",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "enhanced_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "extracted_skills": [
+          {
+            "name": "skill_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "job_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "skill_type",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "confidence_score",
+            "type": "double precision",
+            "nullable": true,
+            "default": "1.0"
+          },
+          {
+            "name": "extraction_method",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "extracted_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "raw_jobs": [
+          {
+            "name": "job_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "portal",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "country",
+            "type": "character",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "url",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "company",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "location",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "requirements",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "salary_raw",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "contract_type",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "remote_type",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "posted_date",
+            "type": "date",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "scraped_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          },
+          {
+            "name": "content_hash",
+            "type": "character varying",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "raw_html",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "is_processed",
+            "type": "boolean",
+            "nullable": true,
+            "default": "false"
+          }
+        ],
+        "skill_embeddings": [
+          {
+            "name": "embedding_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": "uuid_generate_v4()"
+          },
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "embedding_vector",
+            "type": "ARRAY",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "model_name",
+            "type": "character varying",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp without time zone",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "skill_frequency": [
+          {
+            "name": "skill_name",
+            "type": "text",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "frequency",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "job_count",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          },
+          {
+            "name": "country_count",
+            "type": "bigint",
+            "nullable": true,
+            "default": null
+          }
+        ]
+      },
+      "postgres_version": "PostgreSQL 15.14 (Debian 15.14-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+      "raw_jobs_count": 2,
+      "sample_jobs": [
+        [
+          "b6fa2154-b6f4-4018-943a-6ca5abf57fa6",
+          "computrabajo",
+          "CO",
+          "https://example.com/job1",
+          "Desarrollador Python",
+          "TechCorp",
+          "Bogot\u00e1",
+          "Desarrollo de aplicaciones web con Python",
+          "Python, Django, PostgreSQL",
+          null,
+          null,
+          null,
+          null,
+          "2025-08-25 23:27:42.209851",
+          "hash1",
+          null,
+          false
+        ],
+        [
+          "a589da44-3555-4271-bb5e-2787db4546d9",
+          "computrabajo",
+          "CO",
+          "https://example.com/job2",
+          "Ingeniero de Datos",
+          "DataCorp",
+          "Medell\u00edn",
+          "An\u00e1lisis y procesamiento de datos",
+          "Python, SQL, Pandas",
+          null,
+          null,
+          null,
+          null,
+          "2025-08-25 23:27:42.209851",
+          "hash2",
+          null,
+          false
+        ]
+      ]
+    }
+  ],
+  "database_structure": {},
+  "errors": [
+    "Docker PostgreSQL (port 5432): connection to server at \"localhost\" (::1), port 5432 failed: FATAL:  password authentication failed for user \"labor_user\"\n"
+  ]
+}

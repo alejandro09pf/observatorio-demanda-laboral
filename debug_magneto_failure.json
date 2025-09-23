@@ -1,0 +1,26 @@
+{
+  "scraper": "magneto",
+  "status": "❌ FAILING",
+  "timestamp": "2025-09-23T01:43:53",
+  "issue": "Connection timeouts with proxy servers",
+  "details": {
+    "error_type": "TimeoutError",
+    "error_count": 4,
+    "retry_attempts": 3,
+    "timeout_duration": "10.0 seconds",
+    "proxies_used": [
+      "http://8.221.141.88:3142",
+      "http://8.213.129.15:8081"
+    ],
+    "target_url": "https://www.magneto365.com/co/empleos",
+    "database_connection": "✅ Connected successfully",
+    "jobs_inserted": 0,
+    "output_file": "outputs/magneto_real.json (not created)"
+  },
+  "recommendations": [
+    "Disable proxy usage for testing",
+    "Increase timeout duration",
+    "Test with different proxy servers",
+    "Check if Magneto is blocking proxy traffic"
+  ]
+}
