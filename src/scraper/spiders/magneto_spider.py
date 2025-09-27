@@ -28,38 +28,49 @@ class MagnetoSpider(BaseSpider):
         self.max_pages = int(kwargs.get('max_pages', 10))
         self.current_page = 0
         
-        # Set start URL based on country
+        # Set start URLs based on country
         if self.country == "CO":
-            self.start_url = "https://www.magneto365.com/co/empleos"
+            self.start_urls = ["https://www.magneto365.com/co/empleos"]
         elif self.country == "MX":
-            self.start_url = "https://www.magneto365.com/mx/empleos"
+            logger.warning("Magneto spider is disabled for Mexico as the target URL is no longer available.")
+            return
         elif self.country == "AR":
-            self.start_url = "https://www.magneto365.com/ar/empleos"
+            self.start_urls = ["https://www.magneto365.com/ar/empleos"]
         else:
             # Default to Colombia
-            self.start_url = "https://www.magneto365.com/co/empleos"
+            self.start_urls = ["https://www.magneto365.com/co/empleos"]
 
         # Override custom settings for this spider
         self.custom_settings.update({
             'DOWNLOAD_DELAY': 1.5,
             'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
             'ROBOTSTXT_OBEY': False,
+            'DOWNLOAD_TIMEOUT': 60,  # Increased timeout to handle slow responses
+            'LOG_LEVEL': 'DEBUG',  # Enable detailed logging for debugging
         })
 
-    def start_requests(self):
-        """Start requests for listing pages."""
+    async def start(self):
+        """Start coroutine for listing pages."""
         logger.info(f"Starting Magneto spider for country: {self.country}")
         logger.info(f"Max pages: {self.max_pages}")
-        
+
+        if not self.start_urls:
+            logger.warning("No start URLs available. Exiting spider.")
+            return
+
         # Start with the first page
         yield scrapy.Request(
-            url=self.start_url,
+            url=self.start_urls[0],
             callback=self.parse_listing_page,
             meta={'page': 1}
         )
 
     def parse_listing_page(self, response):
         """Parse listing page and extract job URLs from JSON-LD ItemList."""
+        if response.status == 410:
+            logger.warning(f"Received HTTP 410 for URL: {response.url}. Skipping.")
+            return
+
         current_page = response.meta.get('page', 1)
         logger.info(f"Parsing listing page {current_page}: {response.url}")
 
@@ -108,7 +119,7 @@ class MagnetoSpider(BaseSpider):
         # Handle pagination
         if current_page < self.max_pages and job_urls:
             next_page = current_page + 1
-            next_url = f"{self.start_url}?page={next_page}"
+            next_url = f"{self.start_urls[0]}?page={next_page}"
             
             logger.info(f"Following to page {next_page}: {next_url}")
             yield scrapy.Request(

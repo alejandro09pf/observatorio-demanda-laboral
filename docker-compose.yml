@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: labor_observatory
       POSTGRES_USER: labor_user
-      POSTGRES_PASSWORD: your_password
+      POSTGRES_PASSWORD: 123456
     ports:
       - "5433:5432"
     volumes:
@@ -26,7 +26,7 @@ services:
       - postgres
       - redis
     environment:
-      - DATABASE_URL=postgresql://labor_user:your_password@postgres:5432/labor_observatory
+      - DATABASE_URL=postgresql://labor_user:123456@postgres:5432/labor_observatory
       - REDIS_URL=redis://redis:6379
     volumes:
       - ./data:/app/data

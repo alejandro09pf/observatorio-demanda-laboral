@@ -10,6 +10,8 @@ import concurrent.futures
 from typing import List, Dict, Tuple
 import json
 import os
+import yaml
+import argparse
 
 class ProxyTester:
     def __init__(self):
@@ -203,32 +205,40 @@ global_settings:
         
         print(f"📝 YAML configuration generated: {filename}")
 
+def load_proxies_from_yaml(file_path):
+    """Load proxies from the proxy_pools section of a YAML configuration file."""
+    with open(file_path, "r") as file:
+        config = yaml.safe_load(file)
+
+    proxies = []
+    proxy_pools = config.get("proxy_pools", {})
+    for pool in proxy_pools.values():
+        proxies.extend(pool.get("proxies", []))
+
+    return proxies
+
 def main():
-    """Main function to test proxies."""
-    print("🚀 Proxy Testing Script for Labor Market Observatory")
-    print("=" * 60)
-    
-    tester = ProxyTester()
-    
-    # Find free proxies
-    print("🔍 Finding free proxies...")
-    proxies = tester.find_free_proxies()
-    print(f"📊 Found {len(proxies)} proxies to test")
-    
+    parser = argparse.ArgumentParser(description="Test proxies from a YAML configuration file.")
+    parser.add_argument("--config", required=True, help="Path to the proxies.yaml file.")
+    parser.add_argument("--test-url", required=True, help="URL to test the proxies against.")
+    args = parser.parse_args()
+
+    # Load proxies from YAML file
+    proxies = load_proxies_from_yaml(args.config)
+
     if not proxies:
-        print("❌ No proxies found")
+        print("No proxies found in the configuration file.")
         return
-    
-    # Test proxies
+
+    tester = ProxyTester()
+    tester.test_url = args.test_url  # Set the test URL
+
     results = tester.test_proxy_list(proxies)
-    
-    # Display results
-    print("\n" + "=" * 60)
-    print("📊 TEST RESULTS")
-    print("=" * 60)
-    print(f"✅ Working: {results['working_count']}")
-    print(f"❌ Failed: {results['failed_count']}")
-    print(f"📈 Success Rate: {(results['working_count'] / results['total_tested']) * 100:.1f}%")
+
+    print("\nSummary:")
+    print(f"Total proxies tested: {results['total_tested']}")
+    print(f"Working proxies: {results['working_count']}")
+    print(f"Failed proxies: {results['failed_count']}")
     
     if results['working_count'] > 0:
         print(f"\n🏆 Fastest Proxy: {min(tester.working_proxies, key=lambda x: x['response_time'])['proxy']}")
