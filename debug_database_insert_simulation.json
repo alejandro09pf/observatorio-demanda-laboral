@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-09-27T22:46:24.497278",
+  "external_connections": [
+    {
+      "config": "External connection (localhost:5433)",
+      "success": true,
+      "job_count": 84,
+      "error": null
+    },
+    {
+      "config": "External connection (localhost:5432)",
+      "success": false,
+      "job_count": 0,
+      "error": "connection to server at \"localhost\" (::1), port 5432 failed: FATAL:  password authentication failed for user \"labor_user\"\n"
+    }
+  ],
+  "internal_connection": {
+    "success": true,
+    "job_count": 84,
+    "error": null
+  },
+  "insert_simulation": {
+    "success": true,
+    "job_id": "a5a2b9ee-ae8c-4ece-abbd-796a676b6c9d"
+  },
+  "verification": {
+    "success": true,
+    "data": "                job_id                |              title              |      company      |   portal    \n--------------------------------------+---------------------------------+-------------------+-------------\n a5a2b9ee-ae8c-4ece-abbd-796a676b6c9d | Test Software Engineer Position | Test Company Inc. | test_portal\n(1 row)\n\n"
+  },
+  "summary": {
+    "external_working": true,
+    "internal_working": true,
+    "insert_working": true,
+    "verification_working": true
+  }
+}

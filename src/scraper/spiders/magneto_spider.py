@@ -40,13 +40,14 @@ class MagnetoSpider(BaseSpider):
             # Default to Colombia
             self.start_urls = ["https://www.magneto365.com/co/empleos"]
 
-        # Override custom settings for this spider
+        # Override custom settings for this spider - optimized for mass scraping
         self.custom_settings.update({
-            'DOWNLOAD_DELAY': 1.5,
-            'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+            'DOWNLOAD_DELAY': 0.1,  # Minimal delay for mass scraping
+            'CONCURRENT_REQUESTS_PER_DOMAIN': 32,  # Increased for mass scraping
             'ROBOTSTXT_OBEY': False,
-            'DOWNLOAD_TIMEOUT': 60,  # Increased timeout to handle slow responses
-            'LOG_LEVEL': 'DEBUG',  # Enable detailed logging for debugging
+            'DOWNLOAD_TIMEOUT': 10,  # Reduced timeout for faster failures
+            'LOG_LEVEL': 'INFO',  # Reduced logging for performance
+            'DUPEFILTER_CLASS': None,  # Disable duplicate filtering
         })
 
     async def start(self):

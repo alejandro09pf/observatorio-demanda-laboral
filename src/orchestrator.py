@@ -205,12 +205,13 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
     """Run a single spider and return results."""
     started_at = datetime.now()
     try:
-        # Build scrapy command
+        # Build scrapy command with mass scraping settings
         cmd = [
             sys.executable, "-m", "scrapy", "crawl", spider,
             "-a", f"country={country}",
             "-a", f"limit={limit}",
             "-a", f"max_pages={max_pages}",
+            "-s", "SETTINGS_MODULE=src.scraper.mass_scraping_settings",
             "-L", "INFO"
         ]
         
@@ -226,6 +227,9 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
         env["ORCHESTRATOR_EXECUTION"] = "1"
         env["SCRAPY_ORCHESTRATOR_RUN"] = "1"
         env["ORCHESTRATOR_MODE"] = "1"
+        
+        # Use mass scraping settings for better performance
+        env["SCRAPY_SETTINGS_MODULE"] = "src.scraper.mass_scraping_settings"
 
         # Run scrapy command with conditional output capture
         if verbose:

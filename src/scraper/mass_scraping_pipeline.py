@@ -2,19 +2,32 @@ import psycopg2
 import hashlib
 from scrapy.exceptions import DropItem
 from datetime import datetime
-from .settings import DB_PARAMS
 import logging
 
 logger = logging.getLogger(__name__)
 
+# Database connection parameters for mass scraping
+DB_PARAMS = {
+    'host': 'localhost',
+    'port': 5433,
+    'database': 'labor_observatory',
+    'user': 'labor_user',
+    'password': '123456',
+}
 
-class JobPostgresPipeline:
+
+class MassScrapingPostgresPipeline:
+    """Pipeline optimized for mass scraping that allows more data collection."""
+    
     def open_spider(self, spider):
         """Open database connection when spider starts."""
         try:
             self.connection = psycopg2.connect(**DB_PARAMS)
             self.cursor = self.connection.cursor()
             self.db_connected = True
+            self.inserted_count = 0
+            self.duplicate_count = 0
+            self.error_count = 0
             logger.info(f"Connected to PostgreSQL database: {DB_PARAMS['database']}")
         except Exception as e:
             logger.warning(f"Failed to connect to database: {e}")
@@ -28,9 +41,16 @@ class JobPostgresPipeline:
             self.cursor.close()
             self.connection.close()
             logger.info("Database connection closed")
+            
+        # Log final statistics
+        logger.info(f"=== MASS SCRAPING PIPELINE STATISTICS ===")
+        logger.info(f"✅ Jobs inserted: {self.inserted_count}")
+        logger.info(f"⏭️ Duplicates skipped: {self.duplicate_count}")
+        logger.info(f"❌ Errors: {self.error_count}")
+        logger.info(f"📊 Total processed: {self.inserted_count + self.duplicate_count + self.error_count}")
 
     def process_item(self, item, spider):
-        """Process job item and insert into database."""
+        """Process job item and insert into database with intelligent duplicate handling."""
         if not getattr(self, 'db_connected', False):
             logger.debug(f"Database not connected, skipping storage for: {item.get('title', 'Unknown')}")
             return item
@@ -40,6 +60,7 @@ class JobPostgresPipeline:
         content_hash = hashlib.sha256(content_string.encode("utf-8")).hexdigest()
 
         try:
+            # Simple INSERT approach - let the database handle duplicates
             self.cursor.execute("""
                 INSERT INTO raw_jobs (
                     portal, country, url, title, company, location,
@@ -61,28 +82,35 @@ class JobPostgresPipeline:
                 item.get("posted_date"),
                 content_hash
             ))
-
+            
             # Commit the transaction
             self.connection.commit()
             
             # Check if row was actually inserted
             if self.cursor.rowcount > 0:
+                self.inserted_count += 1
                 logger.info(f"✅ INSERTED: {item.get('title', 'Unknown')} from {item.get('portal')}")
             else:
+                self.duplicate_count += 1
                 logger.debug(f"⏭️ DUPLICATE: {item.get('title', 'Unknown')} from {item.get('portal')}")
 
             return item
 
-        except psycopg2.IntegrityError as e:
-            # Handle duplicate content_hash - this is expected and fine
-            logger.debug(f"Duplicate job skipped: {item.get('title', 'Unknown')} from {item.get('portal')}")
-            self.connection.rollback()
-            return item
         except psycopg2.Error as e:
+            self.error_count += 1
             logger.error(f"Database error while inserting job: {e}")
-            self.connection.rollback()
+            # Rollback the transaction and continue
+            try:
+                self.connection.rollback()
+            except:
+                pass
             return item
         except Exception as e:
+            self.error_count += 1
             logger.error(f"Unexpected error while processing job: {e}")
-            self.connection.rollback()
+            # Rollback the transaction and continue
+            try:
+                self.connection.rollback()
+            except:
+                pass
             return item

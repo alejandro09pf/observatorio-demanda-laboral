@@ -1,6 +1,8 @@
 """
-Scrapy settings for Labor Market Observatory
+Scrapy settings for Mass Scraping - Labor Market Observatory
+Optimized for collecting 200k+ job ads efficiently
 """
+
 import os
 import sys
 from pathlib import Path
@@ -16,15 +18,15 @@ try:
 except ImportError:
     # Fallback settings if config module is not available
     class FallbackSettings:
-        scraper_concurrent_requests = 8
-        scraper_download_delay = 1.0
+        scraper_concurrent_requests = 16
+        scraper_download_delay = 0.5
         scraper_retry_times = 3
         scraper_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     
     settings = FallbackSettings()
 
 # Scrapy project settings
-BOT_NAME = 'labor_observatory'
+BOT_NAME = 'labor_observatory_mass'
 
 SPIDER_MODULES = ['src.scraper.spiders']
 NEWSPIDER_MODULE = 'src.scraper.spiders'
@@ -32,25 +34,26 @@ NEWSPIDER_MODULE = 'src.scraper.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-# Configure concurrent requests
-CONCURRENT_REQUESTS = int(os.getenv('SCRAPY_CONCURRENT_REQUESTS', settings.scraper_concurrent_requests))
-CONCURRENT_REQUESTS_PER_DOMAIN = 8
-CONCURRENT_REQUESTS_PER_IP = 8
+# Configure concurrent requests for mass scraping
+CONCURRENT_REQUESTS = 64  # Increased for mass scraping
+CONCURRENT_REQUESTS_PER_DOMAIN = 32  # Increased per domain
+CONCURRENT_REQUESTS_PER_IP = 32
 
 # Configure a delay for requests for the same website
-DOWNLOAD_DELAY = float(os.getenv('SCRAPY_DOWNLOAD_DELAY', settings.scraper_download_delay))
+DOWNLOAD_DELAY = 0.1  # Minimal delay for faster scraping
 RANDOMIZE_DOWNLOAD_DELAY = True
-DOWNLOAD_DELAY_RANGE = (0.5, 2.0)
+DOWNLOAD_DELAY_RANGE = (0.05, 0.3)
 
 # Download timeout
-DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 10))
+DOWNLOAD_TIMEOUT = 10  # Reduced timeout for faster failures
 
 # Enable or disable downloader middlewares
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scraper.middlewares.UserAgentRotationMiddleware': 400,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
-    'scraper.middlewares.ProxyRotationMiddleware': 760,
+    # Disable proxy middleware for mass scraping to avoid 403 errors
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': None,
+    'scraper.middlewares.ProxyRotationMiddleware': None,
     'scraper.middlewares.RetryWithBackoffMiddleware': 770,
 }
 
@@ -61,7 +64,7 @@ SPIDER_MIDDLEWARES = {
 }
 
 # Disable duplicate filtering completely
-DUPEFILTER_CLASS = None
+DUPEFILTER_ENABLED = False
 
 # Enable or disable extensions here
 EXTENSIONS = {
@@ -70,7 +73,7 @@ EXTENSIONS = {
 
 # Feed export settings - save items to JSON files
 FEEDS = {
-    'outputs/%(name)s_real.json': {
+    'outputs/%(name)s_mass.json': {
         'format': 'json',
         'encoding': 'utf8',
         'store_empty': False,
@@ -79,14 +82,19 @@ FEEDS = {
     }
 }
 
-# Configure item pipelines
+# Configure item pipelines for mass scraping
 ITEM_PIPELINES = {
-    'scraper.pipelines.JobPostgresPipeline': 300,
+    'scraper.mass_scraping_pipeline.MassScrapingPostgresPipeline': 300,
 }
+
+# Disable the default pipeline
+ITEM_PIPELINES_DISABLED = [
+    'scraper.pipelines.JobPostgresPipeline',
+]
 
 # Retry configuration
 RETRY_ENABLED = True
-RETRY_TIMES = int(os.getenv('SCRAPY_RETRY_TIMES', settings.scraper_retry_times))
+RETRY_TIMES = 1  # Minimal retries for faster scraping
 RETRY_HTTP_CODES = [500, 502, 503, 504, 408, 429]
 
 # User agent
@@ -94,21 +102,22 @@ USER_AGENT = settings.scraper_user_agent
 
 # Enable and configure HTTP caching
 HTTPCACHE_ENABLED = True
-HTTPCACHE_EXPIRATION_SECS = 3600
+HTTPCACHE_EXPIRATION_SECS = 1800  # Reduced cache time for fresher data
 HTTPCACHE_DIR = 'httpcache'
 HTTPCACHE_IGNORE_HTTP_CODES = []
 HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # Logging
 LOG_LEVEL = 'INFO'
-LOG_FILE = 'logs/scrapy.log'
+LOG_FILE = 'logs/mass_scraping.log'
 
-# AutoThrottle extension
-AUTOTHROTTLE_ENABLED = True
-AUTOTHROTTLE_START_DELAY = 1
-AUTOTHROTTLE_MAX_DELAY = 60
-AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-AUTOTHROTTLE_DEBUG = False
+# AutoThrottle extension - disabled for mass scraping
+AUTOTHROTTLE_ENABLED = False
+
+# Additional speed optimizations
+SCHEDULER_ORDER = 'BFO'  # Breadth-first order for faster processing
+SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
+SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
 
 # Database connection parameters for pipeline
 DB_PARAMS = {
@@ -116,5 +125,5 @@ DB_PARAMS = {
     'port': int(os.getenv('DB_PORT', 5433)),
     'database': os.getenv('DB_NAME', 'labor_observatory'),
     'user': os.getenv('DB_USER', 'labor_user'),
-    'password': os.getenv('DB_PASSWORD', 'your_password'),
+    'password': os.getenv('DB_PASSWORD', '123456'),
 }
