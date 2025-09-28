@@ -43,5 +43,9 @@ htmlcov/
 # Scrapy
 .scrapy/
 
+# Large result files
+mass_scraping_results.json
+*.json
+
 # Notebooks
 .ipynb_checkpoints/
