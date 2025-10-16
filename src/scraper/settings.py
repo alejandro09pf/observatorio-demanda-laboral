@@ -61,7 +61,7 @@ SPIDER_MIDDLEWARES = {
 }
 
 # Disable duplicate filtering completely
-DUPEFILTER_CLASS = None
+DUPEFILTER_ENABLED = False
 
 # Enable or disable extensions here
 EXTENSIONS = {
