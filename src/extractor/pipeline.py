@@ -45,17 +45,26 @@ class ExtractionPipeline:
     def extract_skills_from_job(self, job_data: Dict[str, Any]) -> List[ExtractedSkillResult]:
         """Extract skills from a job posting using all methods."""
         job_id = job_data.get('job_id')
-        title = job_data.get('title', '')
-        description = job_data.get('description', '')
-        requirements = job_data.get('requirements', '')
-        
-        logger.info(f"🔍 Starting skill extraction for job: {job_id}")
-        logger.info(f"   Title: {title[:50]}...")
-        logger.info(f"   Description length: {len(description)} characters")
-        logger.info(f"   Requirements length: {len(requirements)} characters")
-        
-        # Combine text for extraction - now including requirements
-        full_text = f"{title}\n{description}\n{requirements}".strip()
+
+        # Use combined_text from cleaned_jobs if available, otherwise fallback to raw text
+        combined_text = job_data.get('combined_text')
+        if combined_text:
+            full_text = combined_text
+            logger.info(f"🔍 Starting skill extraction for job: {job_id}")
+            logger.info(f"   Using cleaned combined_text ({len(full_text)} characters)")
+        else:
+            # Fallback: manually combine raw fields
+            title = job_data.get('title', '')
+            description = job_data.get('description', '')
+            requirements = job_data.get('requirements', '')
+
+            logger.info(f"🔍 Starting skill extraction for job: {job_id}")
+            logger.info(f"   Title: {title[:50]}...")
+            logger.info(f"   Description length: {len(description)} characters")
+            logger.info(f"   Requirements length: {len(requirements)} characters")
+
+            full_text = f"{title}\n{description}\n{requirements}".strip()
+            logger.warning(f"⚠️  No cleaned_text found for job {job_id}, using raw text")
         
         # Step 1: Extract skills with regex
         logger.info("📋 Step 1: Regex-based skill extraction...")
@@ -108,22 +117,24 @@ class ExtractionPipeline:
     def process_batch(self, batch_size: int = 10) -> Dict[str, Any]:
         """Process a batch of jobs for skill extraction."""
         logger.info(f"🚀 Starting batch processing (batch size: {batch_size})")
-        
+
         try:
             with psycopg2.connect(self.db_url) as conn:
                 cursor = conn.cursor()
-                
-                # Get pending jobs
+
+                # Get extraction-ready jobs (usable + cleaned + pending)
+                # This view filters for is_usable=TRUE automatically, excluding junk jobs
                 cursor.execute("""
-                    SELECT job_id, title, description, requirements, portal, country
-                    FROM raw_jobs 
-                    WHERE extraction_status = 'pending'
+                    SELECT job_id, title_cleaned, description_cleaned,
+                           requirements_cleaned, combined_text, portal, country,
+                           combined_word_count
+                    FROM extraction_ready_jobs
                     ORDER BY scraped_at ASC
                     LIMIT %s
                 """, (batch_size,))
-                
+
                 pending_jobs = cursor.fetchall()
-                logger.info(f"📊 Found {len(pending_jobs)} pending jobs for extraction")
+                logger.info(f"📊 Found {len(pending_jobs)} extraction-ready jobs (cleaned, usable, pending)")
                 
                 if not pending_jobs:
                     logger.info("No pending jobs found")
@@ -143,20 +154,22 @@ class ExtractionPipeline:
                     try:
                         # Mark as processing
                         cursor.execute("""
-                            UPDATE raw_jobs 
-                            SET extraction_status = 'processing', 
+                            UPDATE raw_jobs
+                            SET extraction_status = 'processing',
                                 extraction_attempts = extraction_attempts + 1
                             WHERE job_id = %s
                         """, (job_data[0],))
-                        
-                        # Extract skills
+
+                        # Extract skills using cleaned data
                         job_dict = {
                             'job_id': job_data[0],
-                            'title': job_data[1],
-                            'description': job_data[2],
-                            'requirements': job_data[3],
-                            'portal': job_data[4],
-                            'country': job_data[5]
+                            'title': job_data[1],  # title_cleaned
+                            'description': job_data[2],  # description_cleaned
+                            'requirements': job_data[3],  # requirements_cleaned
+                            'combined_text': job_data[4],  # pre-computed combined clean text
+                            'portal': job_data[5],
+                            'country': job_data[6],
+                            'word_count': job_data[7]  # combined_word_count
                         }
                         
                         extracted_skills = self.extract_skills_from_job(job_dict)
