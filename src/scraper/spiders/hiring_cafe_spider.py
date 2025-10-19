@@ -17,15 +17,20 @@ class HiringCafeSpider(BaseSpider):
     allowed_domains = ['hiring.cafe']
     
     # Spider configuration - override base settings for API calls
+    # Conservative settings to avoid 429 rate limiting
     custom_settings = {
-        'DOWNLOAD_DELAY': 2,
+        'DOWNLOAD_DELAY': 5,  # Increased from 2 to 5 seconds
         'RANDOMIZE_DOWNLOAD_DELAY': True,
-        'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 1,  # Reduced from 2 to 1 (sequential)
+        'CONCURRENT_REQUESTS': 1,  # Only 1 request at a time globally
         'AUTOTHROTTLE_ENABLED': True,
-        'AUTOTHROTTLE_START_DELAY': 2,
-        'AUTOTHROTTLE_MAX_DELAY': 5,
+        'AUTOTHROTTLE_START_DELAY': 5,  # Increased from 2 to 5
+        'AUTOTHROTTLE_MAX_DELAY': 60,  # Increased from 5 to 60 seconds
         'AUTOTHROTTLE_TARGET_CONCURRENCY': 0.5,
         'ROBOTSTXT_OBEY': False,
+        'RETRY_TIMES': 3,  # Retry up to 3 times on 429
+        'RETRY_HTTP_CODES': [429, 500, 502, 503, 504, 408],  # Include 429
+        'HTTPCACHE_ENABLED': False,  # Disable cache to prevent replaying 429 errors
     }
     
     def __init__(self, *args, **kwargs):
@@ -63,135 +68,159 @@ class HiringCafeSpider(BaseSpider):
         if self.country not in self.countries:
             raise ValueError(f"Unsupported country: {self.country}. Supported: {list(self.countries.keys())}")
     
-    def start_requests(self):
-        """Start requests for the spider."""
-        self.logger.info(f"Starting HiringCafe spider for {self.country}")
-        print(f"[DEBUG] Starting HiringCafe spider for {self.country}")
-        
+    def generate_page_request(self, page: int):
+        """Generate a single page request."""
         # API endpoint
         api_url = 'https://hiring.cafe/api/search-jobs'
-        
+
         # Default parameters
         workplace_types = ["Remote", "Hybrid", "Onsite"]
         seniority_levels = ["No Prior Experience Required", "Entry Level", "Mid Level", "Senior Level"]
-        
+
         country_config = self.countries[self.country]
-        print(f"[DEBUG] Country config: {country_config}")
-        
-        for page in range(1, self.max_pages + 1):
-            print(f"[DEBUG] Creating request for page {page}")
-            # Use the exact payload structure from the working scraper
-            payload = {
-                "size": 100,
-                "page": page,
-                "searchState": {
-                    "locations": [{
-                        "formatted_address": country_config['formatted_address'],
-                        "types": ["country"],
-                        "geometry": {
-                            "location": {
-                                "lat": country_config['lat'],
-                                "lon": country_config['lon']
-                            }
-                        },
-                        "id": "user_country",
-                        "address_components": [{
-                            "long_name": country_config['formatted_address'],
-                            "short_name": country_config['short_name'],
-                            "types": ["country"]
-                        }],
-                        "options": {
-                            "flexible_regions": ["anywhere_in_continent", "anywhere_in_world"]
+
+        # Use the exact payload structure from the working scraper
+        payload = {
+            "size": 100,
+            "page": page,
+            "searchState": {
+                "locations": [{
+                    "formatted_address": country_config['formatted_address'],
+                    "types": ["country"],
+                    "geometry": {
+                        "location": {
+                            "lat": country_config['lat'],
+                            "lon": country_config['lon']
                         }
+                    },
+                    "id": "user_country",
+                    "address_components": [{
+                        "long_name": country_config['formatted_address'],
+                        "short_name": country_config['short_name'],
+                        "types": ["country"]
                     }],
-                    "workplaceTypes": workplace_types,
-                    "defaultToUserLocation": True,
-                    "userLocation": None,
-                    "physicalEnvironments": ["Office", "Outdoor", "Vehicle", "Industrial", "Customer-Facing"],
-                    "physicalLaborIntensity": ["Low", "Medium", "High"],
-                    "physicalPositions": ["Sitting", "Standing"],
-                    "oralCommunicationLevels": ["Low", "Medium", "High"],
-                    "computerUsageLevels": ["Low", "Medium", "High"],
-                    "cognitiveDemandLevels": ["Low", "Medium", "High"],
-                    "currency": {"label": "Any", "value": None},
-                    "frequency": {"label": "Any", "value": None},
-                    "minCompensationLowEnd": None,
-                    "minCompensationHighEnd": None,
-                    "maxCompensationLowEnd": None,
-                    "maxCompensationHighEnd": None,
-                    "restrictJobsToTransparentSalaries": False,
-                    "calcFrequency": "Yearly",
-                    "commitmentTypes": ["Full Time", "Part Time", "Contract", "Internship", "Temporary", "Seasonal", "Volunteer"],
-                    "jobTitleQuery": "",
-                    "jobDescriptionQuery": "",
-                    "associatesDegreeFieldsOfStudy": [],
-                    "excludedAssociatesDegreeFieldsOfStudy": [],
-                    "bachelorsDegreeFieldsOfStudy": [],
-                    "excludedBachelorsDegreeFieldsOfStudy": [],
-                    "mastersDegreeFieldsOfStudy": [],
-                    "excludedMastersDegreeFieldsOfStudy": [],
-                    "doctorateDegreeFieldsOfStudy": [],
-                    "excludedDoctorateDegreeFieldsOfStudy": [],
-                    "associatesDegreeRequirements": [],
-                    "bachelorsDegreeRequirements": [],
-                    "mastersDegreeRequirements": [],
-                    "doctorateDegreeRequirements": [],
-                    "licensesAndCertifications": [],
-                    "excludedLicensesAndCertifications": [],
-                    "excludeAllLicensesAndCertifications": False,
-                    "seniorityLevel": seniority_levels,
-                    "roleTypes": ["Individual Contributor", "People Manager"],
-                    "roleYoeRange": [0, 20],
-                    "excludedCompanyNames": [],
-                    "usaGovPref": None,
-                    "industries": [],
-                    "excludedIndustries": [],
-                    "companyKeywords": [],
-                    "companyKeywordsBooleanOperator": "OR",
-                    "excludedCompanyKeywords": [],
-                    "hideJobTypes": [],
-                    "encouragedToApply": [],
-                    "searchQuery": ""
-                }
+                    "options": {
+                        "flexible_regions": ["anywhere_in_continent", "anywhere_in_world"]
+                    }
+                }],
+                "workplaceTypes": workplace_types,
+                "defaultToUserLocation": True,
+                "userLocation": None,
+                "physicalEnvironments": ["Office", "Outdoor", "Vehicle", "Industrial", "Customer-Facing"],
+                "physicalLaborIntensity": ["Low", "Medium", "High"],
+                "physicalPositions": ["Sitting", "Standing"],
+                "oralCommunicationLevels": ["Low", "Medium", "High"],
+                "computerUsageLevels": ["Low", "Medium", "High"],
+                "cognitiveDemandLevels": ["Low", "Medium", "High"],
+                "currency": {"label": "Any", "value": None},
+                "frequency": {"label": "Any", "value": None},
+                "minCompensationLowEnd": None,
+                "minCompensationHighEnd": None,
+                "maxCompensationLowEnd": None,
+                "maxCompensationHighEnd": None,
+                "restrictJobsToTransparentSalaries": False,
+                "calcFrequency": "Yearly",
+                "commitmentTypes": ["Full Time", "Part Time", "Contract", "Internship", "Temporary", "Seasonal", "Volunteer"],
+                "jobTitleQuery": "",
+                "jobDescriptionQuery": "",
+                "associatesDegreeFieldsOfStudy": [],
+                "excludedAssociatesDegreeFieldsOfStudy": [],
+                "bachelorsDegreeFieldsOfStudy": [],
+                "excludedBachelorsDegreeFieldsOfStudy": [],
+                "mastersDegreeFieldsOfStudy": [],
+                "excludedMastersDegreeFieldsOfStudy": [],
+                "doctorateDegreeFieldsOfStudy": [],
+                "excludedDoctorateDegreeFieldsOfStudy": [],
+                "associatesDegreeRequirements": [],
+                "bachelorsDegreeRequirements": [],
+                "mastersDegreeRequirements": [],
+                "doctorateDegreeRequirements": [],
+                "licensesAndCertifications": [],
+                "excludedLicensesAndCertifications": [],
+                "excludeAllLicensesAndCertifications": False,
+                "seniorityLevel": seniority_levels,
+                "roleTypes": ["Individual Contributor", "People Manager"],
+                "roleYoeRange": [0, 20],
+                "excludedCompanyNames": [],
+                "usaGovPref": None,
+                "industries": [],
+                "excludedIndustries": [],
+                "companyKeywords": [],
+                "companyKeywordsBooleanOperator": "OR",
+                "excludedCompanyKeywords": [],
+                "hideJobTypes": [],
+                "encouragedToApply": [],
+                "searchQuery": ""
             }
-            
-            headers = {
-                'Content-Type': 'application/json',
-                # User-Agent will be handled by middleware
-            }
-            
-            yield scrapy.Request(
-                url=api_url,
-                method='POST',
-                body=json.dumps(payload),
-                headers=headers,
-                callback=self.parse_search_results,
-                meta={'page': page, 'country': self.country},
-                dont_filter=True
-            )
-            
-            # Note: Scrapy handles delays through DOWNLOAD_DELAY setting
+        }
+
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Origin': 'https://hiring.cafe',
+            'Referer': 'https://hiring.cafe/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            # User-Agent will be handled by middleware
+        }
+
+        return scrapy.Request(
+            url=api_url,
+            method='POST',
+            body=json.dumps(payload),
+            headers=headers,
+            callback=self.parse_search_results,
+            meta={'page': page, 'country': self.country},
+            dont_filter=True
+        )
+
+    def start_requests(self):
+        """Start requests for the spider - only generates first page."""
+        self.logger.info(f"Starting HiringCafe spider for {self.country}")
+        print(f"[DEBUG] Starting HiringCafe spider for {self.country}")
+        print(f"[DEBUG] Generating ONLY first page request (sequential mode)")
+
+        # Only yield the first page - subsequent pages will be generated in parse_search_results
+        yield self.generate_page_request(1)
     
     def parse_search_results(self, response):
         """Parse search results from the API response."""
-        print(f"[DEBUG] parse_search_results called for page {response.meta['page']}")
+        current_page = response.meta['page']
+        print(f"[DEBUG] parse_search_results called for page {current_page}")
         print(f"[DEBUG] Response status: {response.status}")
         print(f"[DEBUG] Response body length: {len(response.body)}")
-        
+
         try:
             data = json.loads(response.text)
             results = data.get('results', [])
-            
+
             print(f"[DEBUG] Parsed {len(results)} results from JSON")
-            self.logger.info(f"Page {response.meta['page']}: Found {len(results)} jobs")
-            
+            self.logger.info(f"Page {current_page}: Found {len(results)} jobs")
+
             if not results:
                 self.logger.info("No more results, search complete!")
                 return
-            
+
+            # Yield all jobs from current page
             for job in results:
                 yield self.parse_job(job, response.meta['country'])
-                
+
+            # Generate next page request if we haven't reached max_pages
+            if current_page < self.max_pages:
+                next_page = current_page + 1
+                delay_seconds = random.uniform(15, 18)
+                self.logger.info(f"⏱️ Waiting {delay_seconds:.1f} seconds before requesting page {next_page}...")
+                print(f"[DEBUG] Waiting {delay_seconds:.1f}s before page {next_page}")
+                time.sleep(delay_seconds)
+
+                print(f"[DEBUG] Generating request for page {next_page}")
+                yield self.generate_page_request(next_page)
+            else:
+                self.logger.info(f"✅ Reached max_pages limit ({self.max_pages}). Stopping.")
+
         except json.JSONDecodeError as e:
             print(f"[DEBUG] JSON decode error: {e}")
             self.logger.error(f"Failed to parse JSON response: {e}")
@@ -212,7 +241,7 @@ class HiringCafeSpider(BaseSpider):
             title = job_info.get('title', '')
             company = processed_data.get('company_name', '')
             description = job_info.get('description', '')
-            requirements = ""  # Will be extracted from description
+            requirements = processed_data.get('requirements_summary', '')
             
             print(f"[DEBUG] Extracted title: {title[:50]}...")
             print(f"[DEBUG] Extracted company: {company}")
@@ -256,15 +285,6 @@ class HiringCafeSpider(BaseSpider):
             item['contract_type'] = contract_type
             item['remote_type'] = remote_type
             item['posted_date'] = posted_date
-            
-            # Add additional fields for hiring.cafe specific data
-            item['job_id'] = job_data.get('id', '')
-            item['job_category'] = processed_data.get('job_category', '')
-            item['role_activities'] = []  # Will be extracted from description
-            item['compensation'] = self.extract_compensation_data(job_data)
-            item['geolocation'] = self.extract_geolocation(job_data)
-            item['source_country'] = country.lower()
-            item['scraped_at'] = datetime.now().isoformat()
             
             print(f"[DEBUG] Created JobItem successfully")
             return item

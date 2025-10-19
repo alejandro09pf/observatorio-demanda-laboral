@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 # Database connection parameters for mass scraping
 DB_PARAMS = {
-    'host': 'localhost',
+    'host': '127.0.0.1',  # Use IPv4 explicitly instead of localhost
     'port': 5433,
     'database': 'labor_observatory',
     'user': 'labor_user',

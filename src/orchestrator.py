@@ -204,6 +204,55 @@ def run_once(
 def run_single_spider(spider: str, country: str, limit: int, max_pages: int, verbose: bool = False) -> dict:
     """Run a single spider and return results."""
     started_at = datetime.now()
+    project_dir = Path(__file__).parent.parent
+
+    # Special handling for hiring_cafe - use requests-based scraper instead of Scrapy
+    if spider == "hiring_cafe":
+        logger.info(f"Using requests-based scraper for hiring_cafe (bypasses bot detection)")
+        try:
+            # Run the requests-based scraper
+            scraper_script = project_dir / "scripts" / "scrape_hiring_cafe_requests.py"
+
+            # Use max_pages if provided, otherwise unlimited
+            pages_arg = str(max_pages) if max_pages and max_pages > 0 else "unlimited"
+
+            cmd = [sys.executable, str(scraper_script), country, pages_arg]
+
+            if verbose:
+                result = subprocess.run(cmd, cwd=project_dir, timeout=7200)  # 2 hour timeout
+            else:
+                result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_dir, timeout=7200)
+
+            if result.returncode != 0:
+                error_msg = result.stderr if hasattr(result, 'stderr') else "Unknown error"
+                logger.error(f"hiring_cafe scraper failed: {error_msg}")
+                raise Exception(f"hiring_cafe scraper failed: {error_msg}")
+
+            # Parse output for statistics
+            items_scraped = 0
+            if not verbose and result.stdout:
+                for line in result.stdout.split('\n'):
+                    if "Jobs inserted:" in line:
+                        try:
+                            items_scraped = int(line.split("Jobs inserted:")[1].strip().split()[0])
+                            break
+                        except:
+                            pass
+
+            return {
+                "spider": spider,
+                "country": country,
+                "items_scraped": items_scraped,
+                "status": "success",
+                "started_at": started_at,
+                "ended_at": datetime.now()
+            }
+
+        except Exception as e:
+            logger.error(f"Error running hiring_cafe scraper: {e}")
+            raise
+
+    # For all other spiders, use standard Scrapy approach
     try:
         # Build scrapy command with mass scraping settings
         cmd = [
@@ -214,9 +263,8 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
             "-s", "SETTINGS_MODULE=src.scraper.mass_scraping_settings",
             "-L", "INFO"
         ]
-        
+
         # Change to project root directory where scrapy.cfg is located
-        project_dir = Path(__file__).parent.parent
         os.chdir(project_dir)
         
         # Set PYTHONPATH to include src/

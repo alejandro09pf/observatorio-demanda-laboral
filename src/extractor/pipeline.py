@@ -47,13 +47,15 @@ class ExtractionPipeline:
         job_id = job_data.get('job_id')
         title = job_data.get('title', '')
         description = job_data.get('description', '')
+        requirements = job_data.get('requirements', '')
         
         logger.info(f"🔍 Starting skill extraction for job: {job_id}")
         logger.info(f"   Title: {title[:50]}...")
         logger.info(f"   Description length: {len(description)} characters")
+        logger.info(f"   Requirements length: {len(requirements)} characters")
         
-        # Combine text for extraction
-        full_text = f"{title}\n{description}".strip()
+        # Combine text for extraction - now including requirements
+        full_text = f"{title}\n{description}\n{requirements}".strip()
         
         # Step 1: Extract skills with regex
         logger.info("📋 Step 1: Regex-based skill extraction...")
@@ -113,7 +115,7 @@ class ExtractionPipeline:
                 
                 # Get pending jobs
                 cursor.execute("""
-                    SELECT job_id, title, description, portal, country
+                    SELECT job_id, title, description, requirements, portal, country
                     FROM raw_jobs 
                     WHERE extraction_status = 'pending'
                     ORDER BY scraped_at ASC
@@ -152,8 +154,9 @@ class ExtractionPipeline:
                             'job_id': job_data[0],
                             'title': job_data[1],
                             'description': job_data[2],
-                            'portal': job_data[3],
-                            'country': job_data[4]
+                            'requirements': job_data[3],
+                            'portal': job_data[4],
+                            'country': job_data[5]
                         }
                         
                         extracted_skills = self.extract_skills_from_job(job_dict)

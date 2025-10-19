@@ -100,9 +100,10 @@ RETRY_HTTP_CODES = [500, 502, 503, 504, 408, 429]
 # User agent
 USER_AGENT = settings.scraper_user_agent
 
-# Enable and configure HTTP caching
-HTTPCACHE_ENABLED = True
-HTTPCACHE_EXPIRATION_SECS = 1800  # Reduced cache time for fresher data
+# Disable HTTP caching to prevent replaying 429 errors
+# IMPORTANT: hiring.cafe returns 429 rate limits which get cached and replayed forever
+HTTPCACHE_ENABLED = False
+HTTPCACHE_EXPIRATION_SECS = 1800  # Not used when caching is disabled
 HTTPCACHE_DIR = 'httpcache'
 HTTPCACHE_IGNORE_HTTP_CODES = []
 HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
