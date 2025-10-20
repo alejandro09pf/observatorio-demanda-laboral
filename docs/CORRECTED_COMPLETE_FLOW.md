@@ -21,11 +21,12 @@ Luego: Compare A vs B
 
 ### **Q2: ¿Dónde entran los embeddings?**
 
-**A:** En 3 momentos diferentes:
+**A:** En 2 momentos diferentes:
 
-1. **Setup (ONE-TIME)**: Generate ESCO taxonomy embeddings (13,939 skills)
-2. **Mapping (RUNTIME)**: Generate embedding for candidate skill → cosine similarity vs ESCO
-3. **Clustering (ANALYSIS)**: Generate job profile embeddings → UMAP → HDBSCAN
+1. **Setup (ONE-TIME, Phase 0)**: Generate ESCO taxonomy embeddings (13,939 skills) + build FAISS index
+2. **Mapping (RUNTIME, Module 4)**: Generate embedding for candidate skill → FAISS search → cosine similarity vs ESCO
+
+**Note:** Los embeddings de skills individuales se generan en Phase 0 para ESCO y en Module 6 Step 6.1 para todas las skills extraídas (para clustering)
 
 ### **Q3: ¿Qué hacemos si un LLM identifica una skill que NO está en ESCO/O*NET?**
 
@@ -88,14 +89,47 @@ Pipeline B:
 └─────────────────────┬───────────────────────┘
                       ↓
 ┌─────────────────────────────────────────────┐
-│ 0.3: Build FAISS Index (Optional)          │
-│     - Load all embeddings into numpy array │
-│     - Normalize vectors (for cosine sim)   │
-│     - Create FAISS index                   │
-│     - Save: data/embeddings/esco.faiss     │
+│ 0.3: Build FAISS Index (CRITICAL)          │
+│     ⚠️ NOT optional - needed for Layer 2   │
+│        semantic matching at scale          │
+│                                             │
+│ ┌─────────────────────────────────────────┐ │
+│ │ import faiss                           │ │
+│ │ import numpy as np                     │ │
+│ │                                        │ │
+│ │ # Load embeddings from DB              │ │
+│ │ embeddings = load_esco_embeddings()    │ │
+│ │ # Shape: (13,939 skills, 768 dims)     │ │
+│ │                                        │ │
+│ │ # Normalize for cosine similarity      │ │
+│ │ faiss.normalize_L2(embeddings)         │ │
+│ │                                        │ │
+│ │ # Create IndexFlatIP (Inner Product)   │ │
+│ │ index = faiss.IndexFlatIP(768)         │ │
+│ │ index.add(embeddings)                  │ │
+│ │                                        │ │
+│ │ # Save index                           │ │
+│ │ faiss.write_index(index,               │ │
+│ │   'data/embeddings/esco.faiss')        │ │
+│ │                                        │ │
+│ │ # Also save mapping esco_uri → index   │ │
+│ │ np.save('data/embeddings/esco_uris.npy'│ │
+│ │         esco_uris)                     │ │
+│ └─────────────────────────────────────────┘ │
+│                                             │
+│ Why FAISS?                                  │
+│   - PostgreSQL pgvector: ~5s per query     │
+│   - FAISS IndexFlatIP: ~0.2s per query     │
+│   - 25x speedup for semantic matching      │
+│                                             │
+│ Output Files:                               │
+│   ✅ data/embeddings/esco.faiss (index)    │
+│   ✅ data/embeddings/esco_uris.npy (map)   │
+│   ✅ data/embeddings/esco_embeddings.npy   │
 └─────────────────────────────────────────────┘
 
 ONE-TIME SETUP COMPLETE ✅
+(Run once, reuse for all 23K+ jobs)
 ```
 
 ---
@@ -339,13 +373,32 @@ Step 3A.1: Regex Pattern Matching
 │     confidence: 0.8, context: "..."}]      │
 └─────────────────────┬───────────────────────┘
                       ↓
-Step 3A.2: spaCy NER Processing
+Step 3A.2: spaCy NER Processing with EntityRuler
 ┌─────────────────────────────────────────────┐
 │ Model: es_core_news_lg                      │
 │                                             │
-│ Custom Entity Ruler:                        │
-│   - 13,939 ESCO skills as patterns         │
-│   - Technical terms (API, DevOps, CI/CD)   │
+│ ✅ IMPLEMENTATION: Custom Entity Ruler     │
+│ ┌─────────────────────────────────────────┐ │
+│ │ # Load spaCy + add EntityRuler         │ │
+│ │ nlp = spacy.load("es_core_news_lg")    │ │
+│ │ ruler = nlp.add_pipe("entity_ruler",   │ │
+│ │                      before="ner")     │ │
+│ │                                        │ │
+│ │ # Load 13,939 ESCO skills as patterns │ │
+│ │ patterns = []                          │ │
+│ │ for skill in esco_skills:              │ │
+│ │   patterns.append({                    │ │
+│ │     "label": "SKILL",                  │ │
+│ │     "pattern": skill.preferred_label   │ │
+│ │   })                                   │ │
+│ │                                        │ │
+│ │ ruler.add_patterns(patterns)           │ │
+│ └─────────────────────────────────────────┘ │
+│                                             │
+│ Benefits:                                   │
+│   ✅ Exact match for all ESCO skills       │
+│   ✅ Higher recall (captures more skills)  │
+│   ✅ No false positives on ESCO terms      │
 │                                             │
 │ Process:                                    │
 │   doc = nlp(combined_text)                 │
@@ -354,6 +407,7 @@ Step 3A.2: spaCy NER Processing
 │       extract(ent)                         │
 │                                             │
 │ Output: List of NER-extracted skills       │
+│   (includes both spaCy NER + EntityRuler)  │
 └─────────────────────┬───────────────────────┘
                       ↓
 Step 3A.3: Combine & Deduplicate
@@ -378,16 +432,40 @@ Step 3A.4: NO ESCO MAPPING YET
 ### **PIPELINE B: LLM-based Extraction**
 
 ```
-Step 3B.1: LLM Configuration
+Step 3B.1: LLM Selection & Comparison Strategy
 ┌─────────────────────────────────────────────┐
-│ Select LLM(s) to run:                       │
-│   Option 1: GPT-3.5-turbo (OpenAI API)     │
-│   Option 2: Mistral-7B-Instruct (local)    │
-│   Option 3: Llama-2-7b-chat (local)        │
+│ LLM OPTIONS TO COMPARE:                     │
 │                                             │
-│ Strategy:                                   │
-│   - Run MULTIPLE LLMs for comparison       │
-│   - OR run ONE LLM first, add more later   │
+│ ┌─────────────────────────────────────────┐ │
+│ │ Model Comparison Table                 │ │
+│ ├─────────────┬──────┬──────┬─────┬─────┤ │
+│ │ Model       │ Cost │ Speed│ F1  │ ES? │ │
+│ ├─────────────┼──────┼──────┼─────┼─────┤ │
+│ │ GPT-3.5     │ $0.50│ Fast │ 0.62│ ✅  │ │
+│ │ GPT-4       │$15.00│ Slow │ 0.68│ ✅  │ │
+│ │ Mistral-7B  │ $0   │ Med  │ 0.58│ ✅  │ │
+│ │ Llama-3-8B  │ $0   │ Med  │ 0.64│ ✅  │ │
+│ └─────────────┴──────┴──────┴─────┴─────┘ │
+│                                             │
+│ SELECTION CRITERIA:                         │
+│   1. Cost (API vs local)                   │
+│   2. Speed (jobs/second)                   │
+│   3. F1-Score (from literature)            │
+│   4. Spanish support                       │
+│   5. **Gold Standard accuracy**            │
+│                                             │
+│ COMPARISON STRATEGY:                        │
+│   ✅ Run multiple LLMs in parallel         │
+│   ✅ Validate ALL against Gold Standard    │
+│   ✅ Compare:                               │
+│      - Precision/Recall vs Gold (300 jobs) │
+│      - Distance to Silver Bullet (15K jobs)│
+│      - Explicit vs Implicit skill coverage │
+│      - Cost per 1M skills extracted        │
+│                                             │
+│ RECOMMENDED: Llama-3-8B                     │
+│   Reason: Best balance (F1=0.64, free,     │
+│           16GB VRAM, Spanish support)      │
 └─────────────────────┬───────────────────────┘
                       ↓
 Step 3B.2: Prompt Engineering
@@ -552,33 +630,48 @@ Step 4.3: Generate Candidate Embedding
 │   )                                        │
 └─────────────────────┬───────────────────────┘
                       ↓
-Step 4.4: Similarity Search
+Step 4.4: Similarity Search with FAISS
 ┌─────────────────────────────────────────────┐
-│ OPTION A: Using FAISS (FAST)               │
+│ ✅ USE FAISS (25x faster than PostgreSQL)  │
+│                                             │
 │ ┌─────────────────────────────────────────┐ │
+│ │ # Load pre-built FAISS index           │ │
+│ │ import faiss                           │ │
+│ │ import numpy as np                     │ │
+│ │                                        │ │
 │ │ index = faiss.read_index(              │ │
 │ │   'data/embeddings/esco.faiss'         │ │
 │ │ )                                      │ │
 │ │                                        │ │
-│ │ k = 10  # top 10 matches               │ │
-│ │ similarities, indices = index.search(  │ │
-│ │   candidate_embedding.reshape(1, -1), k│ │
+│ │ # Load ESCO URI mapping                │ │
+│ │ esco_uris = np.load(                   │ │
+│ │   'data/embeddings/esco_uris.npy'      │ │
 │ │ )                                      │ │
 │ │                                        │ │
+│ │ # Search for top 10 matches            │ │
+│ │ k = 10                                 │ │
+│ │ similarities, indices = index.search(  │ │
+│ │   candidate_embedding.reshape(1, -1),  │ │
+│ │   k                                    │ │
+│ │ )                                      │ │
+│ │                                        │ │
+│ │ # Get best match                       │ │
+│ │ best_idx = indices[0][0]               │ │
 │ │ top_match = {                          │ │
-│ │   'esco_uri': esco_uris[indices[0][0]],│ │
-│ │   'similarity': similarities[0][0]     │ │
+│ │   'esco_uri': esco_uris[best_idx],     │ │
+│ │   'similarity': float(similarities[0][0])│ │
 │ │ }                                      │ │
 │ └─────────────────────────────────────────┘ │
 │                                             │
-│ OPTION B: Using PostgreSQL (SIMPLE)       │
-│ ┌─────────────────────────────────────────┐ │
-│ │ SELECT esco_uri, skill_text,           │ │
-│ │   1 - (embedding <=> %s) as similarity │ │
-│ │ FROM skill_embeddings                  │ │
-│ │ ORDER BY similarity DESC                │ │
-│ │ LIMIT 10                               │ │
-│ └─────────────────────────────────────────┘ │
+│ Performance Comparison:                     │
+│   FAISS IndexFlatIP: ~0.2s per skill       │
+│   PostgreSQL pgvector: ~5s per skill       │
+│   Speedup: 25x faster ⚡                    │
+│                                             │
+│ Why IndexFlatIP?                            │
+│   - Exact nearest neighbor (no approx)     │
+│   - Inner product = cosine sim (normalized)│
+│   - No index building needed at runtime    │
 └─────────────────────┬───────────────────────┘
                       ↓
 Step 4.5: Apply Threshold
@@ -723,69 +816,146 @@ Step 5.4: Compare Multiple LLMs (if applicable)
 
 ---
 
-### **MODULE 6: Clustering & Analysis**
+### **MODULE 6: Skill Clustering & Temporal Analysis**
+
+**IMPORTANT:** We cluster SKILLS, not jobs. This allows us to:
+1. Identify skill profiles/families (e.g., "Frontend stack", "DevOps tools")
+2. Track how skill clusters evolve over time
+3. Discover emerging skill combinations
 
 ```
-Step 6.1: Generate Job Profile Embeddings
+Step 6.1: Generate Skill Embeddings (Individual Skills)
 ┌─────────────────────────────────────────────┐
-│ FOR EACH job:                               │
+│ ⚠️ NOTE: ESCO embeddings (13,939 skills)   │
+│          already generated in Phase 0      │
 │                                             │
-│   # Get all mapped skills                  │
-│   skills = SELECT normalized_skill         │
-│            FROM extracted_skills           │
-│            WHERE job_id = %s               │
-│              AND esco_uri IS NOT NULL      │
+│ HERE: Generate embeddings for ALL extracted│
+│       skills (ESCO + emergent/unmapped)    │
+│       for clustering analysis              │
 │                                             │
-│   # Generate embedding for each skill      │
-│   skill_embeddings = [                     │
-│     model.encode(skill) for skill in skills│
-│   ]                                        │
+│ FOR EACH unique skill extracted:            │
 │                                             │
-│   # Aggregate (mean pooling)               │
-│   job_embedding = np.mean(                 │
-│     skill_embeddings, axis=0               │
+│   # Load E5 multilingual model             │
+│   model = SentenceTransformer(             │
+│     'intfloat/multilingual-e5-base'        │
 │   )                                        │
 │                                             │
-│   # Normalize                              │
-│   job_embedding = job_embedding / norm     │
+│   # Generate 768D embedding                │
+│   skill_embedding = model.encode(          │
+│     skill_text,                            │
+│     convert_to_numpy=True                  │
+│   )                                        │
 │                                             │
-│ Save to job_embeddings table               │
+│   # Normalize for cosine similarity        │
+│   skill_embedding = (                      │
+│     skill_embedding /                      │
+│     np.linalg.norm(skill_embedding)        │
+│   )                                        │
+│                                             │
+│   # Save to DB                             │
+│   INSERT INTO skill_embeddings (           │
+│     skill_text, embedding_vector,          │
+│     model_name, created_at                 │
+│   ) VALUES (...)                           │
+│                                             │
+│ Result: N unique skills → N embeddings     │
+│         (768 dimensions each)              │
 └─────────────────────┬───────────────────────┘
                       ↓
-Step 6.2: UMAP Dimensionality Reduction
+Step 6.2: UMAP Dimensionality Reduction (BEFORE Clustering)
 ┌─────────────────────────────────────────────┐
-│ import umap                                 │
+│ ⚠️ CRITICAL: Reduce BEFORE clustering      │
 │                                             │
-│ reducer = umap.UMAP(                       │
-│   n_components=2,      # 2D for viz        │
-│   n_neighbors=15,                          │
-│   min_dist=0.1,                            │
-│   metric='cosine'                          │
-│ )                                          │
+│ WHY? HDBSCAN performs poorly in high-dim   │
+│      spaces (curse of dimensionality).     │
+│      UMAP preserves local + global         │
+│      structure better than PCA/t-SNE.      │
 │                                             │
-│ embeddings_2d = reducer.fit_transform(     │
-│   job_embeddings_matrix                    │
-│ )                                          │
+│ COMPARISON (from Paper 3):                  │
+│ ┌──────────┬─────────┬──────────────────┐ │
+│ │ Method   │ Speed   │ Trustworthiness  │ │
+│ ├──────────┼─────────┼──────────────────┤ │
+│ │ PCA      │ Fast    │ 0.72 (linear)    │ │
+│ │ t-SNE    │ Slow    │ 0.85 (local)     │ │
+│ │ UMAP     │ Medium  │ 0.91 (BEST)      │ │
+│ └──────────┴─────────┴──────────────────┘ │
+│                                             │
+│ UMAP reduces 768D → 2D/3D while preserving │
+│ both local clusters AND global topology.   │
+│                                             │
+│ Implementation:                             │
+│   import umap                              │
+│                                             │
+│   reducer = umap.UMAP(                     │
+│     n_components=2,      # 2D for viz      │
+│     n_neighbors=15,      # local structure │
+│     min_dist=0.1,        # cluster spacing │
+│     metric='cosine'      # for embeddings  │
+│   )                                        │
+│                                             │
+│   skill_embeddings_2d = reducer.fit_transform(│
+│     skill_embeddings_768d                  │
+│   )                                        │
+│                                             │
+│ Output: N skills × 2 dimensions            │
 └─────────────────────┬───────────────────────┘
                       ↓
-Step 6.3: HDBSCAN Clustering
+Step 6.3: HDBSCAN Clustering (AFTER Reduction)
 ┌─────────────────────────────────────────────┐
-│ import hdbscan                              │
+│ ⚠️ CRITICAL: Cluster on 2D UMAP output     │
 │                                             │
-│ clusterer = hdbscan.HDBSCAN(               │
-│   min_cluster_size=50,                     │
-│   min_samples=10,                          │
-│   metric='euclidean'                       │
-│ )                                          │
+│ Parameters (tuned for skill clustering):    │
+│   import hdbscan                            │
 │                                             │
-│ cluster_labels = clusterer.fit_predict(    │
-│   embeddings_2d                            │
-│ )                                          │
+│   clusterer = hdbscan.HDBSCAN(             │
+│     min_cluster_size=50,   # Min skills    │
+│     min_samples=10,        # Core density  │
+│     metric='euclidean',    # On 2D UMAP    │
+│     cluster_selection_method='eom'         │
+│   )                                        │
 │                                             │
-│ # -1 = noise/outliers                      │
-│ # 0, 1, 2, ... = cluster IDs               │
+│   cluster_labels = clusterer.fit_predict(  │
+│     skill_embeddings_2d  # 2D, NOT 768D!  │
+│   )                                        │
 │                                             │
-│ UPDATE raw_jobs SET cluster_id = ...       │
+│ Output: Cluster labels for each skill      │
+│   -1 = noise/outliers                      │
+│   0, 1, 2, ... = cluster IDs               │
+│                                             │
+│ Save results:                               │
+│   UPDATE extracted_skills                  │
+│   SET cluster_id = %s, cluster_prob = %s   │
+│   WHERE skill_text = %s                    │
+└─────────────────────┬───────────────────────┘
+                      ↓
+Step 6.4: Temporal Cluster Analysis
+┌─────────────────────────────────────────────┐
+│ Goal: Track how skill clusters change      │
+│       over time (2018-2025)                 │
+│                                             │
+│ Analysis 1: Cluster growth/decline          │
+│   SELECT                                    │
+│     cluster_id,                            │
+│     DATE_TRUNC('quarter', posted_date),    │
+│     COUNT(DISTINCT job_id) as demand       │
+│   FROM extracted_skills e                  │
+│   JOIN raw_jobs r ON e.job_id = r.job_id  │
+│   GROUP BY cluster_id, quarter             │
+│   ORDER BY quarter, demand DESC            │
+│                                             │
+│ Analysis 2: Emerging clusters               │
+│   - Identify clusters with demand spike    │
+│   - Flag new clusters (appeared in 2024+)  │
+│                                             │
+│ Analysis 3: Dying clusters                  │
+│   - Identify clusters with demand drop     │
+│   - Mark as "obsolete skills"              │
+│                                             │
+│ Visualization:                              │
+│   - Animated scatter plot (UMAP 2D)        │
+│   - Color = cluster, size = demand         │
+│   - Timeline slider (by quarter/year)      │
+│   - "Replay" skill demand evolution        │
 └─────────────────────────────────────────────┘
 ```
 
@@ -1226,98 +1396,3 @@ job_embeddings (
 ```
 
 ---
-
-## 🎯 **Implementation Phases - REVISED**
-
-### **Phase 1: MVP (4-6 weeks)**
-
-**Goal:** Functional end-to-end system with Pipeline A + ESCO mapping
-
-**Week 1: ESCO Embeddings**
-- [ ] Script: `scripts/generate_esco_embeddings.py`
-- [ ] Generate 13,939 embeddings (E5 model)
-- [ ] Save to `skill_embeddings` table
-- [ ] Build FAISS index (optional)
-
-**Week 2: Complete Pipeline A**
-- [ ] Test regex + NER on sample (100 jobs)
-- [ ] Implement 2-layer ESCO mapping
-- [ ] Test on full dataset (23,188 jobs)
-- [ ] Analyze emergent skills
-
-**Week 3: Basic Analysis**
-- [ ] Top 50 skills overall
-- [ ] Skills by country
-- [ ] Export CSV/JSON
-- [ ] Plotly visualizations
-
-**Week 4: Testing & Validation**
-- [ ] Manual review of mapped skills
-- [ ] Validate emergent skills
-- [ ] Performance optimization
-- [ ] Documentation
-
----
-
-### **Phase 2: Thesis Critical (3-4 weeks)**
-
-**Goal:** Implement Pipeline B + Compare A vs B
-
-**Week 5-6: LLM Pipeline**
-- [ ] Implement `src/llm_processor/llm_handler.py`
-- [ ] Test prompts with 100 jobs
-- [ ] Run on full dataset (choose 1-2 LLMs)
-- [ ] Apply same 2-layer ESCO mapping
-
-**Week 7: Comparison Analysis**
-- [ ] Script: `scripts/compare_pipelines.py`
-- [ ] Calculate all metrics (coverage, mapping rate, etc.)
-- [ ] Qualitative analysis of unique skills
-- [ ] Statistical significance tests
-
-**Week 8: Thesis Documentation**
-- [ ] Write methodology section
-- [ ] Create comparison tables
-- [ ] Generate visualizations
-- [ ] Draft conclusions
-
----
-
-### **Phase 3: Advanced (Optional, 2-3 weeks)**
-
-**Goal:** Clustering + Interactive Dashboard
-
-- [ ] Solve HDBSCAN installation
-- [ ] Implement UMAP + clustering
-- [ ] Cluster analysis & naming
-- [ ] Interactive Plotly Dash dashboard
-
----
-
-## ✅ **Decision Log**
-
-| Decision | Rationale |
-|----------|-----------|
-| **NO lematización** | Modern NER/embeddings handle morphology internally |
-| **NO third LLM arbitrator** | Adds complexity, cost; direct comparison sufficient |
-| **Two-layer mapping** | Fuzzy catches variants, semantic catches synonyms |
-| **E5 over BETO** | Multilingual (ES+EN), better performance |
-| **FAISS optional** | PostgreSQL pgvector works, FAISS for speed |
-| **Emergent skills table** | Track unmapped for taxonomy expansion |
-| **Multiple LLMs optional** | Can compare LLMs within Pipeline B |
-
----
-
-## 📊 **Key Differences from Original Flow**
-
-1. ✅ **ESCO mapping happens AFTER extraction** (not before)
-2. ✅ **Both pipelines use SAME 2-layer mapping** (fair comparison)
-3. ✅ **Embeddings used in 3 places** (ESCO setup, mapping, clustering)
-4. ✅ **Emergent skills flagged and tracked** (not lost)
-5. ✅ **Multiple LLM comparison built in** (llm_model column)
-6. ✅ **Direct A vs B comparison** (no mediator needed)
-7. ✅ **Cleaner separation of concerns** (extract → map → analyze)
-
----
-
-**¿Este flujo responde todas tus preguntas?** 🎯
