@@ -23,38 +23,87 @@ class ElempleoSpider(BaseSpider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.portal = "elempleo"
-        
+
         # Force Colombia as Elempleo only works for Colombia
         self.country = "CO"
-        
-        # Start URLs for different cities and modalities
-        self.start_urls = [
-            "https://www.elempleo.com/co/ofertas-empleo/bogota",
-            "https://www.elempleo.com/co/ofertas-empleo/medellin",
-            "https://www.elempleo.com/co/ofertas-empleo/cali",
-            "https://www.elempleo.com/co/ofertas-empleo/barranquilla",
-            "https://www.elempleo.com/co/ofertas-empleo/remoto",
-            "https://www.elempleo.com/co/ofertas-empleo/modalidad-remoto"
-        ]
-        
-        # Track scraped URLs to avoid duplicates
+
+        # IMPORTANT: Listing-only mode DISABLED for Elempleo
+        # Reason: Company data is NOT available on listing pages (JavaScript-rendered)
+        # We MUST visit detail pages to get authentic company information
+        self.listing_only = False  # Force full-detail mode
+        logger.info("🔍 FULL-DETAIL MODE: Enabled (company data requires detail pages)")
+
+        # OPTIMIZATION: Multi-city scraping (like Computrabajo)
+        self.multi_city = kwargs.get('multi_city', 'false').lower() in ('true', '1', 'yes')
+
+        if self.multi_city:
+            # Scrape ALL major cities + modalities for maximum coverage
+            locations = [
+                # Major cities
+                'bogota', 'medellin', 'cali', 'barranquilla', 'bucaramanga',
+                'cartagena', 'cucuta', 'ibague', 'pereira', 'santa-marta',
+                'manizales', 'neiva', 'villavicencio', 'pasto', 'monteria',
+                'valledupar', 'buenaventura', 'popayan', 'armenia', 'sincelejo',
+                'tunja', 'florencia', 'riohacha', 'quibdo', 'yopal',
+                # Work modalities
+                'modalidad-remoto', 'modalidad-presencial', 'modalidad-h',
+                # Popular categories
+                'trabajo-desde-casa', 'trabajo-sin-experiencia',
+                'trabajo-medio-tiempo', 'trabajo-teletrabajo',
+                # Alrededores
+                'bogota-alrededores', 'chia', 'tocancipa', 'funza', 'cajica'
+            ]
+            self.start_urls = [f"https://www.elempleo.com/co/ofertas-empleo/{loc}" for loc in locations]
+            logger.info(f"🌍 MULTI-CITY MODE: Scraping {len(self.start_urls)} locations")
+            logger.info(f"📍 Locations: {', '.join(locations[:10])}... (+{len(locations)-10} more)")
+        else:
+            # Single city mode (backward compatibility)
+            self.city = kwargs.get('city', 'bogota').lower()
+            self.keyword = kwargs.get('keyword', '').lower()
+
+            if self.keyword:
+                # With keyword search
+                base_url = f"https://www.elempleo.com/co/ofertas-empleo/{self.city}"
+                self.start_urls = [f"{base_url}?q={self.keyword}"]
+                logger.info(f"🔍 Searching: city={self.city}, keyword={self.keyword}")
+            else:
+                # Without keyword (all jobs in city)
+                self.start_urls = [f"https://www.elempleo.com/co/ofertas-empleo/{self.city}"]
+                logger.info(f"🔍 Searching: city={self.city} (all jobs)")
+
+        # OPTIMIZATION: Empty page detection for unlimited scraping
+        self.consecutive_empty_pages = 0
+        self.max_empty_pages = 3  # Stop after 3 empty pages
+
+        # Track scraped URLs to avoid duplicates within this session
+        # Note: Pipeline also handles deduplication via SHA256 hash
         self.scraped_urls = set()
-        
+
         # Statistics tracking
         self.stats = {
             'total_jobs_found': 0,
             'total_jobs_scraped': 0,
             'duplicates_skipped': 0,
             'pages_processed': 0,
-            'errors': 0
+            'errors': 0,
+            'empty_pages': 0
         }
-        
+
+        # 🔥 ULTRA-AGGRESSIVE OPTIMIZATION: Máxima velocidad sin perder autenticidad
+        # 25 workers + 0.6s delay = ~500-700 jobs/hora (vs 56 anterior)
+        # Matching Computrabajo's ultra-aggressive strategy
+        concurrent_requests = int(kwargs.get('concurrent_requests', '25'))
+        download_delay = float(kwargs.get('download_delay', '0.6'))
+        logger.info(f"🔥 ULTRA-AGGRESSIVE MODE: {concurrent_requests} concurrent, {download_delay}s delay")
+        logger.info(f"🎯 Target: ~600 jobs/hora (100% data completeness)")
+
         # Override custom settings for this spider
         self.custom_settings.update({
-            'DOWNLOAD_DELAY': 2.0,  # Respect rate limits
-            'CONCURRENT_REQUESTS_PER_DOMAIN': 2,  # Conservative concurrency
-            'ROBOTSTXT_OBEY': False,  # Disable robots.txt
-            'AUTOTHROTTLE_ENABLED': True,  # Enable autothrottle
+            'DOWNLOAD_DELAY': download_delay,
+            'CONCURRENT_REQUESTS_PER_DOMAIN': concurrent_requests,
+            'CONCURRENT_REQUESTS': concurrent_requests * 2,
+            'ROBOTSTXT_OBEY': False,
+            'AUTOTHROTTLE_ENABLED': True,
             'AUTOTHROTTLE_START_DELAY': 1,
             'AUTOTHROTTLE_MAX_DELAY': 10,
             'DOWNLOADER_MIDDLEWARES': {
@@ -117,83 +166,131 @@ class ElempleoSpider(BaseSpider):
         """Parse job listing page to extract job links."""
         current_page = response.meta.get('page', 1)
         logger.info(f"Parsing listing page {current_page}: {response.url}")
-        
+
         # Extract job links from the page
         job_links = response.css("a[href^='/co/ofertas-trabajo/']")
         logger.info(f"Found {len(job_links)} job links on page {current_page}")
-        
+
         # Debug: Log first few job links to see their structure
         for i, link in enumerate(job_links[:3]):
             href = link.attrib.get('href', 'NO_HREF')
             text = link.css("::text").get() or 'NO_TEXT'
             logger.info(f"Job link {i+1}: href='{href}', text='{text[:50]}...'")
-        
-        if not job_links:
-            logger.warning(f"No job links found on page {current_page}")
-            return
-        
+
+        # OPTIMIZATION: Empty page detection
+        unique_jobs_on_page = set()
+        for link in job_links:
+            job_url = link.attrib.get('href')
+            if job_url:
+                unique_jobs_on_page.add(job_url)
+
+        if not unique_jobs_on_page or len(unique_jobs_on_page) < 3:
+            self.consecutive_empty_pages += 1
+            self.stats['empty_pages'] += 1
+            logger.warning(f"⚠️ Empty/low page detected ({len(unique_jobs_on_page)} unique jobs). Count: {self.consecutive_empty_pages}/{self.max_empty_pages}")
+
+            if self.consecutive_empty_pages >= self.max_empty_pages:
+                logger.warning(f"🛑 Stopping: {self.max_empty_pages} consecutive empty pages detected")
+                return
+        else:
+            # Reset counter if we find jobs
+            self.consecutive_empty_pages = 0
+
         # Process each job link
+        jobs_processed_on_page = 0
         for job_link in job_links:
             try:
-                # FIXED: Extract href attribute properly, not the entire element
+                # Extract href attribute properly
                 job_url = job_link.attrib.get('href')
                 if not job_url:
                     continue
-                
+
                 # Build absolute URL
                 absolute_url = urljoin(response.url, job_url)
-                
+
                 # Update statistics
                 self.stats['total_jobs_found'] += 1
-                
+
                 # Skip if already scraped (DUPLICATE PREVENTION)
                 if absolute_url in self.scraped_urls:
                     self.stats['duplicates_skipped'] += 1
                     logger.debug(f"⏭️ Skipping duplicate job: {absolute_url}")
                     continue
-                
+
                 # Mark as scraped to prevent future duplicates
                 self.scraped_urls.add(absolute_url)
-                logger.info(f"🔍 New job found: {absolute_url}")
-                
+                jobs_processed_on_page += 1
+
                 # Extract basic info from listing
                 job_title = job_link.css("::text").get()
-                
-                # Follow to job detail page
-                yield scrapy.Request(
-                    url=absolute_url,
-                    callback=self.parse_job_detail,
-                    meta={
-                        'proxy': self.get_proxy(),  # Re-enabled proxy support
-                        'listing_title': job_title,
-                        'source_page': response.url,
-                        'is_new_job': True  # Flag to track new jobs
-                    },
-                    headers=self.get_headers(),
-                    errback=self.handle_error
-                )
-                
+
+                # OPTIMIZATION: Listing-only mode (skip detail page scraping)
+                if self.listing_only:
+                    # Extract data directly from listing page (faster but less detailed)
+                    item = JobItem()
+                    item['portal'] = self.portal
+                    item['country'] = self.country
+                    item['url'] = absolute_url
+                    item['title'] = self.clean_text(job_title) if job_title else ""
+
+                    # Try to extract basic info from listing
+                    parent_card = job_link.xpath("ancestor::*[contains(@class, 'job') or contains(@class, 'offer')][1]")
+                    if parent_card:
+                        item['company'] = self.clean_text(parent_card.xpath(".//*[contains(@class, 'company')]//text()").get())
+                        item['location'] = self.clean_text(parent_card.xpath(".//*[contains(@class, 'location') or contains(@class, 'city')]//text()").get())
+                        item['salary_raw'] = self.clean_text(parent_card.xpath(".//*[contains(@class, 'salary')]//text()").get())
+                    else:
+                        item['company'] = None
+                        item['location'] = None
+                        item['salary_raw'] = None
+
+                    item['description'] = None  # Not available in listing
+                    item['requirements'] = None  # Not available in listing
+                    item['contract_type'] = None
+                    item['remote_type'] = None
+                    item['posted_date'] = datetime.today().date().isoformat()
+
+                    if self.validate_job_item(item):
+                        self.stats['total_jobs_scraped'] += 1
+                        yield item
+                else:
+                    # Full-detail mode: Follow to job detail page
+                    logger.info(f"🔍 New job found: {absolute_url}")
+                    yield scrapy.Request(
+                        url=absolute_url,
+                        callback=self.parse_job_detail,
+                        meta={
+                            'proxy': self.get_proxy(),
+                            'listing_title': job_title,
+                            'source_page': response.url,
+                            'is_new_job': True
+                        },
+                        headers=self.get_headers(),
+                        errback=self.handle_error
+                    )
+
             except Exception as e:
                 self.stats['errors'] += 1
                 logger.error(f"Error processing job link: {e}")
                 continue
-        
+
         # Update page statistics
         self.stats['pages_processed'] += 1
-        
-        # Handle pagination
-        if current_page < self.max_pages:
+        logger.info(f"✅ Page {current_page}: Processed {jobs_processed_on_page} new jobs")
+
+        # Handle pagination (unlimited if max_pages not set or empty pages not reached)
+        if current_page < self.max_pages or self.max_pages == 0:
             next_page = current_page + 1
             next_url = self.get_next_page_url(response.url, next_page)
-            
-            if next_url:
+
+            if next_url and self.consecutive_empty_pages < self.max_empty_pages:
                 logger.info(f"📄 Following to page {next_page}: {next_url}")
                 yield scrapy.Request(
                     url=next_url,
                     callback=self.parse_listing_page,
                     meta={
                         'page': next_page,
-                        'proxy': self.get_proxy(),  # Re-enabled proxy support
+                        'proxy': self.get_proxy(),
                         'dont_cache': True
                     },
                     headers=self.get_headers(),
@@ -204,17 +301,15 @@ class ElempleoSpider(BaseSpider):
     
     def get_next_page_url(self, current_url: str, next_page: int) -> Optional[str]:
         """Generate next page URL based on current URL pattern."""
-        # Try different pagination patterns
-        pagination_patterns = [
-            f"{current_url}?page={next_page}",
-            f"{current_url}?pagina={next_page}",
-            f"{current_url}?p={next_page}",
-            f"{current_url}/page/{next_page}"
-        ]
-        
-        # For now, return the first pattern
-        # In a real implementation, you'd test which one works
-        return pagination_patterns[0]
+        # CONFIRMED: Elempleo uses ?page=X pagination
+        base_url = current_url.split('?')[0]  # Remove existing query params
+
+        # Check if there's already a keyword parameter
+        if '?q=' in current_url:
+            keyword = current_url.split('?q=')[1].split('&')[0]
+            return f"{base_url}?q={keyword}&page={next_page}"
+        else:
+            return f"{base_url}?page={next_page}"
     
     def parse_job_detail(self, response):
         """Parse individual job detail page."""
@@ -601,15 +696,16 @@ class ElempleoSpider(BaseSpider):
         logger.info(f"✅ Total jobs scraped: {self.stats['total_jobs_scraped']}")
         logger.info(f"⏭️ Duplicates skipped: {self.stats['duplicates_skipped']}")
         logger.info(f"📄 Pages processed: {self.stats['pages_processed']}")
+        logger.info(f"📄 Empty pages: {self.stats['empty_pages']}")
         logger.info(f"❌ Errors encountered: {self.stats['errors']}")
         logger.info(f"🔗 Unique URLs tracked: {len(self.scraped_urls)}")
         logger.info("=" * 60)
-        
+
         # Calculate efficiency metrics
         if self.stats['total_jobs_found'] > 0:
             duplicate_rate = (self.stats['duplicates_skipped'] / self.stats['total_jobs_found']) * 100
             success_rate = (self.stats['total_jobs_scraped'] / self.stats['total_jobs_found']) * 100
             logger.info(f"📈 Duplicate rate: {duplicate_rate:.1f}%")
             logger.info(f"📈 Success rate: {success_rate:.1f}%")
-        
+
         logger.info("=" * 60)

@@ -182,26 +182,28 @@ def run_once(
     country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR, CL, PE, EC, PA, UY)"),
     limit: int = typer.Option(100, "--limit", "-l", help="Maximum number of jobs to scrape"),
     max_pages: int = typer.Option(5, "--max-pages", "-p", help="Maximum pages to scrape"),
+    multi_city: bool = typer.Option(False, "--multi-city", "-m", help="Scrape multiple cities/locations (for Elempleo)"),
+    listing_only: bool = typer.Option(False, "--listing-only", "-lo", help="Fast mode: only scrape listing pages (2x faster)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show real-time console output")
 ):
     """Run a single spider once."""
     validate_spiders([spider])
     country = validate_country(country)
-    
+
     logger.info(f"Running single spider: {spider} for {country}")
-    
+
     try:
-        result = run_single_spider(spider, country, limit, max_pages, verbose)
+        result = run_single_spider(spider, country, limit, max_pages, multi_city, listing_only, verbose)
         typer.echo(f" {spider} completed: {result.get('items_scraped', 0)} items scraped (see outputs/)")
         return result
-        
+
     except Exception as e:
         logger.error(f"Error running spider {spider}: {e}")
         typer.echo(f" {spider} failed: {e}")
         raise typer.Exit(1)
 
 
-def run_single_spider(spider: str, country: str, limit: int, max_pages: int, verbose: bool = False) -> dict:
+def run_single_spider(spider: str, country: str, limit: int, max_pages: int, multi_city: bool = False, listing_only: bool = False, verbose: bool = False) -> dict:
     """Run a single spider and return results."""
     started_at = datetime.now()
     project_dir = Path(__file__).parent.parent
@@ -260,6 +262,8 @@ def run_single_spider(spider: str, country: str, limit: int, max_pages: int, ver
             "-a", f"country={country}",
             "-a", f"limit={limit}",
             "-a", f"max_pages={max_pages}",
+            "-a", f"multi_city={'true' if multi_city else 'false'}",
+            "-a", f"listing_only={'true' if listing_only else 'false'}",
             "-s", "SETTINGS_MODULE=src.scraper.mass_scraping_settings",
             "-L", "INFO"
         ]

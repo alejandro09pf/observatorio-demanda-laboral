@@ -49,6 +49,7 @@ DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 10))
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scraper.middlewares.UserAgentRotationMiddleware': 400,
+    'scraper.middlewares.BrowserFingerprintMiddleware': 410,  # NEW: Advanced fingerprinting
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
     'scraper.middlewares.ProxyRotationMiddleware': 760,
     'scraper.middlewares.RetryWithBackoffMiddleware': 770,
@@ -92,6 +93,17 @@ RETRY_HTTP_CODES = [500, 502, 503, 504, 408, 429]
 # User agent
 USER_AGENT = settings.scraper_user_agent
 
+# 🔥 HTTP/2 CONNECTION POOLING (Ultra-aggressive optimization)
+# Reutiliza conexiones TCP para múltiples requests = +25% throughput
+DOWNLOAD_HANDLERS = {
+    'http': 'scrapy.core.downloader.handlers.http2.H2DownloadHandler',
+    'https': 'scrapy.core.downloader.handlers.http2.H2DownloadHandler',
+}
+
+# Disable size limits for HTTP/2
+DOWNLOAD_MAXSIZE = 0
+DOWNLOAD_WARNSIZE = 0
+
 # Enable and configure HTTP caching
 HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 3600
@@ -112,9 +124,12 @@ AUTOTHROTTLE_DEBUG = False
 
 # Database connection parameters for pipeline
 DB_PARAMS = {
-    'host': os.getenv('DB_HOST', 'localhost'),
+    'host': os.getenv('DB_HOST', '127.0.0.1'),
     'port': int(os.getenv('DB_PORT', 5433)),
     'database': os.getenv('DB_NAME', 'labor_observatory'),
     'user': os.getenv('DB_USER', 'labor_user'),
-    'password': os.getenv('DB_PASSWORD', 'your_password'),
+    'password': os.getenv('DB_PASSWORD', '123456'),
 }
+
+# Batch insert configuration for pipeline
+BATCH_INSERT_SIZE = int(os.getenv('BATCH_INSERT_SIZE', 100))

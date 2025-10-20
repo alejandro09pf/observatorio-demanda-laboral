@@ -1,0 +1,140 @@
+# Browser Fingerprint Configuration for Anti-Bot Evasion
+# Used by scrapers to generate realistic browser headers and behavior
+
+# Accept-Language pools (realistic for Latin America)
+accept_languages:
+  - "es-CO,es;q=0.9,en;q=0.8"
+  - "es-MX,es;q=0.9,en;q=0.8"
+  - "es-AR,es;q=0.9,en;q=0.8"
+  - "es-ES,es;q=0.9,en;q=0.8"
+  - "es-419,es;q=0.9,en;q=0.8"
+  - "es-CO,es;q=0.9,en-US;q=0.8,en;q=0.7"
+  - "es-MX,es;q=0.9,en-US;q=0.8,en;q=0.7"
+  - "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7"
+  - "es,en-US;q=0.9,en;q=0.8"
+  - "es-419,es;q=0.9,en-US;q=0.8,en;q=0.7"
+
+# Accept headers (browser defaults)
+accept_headers:
+  html: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+  json: "application/json, text/plain, */*"
+  any: "*/*"
+
+# Accept-Encoding (standard compression)
+accept_encodings:
+  - "gzip, deflate, br"
+  - "gzip, deflate, br, zstd"
+
+# Sec-Fetch headers (realistic navigation patterns)
+sec_fetch_patterns:
+  navigation:
+    Sec-Fetch-Dest: "document"
+    Sec-Fetch-Mode: "navigate"
+    Sec-Fetch-Site: "none"
+    Sec-Fetch-User: "?1"
+
+  same_origin:
+    Sec-Fetch-Dest: "document"
+    Sec-Fetch-Mode: "navigate"
+    Sec-Fetch-Site: "same-origin"
+
+  cross_site:
+    Sec-Fetch-Dest: "document"
+    Sec-Fetch-Mode: "navigate"
+    Sec-Fetch-Site: "cross-site"
+    Sec-Fetch-User: "?1"
+
+  api_call:
+    Sec-Fetch-Dest: "empty"
+    Sec-Fetch-Mode: "cors"
+    Sec-Fetch-Site: "same-origin"
+
+# Sec-CH-UA (Client Hints - modern Chrome/Edge)
+sec_ch_ua_brands:
+  chrome_121:
+    - '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"'
+  chrome_120:
+    - '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"'
+  chrome_119:
+    - '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"'
+  edge_121:
+    - '"Not A(Brand";v="99", "Microsoft Edge";v="121", "Chromium";v="121"'
+  edge_120:
+    - '"Not_A Brand";v="8", "Chromium";v="120", "Microsoft Edge";v="120"'
+
+# Sec-CH-UA-Platform
+sec_ch_ua_platforms:
+  - '"Windows"'
+  - '"macOS"'
+  - '"Linux"'
+
+# Sec-CH-UA-Mobile
+sec_ch_ua_mobile:
+  - "?0"
+
+# Connection types
+connection_types:
+  - "keep-alive"
+  - "Keep-Alive"
+
+# Upgrade-Insecure-Requests
+upgrade_insecure_requests:
+  - "1"
+
+# DNT (Do Not Track) - some users have it
+dnt_values:
+  - null  # 70% don't set it
+  - "1"   # 30% have DNT enabled
+
+# Cache-Control patterns
+cache_control_patterns:
+  - "max-age=0"
+  - "no-cache"
+  - null  # Most requests don't have this
+
+# Viewport sizes (realistic screen resolutions)
+viewport_sizes:
+  - {width: 1920, height: 1080}  # Full HD
+  - {width: 1366, height: 768}   # Common laptop
+  - {width: 1536, height: 864}   # 1.5x scaling
+  - {width: 1440, height: 900}   # MacBook
+  - {width: 2560, height: 1440}  # 2K
+  - {width: 1280, height: 720}   # HD
+  - {width: 1600, height: 900}   # 16:9
+  - {width: 1680, height: 1050}  # 16:10
+
+# Portal-specific configurations
+portal_configs:
+  computrabajo:
+    # More conservative for aggressive bot detection
+    use_sec_fetch: true
+    use_sec_ch_ua: true
+    use_referer: true
+    use_dnt: true
+    randomize_accept_language: true
+    session_cookies: true
+
+  hiring_cafe:
+    # Less aggressive, API-based
+    use_sec_fetch: true
+    use_sec_ch_ua: false
+    use_referer: false
+    use_dnt: false
+    randomize_accept_language: false
+    session_cookies: false
+
+  indeed:
+    use_sec_fetch: true
+    use_sec_ch_ua: true
+    use_referer: true
+    use_dnt: true
+    randomize_accept_language: true
+    session_cookies: true
+
+  default:
+    use_sec_fetch: true
+    use_sec_ch_ua: true
+    use_referer: true
+    use_dnt: false
+    randomize_accept_language: true
+    session_cookies: false

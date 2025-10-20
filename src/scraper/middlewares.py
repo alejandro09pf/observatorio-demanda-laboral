@@ -279,13 +279,178 @@ class RetryWithBackoffMiddleware(RetryMiddleware):
 
 class RandomDelayMiddleware:
     """Add random delays between requests."""
-    
+
     def __init__(self, delay_range=(1, 3)):
         self.delay_range = delay_range
-    
+
     def process_request(self, request, spider):
         """Add random delay before processing request."""
         delay = random.uniform(*self.delay_range)
         time.sleep(delay)
         logger.debug(f"Added delay of {delay:.2f}s")
         return None
+
+
+class BrowserFingerprintMiddleware:
+    """Advanced browser fingerprinting middleware to evade bot detection."""
+
+    def __init__(self):
+        self.fingerprint_config = self._load_fingerprint_config()
+        self.session_data = {}  # Store session-specific data per spider
+
+    def _load_fingerprint_config(self):
+        """Load fingerprint configuration from YAML file."""
+        try:
+            import yaml
+            config_file = os.getenv('FINGERPRINT_CONFIG_PATH', './config/fingerprints.yaml')
+            if os.path.exists(config_file):
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    config = yaml.safe_load(f)
+                    logger.info(f"✅ Loaded fingerprint config from {config_file}")
+                    return config
+            else:
+                logger.warning(f"⚠️ Fingerprint config file not found: {config_file}")
+        except Exception as e:
+            logger.error(f"❌ Could not load fingerprint config: {e}")
+        return {}
+
+    def _get_portal_config(self, spider):
+        """Get portal-specific fingerprint configuration."""
+        portal = getattr(spider, 'portal', getattr(spider, 'name', 'default'))
+        portal_configs = self.fingerprint_config.get('portal_configs', {})
+        return portal_configs.get(portal, portal_configs.get('default', {}))
+
+    def _get_or_create_session_data(self, spider):
+        """Get or create session data for spider."""
+        spider_id = id(spider)
+        if spider_id not in self.session_data:
+            # Initialize session data
+            self.session_data[spider_id] = {
+                'accept_language': random.choice(self.fingerprint_config.get('accept_languages', ['es-ES,es;q=0.9,en;q=0.8'])),
+                'accept_encoding': random.choice(self.fingerprint_config.get('accept_encodings', ['gzip, deflate, br'])),
+                'viewport': random.choice(self.fingerprint_config.get('viewport_sizes', [{'width': 1920, 'height': 1080}])),
+                'dnt': random.choice([None, None, None, "1"]),  # 75% don't have DNT, 25% do
+                'sec_ch_ua_platform': random.choice(self.fingerprint_config.get('sec_ch_ua_platforms', ['"Windows"'])),
+            }
+        return self.session_data[spider_id]
+
+    def _generate_sec_ch_ua(self, user_agent):
+        """Generate Sec-CH-UA header based on User-Agent."""
+        # Detect browser from user agent
+        if 'Chrome/' in user_agent and 'Edg/' not in user_agent:
+            if '121.0' in user_agent:
+                brands = self.fingerprint_config.get('sec_ch_ua_brands', {}).get('chrome_121', [])
+            elif '120.0' in user_agent:
+                brands = self.fingerprint_config.get('sec_ch_ua_brands', {}).get('chrome_120', [])
+            else:
+                brands = self.fingerprint_config.get('sec_ch_ua_brands', {}).get('chrome_119', [])
+        elif 'Edg/' in user_agent:
+            if '121.0' in user_agent:
+                brands = self.fingerprint_config.get('sec_ch_ua_brands', {}).get('edge_121', [])
+            else:
+                brands = self.fingerprint_config.get('sec_ch_ua_brands', {}).get('edge_120', [])
+        else:
+            return None
+
+        return random.choice(brands) if brands else None
+
+    def _get_referer(self, request, spider):
+        """Generate realistic referer based on request context."""
+        portal = getattr(spider, 'portal', getattr(spider, 'name', 'default'))
+
+        # For detail pages, use listing page as referer
+        if request.meta.get('is_detail_page'):
+            return request.meta.get('listing_url', request.url)
+
+        # For first page, no referer or use search engine
+        page = request.meta.get('page', 1)
+        if page == 1:
+            # 30% chance of coming from Google search
+            if random.random() < 0.3:
+                search_engines = [
+                    'https://www.google.com/',
+                    'https://www.google.com.co/',
+                    'https://www.google.com.mx/',
+                    'https://www.google.com.ar/',
+                ]
+                return random.choice(search_engines)
+            return None
+
+        # For subsequent pages, use previous page as referer
+        return request.meta.get('previous_url', request.url)
+
+    def process_request(self, request, spider):
+        """Add advanced browser fingerprinting headers."""
+        try:
+            if not self.fingerprint_config:
+                return None
+
+            portal_config = self._get_portal_config(spider)
+            session_data = self._get_or_create_session_data(spider)
+
+            # Get current user agent (already set by UserAgentRotationMiddleware)
+            user_agent = request.headers.get('User-Agent', b'').decode('utf-8')
+
+            # Accept header
+            accept_type = 'html' if not request.meta.get('is_api_call') else 'json'
+            accept_headers = self.fingerprint_config.get('accept_headers', {})
+            if accept_type in accept_headers:
+                request.headers['Accept'] = accept_headers[accept_type]
+
+            # Accept-Language (session-consistent)
+            if portal_config.get('randomize_accept_language', True):
+                request.headers['Accept-Language'] = session_data['accept_language']
+
+            # Accept-Encoding
+            request.headers['Accept-Encoding'] = session_data['accept_encoding']
+
+            # Connection
+            request.headers['Connection'] = random.choice(self.fingerprint_config.get('connection_types', ['keep-alive']))
+
+            # Upgrade-Insecure-Requests
+            if accept_type == 'html':
+                request.headers['Upgrade-Insecure-Requests'] = '1'
+
+            # Sec-Fetch headers
+            if portal_config.get('use_sec_fetch', True):
+                is_navigation = request.meta.get('page', 1) == 1 or not request.meta.get('is_detail_page')
+
+                if is_navigation:
+                    sec_fetch = self.fingerprint_config.get('sec_fetch_patterns', {}).get('navigation', {})
+                else:
+                    sec_fetch = self.fingerprint_config.get('sec_fetch_patterns', {}).get('same_origin', {})
+
+                for header, value in sec_fetch.items():
+                    request.headers[header] = value
+
+            # Sec-CH-UA headers (modern Chrome/Edge)
+            if portal_config.get('use_sec_ch_ua', True):
+                sec_ch_ua = self._generate_sec_ch_ua(user_agent)
+                if sec_ch_ua:
+                    request.headers['Sec-CH-UA'] = sec_ch_ua
+                    request.headers['Sec-CH-UA-Mobile'] = '?0'
+                    request.headers['Sec-CH-UA-Platform'] = session_data['sec_ch_ua_platform']
+
+            # DNT header
+            if portal_config.get('use_dnt', False) and session_data['dnt']:
+                request.headers['DNT'] = session_data['dnt']
+
+            # Referer
+            if portal_config.get('use_referer', True):
+                referer = self._get_referer(request, spider)
+                if referer:
+                    request.headers['Referer'] = referer
+
+            # Cache-Control (for navigation requests)
+            if request.meta.get('page', 1) == 1:
+                cache_control = random.choice(self.fingerprint_config.get('cache_control_patterns', ['max-age=0']))
+                if cache_control:
+                    request.headers['Cache-Control'] = cache_control
+
+            logger.debug(f"✅ Applied browser fingerprinting for {spider.name}")
+
+            return None
+
+        except Exception as e:
+            logger.error(f"❌ Error in fingerprint middleware for {spider.name}: {e}")
+            return None
