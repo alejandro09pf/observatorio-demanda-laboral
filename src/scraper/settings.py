@@ -49,7 +49,8 @@ DOWNLOAD_TIMEOUT = int(os.getenv('SCRAPY_DOWNLOAD_TIMEOUT', 10))
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scraper.middlewares.UserAgentRotationMiddleware': 400,
-    'scraper.middlewares.BrowserFingerprintMiddleware': 410,  # NEW: Advanced fingerprinting
+    'scraper.middlewares.BrowserFingerprintMiddleware': 410,  # Advanced fingerprinting
+    'scraper.middlewares.TLSFingerprintMiddleware': 585,  # TLS fingerprinting for bypass HTTP 403
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 750,
     'scraper.middlewares.ProxyRotationMiddleware': 760,
     'scraper.middlewares.RetryWithBackoffMiddleware': 770,

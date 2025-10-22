@@ -1,357 +1,464 @@
 """
 Magneto spider for Labor Market Observatory.
-Scrapes job postings from Magneto365 Colombia using JSON-LD structured data.
+Scrapes job postings from Magneto365 using Selenium (SPA dynamic content).
 """
 
 import scrapy
-import json
-import re
-from urllib.parse import urljoin, urlparse
+import time
+import random
+import logging
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Dict, Any, Optional
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from .base_spider import BaseSpider
 from ..items import JobItem
-import logging
 
 logger = logging.getLogger(__name__)
 
 
 class MagnetoSpider(BaseSpider):
-    """Spider for Magneto365 job portal using JSON-LD structured data."""
+    """Spider for Magneto365 job portal using Selenium for SPA content."""
 
     name = "magneto"
     allowed_domains = ["magneto365.com"]
 
+    # Custom settings optimized for Selenium scraping
+    custom_settings = {
+        'DOWNLOAD_DELAY': 2,
+        'RANDOMIZE_DOWNLOAD_DELAY': True,
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 1,  # Selenium is single-threaded
+        'AUTOTHROTTLE_ENABLED': True,
+        'AUTOTHROTTLE_START_DELAY': 2,
+        'AUTOTHROTTLE_MAX_DELAY': 5,
+        'AUTOTHROTTLE_TARGET_CONCURRENCY': 0.5,
+        'ROBOTSTXT_OBEY': False,
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.portal = "magneto"
-        self.max_pages = int(kwargs.get('max_pages', 10))
-        self.current_page = 0
-        
-        # Set start URLs based on country
+        self.driver = None
+        self.wait_timeout = 20
+        self.scraped_urls = set()
+
+        # Set start URL based on country
         if self.country == "CO":
-            self.start_urls = ["https://www.magneto365.com/co/empleos"]
-        elif self.country == "MX":
-            logger.warning("Magneto spider is disabled for Mexico as the target URL is no longer available.")
-            return
+            self.start_url = "https://www.magneto365.com/co/empleos"
         elif self.country == "AR":
-            self.start_urls = ["https://www.magneto365.com/ar/empleos"]
+            self.start_url = "https://www.magneto365.com/ar/empleos"
         else:
-            # Default to Colombia
-            self.start_urls = ["https://www.magneto365.com/co/empleos"]
+            logger.warning(f"Magneto not configured for country: {self.country}")
+            self.start_url = "https://www.magneto365.com/co/empleos"
 
-        # Override custom settings for this spider - optimized for mass scraping
-        self.custom_settings.update({
-            'DOWNLOAD_DELAY': 0.1,  # Minimal delay for mass scraping
-            'CONCURRENT_REQUESTS_PER_DOMAIN': 32,  # Increased for mass scraping
-            'ROBOTSTXT_OBEY': False,
-            'DOWNLOAD_TIMEOUT': 10,  # Reduced timeout for faster failures
-            'LOG_LEVEL': 'INFO',  # Reduced logging for performance
-            'DUPEFILTER_CLASS': None,  # Disable duplicate filtering
-        })
+        logger.info(f"Magneto spider initialized for country: {self.country}")
+        logger.info(f"Start URL: {self.start_url}")
 
-    async def start(self):
-        """Start coroutine for listing pages."""
-        logger.info(f"Starting Magneto spider for country: {self.country}")
-        logger.info(f"Max pages: {self.max_pages}")
-
-        if not self.start_urls:
-            logger.warning("No start URLs available. Exiting spider.")
+    def start_requests(self):
+        """Start scraping with Selenium."""
+        if not hasattr(self, 'start_url'):
+            logger.error("No start URL configured")
             return
 
-        # Start with the first page
+        # Initialize Selenium driver
+        self._setup_driver()
+
+        # Start scraping from page 1
         yield scrapy.Request(
-            url=self.start_urls[0],
-            callback=self.parse_listing_page,
-            meta={'page': 1}
+            url=self.start_url,
+            callback=self.parse_search_results_page,
+            meta={'page': 1},
+            dont_filter=True
         )
 
-    def parse_listing_page(self, response):
-        """Parse listing page and extract job URLs from JSON-LD ItemList."""
-        if response.status == 410:
-            logger.warning(f"Received HTTP 410 for URL: {response.url}. Skipping.")
-            return
-
-        current_page = response.meta.get('page', 1)
-        logger.info(f"Parsing listing page {current_page}: {response.url}")
-
-        # Find JSON-LD scripts
-        json_ld_scripts = response.css('script[type="application/ld+json"]')
-        
-        job_urls = []
-        
-        for script in json_ld_scripts:
-            try:
-                # Get script content - extract text from within script tags
-                script_content = script.xpath('text()').get()
-                if not script_content:
-                    continue
-                
-                json_data = json.loads(script_content)
-                
-                # Look for ItemList with job URLs
-                if json_data.get('@type') == 'ItemList':
-                    item_list = json_data.get('itemListElement', [])
-                    logger.info(f"Found ItemList with {len(item_list)} items")
-                    
-                    for item in item_list:
-                        if isinstance(item, dict) and item.get('@type') == 'ListItem':
-                            job_url = item.get('url')
-                            if job_url:
-                                job_urls.append(job_url)
-                                logger.debug(f"Found job URL: {job_url}")
-                    
-                    break  # Found ItemList, no need to check other scripts
-                    
-            except json.JSONDecodeError as e:
-                logger.warning(f"Error parsing JSON-LD script: {e}")
-                continue
-
-        logger.info(f"Extracted {len(job_urls)} job URLs from page {current_page}")
-
-        # Follow each job URL to get detailed information
-        for job_url in job_urls:
-            yield scrapy.Request(
-                url=job_url,
-                callback=self.parse_job_detail,
-                meta={'source_page': current_page}
-            )
-
-        # Handle pagination
-        if current_page < self.max_pages and job_urls:
-            next_page = current_page + 1
-            next_url = f"{self.start_urls[0]}?page={next_page}"
-            
-            logger.info(f"Following to page {next_page}: {next_url}")
-            yield scrapy.Request(
-                url=next_url,
-                callback=self.parse_listing_page,
-                meta={'page': next_page}
-            )
-
-    def parse_job_detail(self, response):
-        """Parse job detail page and extract information from JSON-LD JobPosting."""
-        source_page = response.meta.get('source_page', 1)
-        logger.info(f"Parsing job detail: {response.url} (from page {source_page})")
-
-        # Find JSON-LD JobPosting script
-        json_ld_scripts = response.css('script[type="application/ld+json"]')
-        
-        job_data = None
-        
-        for script in json_ld_scripts:
-            try:
-                # Get script content - extract text from within script tags
-                script_content = script.xpath('text()').get()
-                if not script_content:
-                    continue
-                
-                json_data = json.loads(script_content)
-                
-                # Look for JobPosting
-                if json_data.get('@type') == 'JobPosting':
-                    job_data = json_data
-                    logger.debug(f"Found JobPosting: {job_data.get('title', 'No title')}")
-                    break
-                    
-            except json.JSONDecodeError as e:
-                logger.warning(f"Error parsing JSON-LD script: {e}")
-                continue
-
-        if not job_data:
-            logger.warning(f"No JobPosting JSON-LD found for: {response.url}")
-            return
-
-        # Create job item
-        item = JobItem()
-        
-        # Basic information
-        item['portal'] = 'magneto'
-        item['country'] = self.country
-        item['url'] = response.url
-
-        # Extract title
-        item['title'] = self.clean_text(job_data.get('title', ''))
-
-        # Extract company
-        hiring_org = job_data.get('hiringOrganization', {})
-        item['company'] = self.clean_text(hiring_org.get('name', ''))
-
-        # Extract location
-        job_location = job_data.get('jobLocation', {})
-        
-        # Handle case where jobLocation might be a list
-        if isinstance(job_location, list):
-            job_location = job_location[0] if job_location else {}
-        
-        address = job_location.get('address', {})
-        
-        # Handle location arrays (Magneto sometimes uses arrays for location)
-        city = address.get('addressLocality', '')
-        region = address.get('addressRegion', '')
-        
-        if isinstance(city, list):
-            city = ', '.join(city) if city else ''
-        if isinstance(region, list):
-            region = ', '.join(region) if region else ''
-        
-        # Combine city and region
-        location_parts = []
-        if city:
-            location_parts.append(city)
-        if region:
-            location_parts.append(region)
-        
-        item['location'] = ', '.join(location_parts) if location_parts else ''
-
-        # Extract description
-        description = job_data.get('description', '')
-        if description:
-            # Clean HTML tags from description
-            description = self.clean_html(description)
-        item['description'] = description
-
-        # Extract requirements (from qualifications field)
-        requirements = job_data.get('qualifications', '')
-        if requirements:
-            requirements = self.clean_text(requirements)
-        item['requirements'] = requirements
-
-        # Extract salary information
-        salary_raw = self.extract_salary_from_json(job_data)
-        item['salary_raw'] = salary_raw
-
-        # Extract contract type
-        employment_type = job_data.get('employmentType', '')
-        contract_type = self.map_employment_type(employment_type)
-        item['contract_type'] = contract_type
-
-        # Extract remote type from description
-        remote_type = self.extract_remote_type_from_description(description)
-        item['remote_type'] = remote_type
-
-        # Extract posted date
-        posted_date = job_data.get('datePosted', '')
-        if posted_date:
-            # Convert to ISO format if needed
-            posted_date = self.parse_date(posted_date)
-        item['posted_date'] = posted_date
-
-        # Validate item
-        if not self.validate_job_item(item):
-            logger.warning(f"Invalid job item: {item['title']}")
-            return
-
-        logger.info(f"Successfully parsed job: {item['title']} at {item['company']}")
-        yield item
-
-    def extract_salary_from_json(self, job_data: Dict[str, Any]) -> str:
-        """Extract salary information from JobPosting JSON-LD."""
-        base_salary = job_data.get('baseSalary', {})
-        if not base_salary:
-            return ''
-
-        currency = base_salary.get('currency', '')
-        value = base_salary.get('value', {})
-        unit_text = base_salary.get('unitText', '')
-
-        if not value:
-            return ''
-
-        # Extract min and max values
-        min_value = value.get('minValue', '')
-        max_value = value.get('maxValue', '')
-        
-        # Build salary string
-        salary_parts = []
-        
-        if min_value and max_value:
-            if min_value == max_value:
-                salary_parts.append(str(min_value))
-            else:
-                salary_parts.append(f"{min_value} - {max_value}")
-        elif min_value:
-            salary_parts.append(f"{min_value}+")
-        elif max_value:
-            salary_parts.append(f"Up to {max_value}")
-        
-        if currency:
-            salary_parts.append(currency)
-        
-        if unit_text:
-            salary_parts.append(f"per {unit_text.lower()}")
-
-        return ' '.join(salary_parts) if salary_parts else ''
-
-    def map_employment_type(self, employment_type: str) -> str:
-        """Map employment type from JSON-LD to standardized format."""
-        if not employment_type:
-            return ''
-        
-        employment_type = employment_type.upper()
-        
-        mapping = {
-            'FULL_TIME': 'Tiempo completo',
-            'PART_TIME': 'Tiempo parcial',
-            'CONTRACTOR': 'Contrato',
-            'TEMPORARY': 'Temporal',
-            'INTERN': 'Pasantía',
-            'VOLUNTEER': 'Voluntario',
-            'PER_DIEM': 'Por día',
-            'OTHER': 'Otro'
-        }
-        
-        return mapping.get(employment_type, employment_type)
-
-    def extract_remote_type_from_description(self, description: str) -> str:
-        """Extract remote work type from job description."""
-        if not description:
-            return ''
-        
-        description_lower = description.lower()
-        
-        # Check for remote work indicators
-        if any(term in description_lower for term in ['remoto', 'remote', 'teletrabajo', 'home office']):
-            return 'Remoto'
-        elif any(term in description_lower for term in ['híbrido', 'hybrid', 'mixto']):
-            return 'Híbrido'
-        elif any(term in description_lower for term in ['presencial', 'on-site', 'oficina']):
-            return 'Presencial'
-        else:
-            return ''
-
-    def clean_html(self, html_text: str) -> str:
-        """Clean HTML tags from text while preserving line breaks."""
-        if not html_text:
-            return ''
-        
-        # Replace common HTML tags with appropriate text
-        html_text = re.sub(r'<br\s*/?>', '\n', html_text, flags=re.IGNORECASE)
-        html_text = re.sub(r'<p[^>]*>', '\n', html_text, flags=re.IGNORECASE)
-        html_text = re.sub(r'</p>', '\n', html_text, flags=re.IGNORECASE)
-        html_text = re.sub(r'<[^>]+>', '', html_text)
-        
-        # Clean up extra whitespace and line breaks
-        html_text = re.sub(r'\n\s*\n', '\n\n', html_text)
-        html_text = html_text.strip()
-        
-        return html_text
-
-    def parse_date(self, date_string: str) -> Optional[str]:
-        """Parse date from various formats to ISO format."""
-        if not date_string:
-            return None
-        
+    def _setup_driver(self):
+        """Setup Chrome WebDriver with webdriver-manager."""
         try:
-            # If it's already in ISO format (YYYY-MM-DD)
-            if re.match(r'^\d{4}-\d{2}-\d{2}$', date_string):
-                return date_string
-            
-            # Try to parse other formats
-            # Add more date parsing logic here if needed
-            # For now, return as is if it's a valid date string
-            return date_string
-            
+            logger.info("Setting up Chrome WebDriver...")
+
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--window-size=1920,1080')
+            options.add_argument(f'user-agent={self.settings.get("USER_AGENT")}')
+
+            service = Service(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(service=service, options=options)
+
+            logger.info("ChromeDriver initialized successfully")
+
         except Exception as e:
-            logger.warning(f"Could not parse date '{date_string}': {e}")
-            return None
+            logger.error(f"Failed to initialize ChromeDriver: {e}")
+            raise
+
+    def parse_search_results_page(self, response):
+        """Parse a search results page using Selenium."""
+        page = response.meta.get('page', 1)
+
+        try:
+            logger.info(f"Parsing search results page {page}")
+            logger.info(f"Navigating to: {response.url}")
+
+            # Navigate to page
+            self.driver.get(response.url)
+
+            # Wait for job cards to load (Magneto uses dynamic loading)
+            time.sleep(5)  # Initial wait for JavaScript to execute
+
+            # Extract job URLs (strings, not elements) to avoid stale element issues
+            job_urls = self._extract_job_urls()
+
+            if not job_urls:
+                logger.warning(f"No job URLs found on page {page}")
+                return
+
+            logger.info(f"Found {len(job_urls)} job postings on page {page}")
+
+            # Process each job URL
+            job_data_list = []
+            for i, job_url in enumerate(job_urls):
+                try:
+                    logger.info(f"Processing job {i+1}/{len(job_urls)}: {job_url}")
+                    job_data = self._extract_job_from_url(job_url)
+                    if job_data and job_data.get('url'):
+                        job_data_list.append(job_data)
+                except Exception as e:
+                    logger.error(f"Error extracting job from URL {i}: {e}")
+                    continue
+
+            logger.info(f"Extracted {len(job_data_list)} jobs from page {page}")
+
+            # Yield items
+            for job_data in job_data_list:
+                if job_data['url'] not in self.scraped_urls:
+                    self.scraped_urls.add(job_data['url'])
+
+                    item = JobItem()
+                    item['portal'] = 'magneto'
+                    item['country'] = self.country
+                    item['url'] = job_data['url']
+                    item['title'] = job_data.get('title', '')
+                    item['company'] = job_data.get('company', '')
+                    item['location'] = job_data.get('location', '')
+                    item['description'] = job_data.get('description', '')
+                    item['requirements'] = job_data.get('requirements', '')
+                    item['salary_raw'] = job_data.get('salary_raw', '')
+                    item['contract_type'] = job_data.get('contract_type', '')
+                    item['remote_type'] = job_data.get('remote_type', '')
+                    item['posted_date'] = job_data.get('posted_date') or None  # None instead of '' for SQL
+                    item['job_id'] = ''
+                    item['job_category'] = ''
+                    item['role_activities'] = []
+                    item['compensation'] = {}
+                    item['geolocation'] = []
+                    item['source_country'] = self.country.lower()
+                    item['scraped_at'] = datetime.now().isoformat()
+
+                    if self.validate_job_item(item):
+                        yield item
+                        logger.info(f"Scraped job: {item['title']} - {item['company']}")
+
+            # Check if we should continue to next page
+            if page < self.max_pages and len(job_data_list) > 0:
+                next_page = page + 1
+                next_url = f"{self.start_url}?page={next_page}"
+
+                # Add random delay
+                time.sleep(random.uniform(2, 5))
+
+                yield scrapy.Request(
+                    url=next_url,
+                    callback=self.parse_search_results_page,
+                    meta={'page': next_page},
+                    dont_filter=True
+                )
+            else:
+                logger.info(f"Finished scraping. Processed {len(self.scraped_urls)} unique jobs.")
+
+        except Exception as e:
+            logger.error(f"Error parsing search results page {page}: {e}")
+        finally:
+            # Clean up driver when done
+            if page >= self.max_pages:
+                self.cleanup_driver()
+
+    def _extract_job_urls(self):
+        """Extract job URLs (as strings) from the current page."""
+        job_urls = []
+
+        # Try multiple selector strategies for Magneto
+        selectors = [
+            'a[href*="/empleos/"]',
+            'a[href*="/co/empleos/"]',
+            'a[href*="/ar/empleos/"]',
+            '.job-card a',
+            '.vacancy a',
+            '[data-testid="job-card"] a',
+            'article a',
+        ]
+
+        job_links = []
+        for selector in selectors:
+            try:
+                elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                if elements:
+                    logger.info(f"Found {len(elements)} elements with selector: {selector}")
+                    job_links = elements
+                    break
+            except Exception as e:
+                logger.debug(f"Selector {selector} failed: {e}")
+                continue
+
+        # Extract URLs from elements immediately (before they become stale)
+        for link in job_links:
+            try:
+                href = link.get_attribute('href')
+                if href and '/empleos/' in href and href not in [self.start_url]:
+                    # Avoid pagination/filter links
+                    if '?' not in href or 'page=' not in href:
+                        job_urls.append(href)
+            except:
+                continue
+
+        logger.info(f"Found {len(job_urls)} actual job URLs")
+        return job_urls
+
+    def _extract_job_from_url(self, job_url: str) -> Dict[str, Any]:
+        """Extract job information by navigating to the job detail page."""
+        job_data = {}
+
+        try:
+            job_data['url'] = job_url
+
+            # Navigate to job detail page
+            logger.debug(f"Navigating to job detail: {job_url}")
+            self.driver.get(job_url)
+            time.sleep(3)  # Wait for page to load
+
+            # Extract job details from the detail page
+            job_data.update(self._extract_job_details_from_page())
+
+            # Ensure we have at least a basic description
+            if not job_data.get('description'):
+                title = job_data.get('title', 'puesto')
+                company = job_data.get('company', 'empresa')
+                job_data['description'] = f"Oportunidad laboral en {company} - {title}"
+
+        except Exception as e:
+            logger.error(f"Error extracting job from URL: {e}")
+
+        return job_data
+
+    def _extract_job_details_from_page(self) -> Dict[str, Any]:
+        """Extract all job details from the current detail page using Magneto-specific selectors."""
+        job_data = {}
+
+        try:
+            # Extract title - Magneto uses h1 element
+            try:
+                title_elem = self.driver.find_element(By.CSS_SELECTOR, 'h1')
+                if title_elem.text.strip():
+                    job_data['title'] = title_elem.text.strip()
+            except NoSuchElementException:
+                logger.debug("Could not extract title")
+
+            # Extract company name - Use meta tag as primary source (most reliable)
+            try:
+                meta_title = self.driver.find_element(By.CSS_SELECTOR, 'meta[property="og:title"]')
+                content = meta_title.get_attribute('content')
+                if ' en ' in content and ' | ' in content:
+                    # Format: "Empleo como [title] en [company] | Magneto"
+                    parts = content.split(' | ')[0].split(' en ', 1)
+                    if len(parts) == 2:
+                        job_data['company'] = parts[1].strip()
+            except:
+                # Fallback to /empresas/ link
+                try:
+                    company_elem = self.driver.find_element(By.CSS_SELECTOR, 'a[href*="/empresas/"]')
+                    company_text = company_elem.text.strip()
+                    # The link might contain both title and company, get just the company part
+                    if company_text and '\n' in company_text:
+                        # Take the last line which is usually the company name
+                        company_text = company_text.split('\n')[-1].strip()
+                    if company_text:
+                        job_data['company'] = company_text
+                except:
+                    pass
+
+            # Extract location - Magneto shows it in meta description
+            try:
+                meta_desc = self.driver.find_element(By.CSS_SELECTOR, 'meta[name="description"]')
+                content = meta_desc.get_attribute('content')
+                if ' en ' in content and ' con la empresa ' in content:
+                    # Format: "Encuentra trabajo como [title] en [location] con la empresa [company]"
+                    parts = content.split(' en ', 1)
+                    if len(parts) == 2:
+                        location_part = parts[1].split(' con la empresa ')[0].strip()
+                        job_data['location'] = location_part
+            except:
+                pass
+
+            # Extract detail items - Magneto shows experience, salary, keywords in specific divs
+            try:
+                detail_items = self.driver.find_elements(By.CSS_SELECTOR,
+                    'div.mg_job_details_magneto-ui-job-details_item-detail_nkmig')
+
+                for item in detail_items:
+                    text = item.text.strip()
+
+                    # Check if it's salary (contains numbers and currency-like format)
+                    if text and any(char.isdigit() for char in text) and len(text) < 50:
+                        # Could be salary like "5.333.000" or date like "Hace 16 minutos"
+                        if not 'hace' in text.lower() and not 'experiencia' in text.lower():
+                            if not job_data.get('salary_raw'):
+                                job_data['salary_raw'] = text
+
+                    # Check if it's experience/requirements
+                    if 'experiencia' in text.lower() or 'años' in text.lower():
+                        job_data['requirements'] = text
+
+                    # Check if it's keywords (Palabras clave)
+                    if 'palabras clave' in text.lower() or len(text) > 100:
+                        # This is likely the keywords/skills section
+                        if 'palabras clave:' in text.lower():
+                            keywords = text.split('Palabras clave:', 1)[1].strip()
+                            # Append to requirements
+                            if job_data.get('requirements'):
+                                job_data['requirements'] += f"\n\nHabilidades: {keywords}"
+                            else:
+                                job_data['requirements'] = f"Habilidades: {keywords}"
+
+                    # Check if it's posted date
+                    if 'hace' in text.lower():
+                        job_data['posted_date'] = self.parse_date(text)
+
+            except Exception as e:
+                logger.debug(f"Could not extract detail items: {e}")
+
+            # Extract description - Magneto doesn't have detailed descriptions
+            # Use keywords as a minimal description if available
+            if not job_data.get('description'):
+                if job_data.get('requirements'):
+                    job_data['description'] = f"Requisitos: {job_data.get('requirements', '')[:500]}"
+
+            # Extract remote type - look in page text
+            try:
+                page_text = self.driver.find_element(By.TAG_NAME, 'body').text.lower()
+                if 'remoto' in page_text or 'trabajo remoto' in page_text:
+                    job_data['remote_type'] = 'Remoto'
+                elif 'híbrido' in page_text or 'hibrido' in page_text:
+                    job_data['remote_type'] = 'Híbrido'
+                elif 'presencial' in page_text:
+                    job_data['remote_type'] = 'Presencial'
+            except Exception as e:
+                logger.debug(f"Could not extract remote type: {e}")
+
+            # Extract contract type
+            try:
+                page_text = self.driver.find_element(By.TAG_NAME, 'body').text.lower()
+                if 'tiempo completo' in page_text or 'full time' in page_text:
+                    job_data['contract_type'] = 'Tiempo Completo'
+                elif 'medio tiempo' in page_text or 'part time' in page_text:
+                    job_data['contract_type'] = 'Medio Tiempo'
+                elif 'contrato' in page_text:
+                    job_data['contract_type'] = 'Contrato'
+            except Exception as e:
+                logger.debug(f"Could not extract contract type: {e}")
+
+        except Exception as e:
+            logger.error(f"Error extracting job details from page: {e}")
+
+        return job_data
+
+    def _parse_job_link_text(self, link_text: str) -> Dict[str, Any]:
+        """Parse job information from link text content."""
+        job_data = {}
+
+        try:
+            # Split the text into lines
+            lines = [line.strip() for line in link_text.split('\n') if line.strip()]
+
+            if not lines:
+                return job_data
+
+            # Remove timestamp/UI lines
+            filtered_lines = []
+            for line in lines:
+                # Skip timestamp lines
+                if any(skip in line.lower() for skip in ['publicado', 'actualizado', 'hace']):
+                    if any(time_word in line.lower() for time_word in ['hora', 'minuto', 'día', 'mes', 'ayer', 'hoy', 'semana']):
+                        job_data['posted_date'] = self.parse_date(line)
+                        continue
+                # Skip UI elements
+                if any(skip in line.lower() for skip in ['aplicar', 'postular', 'guardar']):
+                    continue
+                # Skip very short lines
+                if len(line) < 3:
+                    continue
+                filtered_lines.append(line)
+
+            if not filtered_lines:
+                return job_data
+
+            # First line is usually the title
+            if filtered_lines:
+                job_data['title'] = filtered_lines[0]
+                filtered_lines = filtered_lines[1:]
+
+            # Second line is often the company
+            if filtered_lines:
+                second_line = filtered_lines[0]
+                if len(second_line) < 100:
+                    job_data['company'] = second_line
+                    filtered_lines = filtered_lines[1:]
+
+            # Look for location
+            for i, line in enumerate(filtered_lines):
+                if any(loc_keyword in line.lower() for loc_keyword in
+                      ['bogotá', 'medellín', 'cali', 'barranquilla', 'buenos aires', 'capital federal']):
+                    if len(line) < 150:
+                        job_data['location'] = line
+                        filtered_lines.pop(i)
+                        break
+
+            # Look for remote type
+            for i, line in enumerate(filtered_lines):
+                if any(mode in line.lower() for mode in ['remoto', 'presencial', 'híbrido', 'mixto']):
+                    if len(line) < 100:
+                        job_data['remote_type'] = line.title()
+                        filtered_lines.pop(i)
+                        break
+
+            # Remaining lines form the description
+            if filtered_lines:
+                description_text = ' '.join(filtered_lines)
+                if len(description_text) > 500:
+                    description_text = description_text[:500] + '...'
+                job_data['description'] = description_text
+
+        except Exception as e:
+            logger.error(f"Error parsing job link text: {e}")
+
+        return job_data
+
+    def cleanup_driver(self):
+        """Clean up Selenium WebDriver."""
+        if self.driver:
+            try:
+                self.driver.quit()
+                logger.info("Selenium WebDriver cleaned up successfully")
+            except Exception as e:
+                logger.error(f"Error closing driver: {e}")
+
+    def closed(self, reason):
+        """Called when spider closes."""
+        self.cleanup_driver()
+        logger.info(f"Magneto spider closed: {reason}")
+        logger.info(f"Total jobs scraped: {len(self.scraped_urls)}")

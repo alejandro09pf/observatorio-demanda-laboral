@@ -433,134 +433,118 @@ class ZonaJobsSpider(BaseSpider):
                 self.cleanup_driver()
     
     def extract_job_from_link(self, job_link) -> Dict[str, Any]:
-        """Extract job information from a job link element."""
+        """Extract job information from a job link element using text parsing only."""
         job_data = {}
-        
+
         try:
-            # Extract URL
+            # Extract URL - this is safe and always works
             job_data['url'] = job_link.get_attribute('href')
-            
-            # Extract text content and parse it
+
+            # Extract ALL text from the link element - this is safe
             link_text = job_link.text.strip()
+
+            # Parse the text to extract job details
             if link_text:
-                job_data.update(self.parse_job_link_text(link_text))
-            
-            # Try to extract additional data from child elements
-            try:
-                # Look for title in child elements
-                title_selectors = [
-                    "h2", "h3", "h4", ".title", "[class*='title']"
-                ]
-                for selector in title_selectors:
-                    try:
-                        title_element = job_link.find_element(By.CSS_SELECTOR, selector)
-                        if title_element.text.strip():
-                            job_data['title'] = title_element.text.strip()
-                            break
-                    except NoSuchElementException:
-                        continue
-                
-                # Look for company in child elements
-                company_selectors = [
-                    ".company", "[class*='company']", ".employer", "[class*='employer']"
-                ]
-                for selector in company_selectors:
-                    try:
-                        company_element = job_link.find_element(By.CSS_SELECTOR, selector)
-                        if company_element.text.strip():
-                            job_data['company'] = company_element.text.strip()
-                            break
-                    except NoSuchElementException:
-                        continue
-                
-                # Look for location in child elements
-                location_selectors = [
-                    ".location", "[class*='location']", ".place", "[class*='place']"
-                ]
-                for selector in location_selectors:
-                    try:
-                        location_element = job_link.find_element(By.CSS_SELECTOR, selector)
-                        if location_element.text.strip():
-                            job_data['location'] = location_element.text.strip()
-                            break
-                    except NoSuchElementException:
-                        continue
-                
-            except Exception as e:
-                logger.debug(f"Could not extract additional data from child elements: {e}")
-            
+                parsed_data = self.parse_job_link_text(link_text)
+                job_data.update(parsed_data)
+
+            # Ensure we have at least a basic description
+            if not job_data.get('description'):
+                title = job_data.get('title', 'puesto')
+                company = job_data.get('company', 'empresa')
+                job_data['description'] = f"Oportunidad laboral en {company} - {title}"
+
         except Exception as e:
             logger.error(f"❌ Error extracting job from link: {e}")
-        
+
         return job_data
     
     def parse_job_link_text(self, link_text: str) -> Dict[str, Any]:
-        """Parse job information from link text content."""
+        """Parse job information from link text content with improved logic."""
         job_data = {}
-        
+
         try:
             # Split the text into lines
             lines = [line.strip() for line in link_text.split('\n') if line.strip()]
-            
+
             if not lines:
                 return job_data
-            
-            # Extract posted date (usually first line with "Publicado")
-            for i, line in enumerate(lines):
-                if 'publicado' in line.lower():
-                    job_data['posted_date'] = self.parse_date(line)
-                    lines = lines[i+1:]  # Remove date line
-                    break
-            
-            # Extract job title (usually the first substantial line after date)
-            if lines:
-                title_line = lines[0]
-                # Skip lines that are just navigation or filters
-                if not any(skip in title_line.lower() for skip in ['puestos', 'relevantes', 'recientes', 'seniority']):
-                    job_data['title'] = title_line
-                    lines = lines[1:]
-            
-            # Extract company name (look for lines that don't contain job-related keywords)
-            for i, line in enumerate(lines):
-                if line and not any(keyword in line.lower() for keyword in 
-                                  ['responsabilidades', 'requisitos', 'presencial', 'remoto', 'híbrido', 
-                                   'para', 'zona', 'buenos aires', 'caba', 'rosario', 'córdoba']):
-                    job_data['company'] = line
-                    lines = lines[i+1:]
-                    break
-            
-            # Extract location (look for lines with location keywords)
-            for i, line in enumerate(lines):
-                if any(location_keyword in line.lower() for location_keyword in 
-                      ['buenos aires', 'caba', 'rosario', 'córdoba', 'mendoza', 'la plata', 'quilmes', 'moreno']):
-                    job_data['location'] = line
-                    lines = lines[i+1:]
-                    break
-            
-            # Extract remote type (look for work mode keywords)
-            for i, line in enumerate(lines):
+
+            # Remove date/time lines and non-content lines (they're not the title)
+            filtered_lines = []
+            for line in lines:
+                # Skip timestamp lines like "Actualizado hace X horas", "Publicado ayer", "Actualizado hace 3 minutos"
+                if any(skip in line.lower() for skip in ['actualizado', 'publicado', 'hace']):
+                    # If it's a time-related line, parse it and skip
+                    if any(time_word in line.lower() for time_word in ['hora', 'minuto', 'día', 'mes', 'ayer', 'hoy', 'semana']):
+                        job_data['posted_date'] = self.parse_date(line)
+                        continue
+                # Skip "Nuevo" indicator (common in ZonaJobs for new postings)
+                if line.strip().lower() == 'nuevo':
+                    continue
+                # Skip empty or very short lines
+                if len(line) < 3:
+                    continue
+                # Skip navigation keywords and UI elements
+                if any(skip in line.lower() for skip in ['puestos', 'relevantes', 'recientes', 'seniority',
+                                                           'alta revisión de perfiles', 'postulación rápida']):
+                    continue
+                filtered_lines.append(line)
+
+            if not filtered_lines:
+                return job_data
+
+            # First substantial line is usually the title
+            if filtered_lines:
+                job_data['title'] = filtered_lines[0]
+                filtered_lines = filtered_lines[1:]
+
+            # Second line is often the company name
+            if filtered_lines:
+                # Check if it looks like a company name (not too long, not a description)
+                second_line = filtered_lines[0]
+                if len(second_line) < 100 and not any(desc_word in second_line.lower() for desc_word in
+                    ['responsabilidades', 'requisitos', 'buscamos', 'experiencia', 'conocimientos']):
+                    job_data['company'] = second_line
+                    filtered_lines = filtered_lines[1:]
+
+            # Look for location in remaining lines
+            for i, line in enumerate(filtered_lines):
+                if any(location_keyword in line.lower() for location_keyword in
+                      ['buenos aires', 'caba', 'rosario', 'córdoba', 'mendoza', 'la plata',
+                       'capital federal', 'zona norte', 'zona sur', 'zona oeste']):
+                    # Only use if it's not too long (not a full description)
+                    if len(line) < 150:
+                        job_data['location'] = line
+                        filtered_lines.pop(i)
+                        break
+
+            # Look for remote type
+            for i, line in enumerate(filtered_lines):
                 if any(mode in line.lower() for mode in ['presencial', 'remoto', 'híbrido']):
-                    job_data['remote_type'] = line.title()
-                    lines = lines[i+1:]
-                    break
-            
-            # Extract description from remaining lines
-            if lines:
-                description_lines = []
-                for line in lines:
-                    if line and not any(skip in line.lower() for skip in ['requisitos', 'responsabilidades']):
-                        description_lines.append(line)
-                
-                if description_lines:
-                    job_data['description'] = ' '.join(description_lines)
-            
+                    # Only use if it's a short line indicating work mode
+                    if len(line) < 100:
+                        job_data['remote_type'] = line.title()
+                        filtered_lines.pop(i)
+                        break
+
+            # Remaining lines form the description (limit to reasonable length)
+            if filtered_lines:
+                description_text = ' '.join(filtered_lines)
+                # Truncate very long descriptions that might be full job postings
+                if len(description_text) > 500:
+                    description_text = description_text[:500] + '...'
+                job_data['description'] = description_text
+
             # If no description found, provide a default one
             if not job_data.get('description'):
-                job_data['description'] = f"Oportunidad laboral en {job_data.get('company', 'empresa')} - {job_data.get('title', 'puesto')}"
-            
+                title = job_data.get('title', 'puesto')
+                company = job_data.get('company', 'empresa')
+                job_data['description'] = f"Oportunidad laboral en {company} - {title}"
+
         except Exception as e:
             logger.error(f"Error parsing job link text: {e}")
-        
+
         return job_data
     
     

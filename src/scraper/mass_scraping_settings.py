@@ -51,6 +51,8 @@ DOWNLOAD_TIMEOUT = 10  # Reduced timeout for faster failures
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scraper.middlewares.UserAgentRotationMiddleware': 400,
+    'scraper.middlewares.BrowserFingerprintMiddleware': 410,  # Advanced fingerprinting
+    'scraper.middlewares.TLSFingerprintMiddleware': 585,  # TLS fingerprinting for OCC bypass
     # Disable proxy middleware for mass scraping to avoid 403 errors
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': None,
     'scraper.middlewares.ProxyRotationMiddleware': None,
