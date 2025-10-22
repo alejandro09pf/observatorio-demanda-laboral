@@ -33,8 +33,8 @@ class ElempleoSpider(BaseSpider):
         self.listing_only = False  # Force full-detail mode
         logger.info("🔍 FULL-DETAIL MODE: Enabled (company data requires detail pages)")
 
-        # OPTIMIZATION: Multi-city scraping (like Computrabajo)
-        self.multi_city = kwargs.get('multi_city', 'false').lower() in ('true', '1', 'yes')
+        # MULTI-CITY MODE: Enabled by default for maximum coverage
+        self.multi_city = kwargs.get('multi_city', 'true').lower() in ('true', '1', 'yes')
 
         if self.multi_city:
             # Scrape ALL major cities + modalities for maximum coverage

@@ -182,7 +182,7 @@ def run_once(
     country: str = typer.Option("CO", "--country", "-c", help="Country code (CO, MX, AR, CL, PE, EC, PA, UY)"),
     limit: int = typer.Option(100, "--limit", "-l", help="Maximum number of jobs to scrape"),
     max_pages: int = typer.Option(5, "--max-pages", "-p", help="Maximum pages to scrape"),
-    multi_city: bool = typer.Option(False, "--multi-city", "-m", help="Scrape multiple cities/locations (for Elempleo)"),
+    multi_city: bool = typer.Option(True, "--multi-city", "-m", help="Scrape multiple cities/locations (enabled by default for maximum coverage)"),
     listing_only: bool = typer.Option(False, "--listing-only", "-lo", help="Fast mode: only scrape listing pages (2x faster)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show real-time console output")
 ):
