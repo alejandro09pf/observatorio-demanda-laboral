@@ -702,5 +702,99 @@ def health():
         typer.echo(f" Error getting health metrics: {e}")
 
 
+@app.command()
+def generate_embeddings(
+    test: bool = typer.Option(False, "--test", help="Run in test mode (100 skills only)"),
+    limit: int = typer.Option(100, "--limit", help="Number of skills in test mode")
+):
+    """Generate embeddings for all skills in esco_skills table."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("PHASE 0 - STEP 0.1: GENERATE SKILL EMBEDDINGS")
+    typer.echo("="*60)
+
+    # Build command
+    script_path = Path(__file__).parent.parent / "scripts" / "phase0_generate_embeddings.py"
+    cmd = [sys.executable, str(script_path)]
+
+    if test:
+        cmd.append("--test")
+        cmd.append(f"--limit={limit}")
+        typer.echo(f" Running in TEST mode (limit={limit})")
+    else:
+        typer.echo(" Running in PRODUCTION mode (all skills)")
+
+    typer.echo()
+
+    # Run script
+    try:
+        result = subprocess.run(cmd, check=True)
+        if result.returncode == 0:
+            typer.echo("\n Embeddings generated successfully!")
+        else:
+            typer.echo(f"\n Failed to generate embeddings (exit code: {result.returncode})")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error generating embeddings: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def build_faiss_index():
+    """Build FAISS index from skill embeddings for fast semantic search."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("PHASE 0 - STEP 0.2: BUILD FAISS INDEX")
+    typer.echo("="*60)
+    typer.echo()
+
+    # Build command
+    script_path = Path(__file__).parent.parent / "scripts" / "phase0_build_faiss_index.py"
+    cmd = [sys.executable, str(script_path)]
+
+    # Run script
+    try:
+        result = subprocess.run(cmd, check=True)
+        if result.returncode == 0:
+            typer.echo("\n FAISS index built successfully!")
+        else:
+            typer.echo(f"\n Failed to build FAISS index (exit code: {result.returncode})")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error building FAISS index: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def test_embeddings(
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output")
+):
+    """Run comprehensive tests on skill embeddings and FAISS index."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("EMBEDDING QUALITY TESTS")
+    typer.echo("="*60)
+    typer.echo()
+
+    # Build command
+    script_path = Path(__file__).parent.parent / "scripts" / "test_embeddings.py"
+    cmd = [sys.executable, str(script_path)]
+
+    if verbose:
+        cmd.append("--verbose")
+
+    # Run script
+    try:
+        result = subprocess.run(cmd, check=True)
+        if result.returncode == 0:
+            typer.echo("\n All embedding tests passed!")
+        else:
+            typer.echo(f"\n Some tests failed (exit code: {result.returncode})")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error running embedding tests: {e}")
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":
     app()
