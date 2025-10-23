@@ -5,7 +5,7 @@ from datetime import datetime
 import psycopg2
 from .ner_extractor import NERExtractor, NERSkill
 from .regex_patterns import RegexExtractor, RegexSkill
-from .esco_matcher import ESCOMatcher, ESCOMatch
+from .esco_matcher_3layers import ESCOMatcher3Layers as ESCOMatcher, ESCOMatch
 from config.settings import get_settings
 
 logger = logging.getLogger(__name__)
