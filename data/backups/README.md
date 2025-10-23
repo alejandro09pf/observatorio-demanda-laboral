@@ -4,7 +4,34 @@ This directory contains database backup and restore utilities for the Labor Obse
 
 ## Overview
 
-The database backup files (*.sql.gz) are **NOT committed to git** due to their large size (100+ MB). However, the backup and restore scripts ARE committed, allowing you to create and restore backups on any computer.
+**IMPORTANT:** This directory includes **SPLIT BACKUP FILES** committed to git!
+
+The database backup has been split into 3 files (50MB, 50MB, 12MB) to stay under GitHub's 100MB file size limit:
+- `backup_part_aa` (50MB)
+- `backup_part_ab` (50MB)
+- `backup_part_ac` (12MB)
+
+These files are **committed and ready to use** on any computer. Simply clone the repo and rejoin them (see below).
+
+## Using the Committed Backup (Recommended for Quick Setup)
+
+**On your other computer, after cloning the repo:**
+
+1. **Rejoin the split backup files:**
+```bash
+bash scripts/rejoin_backup.sh
+```
+
+This will combine `backup_part_aa`, `backup_part_ab`, and `backup_part_ac` into a single `.sql.gz` file.
+
+2. **Restore the database:**
+```bash
+bash scripts/restore_database.sh data/backups/labor_observatory_backup_<timestamp>.sql.gz
+```
+
+**That's it!** You now have all 23K+ job ads and 14,215 ESCO skills ready to work with.
+
+---
 
 ## Creating a Backup
 

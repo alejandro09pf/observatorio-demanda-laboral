@@ -21,6 +21,7 @@ data/models/*.gguf
 data/models/*/
 data/cache/
 data/backups/*.sql.gz
+!data/backups/backup_part_*
 outputs/
 logs/
 
