@@ -20,6 +20,7 @@ ENV/
 data/models/*.gguf
 data/models/*/
 data/cache/
+data/backups/*.sql.gz
 outputs/
 logs/
 
