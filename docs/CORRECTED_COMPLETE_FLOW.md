@@ -1,6 +1,6 @@
 # Observatorio de Demanda Laboral - Especificación Técnica Completa
 
-**Autor:** Nicolás Camacho
+**Autor:** Nicolás Camacho y Alejandro Pinzon
 **Versión:** 2.1
 **Fecha:** Octubre 22, 2025
 **Última Actualización:** Fase 0 Implementada - Embeddings y FAISS
