@@ -4,7 +4,7 @@ Para comprender el diseño y la justificación de la solución desarrollada, es 
 
 \section{Web Scraping y Adquisición de Datos}
 
-El punto de partida del observatorio es la recolección de datos a gran escala desde fuentes web públicas. Esta tarea se realiza mediante \textbf{Web Scraping}, una técnica de extracción automatizada de información desde el código HTML de las páginas web \cite{orozco2019webscraping}. En el contexto del mercado laboral, esta técnica ha demostrado ser fundamental para obtener datos de alta frecuencia y granularidad directamente de los portales de empleo, superando las limitaciones de las encuestas y los reportes institucionales, que suelen ser retrospectivos y de baja periodicidad \cite{cardenas2015, rubio2024}.
+El punto de partida del observatorio es la recolección de datos a gran escala desde fuentes web públicas. Esta tarea se realiza mediante \textbf{Web Scraping}, una técnica de extracción automatizada de información desde el código HTML de las páginas web \parencite{orozco2019webscraping}. En el contexto del mercado laboral, esta técnica ha demostrado ser fundamental para obtener datos de alta frecuencia y granularidad directamente de los portales de empleo, superando las limitaciones de las encuestas y los reportes institucionales, que suelen ser retrospectivos y de baja periodicidad \parencite{cardenas2015, rubio2024}.
 
 \subsection{Conceptos clave del web scraping}
 
@@ -38,9 +38,9 @@ Una vez extraído el contenido textual de las ofertas laborales, el siguiente pa
 El preprocesamiento es fundamental para estandarizar y limpiar los datos textuales:
 
 \begin{itemize}
-    \item \textbf{Tokenización}: Segmentación del texto en unidades mínimas o ``tokens'' (generalmente palabras o signos de puntuación) \cite{nguyen2024}. Este proceso transforma cadenas de texto continuo en secuencias discretas procesables computacionalmente.
+    \item \textbf{Tokenización}: Segmentación del texto en unidades mínimas o ``tokens'' (generalmente palabras o signos de puntuación) \parencite{nguyen2024}. Este proceso transforma cadenas de texto continuo en secuencias discretas procesables computacionalmente.
 
-    \item \textbf{Lematización}: Reducción de las palabras a su forma base o raíz gramatical (lema), permitiendo agrupar variaciones morfológicas de un mismo término. Por ejemplo, ``programar'', ``programando'' y ``programado'' se unifican bajo el lema ``programar'' \cite{echeverria2022}. Este paso es crucial para estandarizar el vocabulario y reducir la dispersión de los datos antes del análisis.
+    \item \textbf{Lematización}: Reducción de las palabras a su forma base o raíz gramatical (lema), permitiendo agrupar variaciones morfológicas de un mismo término. Por ejemplo, ``programar'', ``programando'' y ``programado'' se unifican bajo el lema ``programar'' \parencite{echeverria2022}. Este paso es crucial para estandarizar el vocabulario y reducir la dispersión de los datos antes del análisis.
 \end{itemize}
 
 \subsection{Extracción de habilidades con NER y Regex}
@@ -48,21 +48,21 @@ El preprocesamiento es fundamental para estandarizar y limpiar los datos textual
 Con el texto limpio y normalizado, el núcleo del desafío consiste en la extracción de habilidades. Para ello, se emplea un enfoque híbrido:
 
 \begin{itemize}
-    \item \textbf{Expresiones Regulares (Regex)}: Un lenguaje de patrones sintácticos que permite identificar y extraer secuencias de texto muy específicas, como nombres de tecnologías o certificaciones con formatos predecibles \cite{lukauskas2023}. Son especialmente efectivas para capturar menciones explícitas de tecnologías con nomenclaturas estandarizadas.
+    \item \textbf{Expresiones Regulares (Regex)}: Un lenguaje de patrones sintácticos que permite identificar y extraer secuencias de texto muy específicas, como nombres de tecnologías o certificaciones con formatos predecibles \parencite{lukauskas2023}. Son especialmente efectivas para capturar menciones explícitas de tecnologías con nomenclaturas estandarizadas.
 
-    \item \textbf{Reconocimiento de Entidades Nombradas (NER)}: Una técnica de NLP diseñada para identificar y clasificar entidades en un texto, como nombres de personas, lugares o, en este caso, habilidades y competencias \cite{herandi2024}. El NER permite pasar de una búsqueda basada en reglas a un sistema capaz de reconocer habilidades en contextos gramaticales complejos.
+    \item \textbf{Reconocimiento de Entidades Nombradas (NER)}: Una técnica de NLP diseñada para identificar y clasificar entidades en un texto, como nombres de personas, lugares o, en este caso, habilidades y competencias \parencite{herandi2024}. El NER permite pasar de una búsqueda basada en reglas a un sistema capaz de reconocer habilidades en contextos gramaticales complejos.
 \end{itemize}
 
 \section{Large Language Models (LLMs)}
 
-Para superar las limitaciones de la extracción de menciones explícitas, el proyecto incorpora el uso de \textbf{Large Language Models (LLMs)}. Estos modelos de lenguaje a gran escala, como GPT o Llama 3, entrenados sobre corpus masivos de texto, poseen capacidades de razonamiento contextual que permiten abordar desafíos más complejos \cite{herandi2024}.
+Para superar las limitaciones de la extracción de menciones explícitas, el proyecto incorpora el uso de \textbf{Large Language Models (LLMs)}. Estos modelos de lenguaje a gran escala, como GPT o Llama 3, entrenados sobre corpus masivos de texto, poseen capacidades de razonamiento contextual que permiten abordar desafíos más complejos \parencite{herandi2024}.
 
 \subsection{Prompt Engineering}
 
 A través del diseño de prompts específicos (\textbf{Prompt Engineering}), es posible guiar a los LLMs para realizar tareas de enriquecimiento semántico, como:
 
 \begin{itemize}
-    \item Distinción entre habilidades explícitas (mencionadas textualmente) e implícitas (inferidas del contexto del cargo) \cite{nguyen2024}
+    \item Distinción entre habilidades explícitas (mencionadas textualmente) e implícitas (inferidas del contexto del cargo) \parencite{nguyen2024}
     \item Normalización de variantes terminológicas
     \item Clasificación de habilidades según taxonomías predefinidas
     \item Generación de salidas estructuradas en formatos como JSON
@@ -74,13 +74,13 @@ Existen diferentes modalidades de aplicación de LLMs para extracción de habili
 
 \begin{itemize}
     \item \textbf{Zero-shot learning}: El modelo realiza la tarea sin ejemplos previos, basándose únicamente en la instrucción del prompt.
-    \item \textbf{Few-shot learning}: Se proporcionan algunos ejemplos en el prompt para guiar el comportamiento del modelo \cite{nguyen2024}.
-    \item \textbf{Fine-tuning}: Re-entrenamiento del modelo sobre datasets específicos del dominio para mejorar su rendimiento \cite{herandi2024, zhang2022}.
+    \item \textbf{Few-shot learning}: Se proporcionan algunos ejemplos en el prompt para guiar el comportamiento del modelo \parencite{nguyen2024}.
+    \item \textbf{Fine-tuning}: Re-entrenamiento del modelo sobre datasets específicos del dominio para mejorar su rendimiento \parencite{herandi2024, zhang2022}.
 \end{itemize}
 
 \section{Embeddings Semánticos y Representación Vectorial}
 
-Una vez extraídas y normalizadas, las habilidades deben ser representadas de una forma que permita su análisis cuantitativo. Para ello, se utilizan \textbf{Embeddings Semánticos}, que son representaciones vectoriales (numéricas) de palabras o frases en un espacio de alta dimensionalidad \cite{kavas2024}.
+Una vez extraídas y normalizadas, las habilidades deben ser representadas de una forma que permita su análisis cuantitativo. Para ello, se utilizan \textbf{Embeddings Semánticos}, que son representaciones vectoriales (numéricas) de palabras o frases en un espacio de alta dimensionalidad \parencite{kavas2024}.
 
 \subsection{Propiedades de los embeddings}
 
@@ -95,7 +95,7 @@ La propiedad fundamental de estos embeddings es que la distancia entre dos vecto
 
 \subsection{Embeddings Multilingües}
 
-Dado que las ofertas laborales en América Latina a menudo contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de \textbf{Embeddings Multilingües}, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \cite{echeverria2022, kavas2024}.
+Dado que las ofertas laborales en América Latina a menudo contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de \textbf{Embeddings Multilingües}, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \parencite{echeverria2022, kavas2024}.
 
 Modelos populares incluyen:
 
@@ -113,13 +113,13 @@ Finalmente, para descubrir patrones y estructuras latentes en el conjunto de dat
 
 Debido a que los embeddings son vectores de muy alta dimensionalidad (ej. 768 dimensiones), lo que dificulta la efectividad de muchos algoritmos (la ``maldición de la dimensionalidad''), primero se aplica una técnica de \textbf{Reducción de Dimensionalidad} como \textbf{UMAP (Uniform Manifold Approximation and Projection)}.
 
-UMAP es un algoritmo no lineal que reduce el número de dimensiones preservando tanto la estructura local como global de los datos, lo que lo hace superior a métodos lineales como PCA para visualizar relaciones semánticas complejas \cite{lukauskas2023}.
+UMAP es un algoritmo no lineal que reduce el número de dimensiones preservando tanto la estructura local como global de los datos, lo que lo hace superior a métodos lineales como PCA para visualizar relaciones semánticas complejas \parencite{lukauskas2023}.
 
 \subsection{Clustering con HDBSCAN}
 
 Sobre los datos ya en un espacio de baja dimensionalidad, se aplica un algoritmo de \textbf{Clustering} basado en densidad como \textbf{HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise)}.
 
-A diferencia de métodos como K-Means, HDBSCAN posee las siguientes ventajas \cite{lukauskas2023}:
+A diferencia de métodos como K-Means, HDBSCAN posee las siguientes ventajas \parencite{lukauskas2023}:
 
 \begin{itemize}
     \item No requiere especificar el número de clústeres de antemano
@@ -128,7 +128,7 @@ A diferencia de métodos como K-Means, HDBSCAN posee las siguientes ventajas \ci
     \item Funciona bien con clústeres de densidades variables
 \end{itemize}
 
-Esta secuencia metodológica, inspirada en la literatura de vanguardia, es la que permite la identificación automática de ``ecosistemas de habilidades'' y perfiles laborales emergentes \cite{lukauskas2023}.
+Esta secuencia metodológica, inspirada en la literatura de vanguardia, es la que permite la identificación automática de ``ecosistemas de habilidades'' y perfiles laborales emergentes \parencite{lukauskas2023}.
 
 \section{Taxonomías Estandarizadas: ESCO e ISCO}
 
@@ -136,7 +136,7 @@ Para asegurar la comparabilidad y estandarización de los resultados, el sistema
 
 \subsection{ESCO (European Skills, Competences, Qualifications and Occupations)}
 
-ESCO es una taxonomía multilingüe desarrollada por la Comisión Europea que clasifica y organiza habilidades, competencias, calificaciones y ocupaciones relevantes para el mercado laboral de la UE \cite{kavargyris2025}. Contiene más de 13,000 habilidades y conocimientos catalogados de manera jerárquica.
+ESCO es una taxonomía multilingüe desarrollada por la Comisión Europea que clasifica y organiza habilidades, competencias, calificaciones y ocupaciones relevantes para el mercado laboral de la UE \parencite{kavargyris2025}. Contiene más de 13,000 habilidades y conocimientos catalogados de manera jerárquica.
 
 \subsection{ISCO-08 (International Standard Classification of Occupations)}
 
@@ -144,4 +144,4 @@ ISCO es un estándar internacional mantenido por la Organización Internacional 
 
 \subsection{Integración con O*NET}
 
-Para el contexto de habilidades tecnológicas generales, también se toma como referencia \textbf{O*NET}, un portal de empleo financiado por el Departamento de Trabajo de EE. UU. que reporta habilidades de alta demanda en el mercado laboral estadounidense \cite{rubio2024}.
+Para el contexto de habilidades tecnológicas generales, también se toma como referencia \textbf{O*NET}, un portal de empleo financiado por el Departamento de Trabajo de EE. UU. que reporta habilidades de alta demanda en el mercado laboral estadounidense \parencite{rubio2024}.
