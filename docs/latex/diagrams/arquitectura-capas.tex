@@ -1,0 +1,141 @@
+\begin{figure}[H]
+\centering
+\shorthandoff{>}\shorthandoff{<}
+\begin{tikzpicture}[
+    scale=0.82,
+    every node/.style={transform shape}
+]
+
+\tikzstyle{capa}=[
+    rectangle,
+    minimum width=12cm,
+    minimum height=1.9cm,
+    draw=black,
+    line width=1.2pt,
+    align=left,
+    font=\small,
+    inner sep=8pt
+]
+
+\tikzstyle{componente}=[
+    rectangle,
+    rounded corners=2pt,
+    minimum width=2.6cm,
+    minimum height=0.6cm,
+    draw=black,
+    align=center,
+    font=\scriptsize,
+    inner sep=3pt
+]
+
+\node[capa, fill=yellow!20] (capa1) at (0,0) {
+    \textbf{CAPA 1: ADQUISICI\'{O}N DE DATOS}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Responsable de extraer datos desde fuentes externas (portales web).\\
+    Implementa scraping \'{e}tico con rate limiting y manejo de errores.
+    \end{minipage}
+};
+
+\node[componente, fill=yellow!40] at (-4,-0.6) {Web Scraper};
+\node[componente, fill=yellow!40] at (-1,-0.6) {Parsers};
+\node[componente, fill=yellow!40] at (2,-0.6) {Validators};
+\node[componente, fill=yellow!40] at (5,-0.6) {Anti-bot};
+
+\node[capa, fill=blue!15] (capa2) at (0,-2.8) {
+    \textbf{CAPA 2: PROCESAMIENTO DE LENGUAJE NATURAL}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Extrae entidades (habilidades) del texto usando NLP tradicional y moderno.\\
+    Combina t\'{e}cnicas s\'{\i}ncronas (NER/Regex) y as\'{\i}ncronas (LLM).
+    \end{minipage}
+};
+
+\node[componente, fill=blue!30] at (-4,-3.4) {NER (spaCy)};
+\node[componente, fill=blue!30] at (-1,-3.4) {Regex Engine};
+\node[componente, fill=blue!30] at (2,-3.4) {ESCO Matcher};
+\node[componente, fill=blue!30] at (5,-3.4) {LLM Processor};
+
+\node[capa, fill=purple!15] (capa3) at (0,-5.6) {
+    \textbf{CAPA 3: REPRESENTACI\'{O}N SEM\'{A}NTICA}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Transforma texto en vectores num\'{e}ricos que capturan significado sem\'{a}ntico.\\
+    Usa modelos preentrenados multilingües (espa\~{n}ol/ingl\'{e}s).
+    \end{minipage}
+};
+
+\node[componente, fill=purple!30] at (-3,-6.2) {E5 Model};
+\node[componente, fill=purple!30] at (0,-6.2) {Batch Processor};
+\node[componente, fill=purple!30] at (3,-6.2) {Vector Cache};
+
+\node[capa, fill=orange!15] (capa4) at (0,-8.4) {
+    \textbf{CAPA 4: AN\'{A}LISIS Y CLUSTERING}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Descubre patrones latentes mediante aprendizaje no supervisado.\\
+    Identifica clusters de habilidades y perfiles emergentes.
+    \end{minipage}
+};
+
+\node[componente, fill=orange!30] at (-3,-9) {UMAP};
+\node[componente, fill=orange!30] at (0,-9) {HDBSCAN};
+\node[componente, fill=orange!30] at (3,-9) {Metrics};
+
+\node[capa, fill=green!15] (capa5) at (0,-11.2) {
+    \textbf{CAPA 5: PRESENTACI\'{O}N}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Genera salidas consumibles: gr\'{a}ficos, reportes, datos exportables.\\
+    Soporta m\'{u}ltiples formatos para distintos p\'{u}blicos (t\'{e}cnico/ejecutivo).
+    \end{minipage}
+};
+
+\node[componente, fill=green!30] at (-4,-11.8) {Visualizer};
+\node[componente, fill=green!30] at (-1,-11.8) {PDF Gen.};
+\node[componente, fill=green!30] at (2,-11.8) {CSV Export};
+\node[componente, fill=green!30] at (5,-11.8) {Static Web};
+
+\node[capa, fill=gray!15] (capa6) at (0,-14) {
+    \textbf{CAPA 6: PERSISTENCIA (PostgreSQL 15+)}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Base de datos relacional con soporte vectorial (pgvector).\\
+    6 tablas principales + taxonom\'{\i}a ESCO (13,000+ skills).
+    \end{minipage}
+};
+
+\node[componente, fill=gray!30] at (-5,-14.6) {\tiny raw\_jobs};
+\node[componente, fill=gray!30] at (-2.7,-14.6) {\tiny extracted};
+\node[componente, fill=gray!30] at (-0.4,-14.6) {\tiny enhanced};
+\node[componente, fill=gray!30] at (1.9,-14.6) {\tiny embeddings};
+\node[componente, fill=gray!30] at (4.2,-14.6) {\tiny results};
+
+\node[capa, fill=red!10] (capa7) at (0,-16.8) {
+    \textbf{CAPA 7: ORQUESTACI\'{O}N Y AUTOMATIZACI\'{O}N}\\[0.2cm]
+    \begin{minipage}{11.5cm}
+    Coordina ejecuci\'{o}n del pipeline completo y programa tareas peri\'{o}dicas.\\
+    CLI unificado + scheduler inteligente + monitoreo de salud.
+    \end{minipage}
+};
+
+\node[componente, fill=red!20] at (-3,-17.4) {Orchestrator CLI};
+\node[componente, fill=red!20] at (0,-17.4) {APScheduler};
+\node[componente, fill=red!20] at (3,-17.4) {Health Monitor};
+
+\draw[-{Stealth}, line width=1.8pt] (capa1.south) -- (capa2.north);
+\draw[-{Stealth}, line width=1.8pt] (capa2.south) -- (capa3.north);
+\draw[-{Stealth}, line width=1.8pt] (capa3.south) -- (capa4.north);
+\draw[-{Stealth}, line width=1.8pt] (capa4.south) -- (capa5.north);
+
+\draw[-{Stealth}, line width=0.8pt, dashed, draw=gray!60] (7.2,0) -- (7.2,-14) node[midway, right, font=\tiny, align=left] {Lectura/\\Escritura};
+\draw[-{Stealth}, line width=0.8pt, dashed, draw=gray!60] (7.2,-2.8) -- (7.2,-14);
+\draw[-{Stealth}, line width=0.8pt, dashed, draw=gray!60] (7.2,-5.6) -- (7.2,-14);
+\draw[-{Stealth}, line width=0.8pt, dashed, draw=gray!60] (7.2,-8.4) -- (7.2,-14);
+\draw[-{Stealth}, line width=0.8pt, dashed, draw=gray!60] (7.2,-11.2) -- (7.2,-14);
+
+\draw[-{Stealth}, line width=0.8pt, dotted, draw=red!60] (-7.2,-16.8) -- (-7.2,0) node[near start, left, font=\tiny, align=right] {Control};
+\draw[-{Stealth}, line width=0.8pt, dotted, draw=red!60] (-7.2,-16.8) -- (-7.2,-2.8);
+\draw[-{Stealth}, line width=0.8pt, dotted, draw=red!60] (-7.2,-16.8) -- (-7.2,-5.6);
+\draw[-{Stealth}, line width=0.8pt, dotted, draw=red!60] (-7.2,-16.8) -- (-7.2,-8.4);
+\draw[-{Stealth}, line width=0.8pt, dotted, draw=red!60] (-7.2,-16.8) -- (-7.2,-11.2);
+
+\end{tikzpicture}
+\shorthandon{>}\shorthandon{<}
+\caption{Arquitectura en Capas del Sistema - Vista de Separaci\'{o}n de Responsabilidades}
+\label{fig:arquitectura-capas}
+\end{figure}

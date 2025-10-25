@@ -1,0 +1,177 @@
+% ============================================================================
+% PONTIFICIA UNIVERSIDAD JAVERIANA
+% FACULTAD DE INGENIERIA - SISTEMAS
+% Observatorio de Demanda Laboral en América Latina
+% ============================================================================
+
+\documentclass[12pt,oneside,letterpaper]{report}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage[backend=biber,style=apa,natbib=true]{biblatex}
+
+% TikZ para diagramas
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, shadows, fit, shapes.multipart}
+
+% ============================================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA
+% ============================================================================
+\addbibresource{bibliografia.bib}
+
+% ============================================================================
+% CONFIGURACIÓN DE CÓDIGO
+% ============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE INTERLINEADO
+% ============================================================================
+\onehalfspacing
+
+% ============================================================================
+% CONFIGURACIÓN DE ENCABEZADOS Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pontificia Universidad Javeriana}
+\fancyhead[R]{Undergraduate Final Project Report}
+\fancyfoot[R]{Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ============================================================================
+% CONFIGURACIÓN DE TÍTULOS DE CAPÍTULOS
+% ============================================================================
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\centering}
+{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+% ============================================================================
+% INFORMACIÓN DEL PROYECTO
+% ============================================================================
+\newcommand{\proyectoTitulo}{Observatorio de demanda laboral en América Latina}
+\newcommand{\proyectoCodigo}{<CODE>}
+\newcommand{\autorUno}{Nicolas Francisco Camacho Alarcón}
+\newcommand{\autorDos}{Alejandro Pinzón Fajardo}
+\newcommand{\director}{Ing. Luis Gabriel Moreno Sandoval}
+\newcommand{\juradoUno}{Ing. <Name of the jury>}
+\newcommand{\juradoDos}{Ing. <Name of the jury>}
+\newcommand{\anio}{2025}
+\newcommand{\mes}{<Month>}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% Páginas preliminares sin numeración
+\pagenumbering{gobble}
+
+% Portada principal
+\input{front/portada}
+\newpage
+
+% Página en blanco
+\thispagestyle{empty}
+\mbox{}
+\newpage
+
+% Portada interna
+\input{front/portada-interna}
+\newpage
+
+% Página en blanco
+\thispagestyle{empty}
+\mbox{}
+\newpage
+
+% Autoridades
+\input{front/autoridades}
+\newpage
+
+% Artículo 23
+\input{front/articulo23}
+\newpage
+
+% Agradecimientos
+\input{front/gratitude}
+\newpage
+
+% Tabla de contenidos
+\pagenumbering{roman}
+\setcounter{page}{6}
+\renewcommand{\contentsname}{CONTENT}
+\tableofcontents
+\newpage
+
+% Abstract
+\input{front/abstract}
+\newpage
+
+% Iniciar numeración arábiga para el contenido
+\pagenumbering{arabic}
+
+% ============================================================================
+% CAPÍTULOS PRINCIPALES
+% ============================================================================
+
+\input{chapters/01-introduccion}
+\input{chapters/02-contexto-problema}
+\input{chapters/03-marco-teorico}
+\input{chapters/04-estado-arte}
+\input{chapters/05-diseno-solucion}
+\input{chapters/06-desarrollo}
+\input{chapters/07-resultados}
+\input{chapters/08-conclusiones}
+
+% ============================================================================
+% REFERENCIAS
+% ============================================================================
+\chapter*{IX- REFERENCES}
+\addcontentsline{toc}{chapter}{IX- REFERENCES}
+\printbibliography[heading=none]
+
+% ============================================================================
+% APÉNDICES
+% ============================================================================
+\chapter*{X- APPENDICES}
+\addcontentsline{toc}{chapter}{X- APPENDICES}
+
+Place in this section of the document a list of all appendices related to the project. Appendices must be downloadable from the website and should be the same as specified in the proposal.
+
+\end{document}

@@ -1,0 +1,82 @@
+% Diagrama de Flujo de Datos Simplificado - TikZ
+% Versión más compacta y visual
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=0.8cm and 2cm,
+    % Estilos
+    process/.style={
+        rectangle,
+        rounded corners=3pt,
+        minimum width=2.8cm,
+        minimum height=0.7cm,
+        text centered,
+        draw=blue!70,
+        fill=blue!15,
+        font=\footnotesize\sffamily,
+        thick
+    },
+    data/.style={
+        rectangle,
+        minimum width=2.8cm,
+        minimum height=0.7cm,
+        text centered,
+        draw=green!70,
+        fill=green!10,
+        font=\footnotesize\ttfamily,
+        thick
+    },
+    arrow/.style={
+        ->,
+        >=Stealth,
+        thick,
+        draw=black!60
+    }
+]
+
+% Columna izquierda: Procesamiento
+\node[process] (scraping) {Web Scraping};
+\node[process, below=of scraping] (extraction) {Extracción};
+\node[process, below=of extraction] (llm) {LLM};
+\node[process, below=of llm] (embedding) {Embedding};
+\node[process, below=of embedding] (analysis) {Análisis};
+
+% Columna derecha: Datos
+\node[data, right=of scraping] (raw) {raw\_jobs};
+\node[data, right=of extraction] (extracted) {extracted\_skills};
+\node[data, right=of llm] (enhanced) {enhanced\_skills};
+\node[data, right=of embedding] (vectors) {skill\_embeddings};
+\node[data, right=of analysis] (results) {analysis\_results};
+
+% Flechas verticales (flujo principal)
+\draw[arrow] (scraping) -- (extraction);
+\draw[arrow] (extraction) -- (llm);
+\draw[arrow] (llm) -- (embedding);
+\draw[arrow] (embedding) -- (analysis);
+
+% Flechas horizontales (escritura a BD)
+\draw[arrow] (scraping) -- (raw);
+\draw[arrow] (extraction) -- (extracted);
+\draw[arrow] (llm) -- (enhanced);
+\draw[arrow] (embedding) -- (vectors);
+\draw[arrow] (analysis) -- (results);
+
+% Flechas de lectura (desde BD a siguiente proceso)
+\draw[arrow, dashed] (raw.south) |- (extraction.east);
+\draw[arrow, dashed] (extracted.south) |- (llm.east);
+\draw[arrow, dashed] (enhanced.south) |- (embedding.east);
+\draw[arrow, dashed] (vectors.south) |- (analysis.east);
+
+% Leyenda
+\node[below=1.5cm of analysis, font=\footnotesize] (legend) {
+    \begin{tabular}{cl}
+    \tikz\draw[arrow] (0,0) -- (0.3,0); & Flujo de procesamiento \\
+    \tikz\draw[arrow, dashed] (0,0) -- (0.3,0); & Lectura desde BD \\
+    \end{tabular}
+};
+
+\end{tikzpicture}
+\caption{Flujo de Datos del Sistema}
+\label{fig:data-flow}
+\end{figure}

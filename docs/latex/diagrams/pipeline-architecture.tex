@@ -1,0 +1,56 @@
+\begin{figure}[H]
+\centering
+\shorthandoff{>}\shorthandoff{<}
+\begin{tikzpicture}[
+    scale=0.9,
+    every node/.style={transform shape},
+    module/.style={rectangle, rounded corners, minimum width=3.5cm, minimum height=0.9cm, text centered, draw=black, fill=blue!20, font=\small\bfseries},
+    database/.style={rectangle, minimum width=3cm, minimum height=0.7cm, draw=black, fill=green!10, font=\small},
+    source/.style={rectangle, rounded corners, minimum width=3cm, minimum height=0.7cm, text centered, draw=black, fill=yellow!30, font=\small\bfseries},
+    output/.style={rectangle, rounded corners, minimum width=3cm, minimum height=0.7cm, text centered, draw=black, fill=orange!30, font=\small\bfseries},
+    arrow/.style={thick, draw=black!70, -{Stealth}},
+    dataarrow/.style={thick, dashed, draw=blue!60, -{Stealth}}
+]
+
+\node[source] (portales) at (0,0) {Portales de Empleo};
+
+\node[module] (scraper) at (0,-1.5) {1. Web Scraper};
+\node[database] (db1) at (5,-1.5) {raw\_jobs};
+
+\node[module] (extractor) at (0,-3) {2. Skill Extractor};
+\node[database] (db2) at (5,-3) {extracted\_skills};
+
+\node[module] (llm) at (0,-4.5) {3. LLM Processor};
+\node[database] (db3) at (5,-4.5) {enhanced\_skills};
+
+\node[module] (embedder) at (0,-6) {4. Embedder};
+\node[database] (db4) at (5,-6) {embeddings};
+
+\node[module] (analyzer) at (0,-7.5) {5. Analyzer};
+\node[database] (db5) at (5,-7.5) {results};
+
+\node[output] (reports) at (0,-9) {Reportes};
+
+\draw[arrow] (portales) -- (scraper);
+\draw[arrow] (scraper) -- (extractor);
+\draw[arrow] (extractor) -- (llm);
+\draw[arrow] (llm) -- (embedder);
+\draw[arrow] (embedder) -- (analyzer);
+\draw[arrow] (analyzer) -- (reports);
+
+\draw[dataarrow] (scraper) -- (db1);
+\draw[dataarrow] (extractor) -- (db2);
+\draw[dataarrow] (llm) -- (db3);
+\draw[dataarrow] (embedder) -- (db4);
+\draw[dataarrow] (analyzer) -- (db5);
+
+\draw[dataarrow] (db1) -- ++(1,0) |- (extractor);
+\draw[dataarrow] (db2) -- ++(1,0) |- (llm);
+\draw[dataarrow] (db3) -- ++(1,0) |- (embedder);
+\draw[dataarrow] (db4) -- ++(1,0) |- (analyzer);
+
+\end{tikzpicture}
+\shorthandon{>}\shorthandon{<}
+\caption{Arquitectura del Pipeline del Observatorio de Demanda Laboral}
+\label{fig:pipeline-architecture}
+\end{figure}

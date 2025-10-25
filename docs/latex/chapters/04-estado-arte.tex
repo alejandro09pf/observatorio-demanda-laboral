@@ -1,0 +1,245 @@
+\chapter{ESTADO DEL ARTE}
+
+El desafío de extraer, analizar y comprender la demanda de habilidades a partir de fuentes de datos no estructuradas, como las ofertas de empleo en línea, ha sido abordado desde múltiples frentes en la literatura académica y aplicada. Si bien el objetivo es común ---traducir texto en conocimiento accionable sobre el mercado laboral---, las aproximaciones metodológicas varían significativamente en su complejidad, escalabilidad y profundidad semántica.
+
+Para posicionar adecuadamente la contribución de este proyecto, fue necesario realizar un análisis crítico de las soluciones existentes a nivel global, las cuales se pueden agrupar en tres grandes líneas de trabajo:
+
+\begin{itemize}
+    \item \textbf{Enfoques Regionales en América Latina}: Un conjunto de estudios pioneros en la región que validaron el uso de técnicas de web scraping para la recolección de datos, pero cuyo análisis se fundamentó en métodos de Procesamiento de Lenguaje Natural (NLP) tradicionales, como el análisis léxico y el emparejamiento basado en reglas.
+
+    \item \textbf{La Frontera de la Extracción con Large Language Models (LLMs)}: Investigaciones de vanguardia a nivel internacional que exploraron el uso de modelos de lenguaje a gran escala, tanto en modalidades de prompting (sin re-entrenamiento) como de fine-tuning (con re-entrenamiento), para lograr una extracción de habilidades con mayor capacidad semántica e inferencial.
+
+    \item \textbf{Pipelines Semánticos y Descubrimiento No Supervisado}: Arquitecturas de análisis completas que, más allá de la extracción, integran embeddings semánticos, técnicas de reducción de dimensionalidad y algoritmos de clustering para descubrir patrones y perfiles laborales emergentes directamente desde los datos.
+\end{itemize}
+
+El siguiente análisis demostrará que, si bien cada una de estas líneas ha aportado herramientas y hallazgos valiosos, ninguna de ellas, de forma aislada, resolvía de manera integral los desafíos metodológicos, geográficos y lingüísticos que presenta el mercado laboral tecnológico en América Latina. Esta fragmentación en el estado del arte fue la que justificó la necesidad de una solución sintética y adaptada, como la que se desarrolló en este proyecto.
+
+\section{Enfoques Regionales: Caracterización del Mercado con Métodos Léxicos}
+
+La primera línea de trabajo relevante para este proyecto comprende un conjunto de estudios pioneros desarrollados en América Latina. Estos trabajos fueron fundamentales porque validaron el uso de portales de empleo en línea como una fuente de datos rica y de alta frecuencia para el análisis del mercado laboral, pero se caracterizaron por emplear metodologías de procesamiento de texto basadas en análisis léxico, frecuencias de términos y reglas manuales.
+
+\subsection{El caso colombiano: análisis de la transformación digital}
+
+El estudio más completo y reciente en este ámbito fue el de \citeauthor{rubio2024} (\citeyear{rubio2024}) para el mercado colombiano. Este trabajo construyó una base de datos masiva mediante web scraping del portal elempleo.com para el periodo 2018-2023, abarcando más de 500,000 ofertas laborales. Su principal aporte fue la caracterización cuantitativa del impacto de la pandemia, demostrando un cambio estructural en la demanda de habilidades.
+
+Metodológicamente, el estudio implementó una tipología propia de habilidades tecnológicas dividida en cuatro categorías: (1) Teletrabajo, (2) Habilidades tecnológicas generales, (3) Habilidades tecnológicas especializadas, y (4) Habilidades de TIC. El proceso de clasificación de las vacantes utilizó un algoritmo de emparejamiento de texto basado en la descomposición de textos en n-gramas y el cálculo de puntajes de similitud contra la Clasificación Internacional Uniforme de Ocupaciones (CIUO) \cite{rubio2024}.
+
+Los hallazgos cuantitativos fueron reveladores: en los 18 meses posteriores al inicio de la crisis sanitaria, las vacantes tecnológicas aumentaron en un 50\% en comparación con las no tecnológicas. Este cambio no fue solo cuantitativo, sino también cualitativo: se observó una marcada caída en la demanda de herramientas ofimáticas tradicionales como Excel (cuya mención en ofertas cayó del 35.8\% en 2018 al 17.4\% en 2023) y un surgimiento exponencial de tecnologías especializadas asociadas al desarrollo web y la gestión de datos, como bases de datos NoSQL (12.3\%), el framework Django (5.5\%) y la librería React (5.3\%) para el año 2023 \cite{rubio2024}.
+
+Sin embargo, la dependencia de la coincidencia léxica representó una limitación fundamental. El propio estudio reconoció que el método perdía eficiencia a medida que aumentaba el número de palabras en los títulos, al no poder capturar el contexto general \cite{rubio2024}. Esta debilidad ilustra el problema central de los enfoques basados exclusivamente en n-gramas: la incapacidad de procesar la riqueza semántica del lenguaje natural.
+
+\subsection{Experiencias en Argentina y México}
+
+De forma análoga, el trabajo de \citeauthor{aguilera2018} (\citeyear{aguilera2018}) para el contexto argentino se centró en el sector de Tecnologías de la Información (TI), extrayendo datos de portales como ZonaJobs y Bumeran. Su análisis se apoyó en técnicas de minería de texto, específicamente en el análisis de frecuencias y el uso de bigramas, para identificar las tecnologías y roles más demandados \cite{aguilera2018}.
+
+Sin embargo, para estandarizar el vocabulario informal de las ofertas, los autores tuvieron que construir una lista de palabras clave de forma semi-manual, lo que limita la escalabilidad del sistema y su capacidad para adaptarse a la aparición de nuevas tecnologías no contempladas inicialmente \cite{aguilera2018}.
+
+Para el caso de México, la investigación de \citeauthor{martinez2024} (\citeyear{martinez2024}) propuso un enfoque innovador al combinar datos de encuestas oficiales con información obtenida mediante scraping. Su análisis se basó en la frecuencia de términos y en una tipología manual para segmentar las habilidades, arrojando luz sobre el desajuste entre oferta y demanda, pero sin incluir un procesamiento avanzado y automatizado del lenguaje natural \cite{martinez2024}.
+
+\subsection{Limitaciones sistémicas de los enfoques léxicos}
+
+En conjunto, estos estudios regionales fueron cruciales para establecer la viabilidad de la recolección de datos, pero, desde una perspectiva metodológica, expusieron una brecha fundamental compartida: su dependencia de la correspondencia léxica explícita. Al basarse en frecuencias de palabras, n-gramas o listas de términos predefinidos, estos sistemas eran metodológicamente frágiles ante la ambigüedad y la variabilidad del lenguaje natural.
+
+Más allá de las limitaciones académicas individuales, esta carencia de infraestructura analítica ha sido reconocida a nivel institucional. El Banco Interamericano de Desarrollo (BID) ha señalado la falta de pipelines de análisis modernos y automatizados en la región, destacando que la mayoría de los sistemas existentes, si bien articulan el scraping, todavía se basan en reglas fijas o mapeos manuales y no han incorporado técnicas de embeddings ni de NLP avanzado \cite{echeverria2022}.
+
+Esta constatación institucional refuerza la conclusión de que existía un vacío sistémico: la ausencia de una solución que superara los enfoques léxicos para proporcionar un análisis semántico, dinámico y escalable de la demanda de habilidades en América Latina.
+
+\section{La Frontera de la Extracción: El Uso de Large Language Models}
+
+Paralelamente a los enfoques regionales, una segunda línea de investigación a nivel internacional ha explorado el uso de Large Language Models (LLMs) para superar las limitaciones de los métodos léxicos. Estos trabajos representan la frontera del estado del arte en extracción semántica, mostrando tanto el potencial transformador de los modelos de lenguaje de gran escala como las complejidades prácticas de su aplicación en dominios especializados como el mercado laboral.
+
+\subsection{Exploración con prompting: zero-shot y few-shot learning}
+
+Una de las primeras aproximaciones en este campo fue la de \citeauthor{nguyen2024} (\citeyear{nguyen2024}), quienes investigaron el uso de LLMs de propósito general, como GPT-3.5 y GPT-4, en una modalidad de prompting sin re-entrenamiento (few-shot learning). Su metodología consistió en proporcionar al modelo una instrucción y unos pocos ejemplos de extracción de habilidades dentro del propio prompt.
+
+Los investigadores experimentaron con dos formatos de salida: uno de extracción directa, donde el modelo devolvía una lista de habilidades (``EXTRACTION-STYLE''), y otro de etiquetado, donde el modelo reescribía la oración original encerrando las habilidades entre etiquetas especiales (``NER-STYLE'') \cite{nguyen2024}.
+
+Sus hallazgos fueron reveladores: aunque los LLMs no lograron igualar la precisión (medida con el F1-score) de los modelos supervisados tradicionales, demostraron una capacidad superior para interpretar frases sintácticamente complejas o ambiguas, como aquellas donde múltiples habilidades están conectadas por conjunciones \cite{nguyen2024}.
+
+Sin embargo, el estudio también advirtió sobre las limitaciones inherentes a este enfoque, principalmente:
+
+\begin{itemize}
+    \item \textbf{Inconsistencia en los formatos de salida}: Los modelos producían resultados con estructuras variables, dificultando el parsing automático.
+    \item \textbf{Riesgo de ``alucinaciones''}: El modelo generaba entidades que no correspondían a habilidades reales presentes en el texto.
+    \item \textbf{Rendimiento cuantitativo inferior}: En términos de F1-score, los resultados oscilaron entre 17.8\% y 27.8\%, muy por debajo de los modelos supervisados \cite{nguyen2024}.
+\end{itemize}
+
+\subsection{Fine-tuning de LLMs: Skill-LLM y el estado del arte}
+
+Tomando estas limitaciones como punto de partida, el trabajo de \citeauthor{herandi2024} (\citeyear{herandi2024}) representó la siguiente evolución lógica: el fine-tuning o re-entrenamiento específico de un LLM para la tarea. En su investigación, tomaron el modelo LLaMA 3 8B y lo ajustaron utilizando el dataset de referencia SkillSpan \cite{zhang2022}.
+
+Su principal innovación fue el diseño de un formato de salida estructurado en JSON que no solo extraía la habilidad (\texttt{skill\_span}), sino también el contexto textual que la rodeaba. Este enfoque les permitió alcanzar un rendimiento que superó el estado del arte (SOTA), logrando un F1-score total de 64.8\%, superior tanto a los modelos supervisados previos como a los LLMs utilizados mediante prompting \cite{herandi2024}.
+
+Más importante aún, su método garantizó la consistencia y la auditabilidad de los resultados, resolviendo uno de los mayores problemas prácticos de los LLMs en modalidad de prompting. El sistema propuesto combinó:
+
+\begin{itemize}
+    \item Uso de LoRA (Low-Rank Adaptation) para fine-tuning eficiente
+    \item Entrenamiento en 2 epochs con batch size de 4 y learning rate de 2e-4
+    \item Evaluación con Span F1 (exact match de spans)
+    \item Distinción explícita entre ``skills'' (aplicación de conocimientos) y ``knowledge'' (saberes adquiridos)
+\end{itemize}
+
+Los resultados mostraron que Skill-LLM logró:
+
+\begin{itemize}
+    \item F1 en skills: 54.3\%
+    \item F1 en knowledge: 74.2\%
+    \item F1 total: 64.8\% (vs. 64.2\% de NNOSE, 62.6\% de ESCOXLM-R, 58.9\% de JobSpanBERT) \cite{herandi2024}
+\end{itemize}
+
+\subsection{La base de datos fundamental: SKILLSPAN}
+
+El trabajo de \citeauthor{herandi2024} (\citeyear{herandi2024}) se sustentó en SKILLSPAN, el primer dataset público a nivel de span para extracción de habilidades hard y soft presentado por \citeauthor{zhang2022} (\citeyear{zhang2022}). Este corpus contiene 391 postings anotados, 14.5K oraciones, 232K tokens, y 12.5K spans de habilidades/conocimientos, extraídos de tres fuentes (BIG, HOUSE, TECH) entre 2012-2021.
+
+El proceso de anotación duró 8 meses, utilizando la herramienta Doccano, con múltiples rondas de ajuste de guías y evaluación de consistencia mediante Fleiss' $\kappa$ = 0.70–0.75 (acuerdo sustancial) \cite{zhang2022}. La diferenciación explícita entre ``skills'' (aplicación de conocimientos, ej. ``work independently'') y ``knowledge'' (saberes adquiridos, ej. ``Python'', ``supply chain'') fue fundamental para establecer un estándar de anotación robusto.
+
+Los hallazgos del estudio de \citeauthor{zhang2022} (\citeyear{zhang2022}) demostraron que:
+
+\begin{itemize}
+    \item El pre-entrenamiento continuo en textos de vacantes laborales mejora consistentemente sobre modelos generales
+    \item STL (Single-Task Learning) supera a MTL (Multi-Task Learning): entrenar skills y knowledge por separado supera al modelo conjunto
+    \item Extraer skills es más difícil (más largas, ambiguas, semánticas); knowledge es más fácil (tokens concretos, nombres propios)
+    \item JobSpanBERT alcanzó $\approx$56.6 F1 en skills y JobBERT $\approx$63.9 F1 en knowledge \cite{zhang2022}
+\end{itemize}
+
+\subsection{Limitación crítica: la barrera del idioma}
+
+A pesar de su sofisticación técnica, estos estudios de vanguardia comparten una limitación crucial que fue central para la justificación de este proyecto: fueron desarrollados y validados casi exclusivamente en contextos anglosajones y sobre datasets en idioma inglés.
+
+El trabajo de \citeauthor{herandi2024} (\citeyear{herandi2024}), por ejemplo, se fundamentó íntegramente en el dataset SkillSpan, que contiene únicamente ofertas de empleo en inglés. Esta dependencia del idioma inglés evidenció un claro vacío geográfico y lingüístico en la aplicación de técnicas de NLP avanzadas para el análisis del mercado laboral.
+
+En conclusión, si bien los LLMs representan la tecnología de punta para la extracción de habilidades, su aplicación efectiva no es trivial. El prompting simple resulta insuficiente en términos de precisión y consistencia \cite{nguyen2024}, y las metodologías de fine-tuning de alto rendimiento, aunque superiores, estaban limitadas por la barrera del idioma de los datos de entrenamiento disponibles \cite{herandi2024}.
+
+\section{Pipelines Semánticos y Descubrimiento No Supervisado}
+
+La tercera línea de investigación relevante se centra en arquitecturas de análisis completas que van más allá de la simple extracción de entidades para estructurar los datos y descubrir patrones latentes de manera no supervisada. Estos sistemas se enfocan en responder preguntas sobre cómo se agrupan las habilidades y cómo evolucionan los perfiles laborales, en lugar de solo identificar menciones individuales.
+
+\subsection{El pipeline de referencia: UMAP + HDBSCAN}
+
+El trabajo de \citeauthor{lukauskas2023} (\citeyear{lukauskas2023}) es el pilar fundamental de esta aproximación. Su investigación en el mercado laboral de Lituania propuso y validó empíricamente un pipeline de extremo a extremo que se ha convertido en una referencia metodológica. El flujo comenzaba con la extracción de las secciones de ``Requisitos'' de las ofertas de empleo mediante expresiones regulares (Regex).
+
+A continuación, el texto extraído era vectorizado utilizando un modelo basado en BERT (Sentence Transformers) para generar embeddings semánticos de 384 dimensiones. Conscientes de la ``maldición de la dimensionalidad'', los autores compararon cinco métodos de reducción de dimensionalidad:
+
+\begin{itemize}
+    \item PCA (lineal)
+    \item t-SNE (no lineal, fuerte en visualización local)
+    \item UMAP (no lineal, escalable, preserva estructura local y global)
+    \item Trimap e Isomap como alternativas
+\end{itemize}
+
+El análisis concluyó que UMAP ofrecía los mejores resultados al preservar la estructura local y global de los datos de manera más efectiva que alternativas como PCA o t-SNE, medido según la métrica de trustworthiness \cite{lukauskas2023}.
+
+Finalmente, sobre los datos ya reducidos, aplicaron y compararon una batería de algoritmos de clustering:
+
+\begin{itemize}
+    \item K-means: eficiente pero limitado a clusters esféricos
+    \item DBSCAN / HDBSCAN: robustos frente a ruido, capturan clusters de densidad variable
+    \item BIRCH: escalable a grandes volúmenes
+    \item Affinity Propagation: no requiere número de clusters, pero costoso
+    \item Spectral Clustering: captura relaciones no lineales
+\end{itemize}
+
+HDBSCAN mostró mejor estabilidad y capacidad para identificar clústeres de formas y densidades variables y manejar el ruido de manera robusta \cite{lukauskas2023}.
+
+El gran aporte de este estudio fue, por tanto, proporcionar una validación empírica para la secuencia completa:
+
+\textbf{Regex → Embeddings BERT → UMAP → HDBSCAN}
+
+como una metodología de vanguardia para el descubrimiento automático y no supervisado de perfiles laborales coherentes a partir de más de 500,000 ofertas laborales.
+
+\subsection{Estandarización con ESCOX}
+
+En una línea complementaria, enfocada en la estandarización, se encuentra la herramienta open-source ESCOX, presentada por \citeauthor{kavargyris2025} (\citeyear{kavargyris2025}). ESCOX fue diseñada para operacionalizar el mapeo semántico de texto no estructurado contra las taxonomías ESCO e ISCO-08.
+
+Su arquitectura se basa en el uso de un modelo Sentence Transformer pre-entrenado (all-MiniLM-L6-v2) para generar embeddings tanto del texto de entrada como de todas las entidades de ESCO. Posteriormente, calcula la similitud del coseno entre el texto de entrada y cada entidad de la taxonomía, devolviendo aquellas que superan un umbral predefinido (default: 0.6 para skills, 0.55 para occupations).
+
+El sistema ofrece:
+
+\begin{itemize}
+    \item Backend Flask API con endpoints REST
+    \item Matching por cosine similarity contra embeddings precomputados de ESCO/ISCO
+    \item Umbrales ajustables
+    \item Deployment con Docker Compose (Flask + Gunicorn + Nginx)
+    \item GUI no-code para usuarios sin conocimientos técnicos
+    \item API REST para integración en pipelines
+\end{itemize}
+
+En un caso de estudio con 6,500 ofertas laborales de EURES en el dominio de software engineering, ESCOX extrajo aproximadamente 7,400 habilidades y 6,100 ocupaciones. Las skills más frecuentes fueron Java (27.7\%), SQL (19.2\%), DevOps (12.8\%), Work independently (10.1\%), y Python (5.9\%) \cite{kavargyris2025}.
+
+El valor de ESCOX reside en su practicidad, eficiencia y su naturaleza de código abierto, ofreciendo una solución accesible para la estandarización de habilidades. Sin embargo, sus propios autores reconocen la limitación de su enfoque: al ser un método basado en embeddings pre-entrenados sin fine-tuning, su precisión es inherentemente menor que la de modelos más avanzados y especializados \cite{kavargyris2025}.
+
+\subsection{Embeddings multilingües para clasificación ocupacional}
+
+El trabajo de \citeauthor{kavas2024} (\citeyear{kavas2024}) abordó el reto de clasificar ofertas laborales multilingües (español, italiano) contra la taxonomía ESCO en inglés, enfrentando el problema de solapamiento de ocupaciones y ambigüedad de skills.
+
+Propusieron un modelo híbrido que combina:
+
+\begin{itemize}
+    \item \textbf{Embeddings multilingües (E5-large)}: Para recuperar las definiciones de ocupaciones ESCO más cercanas por similitud coseno (top 30).
+    \item \textbf{Retrieval-Augmented Generation (RAG)}: Para enriquecer al LLM con contexto específico y reducir alucinaciones.
+    \item \textbf{LLMs optimizados (Llama-3 8B)}: Con Chain-of-Thought + DSPy para seleccionar títulos ocupacionales finales dentro de un conjunto restringido.
+\end{itemize}
+
+Los resultados sobre 200 ofertas reales (100 IT, 100 ES) de InfoJobs mostraron:
+
+\begin{itemize}
+    \item Llama-3-8B (CoT optimizado) → Precisión@5 = 0.32 (IT), 0.28 (ES); Recall@5 = 0.76 (IT), 0.72 (ES)
+    \item Embeddings E5-large → Recall@10 = 0.88 (IT), 0.92 (ES)
+    \item Superación amplia de baselines (SkillGPT, MNLI) \cite{kavas2024}
+\end{itemize}
+
+Este trabajo validó que el enfoque híbrido embeddings → LLM → clasificación es efectivo para contextos multilingües, demostrando que los embeddings multilingües son clave para recall alto, mientras que los LLMs refinan precisión \cite{kavas2024}.
+
+\section{Análisis Comparativo y Valor Agregado de la Solución Propuesta}
+
+El análisis del contexto revela un panorama de investigación rico pero fragmentado, donde ninguna solución existente abordaba de manera integral los desafíos del mercado laboral tecnológico en América Latina. La Tabla~\ref{tab:estado-arte-comparativo} resume las características principales de las líneas de trabajo analizadas.
+
+\begin{table}[H]
+\centering
+\caption{Comparación de enfoques en el estado del arte}
+\label{tab:estado-arte-comparativo}
+\begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{Enfoque} & \textbf{Ventajas} & \textbf{Limitaciones} & \textbf{Referencias} \\
+\hline
+Enfoques Regionales (Léxicos) & - Validación de web scraping\newline - Datos de alta frecuencia\newline - Contexto local & - Dependencia léxica\newline - Escalabilidad limitada\newline - No captura semántica & \cite{rubio2024, aguilera2018, martinez2024} \\
+\hline
+LLMs Prompting & - Flexibilidad\newline - Sin necesidad de entrenamiento\newline - Captura contexto complejo & - Inconsistencia de salida\newline - Alucinaciones\newline - F1 bajo (17-27\%) & \cite{nguyen2024} \\
+\hline
+LLMs Fine-tuned & - SOTA en F1 (64.8\%)\newline - Salidas estructuradas\newline - Auditabilidad & - Requiere datasets anotados\newline - Solo en inglés\newline - Costoso computacionalmente & \cite{herandi2024, zhang2022} \\
+\hline
+Pipelines Semánticos & - Descubrimiento no supervisado\newline - Identificación de perfiles\newline - Metodología validada & - No incluye LLMs\newline - Limitado a extracción regex inicial & \cite{lukauskas2023} \\
+\hline
+Herramientas de Estandarización & - Open-source\newline - Integración ESCO/ISCO\newline - Fácil de usar & - Precisión limitada\newline - No captura skills emergentes & \cite{kavargyris2025} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Síntesis estratégica de metodologías}
+
+Ante esta realidad, el sistema desarrollado en este proyecto no se posicionó como una alternativa incremental, sino como una síntesis estratégica que articuló las fortalezas de las distintas líneas de investigación para crear una solución metodológicamente superior y contextualmente relevante.
+
+El proyecto partió de los aprendizajes de los estudios regionales, adoptando su enfoque en la recolección de datos masivos a través de web scraping como una fuente válida y de alta frecuencia para caracterizar el mercado \cite{aguilera2018, martinez2024, rubio2024}. Sin embargo, reemplazó conscientemente su análisis léxico, propenso a errores y de limitada profundidad, con la potencia semántica e inferencial de los Large Language Models (LLMs).
+
+Para ello, se inspiró en la investigación internacional de vanguardia, tanto en la exploración del prompting para manejar frases ambiguas \cite{nguyen2024}, como en la implementación de técnicas de fine-tuning para alcanzar un rendimiento de última generación \cite{herandi2024}.
+
+Además, la solución no se detuvo en la simple extracción de habilidades, sino que buscó estructurar el conocimiento descubierto. Para lograrlo, integró el robusto pipeline de análisis no supervisado validado empíricamente por \citeauthor{lukauskas2023} (\citeyear{lukauskas2023}), combinando embeddings, UMAP y HDBSCAN para la identificación automática de clústeres de competencias.
+
+\subsection{Adaptación al contexto latinoamericano}
+
+Crucialmente, todo el sistema fue diseñado desde su concepción para adaptarse a la realidad lingüística y de datos de América Latina, un vacío metodológico dejado por la investigación internacional, que se ha centrado casi exclusivamente en datasets en inglés \cite{herandi2024}.
+
+Esta adaptación incluyó:
+
+\begin{itemize}
+    \item Uso de embeddings multilingües (E5) para manejar el ``Spanglish'' técnico
+    \item Validación con datos de Colombia, México y Argentina
+    \item Integración con taxonomías internacionales (ESCO) pero adaptadas al contexto regional
+    \item Manejo de la informalidad y variabilidad en la redacción de ofertas laborales
+\end{itemize}
+
+\subsection{Arquitectura comparativa dual: valor agregado}
+
+Finalmente, el valor agregado más significativo del proyecto residió en su arquitectura comparativa (Pipeline A vs. Pipeline B). Este diseño dual no solo permitió aprovechar lo mejor de los métodos tradicionales y de los LLMs, sino que introdujo un marco de validación empírica que aporta un rigor científico del que carecen muchas aplicaciones prácticas.
+
+Al contrastar sistemáticamente un método transparente y auditable (Pipeline A: NER + Regex + ESCO) contra un modelo semántico avanzado (Pipeline B: LLMs), el sistema no solo generó resultados, sino que también proveyó una medida de la fiabilidad y el valor agregado de cada enfoque, constituyendo una contribución novedosa y completa al campo de los observatorios laborales automatizados.

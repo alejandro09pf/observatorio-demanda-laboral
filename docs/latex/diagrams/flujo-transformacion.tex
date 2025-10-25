@@ -1,0 +1,159 @@
+\begin{figure}[H]
+\centering
+\shorthandoff{>}\shorthandoff{<}
+\begin{tikzpicture}[
+    scale=0.88,
+    every node/.style={transform shape},
+    data/.style={
+        rectangle,
+        rounded corners=3pt,
+        minimum width=2.4cm,
+        minimum height=2.1cm,
+        draw=black,
+        line width=1pt,
+        align=center,
+        font=\scriptsize,
+        inner sep=5pt
+    },
+    proceso/.style={
+        trapezium,
+        trapezium left angle=70,
+        trapezium right angle=110,
+        minimum width=1.6cm,
+        minimum height=0.85cm,
+        draw=black,
+        line width=1pt,
+        align=center,
+        font=\tiny\bfseries,
+        inner sep=3pt
+    }
+]
+
+\node[data, fill=yellow!30] (d1) at (0,0) {
+    \textbf{HTML}\\[0.15cm]
+    Portales\\
+    web\\[0.15cm]
+    {\tiny Computrabajo}\\
+    {\tiny Bumeran}\\
+    {\tiny ElEmpleo}
+};
+
+\node[proceso, fill=blue!20] (p1) at (3,0) {SCRAPE\\+\\PARSE};
+
+\node[data, fill=green!20] (d2) at (6,0) {
+    \textbf{JSON}\\[0.15cm]
+    Ofertas\\
+    estructuradas\\[0.15cm]
+    {\tiny 23K+ jobs}\\
+    {\tiny raw\_jobs}
+};
+
+\node[proceso, fill=blue!20] (p2) at (9,0) {NER\\+\\REGEX};
+
+\node[data, fill=green!25] (d3) at (12,0) {
+    \textbf{Entities}\\[0.15cm]
+    Habilidades\\
+    expl\'{\i}citas\\[0.15cm]
+    {\tiny + ESCO URI}\\
+    {\tiny extracted}
+};
+
+\node[proceso, fill=purple!20] (p3) at (3,-3) {LLM\\ENHANCE};
+
+\node[data, fill=green!30] (d4) at (6,-3) {
+    \textbf{Normalized}\\[0.15cm]
+    Habilidades\\
+    + impl\'{\i}citas\\[0.15cm]
+    {\tiny + confianza}\\
+    {\tiny enhanced}
+};
+
+\node[proceso, fill=purple!20] (p4) at (9,-3) {E5\\EMBED};
+
+\node[data, fill=orange!20] (d5) at (12,-3) {
+    \textbf{Vectors}\\[0.15cm]
+    768D\\
+    embeddings\\[0.15cm]
+    {\tiny pgvector}\\
+    {\tiny cosine sim}
+};
+
+\node[proceso, fill=orange!25] (p5) at (3,-6) {UMAP\\REDUCE};
+
+\node[data, fill=orange!25] (d6) at (6,-6) {
+    \textbf{2D/3D}\\[0.15cm]
+    Vectores\\
+    reducidos\\[0.15cm]
+    {\tiny visualizable}\\
+    {\tiny analysis}
+};
+
+\node[proceso, fill=orange!25] (p6) at (9,-6) {HDBSCAN\\CLUSTER};
+
+\node[data, fill=red!20] (d7) at (12,-6) {
+    \textbf{Clusters}\\[0.15cm]
+    Grupos de\\
+    habilidades\\[0.15cm]
+    {\tiny + etiquetas}\\
+    {\tiny + metrics}
+};
+
+\node[proceso, fill=red!25] (p7) at (7.5,-8.5) {VISUALIZE\\+\\REPORT};
+
+\node[data, fill=red!30] (d8) at (12,-8.5) {
+    \textbf{Outputs}\\[0.15cm]
+    PDF / PNG\\
+    CSV / JSON\\[0.15cm]
+    {\tiny insights}\\
+    {\tiny reportes}
+};
+
+\draw[-{Stealth}, line width=2pt] (d1) -- (p1);
+\draw[-{Stealth}, line width=2pt] (p1) -- (d2);
+\draw[-{Stealth}, line width=2pt] (d2) -- (p2);
+\draw[-{Stealth}, line width=2pt] (p2) -- (d3);
+\draw[-{Stealth}, line width=2pt] (d3) -- ++(0,-1) -| (p3);
+\draw[-{Stealth}, line width=2pt] (p3) -- (d4);
+\draw[-{Stealth}, line width=2pt] (d4) -- (p4);
+\draw[-{Stealth}, line width=2pt] (p4) -- (d5);
+\draw[-{Stealth}, line width=2pt] (d5) -- ++(0,-1) -| (p5);
+\draw[-{Stealth}, line width=2pt] (p5) -- (d6);
+\draw[-{Stealth}, line width=2pt] (d6) -- (p6);
+\draw[-{Stealth}, line width=2pt] (p6) -- (d7);
+\draw[-{Stealth}, line width=2pt] (d7) -- ++(0,-1) -| (p7);
+\draw[-{Stealth}, line width=2pt] (p7) -- (d8);
+
+\node[font=\footnotesize, text width=10cm, align=center] at (7,-10.5) {
+    \textbf{Transformaci\'{o}n de Datos:}\\
+    HTML $\rightarrow$ JSON $\rightarrow$ Entities $\rightarrow$ Normalized $\rightarrow$ Vectors 768D $\rightarrow$ 2D/3D $\rightarrow$ Clusters $\rightarrow$ Reports
+};
+
+\node[rectangle, draw=blue!60, fill=blue!10, line width=1pt, font=\tiny, align=center, text width=2.2cm, inner sep=4pt] at (-2,-0.5) {
+    \textbf{Etapas 1-2}\\
+    Adquisici\'{o}n\\
+    y extracci\'{o}n
+};
+
+\node[rectangle, draw=purple!60, fill=purple!10, line width=1pt, font=\tiny, align=center, text width=2.2cm, inner sep=4pt] at (-2,-3) {
+    \textbf{Etapas 3-4}\\
+    Enriquecimiento\\
+    sem\'{a}ntico
+};
+
+\node[rectangle, draw=orange!60, fill=orange!10, line width=1pt, font=\tiny, align=center, text width=2.2cm, inner sep=4pt] at (-2,-6) {
+    \textbf{Etapas 5-6}\\
+    An\'{a}lisis\\
+    no supervisado
+};
+
+\node[rectangle, draw=red!60, fill=red!10, line width=1pt, font=\tiny, align=center, text width=2.2cm, inner sep=4pt] at (-2,-8.5) {
+    \textbf{Etapas 7-8}\\
+    Visualizaci\'{o}n\\
+    y reportes
+};
+
+\end{tikzpicture}
+\shorthandon{>}\shorthandon{<}
+\caption{Flujo de Transformaci\'{o}n de Datos a trav\'{e}s del Pipeline}
+\label{fig:flujo-transformacion}
+\end{figure}

@@ -1,0 +1,246 @@
+\begin{figure}[p]
+\centering
+\shorthandoff{>}\shorthandoff{<}
+\begin{tikzpicture}[
+    scale=0.72,
+    every node/.style={transform shape},
+    modulo/.style={
+        rectangle,
+        rounded corners=2pt,
+        minimum width=11cm,
+        minimum height=2.3cm,
+        draw=black,
+        line width=1.2pt,
+        fill=blue!5,
+        align=left
+    },
+    tech/.style={
+        rectangle,
+        rounded corners=1pt,
+        minimum width=2.5cm,
+        minimum height=0.5cm,
+        draw=blue!60,
+        fill=blue!15,
+        font=\scriptsize\ttfamily,
+        align=center
+    },
+    db/.style={
+        rectangle,
+        rounded corners=1pt,
+        minimum width=2.5cm,
+        minimum height=0.5cm,
+        draw=green!60,
+        fill=green!15,
+        font=\scriptsize\ttfamily,
+        align=center
+    },
+    etapa/.style={
+        circle,
+        draw=red!60,
+        fill=red!20,
+        font=\small\bfseries,
+        minimum size=0.8cm
+    },
+    arrow/.style={
+        line width=1.5pt,
+        draw=black!70,
+        -{Stealth}
+    }
+]
+
+\node[modulo] (mod1) at (0,0) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 1: WEB SCRAPER}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Extracci\'{o}n automatizada de ofertas laborales\\
+    \textbf{Entrada:} Portales web (Computrabajo, Bumeran, ElEmpleo)\\
+    \textbf{Salida:} Ofertas estructuradas (JSON)\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{Scrapy 2.11};\\
+    \tikz\node[tech]{Selenium};\\
+    \tikz\node[tech]{BeautifulSoup};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{raw\_jobs};\\
+    \tikz\node[db]{23,000+ registros};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod2) at (0,-3.5) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 2: SKILL EXTRACTOR}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Extracci\'{o}n de habilidades expl\'{\i}citas\\
+    \textbf{Entrada:} Texto de ofertas (title + description + requirements)\\
+    \textbf{Salida:} Lista de habilidades con confianza\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{spaCy NER};\\
+    \tikz\node[tech]{Regex Patterns};\\
+    \tikz\node[tech]{ESCO Matcher};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{extracted\_skills};\\
+    \tikz\node[db]{M\'{u}ltiples por job};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod3) at (0,-7) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 3: LLM PROCESSOR}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Enriquecimiento sem\'{a}ntico e inferencia de impl\'{\i}citas\\
+    \textbf{Entrada:} Habilidades extra\'{\i}das + contexto del job\\
+    \textbf{Salida:} Habilidades normalizadas + impl\'{\i}citas\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{Mistral 7B};\\
+    \tikz\node[tech]{LLaMA 3 8B};\\
+    \tikz\node[tech]{Prompt Eng.};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{enhanced\_skills};\\
+    \tikz\node[db]{+ razonamiento};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod4) at (0,-10.5) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 4: EMBEDDING GENERATOR}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Generaci\'{o}n de representaciones vectoriales\\
+    \textbf{Entrada:} Habilidades normalizadas (texto)\\
+    \textbf{Salida:} Vectores de 768 dimensiones\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{E5 Multilingual};\\
+    \tikz\node[tech]{HuggingFace};\\
+    \tikz\node[tech]{Batch Process};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{skill\_embeddings};\\
+    \tikz\node[db]{pgvector (768D)};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod5) at (0,-14) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 5: DIMENSION REDUCER}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Reducci\'{o}n de dimensionalidad para clustering\\
+    \textbf{Entrada:} Vectores de 768D\\
+    \textbf{Salida:} Vectores de 2D/3D para visualizaci\'{o}n\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{UMAP};\\
+    \tikz\node[tech]{n\_neighbors=15};\\
+    \tikz\node[tech]{metric=cosine};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{analysis\_results};\\
+    \tikz\node[db]{+ par\'{a}metros};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod6) at (0,-17.5) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 6: CLUSTERING}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Agrupamiento no supervisado de habilidades\\
+    \textbf{Entrada:} Vectores reducidos (2D/3D)\\
+    \textbf{Salida:} Clusters de habilidades + etiquetas\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{HDBSCAN};\\
+    \tikz\node[tech]{min\_size=5};\\
+    \tikz\node[tech]{metric=euclidean};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{analysis\_results};\\
+    \tikz\node[db]{+ m\'{e}tricas};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod7) at (0,-21) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 7: VISUALIZATION}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Generaci\'{o}n de gr\'{a}ficos y visualizaciones\\
+    \textbf{Entrada:} Clusters + estad\'{\i}sticas\\
+    \textbf{Salida:} Im\'{a}genes PNG, p\'{a}ginas HTML est\'{a}ticas\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{Matplotlib};\\
+    \tikz\node[tech]{Seaborn};\\
+    \tikz\node[tech]{Plotly (static)};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{outputs/PNG};\\
+    \tikz\node[db]{outputs/HTML};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[modulo] (mod8) at (0,-24.5) {
+    \begin{minipage}{10.5cm}
+    \textbf{M\'{O}DULO 8: REPORT GENERATOR}\\[0.15cm]
+    \textbf{Funci\'{o}n:} Generaci\'{o}n de reportes finales\\
+    \textbf{Entrada:} Visualizaciones + datos tabulares\\
+    \textbf{Salida:} Documentos PDF, archivos CSV, JSON\\[0.15cm]
+    \begin{minipage}[t]{5cm}
+    \textbf{Tecnolog\'{\i}as:}\\
+    \tikz\node[tech]{ReportLab};\\
+    \tikz\node[tech]{Pandas};\\
+    \tikz\node[tech]{JSON/CSV};
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{5cm}
+    \textbf{Almacenamiento:}\\
+    \tikz\node[db]{outputs/PDF};\\
+    \tikz\node[db]{outputs/CSV};
+    \end{minipage}
+    \end{minipage}
+};
+
+\node[etapa] at (-6.5,0) {1};
+\node[etapa] at (-6.5,-3.5) {2};
+\node[etapa] at (-6.5,-7) {3};
+\node[etapa] at (-6.5,-10.5) {4};
+\node[etapa] at (-6.5,-14) {5};
+\node[etapa] at (-6.5,-17.5) {6};
+\node[etapa] at (-6.5,-21) {7};
+\node[etapa] at (-6.5,-24.5) {8};
+
+\draw[arrow] (mod1.south) -- (mod2.north);
+\draw[arrow] (mod2.south) -- (mod3.north);
+\draw[arrow] (mod3.south) -- (mod4.north);
+\draw[arrow] (mod4.south) -- (mod5.north);
+\draw[arrow] (mod5.south) -- (mod6.north);
+\draw[arrow] (mod6.south) -- (mod7.north);
+\draw[arrow] (mod7.south) -- (mod8.north);
+
+\node[font=\footnotesize\itshape, text width=10cm, align=center] at (0,-27) {
+    Arquitectura Pipeline Lineal: Cada m\'{o}dulo procesa datos secuencialmente,\\
+    almacena resultados en PostgreSQL y pasa al siguiente m\'{o}dulo.\\
+    Dise\~{n}o modular permite ejecuci\'{o}n independiente y reproducibilidad.
+};
+
+\end{tikzpicture}
+\shorthandon{>}\shorthandon{<}
+\caption{Arquitectura Modular Completa del Observatorio - Pipeline de 8 Etapas}
+\label{fig:arquitectura-completa}
+\end{figure}
