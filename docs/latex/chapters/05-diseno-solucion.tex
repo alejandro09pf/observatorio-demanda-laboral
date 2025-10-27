@@ -70,6 +70,15 @@ La Figura \ref{fig:arquitectura-capas} reorganiza los componentes del sistema en
 
 Las capas 1-5 representan el flujo vertical de procesamiento de datos (de arriba hacia abajo), mientras que la capa 6 (Persistencia) actúa como el repositorio central al que todas las capas superiores acceden para lectura y escritura. La capa 7 (Orquestación) coordina transversalmente la ejecución de todas las demás capas, implementando el patrón de orquestador que controla el ciclo de vida completo del sistema.
 
+\textbf{Características clave del flujo de procesamiento}:
+\begin{itemize}
+    \item \textbf{Deduplicación en Scraper (Capa 1)}: El módulo de scraping implementa detección de duplicados mediante hashing SHA-256 del contenido (\texttt{content\_hash}), evitando el almacenamiento de ofertas repetidas antes de su persistencia.
+
+    \item \textbf{Limpieza de texto en Extractor (Capa 2)}: El Skill Extractor realiza preprocesamiento y normalización del texto (eliminación de caracteres especiales, normalización de espacios, conversión a minúsculas) antes de aplicar técnicas de NER y Regex.
+
+    \item \textbf{Procesamiento paralelo (Capas 2-3)}: Los módulos 2 (Skill Extractor) y 3 (LLM Processor) están diseñados para ejecutarse en paralelo sobre diferentes lotes de ofertas laborales, maximizando el throughput del sistema mediante procesamiento concurrente.
+\end{itemize}
+
 \subsubsection{Vista de Estados: Ciclo de Vida de Jobs}
 
 La Figura \ref{fig:estados-jobs} ilustra el ciclo de vida completo que atraviesan las ofertas laborales desde su ingreso al sistema hasta la generación de reportes. Este diagrama de estados muestra las transiciones entre las diferentes etapas de procesamiento, incluyendo los caminos de manejo de errores y reintentos.
@@ -374,6 +383,12 @@ Esta arquitectura garantiza integridad referencial y permite trazabilidad comple
     \item Solicitud de formato JSON con campos definidos
 \end{itemize}
 
+\textbf{Configuración experimental}: El sistema permite ejecutar el pipeline LLM de dos formas:
+\begin{enumerate}
+    \item \textbf{Comparación multi-modelo}: Procesar las mismas ofertas con Mistral 7B, LLaMA 3 8B y GPT-4 para evaluar diferencias en rendimiento, consistencia y calidad de extracción.
+    \item \textbf{Producción con LLaMA}: Usar exclusivamente LLaMA 3 8B como modelo estándar por su balance entre rendimiento y velocidad de inferencia en español.
+\end{enumerate}
+
 \subsection{Módulo 4: Embedding Generator}
 
 \textbf{Propósito}: Generar representaciones vectoriales semánticas de habilidades.
@@ -394,6 +409,25 @@ Esta arquitectura garantiza integridad referencial y permite trazabilidad comple
 5. Almacenar en PostgreSQL con pgvector
 6. Crear índice IVFFlat para búsquedas eficientes
 \end{verbatim}
+
+\textbf{Pipeline A vs Pipeline B - Comparación experimental}:
+
+El sistema implementa dos pipelines de procesamiento paralelos para evaluar la efectividad de diferentes enfoques:
+
+\begin{itemize}
+    \item \textbf{Pipeline A (NER + Regex + ESCO)}: Extracción basada en reglas (Módulo 2) seguida de generación de embeddings (Módulo 4)
+    \item \textbf{Pipeline B (LLM + ESCO)}: Extracción semántica con LLMs (Módulo 3) seguida de generación de embeddings (Módulo 4)
+\end{itemize}
+
+Esta arquitectura dual permite comparar cuantitativamente:
+\begin{enumerate}
+    \item Cantidad y calidad de habilidades extraídas por cada método
+    \item Cobertura de la taxonomía ESCO alcanzada
+    \item Consistencia de los embeddings generados
+    \item Rendimiento de clustering y descubrimiento de patrones
+\end{enumerate}
+
+Los resultados de ambos pipelines convergen en la capa de embeddings, donde se puede evaluar objetivamente cuál enfoque genera representaciones vectoriales más útiles para análisis downstream.
 
 \subsection{Módulo 5: Analyzer}
 
