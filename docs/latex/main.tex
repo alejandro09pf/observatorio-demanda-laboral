@@ -4,7 +4,7 @@
 % Observatorio de Demanda Laboral en América Latina
 % ============================================================================
 
-\documentclass[12pt,oneside,letterpaper]{report}
+\documentclass[11pt,oneside,letterpaper]{report}
 
 % ============================================================================
 % PAQUETES
@@ -26,7 +26,7 @@
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{array}
-\usepackage[backend=biber,style=apa,natbib=true]{biblatex}
+\usepackage[backend=biber,style=ieee,citestyle=numeric-comp,sorting=none]{biblatex}
 
 % TikZ para diagramas
 \usepackage{tikz}
@@ -63,23 +63,35 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{Pontificia Universidad Javeriana}
-\fancyhead[R]{Undergraduate Final Project Report}
-\fancyfoot[R]{Page \thepage}
+\fancyhead[R]{Informe de Proyecto de Grado}
+\fancyfoot[R]{Página \thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
+
+% Forzar que la primera página de cada capítulo use el mismo estilo
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[L]{Pontificia Universidad Javeriana}
+  \fancyhead[R]{Informe de Proyecto de Grado}
+  \fancyfoot[R]{Página \thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
 
 % ============================================================================
 % CONFIGURACIÓN DE TÍTULOS DE CAPÍTULOS
 % ============================================================================
 \titleformat{\chapter}[display]
-{\normalfont\huge\bfseries\centering}
-{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+{\normalfont\Large\bfseries\centering}
+{}{0pt}{\Large}
+
+\titlespacing*{\chapter}{0pt}{20pt}{20pt}
 
 \titleformat{\section}
-{\normalfont\Large\bfseries}{\thesection}{1em}{}
+{\normalfont\large\bfseries}{\thesection}{1em}{}
 
 \titleformat{\subsection}
-{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
 
 % ============================================================================
 % INFORMACIÓN DEL PROYECTO
@@ -99,8 +111,8 @@
 % ============================================================================
 \begin{document}
 
-% Páginas preliminares sin numeración
-\pagenumbering{gobble}
+% Páginas preliminares con numeración romana
+\pagenumbering{roman}
 
 % Portada principal
 \input{front/portada}
@@ -133,27 +145,24 @@
 \newpage
 
 % Tabla de contenidos
-\pagenumbering{roman}
-\setcounter{page}{6}
-\renewcommand{\contentsname}{CONTENT}
+\renewcommand{\contentsname}{CONTENIDO}
 \tableofcontents
 \newpage
 
 % Abstract
 \input{front/abstract}
-\newpage
 
-% Iniciar numeración arábiga para el contenido
+% ============================================================================
+% CAPÍTULOS PRINCIPALES - Numeración arábiga desde página 1
+% ============================================================================
+\clearpage
+\pagestyle{fancy}
 \pagenumbering{arabic}
 
-% ============================================================================
-% CAPÍTULOS PRINCIPALES
-% ============================================================================
-
 \input{chapters/01-introduccion}
-\input{chapters/02-contexto-problema}
-\input{chapters/03-marco-teorico}
-\input{chapters/04-estado-arte}
+\input{chapters/02-descripcion-general}
+\input{chapters/03-contexto}
+\input{chapters/04-analisis-problema}
 \input{chapters/05-diseno-solucion}
 \input{chapters/06-desarrollo}
 \input{chapters/07-resultados}
@@ -162,16 +171,16 @@
 % ============================================================================
 % REFERENCIAS
 % ============================================================================
-\chapter*{IX- REFERENCES}
-\addcontentsline{toc}{chapter}{IX- REFERENCES}
+\chapter*{REFERENCIAS}
+\addcontentsline{toc}{chapter}{REFERENCIAS}
 \printbibliography[heading=none]
 
 % ============================================================================
 % APÉNDICES
 % ============================================================================
-\chapter*{X- APPENDICES}
-\addcontentsline{toc}{chapter}{X- APPENDICES}
+\chapter*{APÉNDICES}
+\addcontentsline{toc}{chapter}{APÉNDICES}
 
-Place in this section of the document a list of all appendices related to the project. Appendices must be downloadable from the website and should be the same as specified in the proposal.
+En esta sección del documento se presenta la lista de todos los apéndices relacionados con el proyecto. Los apéndices deben ser descargables desde el sitio web y deben coincidir con los especificados en la propuesta.
 
 \end{document}

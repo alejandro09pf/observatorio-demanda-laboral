@@ -180,15 +180,27 @@ Propusieron un modelo híbrido que combina:
     \item \textbf{LLMs optimizados (Llama-3 8B)}: Con Chain-of-Thought + DSPy para seleccionar títulos ocupacionales finales dentro de un conjunto restringido.
 \end{itemize}
 
-Los resultados sobre 200 ofertas reales (100 IT, 100 ES) de InfoJobs mostraron:
+El sistema fue evaluado sobre 200 ofertas reales de InfoJobs (100 de Italia y 100 de España). La Tabla \ref{tab:kavas-results-ch4} resume los resultados obtenidos.
 
-\begin{itemize}
-    \item Llama-3-8B (CoT optimizado) → Precisión@5 = 0.32 (IT), 0.28 (ES); Recall@5 = 0.76 (IT), 0.72 (ES)
-    \item Embeddings E5-large → Recall@10 = 0.88 (IT), 0.92 (ES)
-    \item Superación amplia de baselines (SkillGPT, MNLI) \parencite{kavas2024}
-\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Resultados del modelo híbrido de Kavas et al. (2024)}
+\label{tab:kavas-results-ch4}
+\small
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Componente} & \textbf{Métrica} & \textbf{Italia} & \textbf{España} \\
+\hline
+\multirow{2}{*}{LLM Llama-3 8B (CoT)} & Precisión@5 & 0.32 & 0.28 \\
+\cline{2-4}
+ & Recall@5 & 0.76 & 0.72 \\
+\hline
+Embeddings E5-large & Recall@10 & 0.88 & 0.92 \\
+\hline
+\end{tabular}
+\end{table}
 
-Este trabajo validó que el enfoque híbrido embeddings → LLM → clasificación es efectivo para contextos multilingües, demostrando que los embeddings multilingües son clave para recall alto, mientras que los LLMs refinan precisión \parencite{kavas2024}.
+Los resultados superaron ampliamente los baselines previos (SkillGPT, MNLI). Este trabajo validó que el enfoque híbrido de tres etapas (embeddings, RAG, LLM) es efectivo para contextos multilingües, demostrando que los embeddings multilingües son clave para lograr alta cobertura, mientras que los LLMs refinan la precisión \parencite{kavas2024}.
 
 En trabajos posteriores del mismo grupo, \citeauthor{kavas2025} (\citeyear{kavas2025}) extendieron este enfoque hacia la extracción multilingüe de habilidades para job matching en knowledge graphs, integrando extracción con NER, embeddings E5 y LLMs con RAG, demostrando la viabilidad de pipelines completos para matching de vacantes y candidatos en múltiples idiomas \parencite{kavas2025}.
 
