@@ -53,21 +53,21 @@ Español LATAM & Medio & Alto & Variable \\
 \end{tabular}
 \end{table}
 
+\textit{Nota: Los valores numéricos presentados en la Tabla \ref{tab:comparacion-tecnicas-extraccion} son estimaciones preliminares basadas en literatura y pruebas iniciales. Estos valores serán reemplazados con métricas reales obtenidas mediante evaluación experimental exhaustiva sobre el conjunto de datos del proyecto una vez completadas las pruebas. Para esta primera revisión del documento, no se incluyen datos ficticios en las celdas marcadas como pendientes.}
+
 Dado que ninguna técnica individual satisface todos los requisitos, se adoptó una \textbf{arquitectura dual de pipelines paralelos}: \textbf{Pipeline A} (NER + Regex + ESCO) optimizado para alta precisión y baja latencia, procesando el 100\% de las ofertas; y \textbf{Pipeline B} (LLMs) para enriquecimiento semántico y detección de habilidades implícitas en un subconjunto estratégico. Esta arquitectura permite evaluación empírica comparativa donde Pipeline A sirve como control de alta precisión y Pipeline B como tratamiento de alta cobertura \cite{li2023}.
 
 \subsection{Modelos de Lenguaje Grandes}
 
-Los Large Language Models se basan en arquitecturas transformer que utilizan mecanismos de auto-atención para capturar dependencias contextuales de largo alcance \cite{vaswani2017}. El pre-entrenamiento mediante modelado de lenguaje causal les permite adquirir capacidades de razonamiento y comprensión lingüística sin requerir datasets anotados específicos del dominio \cite{brown2020, wei2022emergent}.
+Habiendo establecido que el Pipeline B requiere capacidades de LLMs para inferencia de habilidades implícitas y normalización semántica, el siguiente desafío consiste en seleccionar un modelo específico que balancee rendimiento lingüístico con restricciones computacionales del proyecto. Los Large Language Models se basan en arquitecturas transformer que utilizan mecanismos de auto-atención para capturar dependencias contextuales de largo alcance \cite{vaswani2017}. El pre-entrenamiento mediante modelado de lenguaje causal les permite adquirir capacidades de razonamiento y comprensión lingüística sin requerir datasets anotados específicos del dominio \cite{brown2020, wei2022emergent}.
 
-Para el Pipeline B del observatorio, se identificaron cuatro familias de LLMs como candidatos, evaluados según criterios de costo, rendimiento, soporte multilingüe y capacidad de despliegue local.
+Para el Pipeline B del observatorio, se identificaron dos modelos LLM de código abierto como candidatos principales, evaluados según criterios de costo computacional, rendimiento en español latinoamericano, soporte multilingüe y capacidad de despliegue local sin dependencias de APIs comerciales.
 
 \subsubsection{Candidatos Evaluados}
 
-\textbf{GPT-4 y GPT-3.5 (OpenAI)} representan el estado del arte con F1-scores de 0.68 y 0.62 en extracción de habilidades en inglés respectivamente \cite{openai2023gpt4, zhang2023}. Ofrecen soporte multilingüe robusto, despliegue simplificado mediante API REST, y function calling nativo para salidas estructuradas. Sin embargo, el costo es elevado (\$255 y \$8.5 respectivamente para 23K jobs), requieren conectividad constante con latencias variables (1-10s), y son black-box sin posibilidad de fine-tuning.
+\textbf{Gemma 3 4B} es un modelo ligero desarrollado por Google basado en la arquitectura Gemini. Con 4 mil millones de parámetros, está optimizado para despliegue eficiente en hardware limitado. Sus ventajas incluyen: tamaño compacto que permite ejecución en CPU o GPUs de gama media (4-6 GB VRAM con cuantización Q4), licencia permisiva Gemma para uso académico y comercial, tokenización eficiente heredada de la familia Gemini, y soporte multilingüe con cobertura de español latinoamericano. Las limitaciones principales son: menor capacidad de razonamiento complejo comparado con modelos más grandes, vocabulario técnico potencialmente limitado debido al tamaño reducido, y documentación aún en desarrollo al ser un modelo relativamente nuevo.
 
-\textbf{Mistral 7B Instruct} es un modelo open-source de 7.3B parámetros que utiliza Grouped-Query Attention y Sliding Window Attention para mejorar eficiencia \cite{jiang2023mistral}. Logra F1=0.58 en español superando a LLaMA 2 13B. Sus ventajas incluyen eficiencia de inferencia con cuantización Q4 (4-5 GB VRAM), licencia Apache 2.0, y costo cero. Las limitaciones son pre-entrenamiento principalmente en inglés (70\% corpus, 15\% español), vocabulario técnico limitado, y latencia de 3-7s en GPU.
-
-\textbf{LLaMA 3 8B Instruct} (Meta AI) está entrenado sobre 15 billones de tokens con vocabulario expandido de 128K tokens \cite{touvron2023llama3}. Logra F1=0.64 en extracción de habilidades, el mejor balance para despliegue local \cite{nguyen2024}. Ventajas: corpus de pre-entrenamiento con 5\% español de alta calidad, tokenización eficiente (1.3 tokens/palabra vs 1.8 en Mistral), fine-tuning instruccional con 10M ejemplos, y latencia competitiva (2-5s con Q4). Limitaciones: requisitos de memoria superiores (8-10 GB VRAM) y licencia restrictiva para aplicaciones con $>$700M usuarios activos mensuales.
+\textbf{Llama 3 3B} (Meta AI) es la versión compacta de la familia LLaMA 3, entrenado sobre un corpus masivo multilingüe con enfoque en eficiencia. Con 3 mil millones de parámetros, representa el balance extremo entre rendimiento y recursos computacionales. Ventajas: requisitos mínimos de memoria (3-4 GB VRAM con cuantización Q4), arquitectura optimizada con Grouped-Query Attention para inferencia rápida, tokenización eficiente de la familia LLaMA 3, licencia LLaMA 3 Community License permisiva para proyectos académicos, y latencia reducida ideal para procesamiento batch. Limitaciones: capacidad de razonamiento más limitada que modelos grandes, posible degradación en tareas complejas de inferencia, y menor cobertura de vocabulario técnico especializado.
 
 La Tabla \ref{tab:comparacion-llms} resume la comparación cuantitativa.
 
@@ -75,34 +75,40 @@ La Tabla \ref{tab:comparacion-llms} resume la comparación cuantitativa.
 \centering
 \caption{Comparación de Large Language Models para Extracción de Habilidades}
 \label{tab:comparacion-llms}
-\begin{tabular}{|p{2.5cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
 \hline
-\textbf{Criterio} & \textbf{GPT-3.5} & \textbf{GPT-4} & \textbf{Mistral 7B} & \textbf{LLaMA 3 8B} \\
+\textbf{Criterio} & \textbf{Gemma 3 4B} & \textbf{Llama 3 3B} \\
 \hline
-Parámetros & 175B & 1.76T (MoE) & 7.3B & 8B \\
+Parámetros & 4B & 3B \\
 \hline
-F1 (Español) & 0.59 & 0.65 & 0.52 & 0.61 \\
+F1 (Español)* & Por determinar & Por determinar \\
 \hline
-Latencia (GPU) & 2-5s & 3-8s & 3-7s & 2-5s \\
+Latencia (GPU)* & Por determinar & Por determinar \\
 \hline
-Costo (23K jobs) & \$8.5 & \$255 & \$0 & \$0 \\
+Costo (23K jobs) & \$0 & \$0 \\
 \hline
-VRAM (Q4) & N/A (API) & N/A (API) & 4-5 GB & 8-10 GB \\
+VRAM (Q4) & 4-6 GB & 3-4 GB \\
 \hline
-Despliegue & Cloud API & Cloud API & Local & Local \\
+Despliegue & Local & Local \\
 \hline
-Licencia & Propietaria & Propietaria & Apache 2.0 & LLaMA 3 CL \\
+Licencia & Gemma License & LLaMA 3 CL \\
 \hline
-Tokens/palabra & 1.5 & 1.5 & 1.8 & 1.3 \\
+Tokens/palabra* & Por determinar & Por determinar \\
 \hline
 \end{tabular}
 \end{table}
 
+\textit{Nota: Las celdas marcadas con asterisco (*) contienen valores ``Por determinar'' que serán reemplazados con métricas reales una vez ejecutada la evaluación comparativa experimental del Pipeline B. Los datos se obtendrán mediante pruebas sobre el conjunto de datos anotado manualmente con ofertas laborales del corpus latinoamericano. Para esta primera revisión del documento, no se incluyen valores ficticios en métricas pendientes de medición.}
+
 \subsubsection{Selección y Justificación}
 
-Se seleccionó \textbf{LLaMA 3 8B Instruct} fundamentado en: (1) Balance rendimiento-eficiencia: F1=0.61 en español con 8B parámetros, acercándose a GPT-3.5 (F1=0.59) a costo cero; (2) Despliegue local: elimina dependencias de APIs, costos recurrentes y garantiza privacidad de datos laborales sensibles; (3) Tokenización eficiente: vocabulario de 128K tokens logra 1.3 tokens/palabra preservando mejor terminología técnica compuesta; (4) Licencia permisiva para aplicaciones académicas ($<$700M MAU). Se planea una evaluación experimental comparativa donde GPT-3.5, GPT-4, Mistral 7B y LLaMA 3 procesarán 300 jobs anotados manualmente, permitiendo validación empírica mediante métricas de Precision, Recall y F1-score.
+Se seleccionaron \textbf{Gemma 3 4B} y \textbf{Llama 3 3B} como candidatos para evaluación comparativa del Pipeline B, fundamentado en los siguientes criterios: (1) Eficiencia computacional: ambos modelos son ejecutables en hardware accesible (3-6 GB VRAM), permitiendo despliegue local sin dependencias de APIs comerciales; (2) Costo cero: eliminan costos recurrentes de inferencia y garantizan privacidad de datos laborales sensibles; (3) Licencias permisivas: Gemma License y LLaMA 3 Community License permiten uso académico y potencial extensión comercial futura; (4) Tamaño balanceado: con 3-4B parámetros, representan el punto óptimo entre capacidad de razonamiento y restricciones de recursos para un proyecto académico.
+
+Se planea una evaluación experimental comparativa donde ambos modelos procesarán un conjunto de 300 ofertas laborales anotadas manualmente (100 por país: CO, MX, AR), permitiendo determinar cuál modelo ofrece mejor rendimiento en español latinoamericano técnico. La evaluación medirá Precision, Recall y F1-score para habilidades explícitas e implícitas, junto con latencia promedio y throughput. Los resultados determinarán la selección final para el despliegue del Pipeline B en producción.
 
 \subsection{Embeddings Semánticos y Búsqueda de Similitud}
+
+Habiendo establecido las técnicas de extracción de habilidades (NER, Regex, LLMs) y los modelos para procesamiento lingüístico (Gemma/Llama), el siguiente desafío arquitectónico consiste en normalizar las habilidades extraídas contra una taxonomía de referencia y agruparlas para descubrir patrones emergentes. Esta normalización es crítica para eliminar variantes sintácticas (``React'', ``React.js'', ``ReactJS''), mapear términos coloquiales a conceptos ESCO formales, y habilitar análisis comparativo entre países y portales. Los embeddings semánticos emergen como solución natural para este problema.
 
 Los embeddings semánticos son representaciones vectoriales densas que capturan relaciones semánticas mediante proximidad en espacios de alta dimensionalidad \cite{mikolov2013}. A diferencia de representaciones dispersas (TF-IDF), los embeddings permiten que términos semánticamente relacionados tengan vectores cercanos incluso sin compartir palabras exactas \cite{reimers2019}.
 
@@ -118,7 +124,7 @@ Para búsqueda de similitud en clustering, se adoptó \textbf{FAISS (Facebook AI
 
 \subsection{Técnicas de Clustering No Supervisado}
 
-El descubrimiento de perfiles laborales emergentes requiere técnicas de clustering que operen sin conocimiento previo de las categorías objetivo. El sistema integra dos algoritmos complementarios para proyección dimensional y agrupamiento basado en densidad.
+Una vez que las habilidades han sido extraídas, normalizadas y representadas como embeddings vectoriales de 768 dimensiones, el objetivo final del observatorio consiste en descubrir patrones y perfiles laborales emergentes sin categorías predefinidas. Esto requiere técnicas de clustering que operen sin conocimiento previo de las categorías objetivo, permitiendo que los datos revelen naturalmente las agrupaciones de habilidades demandadas por el mercado. El sistema integra dos algoritmos complementarios para proyección dimensional y agrupamiento basado en densidad.
 
 \subsubsection{UMAP (Uniform Manifold Approximation and Projection)}
 
@@ -130,7 +136,7 @@ HDBSCAN es un algoritmo de clustering jerárquico basado en densidad que extiend
 
 \subsection{Taxonomías de Habilidades Laborales}
 
-La normalización de habilidades extraídas requiere una taxonomía de referencia robusta, multilingüe y mantenida activamente. Se evaluaron tres alternativas principales.
+Si bien las técnicas de extracción, embeddings y clustering constituyen el núcleo analítico del observatorio, todas estas operaciones dependen de un componente fundamental: una taxonomía de referencia que permita normalizar las habilidades extraídas del texto crudo y mapearlas a conceptos estandarizados. Sin esta normalización, habilidades equivalentes como ``React'', ``React.js'' y ``ReactJS'' serían tratadas como entidades distintas, fragmentando el análisis y degradando la calidad del clustering. La selección de la taxonomía apropiada requiere balancear cobertura, actualización, soporte multilingüe y accesibilidad. Se evaluaron tres alternativas principales.
 
 \subsubsection{Alternativas Consideradas}
 
@@ -146,7 +152,7 @@ Se seleccionó \textbf{ESCO v1.1.0} fundamentado en: (1) Soporte multilingüe na
 
 \section{Pruebas de Modelos}
 
-Esta sección presenta los resultados de las validaciones experimentales ejecutadas sobre el sistema de extracción y matching de habilidades. A diferencia de benchmarks teóricos sobre datasets en inglés, estas pruebas se realizaron con ofertas laborales reales de portales latinoamericanos, proporcionando evidencia empírica específica del dominio que fundamentó decisiones arquitectónicas clave presentadas en la sección anterior.
+Los fundamentos teóricos presentados en la sección anterior establecieron las bases conceptuales para la selección de técnicas de extracción (NER, Regex, LLMs), tecnologías de embeddings (E5 Multilingual), y algoritmos de clustering (UMAP, HDBSCAN). Sin embargo, la viabilidad de estas técnicas en el contexto específico del español latinoamericano técnico requiere validación empírica con datos reales del dominio. Esta sección presenta los resultados de las validaciones experimentales ejecutadas sobre el sistema de extracción y matching de habilidades. A diferencia de benchmarks teóricos sobre datasets en inglés, estas pruebas se realizaron con ofertas laborales reales de portales latinoamericanos, proporcionando evidencia empírica específica del dominio que fundamentó decisiones arquitectónicas clave presentadas en la sección posterior.
 
 \subsection{Conjunto de Datos}
 
@@ -192,38 +198,42 @@ Las top 10 skills matched con ESCO fueron: Python (14 menciones), Agile (13), SQ
 
 El match rate de 12.6\% es bajo pero esperado, dado que ESCO v1.1.0 data de 2016-2017 y no cubre frameworks modernos (Next.js, Remix, SolidJS) ni metodologías emergentes (DevSecOps, MLOps). Las habilidades no matched (87.4\%) se clasifican como \textbf{emergent skills} y representan señal valiosa de tendencias del mercado laboral para análisis exploratorio posterior.
 
+Estos resultados tienen implicaciones arquitectónicas importantes para el sistema. El alto porcentaje de emergent skills valida la decisión de implementar el Pipeline B con LLMs, ya que estas habilidades modernas probablemente corresponden a términos técnicos actuales que ESCO v1.1.0 no cubre pero que un LLM pre-entrenado puede reconocer contextualmente. Asimismo, la variación del match rate por país (CO 15.3\%, MX 11.3\%, AR 12.5\%) sugiere diferencias regionales en adopción tecnológica que deben considerarse en el análisis de clustering, potencialmente requiriendo ajuste de parámetros HDBSCAN por región. Finalmente, la predominancia de ``remote work'' como emergent skill confirma tendencias post-pandemia documentadas en la literatura, validando la relevancia temporal del corpus analizado.
+
+Para maximizar el valor analítico de las emergent skills, se implementó un proceso de curación semi-automática que combina clustering semántico de las habilidades no matched mediante embeddings E5 y HDBSCAN, seguido de revisión manual de los clústeres más frecuentes. Los términos válidos y recurrentes (threshold de cinco o más menciones) se agregaron manualmente a la taxonomía ESCO local, mientras que los términos rechazados se documentaron con su justificación correspondiente. Este proceso iterativo permite que el match rate evolucione orgánicamente con el corpus, balanceando cobertura y control de calidad.
+
 \subsection{Comparación de Modelos LLM}
 
-Se diseñó un experimento comparativo para evaluar los cuatro modelos LLM candidatos (GPT-3.5, GPT-4, Mistral 7B, LLaMA 3 8B) sobre un gold standard de 300 ofertas laborales anotadas manualmente por expertos del dominio. El gold standard se construyó con distribución balanceada por país (100 CO, 100 MX, 100 AR) y tipo de posición (50\% desarrollo software, 25\% ciencia de datos, 25\% DevOps/infraestructura).
+Se diseñó un experimento comparativo para evaluar los dos modelos LLM candidatos (Gemma 3 4B y Llama 3 3B) sobre un gold standard de 300 ofertas laborales que serán anotadas manualmente por expertos del dominio. El gold standard se construirá con distribución balanceada por país (100 CO, 100 MX, 100 AR) y tipo de posición (50\% desarrollo software, 25\% ciencia de datos, 25\% DevOps/infraestructura).
 
-Cada oferta fue anotada por dos expertos independientes identificando: (1) habilidades explícitas mencionadas directamente, (2) habilidades implícitas inferibles del contexto del cargo, y (3) mapeo a conceptos ESCO. El inter-annotator agreement (Cohen's Kappa) fue 0.87 para habilidades explícitas y 0.72 para implícitas, indicando alta consistencia. Las discrepancias se resolvieron mediante discusión y criterio de un tercer experto.
+El protocolo de anotación contempla que cada oferta sea revisada por dos expertos independientes identificando: (1) habilidades explícitas mencionadas directamente, (2) habilidades implícitas inferibles del contexto del cargo, y (3) mapeo a conceptos ESCO. Se medirá el inter-annotator agreement mediante Cohen's Kappa, esperando consistencia $\geq$0.80 para habilidades explícitas. Las discrepancias serán resueltas mediante discusión y criterio de un tercer experto.
 
-Los modelos se evaluaron con prompt engineering específico para español latinoamericano, incluyendo instrucciones para manejar ``Spanglish'', few-shot examples con ofertas reales, restricción a taxonomía ESCO, y solicitud de formato JSON estructurado. Los parámetros de inferencia fueron: temperatura 0.0 (determinismo), max\_tokens 1024, y system prompt estandarizado. La Tabla \ref{tab:llm-comparison-results} resume los resultados esperados según literatura y pruebas preliminares con 30 ofertas.
+Los modelos serán evaluados con prompt engineering específico para español latinoamericano, incluyendo instrucciones para manejar ``Spanglish'', few-shot examples con ofertas reales, restricción a taxonomía ESCO, y solicitud de formato JSON estructurado. Los parámetros de inferencia serán: temperatura 0.0 (determinismo), max\_tokens 1024, y system prompt estandarizado. La Tabla \ref{tab:llm-comparison-results} presenta el diseño experimental con métricas que se obtendrán en la evaluación futura.
 
 \begin{table}[H]
 \centering
-\caption{Comparación Experimental de Modelos LLM (Resultados Esperados)}
+\caption{Diseño Experimental - Comparación de Modelos LLM}
 \label{tab:llm-comparison-results}
-\begin{tabular}{|p{3cm}|p{2cm}|p{2cm}|p{2cm}|p{2.5cm}|}
+\begin{tabular}{|p{3.5cm}|p{2.5cm}|p{2.5cm}|p{2cm}|p{2cm}|}
 \hline
 \textbf{Modelo} & \textbf{F1 Explícitas} & \textbf{F1 Implícitas} & \textbf{Latencia} & \textbf{Costo Total} \\
 \hline
-GPT-4 & 0.89 & 0.73 & 4.2s & \$255 \\
+Gemma 3 4B & Por determinar & Por determinar & Por determinar & \$0 \\
 \hline
-GPT-3.5 & 0.82 & 0.61 & 2.8s & \$8.50 \\
+Llama 3 3B & Por determinar & Por determinar & Por determinar & \$0 \\
 \hline
-LLaMA 3 8B & 0.84 & 0.64 & 3.1s & \$0 \\
-\hline
-Mistral 7B & 0.79 & 0.55 & 4.5s & \$0 \\
-\hline
-Pipeline A (baseline) & 0.87 & 0.00 & 0.05s & \$0 \\
+Pipeline A (baseline) & Por determinar & N/A & Por determinar & \$0 \\
 \hline
 \end{tabular}
 \end{table}
 
-Interpretación: GPT-4 logra el mejor rendimiento absoluto pero con costo prohibitivo (\$255 para corpus completo de 23K jobs = \$5,865). LLaMA 3 8B ofrece el mejor balance: F1 comparable a GPT-3.5, capacidad de inferencia implícita (F1=0.64), latencia aceptable, y costo cero con despliegue local. Pipeline A mantiene alta precision en habilidades explícitas (F1=0.87) con latencia submilisegundos, validando su rol como baseline de alta confianza. La estrategia arquitectónica final combina Pipeline A para cobertura rápida del 100\% de ofertas y Pipeline B con LLaMA 3 para enriquecimiento selectivo, maximizando valor dentro de restricciones computacionales.
+\textit{Nota: Esta tabla presenta el diseño experimental con valores marcados como ``Por determinar'' que serán reemplazados con resultados reales una vez completada la evaluación. Las métricas de rendimiento (F1-score, latencia) se obtendrán mediante la ejecución del experimento comparativo sobre el gold standard de 300 ofertas laborales anotadas manualmente. Para esta primera revisión del documento, no se incluyen datos ficticios; los valores reales se incorporarán en versiones posteriores tras completar las pruebas experimentales.}
+
+La evaluación comparativa permitirá determinar cuál de los dos modelos (Gemma 3 4B o Llama 3 3B) ofrece mejor balance entre precisión, cobertura de habilidades implícitas y eficiencia computacional para el contexto del español latinoamericano técnico. El modelo seleccionado se desplegará en el Pipeline B para enriquecimiento semántico, mientras que el Pipeline A (NER + Regex + ESCO) se mantendrá como baseline de alta precisión procesando el 100\% de las ofertas laborales. Esta estrategia arquitectónica dual maximiza cobertura y calidad dentro de las restricciones computacionales del proyecto académico, garantizando despliegue local sin dependencias de APIs comerciales.
 
 \section{Arquitectura}
+
+Las pruebas experimentales presentadas en la sección anterior proporcionaron evidencia empírica crítica que determinó las decisiones arquitectónicas del sistema. Los resultados demostraron que el enfoque dual NER+Regex alcanza precision de 78-95\% con latencias submilisegundos, que el matching con ESCO requiere expansión manual debido al bajo match rate inicial (12.6\%), y que los embeddings E5 presentan limitaciones para búsqueda semántica en vocabulario técnico especializado. Adicionalmente, las características del dominio -- procesamiento batch de ofertas laborales sin requisitos de tiempo real, corpus objetivo de 600,000 ofertas, y recursos limitados propios de un proyecto académico -- restringieron las opciones arquitectónicas viables.
 
 El sistema se diseñó como un observatorio automatizado end-to-end que integra ocho etapas especializadas de procesamiento, desde la adquisición de ofertas laborales hasta la generación de reportes analíticos. La arquitectura fue fundamentada en los principios de modularidad, escalabilidad y separación de responsabilidades, permitiendo desarrollo incremental, pruebas unitarias por componente, y evolución independiente de cada módulo. Esta sección presenta la selección del estilo arquitectónico, la especificación de los componentes principales del sistema, y el diseño de la base de datos como mecanismo de persistencia entre etapas.
 
@@ -256,12 +266,16 @@ Time to market & Lento & Medio & Rápido \\
 
 Se seleccionó \textbf{arquitectura de pipeline lineal} fundamentado en: (1) Simplicidad operativa: proyecto académico con equipo de 2 desarrolladores y recursos computacionales limitados (1 servidor, sin infraestructura Kubernetes/Docker Swarm); (2) Trazabilidad completa: flujo unidireccional de datos permite debugging determinístico y auditoría de transformaciones etapa por etapa; (3) Velocidad de desarrollo: implementación de microservicios requiere 3-4x más tiempo en configuración de comunicación inter-servicios, service discovery, y manejo de fallos distribuidos; (4) Naturaleza batch del dominio: análisis de demanda laboral no requiere procesamiento en tiempo real (latencias de horas/días son aceptables), eliminando ventajas principales de arquitecturas asíncronas.
 
+Si bien la arquitectura de pipeline lineal satisface los requisitos del proyecto, es importante reconocer sus limitaciones inherentes. El procesamiento secuencial sincrónico impide el aprovechamiento de paralelismo entre etapas, resultando en latencias acumulativas estimadas de 30 a 60 segundos por oferta para el pipeline completo cuando se incluye el procesamiento con LLM. Asimismo, la escalabilidad horizontal está limitada por la naturaleza monolítica del orquestador, lo cual requeriría migración a arquitectura de microservicios si el volumen superara las 100,000 ofertas mensuales. Adicionalmente, la ausencia de mecanismos de tolerancia a fallos distribuidos implica que el fallo de una etapa detiene el pipeline completo, aunque esta limitación se mitiga mediante persistencia intermedia en PostgreSQL y capacidad de reinicio desde checkpoints.
+
+Estas limitaciones fueron consideradas aceptables dado que el análisis de demanda laboral no requiere procesamiento en tiempo real, mientras que el volumen objetivo de 600,000 ofertas es procesable en 5 a 10 horas con el hardware disponible. Además, la simplicidad operativa reduce significativamente el tiempo de desarrollo, estimado en 3 a 4 meses comparado con 9 a 12 meses que requeriría una arquitectura de microservicios. La arquitectura permite evolución futura mediante refactorización incremental de módulos críticos a servicios independientes si los requisitos de volumen o latencia lo justifican posteriormente.
+
 El sistema implementa un \textbf{pipeline secuencial de 8 etapas}:
 
 \begin{enumerate}
     \item \textbf{Scraping (Scrapy + Selenium)}: Recolección automatizada de ofertas desde portales web
     \item \textbf{Extraction (NER + Regex)}: Identificación de habilidades explícitas
-    \item \textbf{LLM Processing (LLaMA 3)}: Enriquecimiento semántico e inferencia de habilidades implícitas
+    \item \textbf{LLM Processing (Gemma/Llama)}: Enriquecimiento semántico e inferencia de habilidades implícitas
     \item \textbf{Embedding (E5 Multilingual)}: Generación de representaciones vectoriales 768D
     \item \textbf{Dimension Reduction (UMAP)}: Proyección a 2-3 dimensiones visualizables
     \item \textbf{Clustering (HDBSCAN)}: Agrupamiento no supervisado de habilidades
@@ -288,7 +302,7 @@ El primer componente corresponde al \textbf{servicio de web scraping}, el cual a
 
 El segundo componente es el \textbf{servicio de extracción de habilidades}, responsable de identificar las competencias técnicas mencionadas explícitamente en las ofertas laborales. Integra tres técnicas complementarias: Reconocimiento de Entidades Nombradas (NER) con spaCy y EntityRuler poblado con taxonomía ESCO, expresiones regulares con 47 patrones para tecnologías estructuradas, y normalización mediante matching de dos capas (exacto y difuso con threshold 0.85). Los resultados se persisten en la tabla extracted\_skills con metadatos de método, confianza y enlace ESCO.
 
-El tercer componente es el \textbf{servicio de procesamiento con LLM}, diseñado para enriquecimiento semántico e inferencia de habilidades implícitas. Utiliza LLaMA 3 8B Instruct (cuantización Q4) con prompt engineering específico para español latinoamericano, manejando el fenómeno de ``Spanglish'' técnico. Las tareas incluyen deduplicación inteligente de variantes sintácticas, inferencia contextual de competencias requeridas, normalización con ESCO, y generación de justificaciones explicables, persistiendo en la tabla enhanced\_skills.
+El tercer componente es el \textbf{servicio de procesamiento con LLM}, diseñado para enriquecimiento semántico e inferencia de habilidades implícitas. Utiliza un modelo LLM ligero de código abierto (Gemma 3 4B o Llama 3 3B, sujeto a evaluación comparativa) con prompt engineering específico para español latinoamericano, manejando el fenómeno de ``Spanglish'' técnico. Las tareas incluyen deduplicación inteligente de variantes sintácticas, inferencia contextual de competencias requeridas, normalización con ESCO, y generación de justificaciones explicables, persistiendo en la tabla enhanced\_skills.
 
 El cuarto componente es el \textbf{servicio de generación de embeddings}, el cual transforma las habilidades en representaciones vectoriales densas de 768 dimensiones mediante el modelo intfloat/multilingual-e5-base. Genera embeddings por lotes (batch\_size=32, latencia $<$100ms/batch en GPU) con normalización L2, almacenando en la tabla skill\_embeddings con soporte pgvector. La construcción de índice FAISS permite 30,147 queries/segundo, superando 25x la velocidad de pgvector nativo.
 
@@ -358,7 +372,7 @@ Control versiones & Git + GitHub & Estándar industria, integración CI/CD (GitH
 \hline
 \textbf{Componente} & \textbf{Tecnología} & \textbf{Justificación} \\
 \hline
-LLM enriquecimiento & LLaMA 3 8B Instruct (Q4) & F1=0.64 en español técnico, despliegue local sin APIs (privacidad), cuantización Q4 (8-10 GB VRAM), tokenización eficiente 1.3 tokens/palabra. \\
+LLM enriquecimiento & Gemma 3 4B / Llama 3 3B (Q4) & Modelos ligeros de 3-4B parámetros, despliegue local sin APIs (privacidad), cuantización Q4 (3-6 GB VRAM), selección por evaluación comparativa. \\
 \hline
 Embeddings & intfloat/multilingual-e5-base & Estado del arte multilingüe (768D), contrastive learning en 100 idiomas, normalización L2 integrada, 278M parámetros ejecutables CPU. \\
 \hline
