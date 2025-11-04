@@ -1,0 +1,46 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Visión global}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Antecedentes, problema y solución propuesta}{3}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Descripción de la problemática u oportunidad}{3}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Formulación del problema}{3}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Propuesta de solución}{4}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}Justificación de la solución}{5}{subsection.1.1.4}%
+\contentsline {section}{\numberline {1.2}Descripción general del proyecto}{5}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Objetivo general}{5}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Objetivos Específicos}{5}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}Entregables, estándares utilizados y justificación}{5}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Análisis de impacto}{7}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Proceso}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Fase metodológica 1 - Diseño y arquitectura}{9}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Método}{9}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Actividades}{9}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Resultados esperados}{9}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Fase metodológica 2 - Extracción de ofertas laborales}{10}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Método}{10}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Actividades}{10}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Resultados esperados}{10}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Fase metodológica 3 - Procesamiento y análisis semántico}{10}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Método}{10}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Actividades}{11}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Resultados esperados}{11}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Fase metodológica 4 - Segmentación de perfiles laborales}{11}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Método}{11}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Actividades}{11}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Resultados esperados}{12}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}Fase metodológica 5 - Validación técnica y visualización macro}{12}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Método}{12}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Actividades}{12}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Resultados esperados}{12}{subsection.3.5.3}%
+\contentsline {section}{\numberline {3.6}Fase metodológica 6 - Documentación y guía metodológica}{13}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Método}{13}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Actividades}{13}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Resultados esperados}{13}{subsection.3.6.3}%
+\contentsline {chapter}{\numberline {4}Aspectos generales del proyecto}{14}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Compromiso de apoyo de la Institución}{14}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Derechos patrimoniales}{14}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Marco teórico}{15}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Fundamentos y conceptos relevantes para el proyecto}{15}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Análisis de alternativas de solución}{18}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Alternativas de solución e impacto}{19}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Comparación de alternativas}{24}{subsection.5.2.2}%
+\contentsline {chapter}{BIBLIOGRAFÍA}{27}{chapter*.1}%

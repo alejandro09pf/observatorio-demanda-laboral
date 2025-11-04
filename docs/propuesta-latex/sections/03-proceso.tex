@@ -1,0 +1,150 @@
+\chapter{Proceso}
+
+Este proyecto de grado adopta una estrategia metodológica mixta inspirada en el modelo CRISP-DM y en prácticas ágiles derivadas de Scrum. En lugar de aplicar estos marcos de manera estricta, se toma de CRISP-DM la lógica iterativa por fases encadenadas, desde la comprensión del dominio hasta la validación y documentación, mientras que de Scrum se retoman prácticas de revisión incremental y planificación flexible por semanas de trabajo. El enfoque favorece un desarrollo modular, adaptable y basado en resultados verificables, articulando técnicas de scraping, procesamiento de lenguaje natural, embeddings semánticos, clustering y validación de resultados.
+
+\section{Fase metodológica 1 - Diseño y arquitectura}
+
+\subsection{Método}
+
+Esta fase se basa en el paso de comprensión del negocio de CRISP-DM y en el inicio de un primer sprint de planificación según Scrum. Se enfoca en el análisis extensivo del estado del arte y en la definición conceptual y técnica del sistema a construir. Se realiza una revisión crítica de estudios previos, tecnologías disponibles y taxonomías laborales existentes (como ESCO o CIUO) para seleccionar las herramientas y flujos más adecuados para el contexto latinoamericano (Colombia, México y Argentina). Paralelamente, se inician los primeros módulos de documentación estructurada (guía metodológica, esquema de arquitectura) que serán alimentados en cada fase.
+
+\subsection{Actividades}
+
+\begin{itemize}
+    \item Revisión crítica y sistemática del estado del arte (papers, benchmarks, pipelines existentes).
+    \item Definición de módulos y flujos de datos (scraping, NLP, embeddings, clustering, validación).
+    \item Selección preliminar de tecnologías, modelos pre entrenados y fuentes de datos.
+    \item Diseño del pipeline general y planificación por iteraciones.
+    \item Inicio de la documentación UML y del repositorio metodológico.
+\end{itemize}
+
+\subsection{Resultados esperados}
+
+\begin{itemize}
+    \item Diagrama del sistema propuesto (pipeline modular).
+    \item Lista de portales de empleo seleccionados y características técnicas de acceso.
+    \item Decisión justificada de tecnologías y taxonomías a utilizar.
+    \item Documento metodológico inicial con justificación de diseño y planificación preliminar.
+\end{itemize}
+
+\section{Fase metodológica 2 - Extracción de ofertas laborales}
+
+\subsection{Método}
+
+Inspirado en la fase de recolección de datos de CRISP-DM, esta fase implementa un sistema de scraping automatizado de portales de empleo relevantes en español (como elempleo.com, Bumeran, Computrabajo). Se aprovechan herramientas como Scrapy y Selenium para capturar datos dinámicos de forma robusta. Desde Scrum se aplica una lógica de entrega continua, con iteraciones de prueba para validar la estabilidad de los spiders y ajustar el crawler por portal.
+
+\subsection{Actividades}
+
+\begin{itemize}
+    \item Implementación de spiders con Scrapy + fallback con Selenium para contenido dinámico.
+    \item Extracción de datos clave: título, descripción, ubicación, modalidad, requisitos.
+    \item Normalización básica de campos y almacenamiento en base de datos estructurada.
+    \item Validación de calidad del scraping (frecuencia de actualización, duplicados, errores).
+    \item Registro continuo de avances en la documentación metodológica.
+\end{itemize}
+
+\subsection{Resultados esperados}
+
+\begin{itemize}
+    \item Base de datos actualizada con vacantes recolectadas de los tres países objetivo.
+    \item Spiders funcionales y adaptables a cambios de formato por portal.
+    \item Informe de scraping con cobertura, precisión y errores detectados.
+    \item Revisión de licitud y ética del scraping conforme a estándares locales.
+\end{itemize}
+
+\section{Fase metodológica 3 - Procesamiento y análisis semántico}
+
+\subsection{Método}
+
+Corresponde a la fase de preparación de los datos y modelado en CRISP-DM. En esta etapa se realizan tareas de extracción de habilidades explícitas e implícitas usando un enfoque híbrido: se combinan técnicas clásicas de NER adaptado al dominio laboral en español con razonamiento semántico vía LLMs en modo few-shot. La fase incorpora un proceso de normalización de términos basado en taxonomías estandarizadas (como ESCO), aplicadas en el idioma original sin traducción previa. A través de actividades similares a los sprints de Scrum, se permite iterar sobre los modelos y prompts hasta alcanzar resultados robustos.
+
+\subsection{Actividades}
+
+\begin{itemize}
+    \item Aplicación de NER entrenado o adaptado al dominio laboral en español.
+    \item Curación y ajuste de regex específicas para secciones clave (requisitos, funciones).
+    \item Implementación de prompts few-shot en LLMs (GPT, LLaMA, Claude) para detección implícita.
+    \item Validación y filtrado de habilidades mediante taxonomías laborales estandarizadas.
+    \item Documentación de los prompts, razonamientos y mejoras obtenidas.
+\end{itemize}
+
+\subsection{Resultados esperados}
+
+\begin{itemize}
+    \item Corpus anotado automáticamente con habilidades por vacante.
+    \item Registro de habilidades explícitas (vía NER) e implícitas (vía LLM).
+    \item Vocabulario laboral multilingüe alineado a taxonomías como ESCO o CIUO.
+    \item Informe de cobertura y rendimiento de los métodos de extracción utilizados.
+\end{itemize}
+
+\section{Fase metodológica 4 - Segmentación de perfiles laborales}
+
+\subsection{Método}
+
+Inspirado en la fase de modelado y análisis de CRISP-DM, esta etapa consiste en representar semánticamente las habilidades detectadas y agruparlas en perfiles o clústeres funcionales. Se utilizan embeddings multilingües (como BETO, LaBSE o E5), reducción de dimensionalidad con UMAP y clustering con HDBSCAN. No se realizan visualizaciones aún; el objetivo es estructurar internamente los grupos y patrones emergentes para su posterior evaluación.
+
+\subsection{Actividades}
+
+\begin{itemize}
+    \item Vectorización de habilidades mediante modelos multilingües preentrenados.
+    \item Reducción de dimensionalidad con UMAP para preservar relaciones semánticas.
+    \item Aplicación de HDBSCAN para identificación de grupos latentes de perfiles laborales.
+    \item Revisión y depuración de clusters generados (eliminación de ruido, interpretación manual inicial).
+    \item Actualización de la documentación con resultados intermedios.
+\end{itemize}
+
+\subsection{Resultados esperados}
+
+\begin{itemize}
+    \item Representación vectorial de habilidades por vacante.
+    \item Clústeres de perfiles laborales con características técnicas y semánticas diferenciadas.
+    \item Informe técnico sobre la estabilidad, coherencia e interpretabilidad de los agrupamientos.
+\end{itemize}
+
+\section{Fase metodológica 5 - Validación técnica y visualización macro}
+
+\subsection{Método}
+
+Equivalente a la fase de evaluación de CRISP-DM, esta etapa se enfoca en validar la calidad de las salidas del sistema: tanto a nivel de precisión del reconocimiento de habilidades como de coherencia en los agrupamientos obtenidos. Se aplican métricas cuantitativas (precisión, recall, silhouette score) y validaciones cualitativas. Adicionalmente, se generan visualizaciones macro que permiten evaluar tendencias emergentes, sin llegar a construir dashboards interactivos.
+
+\subsection{Actividades}
+
+\begin{itemize}
+    \item Evaluación de los resultados de extracción con muestras revisadas manualmente.
+    \item Cálculo de métricas para los clusters (densidad, separación, coherencia).
+    \item Generación de visualizaciones macro estáticas (por frecuencia, temporalidad, distribución regional).
+    \item Revisión crítica con usuarios técnicos (Profesores, revisores) para retroalimentación.
+    \item Registro de hallazgos, mejoras y limitaciones detectadas.
+\end{itemize}
+
+\subsection{Resultados esperados}
+
+\begin{itemize}
+    \item Reporte técnico de validación con métricas y gráficos interpretables.
+    \item Visualizaciones macro de perfiles, habilidades, y patrones relevantes.
+    \item Justificación del valor informativo del sistema construido.
+\end{itemize}
+
+\section{Fase metodológica 6 - Documentación y guía metodológica}
+
+\subsection{Método}
+
+Inspirada en la fase final de despliegue de CRISP-DM, esta etapa compila todo el conocimiento generado en las fases anteriores y estructura una guía metodológica que permita replicar, adaptar o escalar el sistema en otros contextos. Se produce documentación técnica, análisis de replicabilidad, y propuestas de mejora futura.
+
+\subsection{Actividades}
+
+\begin{itemize}
+    \item Consolidación de resultados técnicos por fase.
+    \item Estructuración de la guía metodológica completa del observatorio.
+    \item Elaboración de anexos: scripts, configuraciones, prompts, logs de scraping, visualizaciones.
+    \item Preparación del entregable final para sustentación.
+    \item Revisión general con enfoque en claridad, replicabilidad y escalabilidad.
+\end{itemize}
+
+\subsection{Resultados esperados}
+
+\begin{itemize}
+    \item Documento técnico y guía metodológica del sistema desarrollado.
+    \item Repositorio estructurado con código y recursos.
+    \item Validación interna del sistema como solución replicable en Latinoamérica.
+\end{itemize}

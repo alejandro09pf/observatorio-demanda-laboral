@@ -1,0 +1,524 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{aguilera2018}{article}{}
+      \name{author}{2}{}{%
+        {{hash=2c594860741b196834f5f8cf0ce6d463}{%
+           family={Aguilera},
+           familyi={A\bibinitperiod},
+           given={S.\bibnamedelimi O.},
+           giveni={S\bibinitperiod\bibinitdelim O\bibinitperiod}}}%
+        {{hash=98f9adda52f7c48d1e93523076302153}{%
+           family={Méndez},
+           familyi={M\bibinitperiod},
+           given={R.\bibnamedelimi E.},
+           giveni={R\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{38879cd3c291b2e682a338f0e6761015}
+      \strng{fullhash}{38879cd3c291b2e682a338f0e6761015}
+      \strng{bibnamehash}{38879cd3c291b2e682a338f0e6761015}
+      \strng{authorbibnamehash}{38879cd3c291b2e682a338f0e6761015}
+      \strng{authornamehash}{38879cd3c291b2e682a338f0e6761015}
+      \strng{authorfullhash}{38879cd3c291b2e682a338f0e6761015}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Revista Perspectivas}
+      \field{number}{1}
+      \field{title}{¿Qué buscan los que buscan? Análisis De mercado laboral IT en Argentina}
+      \field{volume}{1}
+      \field{year}{2018}
+      \field{pages}{15\bibrangedash 30}
+      \range{pages}{16}
+      \verb{urlraw}
+      \verb https://revistas.ub.edu.ar/index.php/Perspectivas/article/view/39
+      \endverb
+      \verb{url}
+      \verb https://revistas.ub.edu.ar/index.php/Perspectivas/article/view/39
+      \endverb
+    \endentry
+    \entry{cardenas2015}{report}{}
+      \name{author}{3}{}{%
+        {{hash=4fcb40d6bb35bd08edae8a5834639069}{%
+           family={Cárdenas\bibnamedelima Rubio},
+           familyi={C\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={J.\bibnamedelimi A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=f99bc662629f677df7c5f374f38c2a03}{%
+           family={Guataquí\bibnamedelima Roa},
+           familyi={G\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={J.\bibnamedelimi C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=4d418a8c5eeb0dd6f6dcad2fca9dc1a8}{%
+           family={Montaña\bibnamedelima Doncel},
+           familyi={M\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={J.\bibnamedelimi M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Organización Internacional del Trabajo / CINTERFOR}%
+      }
+      \strng{namehash}{b834eca59a5bb1dd16c17c658a176267}
+      \strng{fullhash}{08610958c6c4480ac36100c3b29e1315}
+      \strng{bibnamehash}{08610958c6c4480ac36100c3b29e1315}
+      \strng{authorbibnamehash}{08610958c6c4480ac36100c3b29e1315}
+      \strng{authornamehash}{b834eca59a5bb1dd16c17c658a176267}
+      \strng{authorfullhash}{08610958c6c4480ac36100c3b29e1315}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Metodología para el análisis de demanda laboral mediante datos de internet: caso Colombia}
+      \field{type}{Informe técnico}
+      \field{year}{2015}
+      \verb{urlraw}
+      \verb https://www.oitcinterfor.org/sites/default/files/file_publicacion/Metodolog%C3%ADa%20An%C3%A1lisis%20Demanda%20Laboral%20Mediante%20Datos%20Internet%20caso%20Colombia.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.oitcinterfor.org/sites/default/files/file_publicacion/Metodolog%C3%ADa%20An%C3%A1lisis%20Demanda%20Laboral%20Mediante%20Datos%20Internet%20caso%20Colombia.pdf
+      \endverb
+    \endentry
+    \entry{orozco2019}{thesis}{}
+      \name{author}{2}{}{%
+        {{hash=4eb743bd9715dcf96c1a769aec121196}{%
+           family={Puello},
+           familyi={P\bibinitperiod},
+           given={Orozco},
+           giveni={O\bibinitperiod}}}%
+        {{hash=5b7f7bb3b3b68fb13c9b003891197d18}{%
+           family={Gómez\bibnamedelima Estrada},
+           familyi={G\bibinitperiod\bibinitdelim E\bibinitperiod},
+           given={L.\bibnamedelimi F.},
+           giveni={L\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Universidad del Sinú Elías Bechara Zainúm, Seccional Cartagena, Facultad de Ciencias Exactas e Ingenierías, Escuela de Ingeniería de Sistemas}%
+      }
+      \strng{namehash}{f876cb7aab0a63f7077b97aff45a3353}
+      \strng{fullhash}{f876cb7aab0a63f7077b97aff45a3353}
+      \strng{bibnamehash}{f876cb7aab0a63f7077b97aff45a3353}
+      \strng{authorbibnamehash}{f876cb7aab0a63f7077b97aff45a3353}
+      \strng{authornamehash}{f876cb7aab0a63f7077b97aff45a3353}
+      \strng{authorfullhash}{f876cb7aab0a63f7077b97aff45a3353}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Proyecto de Grado {II} -- Web Scraping}
+      \field{type}{Trabajo de grado}
+      \field{year}{2019}
+      \verb{urlraw}
+      \verb http://repositorio.unisinucartagena.edu.co:8080/jspui/bitstream/123456789/94/1/1.%20Proyecto%20de%20Grado%20II%20-%20WEB%20SCRAPING_FINAL.pdf
+      \endverb
+      \verb{url}
+      \verb http://repositorio.unisinucartagena.edu.co:8080/jspui/bitstream/123456789/94/1/1.%20Proyecto%20de%20Grado%20II%20-%20WEB%20SCRAPING_FINAL.pdf
+      \endverb
+    \endentry
+    \entry{rubio2024}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=29818dc5ac9b0512255d9b0e892820dc}{%
+           family={Rubio\bibnamedelima Arrubla},
+           familyi={R\bibinitperiod\bibinitdelim A\bibinitperiod},
+           given={J.\bibnamedelimi A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Universidad de los Andes}%
+      }
+      \strng{namehash}{29818dc5ac9b0512255d9b0e892820dc}
+      \strng{fullhash}{29818dc5ac9b0512255d9b0e892820dc}
+      \strng{bibnamehash}{29818dc5ac9b0512255d9b0e892820dc}
+      \strng{authorbibnamehash}{29818dc5ac9b0512255d9b0e892820dc}
+      \strng{authornamehash}{29818dc5ac9b0512255d9b0e892820dc}
+      \strng{authorfullhash}{29818dc5ac9b0512255d9b0e892820dc}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Demanda de habilidades tecnológicas: evidencia desde el mercado laboral colombiano}
+      \field{type}{Tesis de maestría}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://repositorio.uniandes.edu.co/server/api/core/bitstreams/ea4ea129-d35e-498c-aa46-028e3d8ffb5e/content
+      \endverb
+      \verb{url}
+      \verb https://repositorio.uniandes.edu.co/server/api/core/bitstreams/ea4ea129-d35e-498c-aa46-028e3d8ffb5e/content
+      \endverb
+    \endentry
+    \entry{martinez2024}{article}{}
+      \name{author}{1}{}{%
+        {{hash=78b87db5a39c17a9203ab78c129717ea}{%
+           family={Martínez\bibnamedelima Sánchez},
+           familyi={M\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={J.\bibnamedelimi C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{78b87db5a39c17a9203ab78c129717ea}
+      \strng{fullhash}{78b87db5a39c17a9203ab78c129717ea}
+      \strng{bibnamehash}{78b87db5a39c17a9203ab78c129717ea}
+      \strng{authorbibnamehash}{78b87db5a39c17a9203ab78c129717ea}
+      \strng{authornamehash}{78b87db5a39c17a9203ab78c129717ea}
+      \strng{authorfullhash}{78b87db5a39c17a9203ab78c129717ea}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Revista del INEGI}
+      \field{title}{Desajuste en el mercado laboral: análisis de los perfiles de candidatos y las ofertas de trabajo publicadas en internet}
+      \field{volume}{44}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://rde.inegi.org.mx/wp-content/uploads/2024/pdf/RDE44/RDE44_art01.pdf
+      \endverb
+      \verb{url}
+      \verb https://rde.inegi.org.mx/wp-content/uploads/2024/pdf/RDE44/RDE44_art01.pdf
+      \endverb
+    \endentry
+    \entry{campos2024}{article}{}
+      \name{author}{2}{}{%
+        {{hash=b643cf84831b333686ee342eb74f49cc}{%
+           family={Campos-Vázquez},
+           familyi={C\bibinithyphendelim V\bibinitperiod},
+           given={R.\bibnamedelimi M.},
+           giveni={R\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=78b87db5a39c17a9203ab78c129717ea}{%
+           family={Martínez\bibnamedelima Sánchez},
+           familyi={M\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={J.\bibnamedelimi C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{2f462d8b07f5eefa3cab96c629995352}
+      \strng{fullhash}{2f462d8b07f5eefa3cab96c629995352}
+      \strng{bibnamehash}{2f462d8b07f5eefa3cab96c629995352}
+      \strng{authorbibnamehash}{2f462d8b07f5eefa3cab96c629995352}
+      \strng{authornamehash}{2f462d8b07f5eefa3cab96c629995352}
+      \strng{authorfullhash}{2f462d8b07f5eefa3cab96c629995352}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Estudios Económicos De El Colegio De México}
+      \field{number}{2}
+      \field{title}{Skills sought by companies in the Mexican labor market: An analysis of online job vacancies}
+      \field{volume}{39}
+      \field{year}{2024}
+      \field{pages}{243\bibrangedash 278}
+      \range{pages}{36}
+      \verb{urlraw}
+      \verb https://estudioseconomicos.colmex.mx/index.php/economicos/article/view/452/619
+      \endverb
+      \verb{url}
+      \verb https://estudioseconomicos.colmex.mx/index.php/economicos/article/view/452/619
+      \endverb
+    \endentry
+    \entry{lukauskas2023}{article}{}
+      \name{author}{4}{}{%
+        {{hash=ffeb71e0a92af291451283ea42dd5a00}{%
+           family={Lukauskas},
+           familyi={L\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=b67be7c3eb878ab363236877a87fe913}{%
+           family={Šarkauskaitė},
+           familyi={Š\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+        {{hash=c7bf50b8d457d9a3cf6cc8cae8d820bd}{%
+           family={Pilinkienė},
+           familyi={P\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+        {{hash=5a079dd5e76c46e2d55b691021078d4f}{%
+           family={Stundziene},
+           familyi={S\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{ae4ccc544d27f0eea90082fb5057af57}
+      \strng{fullhash}{38ea03925de32b0853e85b6217cd37fa}
+      \strng{bibnamehash}{38ea03925de32b0853e85b6217cd37fa}
+      \strng{authorbibnamehash}{38ea03925de32b0853e85b6217cd37fa}
+      \strng{authornamehash}{ae4ccc544d27f0eea90082fb5057af57}
+      \strng{authorfullhash}{38ea03925de32b0853e85b6217cd37fa}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ResearchGate}
+      \field{title}{Enhancing Skills Demand Understanding through Job Ad Segmentation Using NLP and Clustering Techniques}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://www.researchgate.net/publication/370816962
+      \endverb
+      \verb{url}
+      \verb https://www.researchgate.net/publication/370816962
+      \endverb
+    \endentry
+    \entry{nguyen2024}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=4dec59068676671f268da53d4c7c7b05}{%
+           family={Nguyen},
+           familyi={N\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod}}}%
+        {{hash=922b74338e14a4c81b03a7487c18522b}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=06f3cedd4330fa4c0813fb6ae1d5b5df}{%
+           family={Montariol},
+           familyi={M\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+        {{hash=36d04f9609ba4f2de2fc5dfee611ccbd}{%
+           family={Bosselut},
+           familyi={B\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {St. Julian's, Malta}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computational Linguistics}%
+      }
+      \strng{namehash}{44e9e90c84f5be537c9ece4a27e0ca4f}
+      \strng{fullhash}{e9c50de5b5e8bbe8b4ed427ea64bbf44}
+      \strng{bibnamehash}{e9c50de5b5e8bbe8b4ed427ea64bbf44}
+      \strng{authorbibnamehash}{e9c50de5b5e8bbe8b4ed427ea64bbf44}
+      \strng{authornamehash}{44e9e90c84f5be537c9ece4a27e0ca4f}
+      \strng{authorfullhash}{e9c50de5b5e8bbe8b4ed427ea64bbf44}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the First Workshop on Natural Language Processing for Human Resources (NLP4HR 2024)}
+      \field{title}{Rethinking Skill Extraction in the Job Market Domain using Large Language Models}
+      \field{year}{2024}
+      \field{pages}{27\bibrangedash 42}
+      \range{pages}{16}
+      \verb{urlraw}
+      \verb https://aclanthology.org/2024.nlp4hr-1.3/
+      \endverb
+      \verb{url}
+      \verb https://aclanthology.org/2024.nlp4hr-1.3/
+      \endverb
+    \endentry
+    \entry{echeverria2022}{report}{}
+      \name{author}{2}{}{%
+        {{hash=61c035d2ad7268f9430391c8c17cfcc6}{%
+           family={Echeverría},
+           familyi={E\bibinitperiod},
+           given={L.},
+           giveni={L\bibinitperiod}}}%
+        {{hash=55f9a8049bb6e8a42caafe0160289951}{%
+           family={Rucci},
+           familyi={R\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Banco Interamericano de Desarrollo}%
+      }
+      \strng{namehash}{3be6bb08c85e24953d2efe6fb58a9c3b}
+      \strng{fullhash}{3be6bb08c85e24953d2efe6fb58a9c3b}
+      \strng{bibnamehash}{3be6bb08c85e24953d2efe6fb58a9c3b}
+      \strng{authorbibnamehash}{3be6bb08c85e24953d2efe6fb58a9c3b}
+      \strng{authornamehash}{3be6bb08c85e24953d2efe6fb58a9c3b}
+      \strng{authorfullhash}{3be6bb08c85e24953d2efe6fb58a9c3b}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{¿Qué suma la ciencia de datos a la identificación y anticipación de la demanda de habilidades?}
+      \field{type}{techreport}
+      \field{year}{2022}
+      \verb{urlraw}
+      \verb https://publications.iadb.org/es/que-suma-la-ciencia-de-datos-la-identificacion-y-anticipacion-de-la-demanda-de-habilidades
+      \endverb
+      \verb{url}
+      \verb https://publications.iadb.org/es/que-suma-la-ciencia-de-datos-la-identificacion-y-anticipacion-de-la-demanda-de-habilidades
+      \endverb
+    \endentry
+    \entry{razumovskaia2024}{inproceedings}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{hash=52665e4622b9967026b1328b411466b5}{%
+           family={Razumovskaia},
+           familyi={R\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Pisa, Italia}%
+      }
+      \strng{namehash}{bd6bc99f8dc75345fdb77f074cf2165f}
+      \strng{fullhash}{bd6bc99f8dc75345fdb77f074cf2165f}
+      \strng{bibnamehash}{bd6bc99f8dc75345fdb77f074cf2165f}
+      \strng{authorbibnamehash}{bd6bc99f8dc75345fdb77f074cf2165f}
+      \strng{authornamehash}{bd6bc99f8dc75345fdb77f074cf2165f}
+      \strng{authorfullhash}{bd6bc99f8dc75345fdb77f074cf2165f}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of CLiC-it 2024}
+      \field{title}{Multilingual Skills Classification with LLMs}
+      \field{year}{2024}
+    \endentry
+    \entry{lopez2025}{inproceedings}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{hash=3d88f128888a61e2c70ecbf7ca87ca32}{%
+           family={López},
+           familyi={L\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{91af5ff7c98c9d0dbb2341154c37472c}
+      \strng{fullhash}{91af5ff7c98c9d0dbb2341154c37472c}
+      \strng{bibnamehash}{91af5ff7c98c9d0dbb2341154c37472c}
+      \strng{authorbibnamehash}{91af5ff7c98c9d0dbb2341154c37472c}
+      \strng{authornamehash}{91af5ff7c98c9d0dbb2341154c37472c}
+      \strng{authorfullhash}{91af5ff7c98c9d0dbb2341154c37472c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of GenAIK Workshop}
+      \field{title}{Entity Linking and Skill Extraction with Chain-of-Thought Reasoning}
+      \field{year}{2025}
+    \endentry
+    \entry{kavas2025}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=489abb899a8a219f9be1c0f0ff8c8e67}{%
+           family={Kavas},
+           familyi={K\bibinitperiod},
+           given={H.},
+           giveni={H\bibinitperiod}}}%
+        {{hash=6fc388064b336983944b95f4e16332ad}{%
+           family={Serra-Vidal},
+           familyi={S\bibinithyphendelim V\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=8bda97a86ce03ae312ca99196018ffd1}{%
+           family={Wanner},
+           familyi={W\bibinitperiod},
+           given={L.},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Abu Dhabi, Emiratos Árabes Unidos}%
+      }
+      \list{publisher}{1}{%
+        {International Committee on Computational Linguistics}%
+      }
+      \strng{namehash}{20096a728ab29e3b6cd4818523a552da}
+      \strng{fullhash}{a7f99ab9134455add8df88082083f037}
+      \strng{bibnamehash}{a7f99ab9134455add8df88082083f037}
+      \strng{authorbibnamehash}{a7f99ab9134455add8df88082083f037}
+      \strng{authornamehash}{20096a728ab29e3b6cd4818523a552da}
+      \strng{authorfullhash}{a7f99ab9134455add8df88082083f037}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Workshop on Generative AI and Knowledge Graphs (GenAIK)}
+      \field{title}{Multilingual Skill Extraction for Job Vacancy--Job Seeker Matching in Knowledge Graphs}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://aclanthology.org/2025.genaik-1.15.pdf
+      \endverb
+      \verb{url}
+      \verb https://aclanthology.org/2025.genaik-1.15.pdf
+      \endverb
+    \endentry
+    \entry{vasquez2024}{inproceedings}{}
+      \name{author}{7}{}{%
+        {{hash=9c8146c902c0cdee150f4f0424a22765}{%
+           family={Vásquez-Rodríguez},
+           familyi={V\bibinithyphendelim R\bibinitperiod},
+           given={L.},
+           giveni={L\bibinitperiod}}}%
+        {{hash=b37c2bd9c37aca0e051ba21a002a41c3}{%
+           family={Audrin},
+           familyi={A\bibinitperiod},
+           given={B.},
+           giveni={B\bibinitperiod}}}%
+        {{hash=4922a8240b9ab54406ef0684e815ce7b}{%
+           family={Michel},
+           familyi={M\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+        {{hash=714592416904f99cfc22d79274714c3c}{%
+           family={Galli},
+           familyi={G\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+        {{hash=e8e8508cb7ff5ccf1470e057ec34b583}{%
+           family={Rogenhofer},
+           familyi={R\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=3801baf5777d2724fe3800abf711ecb0}{%
+           family={Negro\bibnamedelima Cusa},
+           familyi={N\bibinitperiod\bibinitdelim C\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=410103b8f1b564e13d8c519a2fdb9c43}{%
+           family={Plas},
+           familyi={P\bibinitperiod},
+           given={L.},
+           giveni={L\bibinitperiod},
+           prefix={van\bibnamedelima der},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Bari, Italia}%
+      }
+      \strng{namehash}{4c3231596977e58fcb79c26238c10700}
+      \strng{fullhash}{f613c3260499bc91ad5f63a5bf34f0b4}
+      \strng{bibnamehash}{4c3231596977e58fcb79c26238c10700}
+      \strng{authorbibnamehash}{4c3231596977e58fcb79c26238c10700}
+      \strng{authornamehash}{4c3231596977e58fcb79c26238c10700}
+      \strng{authorfullhash}{f613c3260499bc91ad5f63a5bf34f0b4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{RecSys in HR Workshop 2024}
+      \field{title}{Hardware-effective Approaches for Skill Extraction in Job Offers and Resumes}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://publications.idiap.ch/attachments/papers/2024/Vasquez-Rodriguez_RECSYSINHR24_2024.pdf
+      \endverb
+      \verb{url}
+      \verb https://publications.idiap.ch/attachments/papers/2024/Vasquez-Rodriguez_RECSYSINHR24_2024.pdf
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

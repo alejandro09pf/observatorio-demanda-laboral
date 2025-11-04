@@ -1,0 +1,129 @@
+\chapter{Vista General del Proyecto}
+
+\section{Visión del Producto}
+
+El presente proyecto busca desarrollar un sistema semiautomatizado, ejecutable de forma periódica y local, que permita procesar y segmentar la demanda de habilidades tecnológicas en Colombia, México y Argentina mediante un pipeline de scraping, procesamiento semántico y visualización macro. El sistema permitirá generar insumos estructurados para el posterior análisis de tendencias laborales en el sector tecnológico latinoamericano, fortaleciendo la toma de decisiones por parte de instituciones educativas, investigadores y organismos interesados en cerrar brechas entre la formación y el mercado laboral.
+
+Se espera que, una vez completado, el sistema siente las bases para futuras ampliaciones en cobertura territorial, frecuencia de actualización, refinamiento técnico y despliegue institucional, permitiendo construir un observatorio laboral replicable, contextualizado al español latinoamericano y alineado a estándares internacionales como ESCO o CIUO.
+
+\section{Propósito, Alcance y Objetivos}
+
+\subsection{Propósito}
+
+Este proyecto se realiza con el fin de sentar las bases técnicas y metodológicas para un observatorio de demanda laboral tecnológica en Latinoamérica, integrando en un solo sistema fases de extracción, procesamiento y visualización de habilidades demandadas en vacantes reales en línea, con especial enfoque en el idioma español y el contexto regional.
+
+\subsection{Alcance}
+
+El proyecto contempla la implementación de un pipeline local compuesto por las siguientes etapas: (1) scraping de portales de empleo (Computrabajo, elempleo.com, Bumeran), (2) extracción de habilidades mediante NER y regex, (3) enriquecimiento semántico con LLMs, (4) representación vectorial con embeddings multilingües, (5) clustering con UMAP y HDBSCAN, y (6) generación de visualizaciones macro estáticas.
+
+Quedan fuera del alcance: el desarrollo de dashboards interactivos, la construcción de portales web, la automatización continua del pipeline y la integración con bases de datos externas o APIs privadas.
+
+\subsection{Objetivo general}
+
+Desarrollar un sistema que permita procesar y segmentar la demanda de habilidades tecnológicas en Colombia, México y Argentina, mediante técnicas de procesamiento de lenguaje natural.
+
+\subsection{Objetivos Específicos}
+
+\begin{itemize}
+    \item Construir un estado del arte exhaustivo para comparar trabajos existentes en el ámbito de observatorios laborales automatizados y técnicas de procesamiento de lenguaje natural en español.
+
+    \item Diseñar una arquitectura modular, escalable y reutilizable para el observatorio laboral automatizado, fundamentada en las mejores prácticas identificadas en el estado del arte.
+
+    \item Implementar e integrar técnicas de inteligencia artificial para la identificación, normalización y agrupación semántica de habilidades tecnológicas en ofertas laborales en español.
+
+    \item Validar el desempeño y la robustez de la arquitectura y los modelos propuestos mediante métricas cuantitativas y estudios empíricos.
+\end{itemize}
+
+\section{Supuestos y Restricciones}
+
+\subsection{Supuestos}
+
+\begin{itemize}
+    \item Se mantendrá acceso continuo a portales de empleo y/o APIs para extracción de vacantes.
+    \item Existirá un corpus suficiente y variado de vacantes en español.
+    \item Se contará con infraestructura local adecuada para ejecutar las tareas técnicas.
+    \item El equipo mantendrá una coordinación fluida durante las semanas de ejecución.
+    \item Se contará con modelos a utilizar que tengan el funcionamiento adecuado en español.
+\end{itemize}
+
+\subsection{Restricciones}
+
+\begin{itemize}
+    \item Existencia de carga académica paralela por parte del equipo.
+    \item Capacidad limitada de procesamiento local (sin uso de GPUs o servidores externos).
+    \item Tiempo acotado para ajuste fino de prompts, clustering y visualizaciones.
+\end{itemize}
+
+\section{Entregables}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{4.5cm}|p{3cm}|p{2.5cm}|}
+\hline
+\textbf{Entregable} & \textbf{Descripción} & \textbf{Destinatario} & \textbf{Fecha estimada} \\
+\hline
+Repositorio funcional del sistema & Código completo de scraping, NER, LLMs, clustering y visualización & Docentes evaluadores & Semana 14 \\
+\hline
+Dataset limpio de vacantes y habilidades & Base de datos estructurada con datos procesados & Equipo y docentes & Semana 13 \\
+\hline
+Diccionario de habilidades y embeddings & Archivo con habilidades extraídas, enriquecidas y vectorizadas & Equipo técnico & Semana 10 \\
+\hline
+Visualizaciones macro & Gráficos estáticos de resultados para validación cualitativa & Asesor y evaluadores & Semana 12 \\
+\hline
+Documento explicativo del sistema & Guía metodológica, arquitectura y funcionamiento & Universidad / Archivo final & Semana 15 \\
+\hline
+Pruebas funcionales y logs & Evidencia de validación de módulos y resultados intermedios & Asesor y docentes & Semana 14 \\
+\hline
+\end{tabular}
+\caption{Entregables del Proyecto}
+\end{table}
+
+\section{Resumen de Calendarización y Presupuesto}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Fase} & \textbf{Actividad} & \textbf{Semanas} \\
+\hline
+F1 & Diseño y arquitectura del sistema & 1--2 \\
+\hline
+F2 & Scraping y carga a base de datos & 3--5 \\
+\hline
+F3 & Extracción de habilidades (NER + regex) & 6--7 \\
+\hline
+F4 & Enriquecimiento con LLMs & 8--9 \\
+\hline
+F5 & Embeddings + clustering & 10--11 \\
+\hline
+F6 & Visualización macro y evaluación & 12 \\
+\hline
+F7 & Pruebas, documentación y entrega final & 13--16 \\
+\hline
+\end{tabular}
+\caption{Fases del Proyecto}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Recurso} & \textbf{Descripción} & \textbf{Costo} \\
+\hline
+Infraestructura local & Uso de computadoras personales & Sin costo adicional \\
+\hline
+Modelos preentrenados & HuggingFace, spaCy, BETO, etc. & Gratuito (open source) \\
+\hline
+API de LLMs & GPT-3.5 para pruebas (en caso de acceso) & Versión gratuita / académica \\
+\hline
+Licencias y software & VSCode, GitHub, Dash, PostgreSQL & Gratuito \\
+\hline
+Herramientas de documentación & Google Docs, Overleaf, GitHub Wiki & Gratuito \\
+\hline
+\end{tabular}
+\caption{Ítems Consolidados}
+\end{table}
+
+\section{Evolución del Plan}
+
+El plan seguirá una lógica iterativa inspirada en CRISP-DM y Scrum no estricto. Cualquier cambio al plan será discutido en reuniones semanales y validado por consenso. Las actualizaciones serán registradas en Google Docs y GitHub, y se comunicarán al equipo con antelación. Las decisiones sobre cambios mayores (como rediseño de etapas o reemplazo de técnicas) deberán estar documentadas en el acta de revisión de fase correspondiente.

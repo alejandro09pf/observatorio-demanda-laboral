@@ -1,0 +1,125 @@
+\chapter{Glosario}
+
+\textbf{1. Portales de empleo}
+
+Son plataformas web donde empresas publican vacantes laborales y profesionales buscan oportunidades. En este proyecto se consideran fuentes como LinkedIn, Computrabajo, Bumeran, ZonaJobs e Indeed, que constituyen insumos primarios para los procesos de scraping y análisis \cite{aguilera2018,cardenas2015}.
+
+\textbf{2. Web Scraping}
+
+Técnica de recolección automatizada de datos desde páginas web, utilizando librerías como BeautifulSoup, Selenium o Playwright. Permite extraer de forma estructurada información relevante de las ofertas publicadas \cite{orozco2019}.
+
+\textbf{3. Oferta laboral}
+
+Se refiere al anuncio publicado por una organización donde se describe el perfil buscado, incluyendo título del cargo, funciones, requisitos y habilidades deseadas \cite{rubio2024}.
+
+\textbf{4. Base de datos relacional (PostgreSQL)}
+
+Sistema que organiza los datos recolectados en tablas interconectadas, facilitando su consulta, limpieza y posterior análisis mediante estructuras SQL \cite{martinez2024}.
+
+\textbf{5. Normalización de datos}
+
+Proceso de limpieza, estandarización y unificación de formatos para reducir ambigüedad, errores y duplicados, y mejorar la coherencia del análisis posterior \cite{campos2024}.
+
+\section*{Procesamiento de texto y extracción de habilidades}
+
+\textbf{6. Expresiones regulares (Regex)}
+
+Lenguaje sintáctico utilizado para identificar y extraer patrones textuales específicos (como frases que contengan habilidades o requisitos) en grandes volúmenes de texto \cite{lukauskas2023}.
+
+\textbf{7. Named Entity Recognition (NER)}
+
+Técnica de procesamiento de lenguaje natural (NLP) que identifica y clasifica entidades en un texto, como nombres de habilidades, empresas o tecnologías \cite{nguyen2024}.
+
+\textbf{8. Tokenización}
+
+Consiste en dividir un texto en unidades mínimas llamadas ``tokens'' (palabras, signos u oraciones), facilitando el análisis lingüístico automatizado \cite{nguyen2024}.
+
+\textbf{9. Lematización}
+
+Proceso que transforma las palabras a su forma canónica o raíz gramatical, permitiendo uniformar variaciones morfológicas del lenguaje \cite{echeverria2022}.
+
+\textbf{10. Stopwords}
+
+Términos frecuentes sin valor informativo (como ``de'', ``por'', ``la''), comúnmente eliminados en tareas de procesamiento textual \cite{nguyen2024}.
+
+\textbf{11. Co-ocurrencia}
+
+Medida estadística que indica la frecuencia con que dos o más términos aparecen juntos en un texto, útil para detectar relaciones semánticas \cite{campos2024}.
+
+\textbf{12. Bigramas y trigramas}
+
+Secuencias de dos o tres palabras consecutivas utilizadas para capturar patrones de lenguaje más complejos que las palabras individuales \cite{aguilera2018}.
+
+\section*{Modelado con LLMs y enriquecimiento semántico}
+
+\textbf{13. LLM (Large Language Models)}
+
+Modelos de lenguaje de gran escala (como GPT o T5) entrenados sobre corpus masivos, capaces de generar texto, extraer conocimiento implícito y realizar razonamiento contextualizado \cite{nguyen2024,razumovskaia2024}.
+
+\textbf{14. Prompt Engineering}
+
+Diseño estratégico de instrucciones o ejemplos para guiar la salida de un LLM, crucial en tareas de extracción de habilidades o clasificación de ocupaciones \cite{razumovskaia2024}.
+
+\textbf{15. Few-shot learning}
+
+Habilidad de los LLMs para realizar tareas complejas con pocos ejemplos, lo cual resulta clave cuando se carece de datasets etiquetados masivamente en español \cite{nguyen2024}.
+
+\textbf{16. Chain-of-Thought Reasoning (CoT)}
+
+Técnica que induce a los modelos a razonar paso a paso, mejorando precisión en tareas como clasificación y desambiguación semántica \cite{razumovskaia2024}.
+
+\textbf{17. Infer-Retrieve-Rank (IRR)}
+
+Enfoque que primero infiere una entidad, luego recupera candidatos posibles, y finalmente los rankea con base en relevancia, utilizado para seleccionar habilidades o clasificar ocupaciones \cite{lopez2025}.
+
+\textbf{18. Habilidades explícitas vs implícitas}
+
+Las primeras están textualmente expresadas (``manejo de Python''), mientras que las segundas deben inferirse por contexto (``implementación de modelos supervisados'') \cite{nguyen2024}.
+
+\section*{Representación vectorial y análisis semántico}
+
+\textbf{19. Embeddings semánticos}
+
+Representaciones numéricas de textos que capturan similitudes semánticas, permitiendo análisis cuantitativos y clustering. Ejemplos incluyen word2vec, BERT y E5 \cite{kavas2025,vasquez2024}.
+
+\textbf{20. Embeddings multilingües}
+
+Vectores entrenados para representar texto en múltiples idiomas en un mismo espacio semántico. Son esenciales para manejar contenido mixto español-inglés en ofertas laborales \cite{echeverria2022,razumovskaia2024}.
+
+\textbf{21. Modelos de lenguaje en español}
+
+Incluyen variantes como BETO, MarIA, T5-español, que han sido entrenadas en corpus hispanos y se adaptan mejor a tareas de extracción en este idioma \cite{nguyen2024}.
+
+\textbf{22. Espacio vectorial}
+
+Marco matemático donde entidades como palabras, frases o documentos son representadas como vectores en un espacio multidimensional \cite{kavas2025}.
+
+\textbf{23. Reducción de dimensionalidad (UMAP)}
+
+Técnica que transforma espacios de alta dimensionalidad en representaciones más simples, conservando la estructura semántica subyacente para facilitar análisis y visualización \cite{lukauskas2023}.
+
+\section*{Segmentación y visualización}
+
+\textbf{24. Clustering (HDBSCAN)}
+
+Algoritmo no supervisado que detecta grupos naturales de observaciones (como habilidades o perfiles laborales) según su similitud semántica, sin requerir número de clusters predefinido \cite{lukauskas2023}.
+
+\textbf{25. Evaluación por coherencia semántica}
+
+Métrica que mide qué tan bien están agrupadas las instancias similares dentro de un modelo, clave para validar la efectividad del clustering \cite{vasquez2024}.
+
+\textbf{26. Silhouette Score}
+
+Indicador que evalúa la calidad de los clusters considerando qué tan cohesionados y separados están entre sí \cite{lukauskas2023}.
+
+\textbf{27. Visualización de datos}
+
+Proceso de representar información compleja en formatos gráficos o interactivos que permiten interpretar resultados, comunicar hallazgos y apoyar decisiones \cite{rubio2024}.
+
+\textbf{28. Python}
+
+Lenguaje de programación ampliamente utilizado en ciencia de datos y NLP, por su sintaxis sencilla y librerías especializadas como scikit-learn, spaCy, transformers y pandas \cite{nguyen2024}.
+
+\textbf{29. Taxonomía de habilidades (ESCO, CIUO-08, O*NET)}
+
+Sistemas jerárquicos y normalizados de clasificación de habilidades y ocupaciones, fundamentales para anclar el análisis a estándares internacionales y mejorar interoperabilidad de los resultados \cite{cardenas2015,echeverria2022}.

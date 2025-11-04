@@ -1,0 +1,174 @@
+\section{Restricciones}
+
+Estas son limitaciones específicas que afectan la capacidad del sistema para cumplir con ciertos requisitos o estándares, y deben ser consideradas durante el desarrollo y evaluación.
+
+\subsection{Restricciones Computacionales}
+
+\subsubsection{Hardware Disponible}
+
+\begin{itemize}
+    \item Servidores universitarios con CPU Intel Xeon (16 cores) / AMD Ryzen (8 cores)
+    \item RAM: 16-32 GB (compartida con otros procesos)
+    \item GPU: NVIDIA GTX 1660 / RTX 3060 (6-12 GB VRAM) o Apple MPS
+    \item Almacenamiento: 100-200 GB cuota en servidores universitarios
+\end{itemize}
+
+\textbf{Implicaciones:}
+\begin{itemize}
+    \item LLMs limitados a modelos $<$4B parámetros con cuantización Q4
+    \item Procesamiento batch preferido sobre tiempo real
+    \item FAISS en modo CPU (suficiente para 14K vectores)
+    \item Imposibilidad de usar modelos grandes (GPT-4, Llama 70B)
+\end{itemize}
+
+\subsection{Restricciones de Tiempo}
+
+\subsubsection{Cronograma Académico}
+
+\begin{itemize}
+    \item Tesis de pregrado: 6-12 meses (2 semestres)
+    \item Tiempo efectivo de desarrollo: ~4-6 meses (clases + otras asignaturas)
+    \item Deadline inflexible para defensa de grado
+\end{itemize}
+
+\textbf{Implicaciones:}
+\begin{itemize}
+    \item Priorización de Pipeline A (tradicional) sobre Pipeline B (experimental)
+    \item Exploraciones de hiperparámetros limitadas (no exhaustivas)
+    \item Validación cualitativa sobre subconjunto representativo
+    \item Implementación incremental con entregas funcionales iterativas
+\end{itemize}
+
+\subsection{Restricciones de Datos}
+
+\subsubsection{Acceso a Portales}
+
+\begin{itemize}
+    \item Scraping sujeto a términos de servicio de portales
+    \item Rate limiting: 1-2 requests/segundo por portal
+    \item Bloqueo de IPs ante comportamiento sospechoso
+    \item Contenido JavaScript requiere Selenium (más lento)
+\end{itemize}
+
+\subsubsection{Cobertura Temporal}
+
+\begin{itemize}
+    \item Dataset actual: marzo-diciembre 2024 (9 meses)
+    \item Análisis de tendencias de largo plazo limitado
+    \item Imposibilidad de comparar con años anteriores
+\end{itemize}
+
+\subsubsection{Idioma}
+
+\begin{itemize}
+    \item Ofertas en español (España + LatAm) y Spanglish técnico
+    \item Modelos NLP optimizados para español de España
+    \item Escasa literatura sobre NLP para español técnico latinoamericano
+\end{itemize}
+
+\subsection{Cumplimiento Normativo}
+
+\subsubsection{Protección de Datos}
+
+El sistema debe cumplir con regulaciones legales y normativas vigentes en los tres países objetivo:
+
+\begin{itemize}
+    \item \textbf{Colombia}: Ley 1581 de 2012 - Tratamiento de datos personales
+    \item \textbf{México}: Ley Federal de Protección de Datos Personales
+    \item \textbf{Argentina}: Ley 25.326 - Protección de Datos Personales
+\end{itemize}
+
+\textbf{Medidas implementadas:}
+\begin{itemize}
+    \item Anonimización de datos: No se almacenan emails, teléfonos, nombres de candidatos
+    \item Datos scrapeados son públicos (ofertas laborales visibles sin login)
+    \item Uso exclusivo con fines académicos e investigación
+    \item No comercialización de datos recolectados
+    \item Eliminación de información sensible (salarios detallados)
+\end{itemize}
+
+\subsection{Restricciones de Taxonomías}
+
+\subsubsection{ESCO v1.1.0}
+
+\begin{itemize}
+    \item Versión desactualizada (2016-2017)
+    \item Enfoque europeo (menor cobertura de tech LatAm)
+    \item No incluye frameworks modernos (Next.js, Remix, SolidJS)
+    \item Actualizaciones oficiales lentas (años)
+\end{itemize}
+
+\textbf{Mitigación:}
+\begin{itemize}
+    \item Expansión manual con 152 O*NET + 83 curated skills
+    \item Skills emergentes catalogadas para futura integración
+    \item Análisis cualitativo de skills no matched
+\end{itemize}
+
+\subsection{Restricciones de Evaluación}
+
+\subsubsection{Gold Standard}
+
+\begin{itemize}
+    \item Presupuesto limitado para anotadores profesionales
+    \item Anotación manual limitada a 300 ofertas (1.3\% del corpus)
+    \item Anotadores: estudiantes de ingeniería (no expertos en RRHH)
+    \item Sesgo potencial hacia perfiles técnicos conocidos
+\end{itemize}
+
+\subsubsection{Validación de Clustering}
+
+\begin{itemize}
+    \item No existen ground truth labels para clústeres de skills
+    \item Evaluación cualitativa subjetiva
+    \item Métricas intrínsecas (silhouette, DBCV) solo aproximadas
+\end{itemize}
+
+\subsection{Restricciones de Publicación Académica}
+
+\subsubsection{Requisitos Universitarios}
+
+\begin{itemize}
+    \item Documento de tesis debe seguir formato institucional (LaTeX PUJ)
+    \item Extensión limitada: 80-120 páginas
+    \item No se puede publicar código con licencias restrictivas
+    \item Resultados deben ser originales (no publicados previamente)
+\end{itemize}
+
+\textbf{Implicaciones:}
+\begin{itemize}
+    \item Documentación técnica detallada en repositorio GitHub
+    \item Código abierto con licencia MIT
+    \item Publicación en conferencias académicas después de defensa de grado
+\end{itemize}
+
+\subsection{Resumen de Restricciones}
+
+La Tabla \ref{tab:resumen-restricciones} presenta un resumen consolidado de las principales restricciones del proyecto.
+
+\begin{table}[H]
+\centering
+\caption{Resumen de Restricciones del Proyecto}
+\label{tab:resumen-restricciones}
+\begin{tabular}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Categoría} & \textbf{Restricción Principal} \\
+\hline
+Computacional & Hardware limitado: 16-32GB RAM, GPU 6-12GB VRAM \\
+\hline
+Temporal & 6-12 meses para tesis completa, 4-6 meses desarrollo efectivo \\
+\hline
+Datos & Rate limiting 1-2 req/s, dataset 9 meses (mar-dic 2024) \\
+\hline
+Legal & Cumplimiento Ley 1581/2012 (CO), LFPDP (MX), Ley 25.326 (AR) \\
+\hline
+Taxonomías & ESCO v1.1.0 desactualizada (2016-2017), enfoque europeo \\
+\hline
+Evaluación & Gold Standard limitado a 300 ofertas (1.3\% corpus) \\
+\hline
+Publicación & Formato LaTeX PUJ, 80-120 páginas, código MIT \\
+\hline
+\end{tabular}
+\end{table}
+
+Estas restricciones han sido consideradas en el diseño arquitectónico del sistema y las decisiones de implementación, priorizando soluciones viables dentro de los límites del proyecto académico.

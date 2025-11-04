@@ -1,0 +1,157 @@
+\chapter{Administración del Proyecto}
+
+\section{Métodos y Herramientas de Estimación}
+
+El presente proyecto ha sido estimado utilizando una combinación de métodos empíricos y de juicio experto, apoyados en la experiencia previa de los integrantes del equipo, la naturaleza del trabajo requerido, y la complejidad técnica de cada fase. Dado que no se cuenta con herramientas formales de estimación como PERT o COCOMO, se optó por un enfoque ágil y práctico, ajustado a las condiciones reales del equipo.
+
+\subsection{Método de Estimación del Proyecto}
+
+El presente proyecto se apoya en una estimación realista de esfuerzos basada en tres principios clave: el análisis de tareas específicas por fase metodológica, la disponibilidad horaria semanal del equipo, y la experiencia práctica en proyectos previos similares. Dado que se trata de un trabajo de grado con una duración prevista de entre 14 y 16 semanas y un equipo de tres personas, se estimó un rango total de \textbf{440 a 500 horas de trabajo distribuidas entre los tres integrantes}.
+
+\subsubsection{Método de estimación utilizado}
+
+Para esta estimación se empleó una \textbf{técnica de descomposición (WBS)}, donde cada fase del proyecto fue dividida en tareas concretas, a las que se asignaron horas aproximadas según su complejidad, herramientas requeridas y experiencia previa del equipo. Esta estimación fue luego contrastada con la disponibilidad semanal esperada de cada integrante, ajustada por compromisos académicos paralelos.
+
+El enfoque adoptado es cualitativo, iterativo y conservador. En lugar de aplicar fórmulas matemáticas complejas (como COCOMO), se optó por la \textbf{estimación fundamentada en experticia del equipo}, validada contra planes previos y distribuida de forma proporcional.
+
+\subsubsection{Estimación del esfuerzo por integrante}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Integrante} & \textbf{Rol principal} & \textbf{Horas estimadas} \\
+\hline
+Nicolás Camacho & Líder técnico, arquitectura & 170 \\
+\hline
+Alejandro Pinzón & Documentación y pruebas & 130 \\
+\hline
+Alejandro Pinzón & Desarrollo de módulos & 140 \\
+\hline
+\textbf{Total estimado} & & \textbf{440 horas} \\
+\hline
+\end{tabular}
+\caption{Tiempo de Esfuerzo por Integrante}
+\end{table}
+
+\subsubsection{Estimación por fase metodológica}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Fase} & \textbf{Horas estimadas} \\
+\hline
+Diseño inicial del sistema & 45 \\
+\hline
+Scraping y carga a base de datos & 70 \\
+\hline
+NER y normalización de habilidades & 60 \\
+\hline
+Enriquecimiento con LLMs & 60 \\
+\hline
+Embeddings y clustering & 50 \\
+\hline
+Visualización macro evaluativa & 40 \\
+\hline
+Documentación, validación y ajustes finales & 70 \\
+\hline
+\textbf{Total} & \textbf{395 horas} \\
+\hline
+\end{tabular}
+\caption{Tiempo Estimado por Fase}
+\end{table}
+
+\textit{Nota:} El total por fases metodológicas no considera horas de reuniones, organización, imprevistos o revisión con el asesor, por lo que se reserva un \textbf{margen adicional de 45–55 horas} para estas actividades transversales, que completan las 440–500 horas globales.
+
+\subsubsection{Herramientas empleadas para la estimación}
+
+\begin{itemize}
+    \item \textbf{Google Sheets} para tabular las actividades y distribuir tiempos por fase e integrante.
+    \item \textbf{Planificación semanal estimada} en base a 8–12 horas de dedicación por persona por semana.
+    \item \textbf{Retroalimentación del director de proyecto}, validando la viabilidad y distribución del esfuerzo.
+\end{itemize}
+
+\section{Inicio del proyecto}
+
+\subsection{Entrenamiento del Personal}
+
+Dado que el proyecto ``Observatorio de Demanda Laboral en Tecnología en Latinoamérica'' involucra herramientas avanzadas como modelos de lenguaje, scraping dinámico, procesamiento semántico en español, embeddings multilingües y técnicas de clustering no supervisado, se ha establecido un plan de entrenamiento ligero pero enfocado, que permita nivelar al equipo en los aspectos técnicos esenciales sin comprometer el cronograma establecido.
+
+El entrenamiento será liderado por Nicolás Camacho, quien cuenta con mayor experiencia técnica en las tecnologías clave del proyecto. Su rol incluirá el diseño de pequeñas cápsulas de formación y la transferencia directa de conocimiento al resto del equipo mediante los siguientes mecanismos:
+
+\begin{itemize}
+    \item \textbf{Explicaciones prácticas durante las reuniones semanales:} Nicolás explicará en vivo el funcionamiento del código que esté desarrollando en cada fase, incluyendo justificación técnica y recomendaciones de buenas prácticas.
+
+    \item \textbf{Ejemplos rápidos y contextualizados:} Se utilizarán notebooks o scripts breves con datos simples para ilustrar conceptos clave como scraping con Selenium, prompts con LLMs, embeddings, UMAP y clustering.
+
+    \item \textbf{Lecturas y recursos recomendados:} Se compartirá documentación oficial, artículos clave y videos cortos en español o inglés, según el tema y nivel de dificultad.
+
+    \item \textbf{Revisión cruzada de avances:} Los integrantes aplicarán lo aprendido directamente en sus tareas asignadas, recibiendo retroalimentación de Nicolás de forma continua.
+\end{itemize}
+
+A continuación, se detalla la planificación del entrenamiento interno:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{2cm}|p{2.5cm}|p{3cm}|p{2.5cm}|}
+\hline
+\textbf{Habilidad o tema técnico} & \textbf{Integrantes a entrenar} & \textbf{Responsable del entrenamiento} & \textbf{Método principal} & \textbf{Tiempo estimado} \\
+\hline
+Scraping web con Scrapy, Selenium y Playwright & Alejandro & Nicolás & Ejemplos en vivo + código comentado & Semanas 2–3 \\
+\hline
+Procesamiento de lenguaje en español (spaCy, regex, taxonomías laborales) & Alejandro & Nicolás & Lecturas + demos & Semanas 3–5 \\
+\hline
+Uso de LLMs y diseño de prompts & Alejandro & Nicolás & Ejercicios guiados + discusión en grupo & Semanas 5–6 \\
+\hline
+Embeddings multilingües y reducción dimensional & Alejandro & Nicolás & Notebooks breves + aplicación directa & Semanas 6–7 \\
+\hline
+Clustering con HDBSCAN y UMAP & Alejandro & Nicolás & Ejemplo sintético + retroalimentación & Semana 8 \\
+\hline
+Visualización macro con Dash / Plotly & Alejandro & Nicolás & Revisión cruzada de visualizaciones & Semanas 9–10 \\
+\hline
+Documentación técnica y guía metodológica & Todo el equipo & Alejandro & Plantillas + validación por Nicolás & Permanente \\
+\hline
+\end{tabular}
+\caption{Plan de Entrenamiento Interno}
+\end{table}
+
+Este entrenamiento se desarrollará de manera continua, práctica y orientada a resolver las necesidades reales del proyecto. No se contempla una fase de formación previa extensa, sino que el aprendizaje estará integrado al flujo de trabajo, adaptado al tiempo disponible y priorizando las tareas más urgentes.
+
+Nicolás también brindará apoyo puntual cuando surjan dudas específicas, y fomentará una cultura de colaboración y mejora técnica, donde se valoran las preguntas, la exploración autónoma y la mejora iterativa. La documentación técnica, liderada por Daniel, incluirá además las explicaciones simplificadas de los procesos clave, con el fin de reforzar el aprendizaje colectivo y dejar registro de las decisiones técnicas para futuras iteraciones o réplicas del proyecto.
+
+\subsection{Infraestructura}
+
+Para el adecuado desarrollo del proyecto ``Observatorio de Demanda Laboral en Tecnología en Latinoamérica'', se requiere una infraestructura técnica que permita la implementación modular del sistema, desde la recolección de datos hasta el análisis semántico y la documentación de resultados. Esta infraestructura combina herramientas de software de código abierto, recursos computacionales locales y servicios colaborativos en la nube, con una planeación clara sobre su adquisición, configuración y mantenimiento.
+
+Los detalles completos de herramientas de software, especificaciones de equipos, y actividades de obtención, despliegue y mantenimiento se encuentran documentados en las tablas 9, 10, 11, 12 y 13 del presente documento.
+
+\section{Planes de Trabajo del Proyecto}
+
+\subsection{Descomposición de Actividades}
+
+La estructura de descomposición de actividades del proyecto (WBS - Work Breakdown Structure) se organiza por fases metodológicas, cada una con sus respectivas subactividades. La siguiente tabla representa la estructura general adoptada para la ejecución, según se detalla en la Tabla 14.
+
+\subsection{Calendarización}
+
+La calendarización define las fechas estimadas de inicio y finalización de cada fase principal, así como su secuencia de ejecución, distribuida en una duración total de 16 semanas, tal como se muestra en la Tabla 15 y la Figura 4 (Carta Gantt).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/CartaGantt.png}
+\caption{Carta Gantt del cronograma del proyecto (16 semanas)}
+\label{fig:carta-gantt}
+\end{figure}
+
+\subsection{Asignación de Recursos}
+
+Para cada fase principal del proyecto, se han identificado los recursos necesarios en términos de recursos humanos, software, hardware y documentación, con el fin de asegurar el cumplimiento eficiente de los objetivos. Los detalles completos se encuentran en la Tabla 16.
+
+\subsection{Asignación de Presupuesto y Justificación}
+
+Este proyecto no contempla flujo de dinero real ni remuneración alguna para los integrantes. Sin embargo, se presenta una estimación simbólica del costo técnico potencial, que refleja lo que implicaría económicamente replicar el esfuerzo si se ejecutara en un entorno profesional o institucional. Esta estimación es útil para evaluar necesidades técnicas, justificar decisiones y proyectar posibles inversiones en caso de escalamiento.
+
+El presupuesto estimado se presenta en la Tabla 17, con un total aproximado de hasta \$8.600.000 COP en valor técnico para réplica profesional del proyecto.
+
+\textit{Esta asignación tiene fines estimativos y no representa una solicitud ni gestión presupuestal formal. Ningún recurso económico será solicitado ni entregado a los integrantes.}

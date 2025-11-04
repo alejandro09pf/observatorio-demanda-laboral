@@ -1,0 +1,130 @@
+\section{Riesgos}
+
+Los riesgos identificados se agrupan en tres categorías principales: riesgos de producto, riesgos de proceso y riesgos de proyecto. Cada uno puede afectar la calidad, validez científica y éxito del observatorio.
+
+\subsection{Riesgos de Producto}
+
+Estos riesgos se relacionan con la calidad, precisión, rendimiento y fiabilidad del sistema final.
+
+\subsubsection{Riesgos de Precisión}
+
+\begin{itemize}
+    \item \textbf{Falsos positivos en extracción NER}: Extracción de frases genéricas o disclaimers legales como skills técnicas (ej. ``national origin'', ``aspirar a la excelencia''). Ya identificado en pruebas con match rate de 10.6\% y 87.4\% emergent skills, requiere mejora de filtros NER.
+
+    \item \textbf{Degradación de modelos pre-entrenados}: spaCy es\_core\_news\_lg y E5 multilingual fueron entrenados en lenguaje general, no especializado en tech jobs de LatAm. Posible bajo rendimiento en Spanglish y jerga técnica local.
+
+    \item \textbf{Baja cobertura de ESCO}: Taxonomía ESCO v1.1.0 data de 2016-2017, no cubre frameworks modernos (Next.js, SolidJS, Remix). Match rate de 12.6\% es esperado pero puede limitar análisis comparativo.
+\end{itemize}
+
+\subsubsection{Riesgos de Rendimiento}
+
+\begin{itemize}
+    \item \textbf{Latencia acumulativa en Pipeline B}: Procesamiento con LLM puede tomar 5-10 segundos por oferta. Para 600K ofertas = 833 horas de cómputo (34 días continuos). Puede hacer inviable procesamiento completo del corpus objetivo.
+
+    \item \textbf{Cuellos de botella en I/O de BD}: Inserts/updates frecuentes en PostgreSQL durante extracción pueden saturar I/O del disco. Mitigado con batch processing pero requiere monitoreo.
+
+    \item \textbf{Memoria insuficiente para UMAP}: Reducción dimensional de 14K+ embeddings de 768D requiere ~10GB RAM. Servidores limitados pueden fallar en esta etapa.
+\end{itemize}
+
+\subsubsection{Riesgos de Fiabilidad}
+
+\begin{itemize}
+    \item \textbf{Pérdida de datos por fallos de hardware}: Scraping de meses puede perderse por fallo de disco sin backups. Sistema académico sin infraestructura de alta disponibilidad.
+
+    \item \textbf{Corrupción de embeddings}: Generación de embeddings interrumpida puede dejar skill\_embeddings table en estado inconsistente. Difícil de detectar sin validación exhaustiva.
+
+    \item \textbf{Dependencia de servicios externos}: Scrapers dependen de portales web que pueden cambiar HTML structure, implementar rate limiting más agresivo, o bloquear IPs.
+\end{itemize}
+
+\subsection{Riesgos de Proceso}
+
+Estos riesgos están asociados al desarrollo, experimentación y mantenimiento del sistema.
+
+\subsubsection{Riesgos de Experimentación Científica}
+
+\begin{itemize}
+    \item \textbf{Sesgo de selección en Gold Standard}: Anotación manual de 300 ofertas puede tener sesgos (ej. sobre-representación de Python jobs, sub-representación de .NET). Invalida evaluación comparativa de Pipelines A vs B.
+
+    \item \textbf{Inter-annotator disagreement}: Dos anotadores pueden discrepar en qué constituye una ``skill''. Cohen's Kappa $<$0.80 invalida Gold Standard.
+
+    \item \textbf{Overfitting a ESCO}: Sistema optimizado para maximizar match rate con ESCO puede perder skills emergentes valiosas. Sesgo hacia skills tradicionales europeas vs. innovaciones LatAm.
+\end{itemize}
+
+\subsubsection{Riesgos de Mantenibilidad}
+
+\begin{itemize}
+    \item \textbf{Complejidad de debugging de pipeline de 8 etapas}: Error en Etapa 7 (clustering) puede ser causado por problema en Etapa 5 (embeddings) o Etapa 3 (extracción). Trazabilidad completa mitiga pero no elimina complejidad.
+
+    \item \textbf{Falta de documentación de decisiones experimentales}: Cambios en parámetros (ej. UMAP n\_neighbors 10$\rightarrow$15) sin documentar impactan reproducibilidad.
+
+    \item \textbf{Dependencia de expertos en dominio}: Validación de resultados de clustering requiere expertos en mercado laboral tech LatAm. Pérdida de acceso a expertos puede paralizar validación cualitativa.
+\end{itemize}
+
+\subsubsection{Riesgos de Implementación}
+
+\begin{itemize}
+    \item \textbf{Curva de aprendizaje de tecnologías especializadas}: FAISS, UMAP, HDBSCAN son tecnologías avanzadas con documentación limitada en español. Configuración incorrecta puede generar resultados inválidos.
+
+    \item \textbf{Limitaciones de tiempo del equipo}: Proyecto académico con 2 desarrolladores part-time. Implementación de Pipeline B (LLM) puede consumir tiempo asignado a análisis de resultados.
+\end{itemize}
+
+\subsection{Riesgos de Proyecto}
+
+Estos riesgos corresponden a factores externos o limitaciones generales que pueden afectar el cumplimiento de objetivos académicos.
+
+\subsubsection{Recursos Computacionales Limitados}
+
+\begin{itemize}
+    \item \textbf{GPU insuficiente para LLM}: Gemma 3 4B y Llama 3 3B requieren 3-6 GB VRAM (con cuantización Q4). Laptops académicos con GPUs integradas pueden ser insuficientes.
+
+    \item \textbf{Almacenamiento limitado}: 600K ofertas con descripción completa + embeddings + clústeres puede requerir $>$50GB. Servidores universitarios con cuotas de almacenamiento pueden limitar corpus procesable.
+
+    \item \textbf{Tiempo de cómputo para experimentos}: Cada iteración de ajuste de parámetros requiere re-ejecutar clustering completo (minutos/horas). Exploraciones extensivas de hiperparámetros pueden ser inviables.
+\end{itemize}
+
+\subsubsection{Acceso a Datos}
+
+\begin{itemize}
+    \item \textbf{Bloqueo de IPs por portales}: Scraping agresivo puede resultar en bloqueo permanente de IPs universitarias. Requiere proxies rotacionales (costo) o scraping throttled (meses de recolección).
+
+    \item \textbf{Cambios legales en protección de datos}: Regulaciones futuras (ej. GDPR-like en LatAm) pueden prohibir scraping de ofertas laborales. Impacta viabilidad de recolección continua.
+
+    \item \textbf{Desaparición de portales minoritarios}: Portales pequeños pueden cerrar operaciones. Impacta cobertura geográfica del análisis.
+\end{itemize}
+
+\subsubsection{Limitaciones de Alcance Académico}
+
+\begin{itemize}
+    \item \textbf{Imposibilidad de validar con usuarios reales}: Sistema académico no tiene acceso a reclutadores o candidatos para validar utilidad práctica de insights generados.
+
+    \item \textbf{Horizonte temporal limitado}: Tesis debe completarse en 6-12 meses. Análisis de tendencias temporales idealmente requiere múltiples años de datos.
+
+    \item \textbf{Restricciones de publicación académica}: Implementación de componentes innovadores puede ser necesaria para publicación en conferencias top-tier, pero excede alcance de tesis de pregrado.
+\end{itemize}
+
+\subsection{Matriz de Riesgos}
+
+La Tabla \ref{tab:matriz-riesgos} resume los riesgos principales con su probabilidad, impacto y estrategia de mitigación.
+
+\begin{table}[H]
+\centering
+\caption{Matriz de Riesgos del Proyecto}
+\label{tab:matriz-riesgos}
+\begin{tabular}{|p{4cm}|c|c|p{5cm}|}
+\hline
+\textbf{Riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Mitigación} \\
+\hline
+Falsos positivos NER & Alta & Alto & Mejora de filtros post-extracción, validación manual de muestra \\
+\hline
+Latencia Pipeline B & Media & Alto & Procesamiento solo de subconjunto representativo (300 ofertas) \\
+\hline
+Pérdida de datos & Baja & Crítico & Backups automáticos diarios de PostgreSQL \\
+\hline
+Sesgo Gold Standard & Media & Alto & Revisión por múltiples anotadores, Cohen's Kappa $>$0.80 \\
+\hline
+GPU insuficiente & Media & Medio & Cuantización Q4, uso de Google Colab, modelos $<$4B parámetros \\
+\hline
+Bloqueo de IPs & Alta & Medio & Rate limiting conservador (1-2 req/s), user-agent rotation \\
+\hline
+\end{tabular}
+\end{table}

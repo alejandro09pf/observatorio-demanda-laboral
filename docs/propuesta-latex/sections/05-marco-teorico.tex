@@ -1,0 +1,273 @@
+\chapter{Marco teórico}
+
+\section{Fundamentos y conceptos relevantes para el proyecto}
+
+Para comprender adecuadamente la propuesta de este proyecto de grado, es necesario abordar los conceptos fundamentales involucrados en el diseño de un observatorio laboral automatizado orientado al análisis de la demanda de habilidades tecnológicas en América Latina. Esta sección organiza dichos conceptos de acuerdo con las etapas del flujo metodológico del sistema propuesto: desde la recolección inicial de datos hasta su representación vectorial, análisis semántico, segmentación y visualización final.
+
+\subsection*{Recolección y almacenamiento de datos}
+
+\begin{enumerate}
+    \item \textbf{Portales de empleo}
+
+    Son plataformas web donde empresas publican vacantes laborales y profesionales buscan oportunidades. En este proyecto se consideran fuentes como LinkedIn, Computrabajo, Bumeran, ZonaJobs e Indeed, que constituyen insumos primarios para los procesos de scraping y análisis \cite{aguilera2018,cardenas2015}.
+
+    \item \textbf{Web Scraping}
+
+    Técnica de recolección automatizada de datos desde páginas web, utilizando librerías como BeautifulSoup, Selenium o Playwright. Permite extraer de forma estructurada información relevante de las ofertas publicadas \cite{orozco2019}.
+
+    \item \textbf{Oferta laboral}
+
+    Se refiere al anuncio publicado por una organización donde se describe el perfil buscado, incluyendo título del cargo, funciones, requisitos y habilidades deseadas \cite{rubio2024}.
+
+    \item \textbf{Base de datos relacional (PostgreSQL)}
+
+    Sistema que organiza los datos recolectados en tablas interconectadas, facilitando su consulta, limpieza y posterior análisis mediante estructuras SQL \cite{martinez2024}.
+
+    \item \textbf{Normalización de datos}
+
+    Proceso de limpieza, estandarización y unificación de formatos para reducir ambigüedad, errores y duplicados, y mejorar la coherencia del análisis posterior \cite{campos2024}.
+\end{enumerate}
+
+\subsection*{Procesamiento de texto y extracción de habilidades}
+
+\begin{enumerate}
+    \setcounter{enumi}{5}
+
+    \item \textbf{Expresiones regulares (Regex)}
+
+    Lenguaje sintáctico utilizado para identificar y extraer patrones textuales específicos (como frases que contengan habilidades o requisitos) en grandes volúmenes de texto \cite{lukauskas2023}.
+
+    \item \textbf{Named Entity Recognition (NER)}
+
+    Técnica de procesamiento de lenguaje natural (NLP) que identifica y clasifica entidades en un texto, como nombres de habilidades, empresas o tecnologías \cite{nguyen2024}.
+
+    \item \textbf{Tokenización}
+
+    Consiste en dividir un texto en unidades mínimas llamadas ``tokens'' (palabras, signos u oraciones), facilitando el análisis lingüístico automatizado \cite{nguyen2024}.
+
+    \item \textbf{Lematización}
+
+    Proceso que transforma las palabras a su forma canónica o raíz gramatical, permitiendo uniformar variaciones morfológicas del lenguaje \cite{echeverria2022}.
+
+    \item \textbf{Stopwords}
+
+    Términos frecuentes sin valor informativo (como ``de'', ``por'', ``la''), comúnmente eliminados en tareas de procesamiento textual \cite{nguyen2024}.
+
+    \item \textbf{Co-ocurrencia}
+
+    Medida estadística que indica la frecuencia con que dos o más términos aparecen juntos en un texto, útil para detectar relaciones semánticas \cite{campos2024}.
+
+    \item \textbf{Bigramas y trigramas}
+
+    Secuencias de dos o tres palabras consecutivas utilizadas para capturar patrones de lenguaje más complejos que las palabras individuales \cite{aguilera2018}.
+\end{enumerate}
+
+\subsection*{Modelado con LLMs y enriquecimiento semántico}
+
+\begin{enumerate}
+    \setcounter{enumi}{12}
+
+    \item \textbf{LLM (Large Language Models)}
+
+    Modelos de lenguaje de gran escala (como GPT o T5) entrenados sobre corpus masivos, capaces de generar texto, extraer conocimiento implícito y realizar razonamiento contextualizado \cite{nguyen2024,razumovskaia2024}.
+
+    \item \textbf{Prompt Engineering}
+
+    Diseño estratégico de instrucciones o ejemplos para guiar la salida de un LLM, crucial en tareas de extracción de habilidades o clasificación de ocupaciones \cite{razumovskaia2024}.
+
+    \item \textbf{Few-shot learning}
+
+    Habilidad de los LLMs para realizar tareas complejas con pocos ejemplos, lo cual resulta clave cuando se carece de datasets etiquetados masivamente en español \cite{nguyen2024}.
+
+    \item \textbf{Chain-of-Thought Reasoning (CoT)}
+
+    Técnica que induce a los modelos a razonar paso a paso, mejorando precisión en tareas como clasificación y desambiguación semántica \cite{razumovskaia2024}.
+
+    \item \textbf{Infer-Retrieve-Rank (IRR)}
+
+    Enfoque que primero infiere una entidad, luego recupera candidatos posibles, y finalmente los rankea con base en relevancia, utilizado para seleccionar habilidades o clasificar ocupaciones \cite{lopez2025}.
+
+    \item \textbf{Habilidades explícitas vs implícitas}
+
+    Las primeras están textualmente expresadas (``manejo de Python''), mientras que las segundas deben inferirse por contexto (``implementación de modelos supervisados'') \cite{nguyen2024}.
+\end{enumerate}
+
+\subsection*{Representación vectorial y análisis semántico}
+
+\begin{enumerate}
+    \setcounter{enumi}{18}
+
+    \item \textbf{Embeddings semánticos}
+
+    Representaciones numéricas de textos que capturan similitudes semánticas, permitiendo análisis cuantitativos y clustering. Ejemplos incluyen word2vec, BERT y E5 \cite{kavas2025,vasquez2024}.
+
+    \item \textbf{Embeddings multilingües}
+
+    Vectores entrenados para representar texto en múltiples idiomas en un mismo espacio semántico. Son esenciales para manejar contenido mixto español-inglés en ofertas laborales \cite{echeverria2022,razumovskaia2024}.
+
+    \item \textbf{Modelos de lenguaje en español}
+
+    Incluyen variantes como BETO, MarIA, T5-español, que han sido entrenadas en corpus hispanos y se adaptan mejor a tareas de extracción en este idioma \cite{nguyen2024}.
+
+    \item \textbf{Espacio vectorial}
+
+    Marco matemático donde entidades como palabras, frases o documentos son representadas como vectores en un espacio multidimensional \cite{kavas2025}.
+
+    \item \textbf{Reducción de dimensionalidad (UMAP)}
+
+    Técnica que transforma espacios de alta dimensionalidad en representaciones más simples, conservando la estructura semántica subyacente para facilitar análisis y visualización \cite{lukauskas2023}.
+\end{enumerate}
+
+\subsection*{Segmentación y visualización}
+
+\begin{enumerate}
+    \setcounter{enumi}{23}
+
+    \item \textbf{Clustering (HDBSCAN)}
+
+    Algoritmo no supervisado que detecta grupos naturales de observaciones (como habilidades o perfiles laborales) según su similitud semántica, sin requerir número de clusters predefinido \cite{lukauskas2023}.
+
+    \item \textbf{Evaluación por coherencia semántica}
+
+    Métrica que mide qué tan bien están agrupadas las instancias similares dentro de un modelo, clave para validar la efectividad del clustering \cite{vasquez2024}.
+
+    \item \textbf{Silhouette Score}
+
+    Indicador que evalúa la calidad de los clusters considerando qué tan cohesionados y separados están entre sí \cite{lukauskas2023}.
+
+    \item \textbf{Visualización de datos}
+
+    Proceso de representar información compleja en formatos gráficos o interactivos que permiten interpretar resultados, comunicar hallazgos y apoyar decisiones \cite{rubio2024}.
+
+    \item \textbf{Python}
+
+    Lenguaje de programación ampliamente utilizado en ciencia de datos y NLP, por su sintaxis sencilla y librerías especializadas como scikit-learn, spaCy, transformers y pandas \cite{nguyen2024}.
+
+    \item \textbf{Taxonomía de habilidades (ESCO, CIUO-08, O*NET)}
+
+    Sistemas jerárquicos y normalizados de clasificación de habilidades y ocupaciones, fundamentales para anclar el análisis a estándares internacionales y mejorar interoperabilidad de los resultados \cite{cardenas2015,echeverria2022}.
+\end{enumerate}
+
+\section{Análisis de alternativas de solución}
+
+Aunque el presente proyecto busca sentar las bases para el diseño e implementación de un Observatorio Laboral automatizado y adaptable al contexto latinoamericano, con enfoque multilingüe, detección explícita e implícita de habilidades, y visualizaciones analíticas basadas en NLP y clustering, existen líneas de investigación y desarrollos aplicados que abordan parcialmente este problema. A continuación se describen tres alternativas representativas que podrían considerarse soluciones parciales al desafío de extraer y analizar habilidades desde ofertas de empleo en línea.
+
+\subsection{Alternativas de solución e impacto}
+
+\subsubsection*{Alternativa 1: Scraping y análisis léxico descriptivo con reglas manuales (caso Colombia, México y Argentina)}
+
+Una línea de trabajo extendida en América Latina consiste en combinar técnicas de recolección de datos mediante web scraping con análisis descriptivo basado en reglas léxicas, tipologías fijas o matching semántico rudimentario. Si bien este enfoque no recurre a modelos de aprendizaje profundo ni representaciones vectoriales, ha sido útil para establecer líneas base de monitoreo laboral.
+
+Uno de los casos más representativos es el trabajo de Rubio Arrubla (2024), quien diseñó un pipeline de extracción sobre el portal elempleo.com en Colombia. Este estudio abarca más de cinco años de ofertas tecnológicas, extraídas mediante técnicas de scraping iterativo. Para la clasificación de habilidades, el autor emplea un esquema basado en la CIUO-08 y una tipología propia, dividiendo las competencias en habilidades generales, especializadas, TIC y de teletrabajo. La identificación de habilidades se realiza mediante tokenización, lematización y matching textual, con una métrica de similitud basada en n-gramas y umbrales de coincidencia. El análisis final presenta tendencias por tipo de habilidad, nivel educativo y sector económico, sin recurrir a embeddings avanzados ni modelos de clasificación automática con LLMs.
+
+De forma similar, Aguilera y Méndez (2018) desarrollaron un sistema de scraping para portales argentinos como ZonaJobs, Bumeran y UniversoBIT. Su estudio se concentra en el sector TI y destaca por utilizar técnicas de minería de texto en R, específicamente bigramas y análisis de frecuencias. La estandarización léxica fue un reto central, dado el uso informal del lenguaje en las ofertas. Los autores construyeron una lista de palabras clave semimanual, segmentando ofertas por tecnología (ej. Java, SQL, Linux) y rol (ej. Analista, Soporte). Un hallazgo clave fue la altísima concentración geográfica de vacantes en Buenos Aires (más del 90\%), lo que refuerza la necesidad de visualización territorial en observatorios laborales.
+
+En México, Martínez Sánchez (2024) combinó datos de la ENOE con scraping de portales abiertos, permitiendo comparar la demanda reportada con la demanda publicada en línea. El enfoque se apoya en un análisis de frecuencia de términos y la creación de índices de crecimiento en habilidades digitales, así como en una tipología que segmenta habilidades sociales, cognitivas y técnicas. Aunque no incluye procesamiento avanzado de lenguaje natural, el estudio evidencia el desajuste entre oferta educativa y demanda laboral, justificando la necesidad de observatorios automatizados.
+
+En términos técnicos, estos estudios suelen combinar Scrapy, un framework de scraping asíncrono, con Selenium o scrapy-selenium para acceder a contenido dinámico cargado por JavaScript. Este diseño modular permite definir spiders especializados por portal, región o sector, optimizando el rastreo en paralelo. Los datos recolectados pueden almacenarse en MongoDB, PostgreSQL o archivos planos (CSV/JSON), facilitando su posterior integración con pipelines de análisis o dashboards institucionales.
+
+Estos tres estudios muestran un enfoque efectivo para capturar tendencias macro en demanda laboral, a partir de reglas simples, sin recurrir a modelos complejos. La fiabilidad del análisis depende de la calidad del scraping y de la precisión de los diccionarios empleados.
+
+\textbf{Impacto técnico:} Estos sistemas son fáciles de implementar y mantener. Pueden ejecutarse con lenguajes como Python o R, y son reproducibles por equipos sin formación avanzada en inteligencia artificial. No requieren GPUs ni acceso a APIs costosas, lo que los vuelve apropiados para entornos universitarios con recursos limitados. Sin embargo, no escalan bien ante la ambigüedad o informalidad de las ofertas, y requieren mantenimiento manual constante de listas de términos y reglas.
+
+\textbf{Impacto social:} Permiten una visualización inicial de las tendencias de empleo, siendo útiles para tomadores de decisiones en políticas públicas o para programas de formación técnica. Al ser comprensibles y auditables, estos enfoques generan confianza entre stakeholders no técnicos. Sin embargo, no capturan habilidades emergentes ni estructuras implícitas del lenguaje, lo que puede invisibilizar competencias importantes.
+
+\textbf{Impacto económico:} Reducen costos frente a encuestas laborales tradicionales, pero requieren esfuerzos manuales continuos. No generan automatización de largo plazo ni integración con dashboards interactivos, lo que limita su reutilización institucional o empresarial.
+
+\subsubsection*{Alternativa 2: Extracción de habilidades mediante LLMs y aprendizaje por instrucciones (casos NLP4HR, CLiC-it, GenAIK)}
+
+En años recientes, una nueva línea de investigación ha explorado el uso de modelos de lenguaje de gran escala (LLMs) para la extracción automatizada de habilidades desde ofertas laborales. Estos métodos recurren a técnicas de few-shot learning, prompting estructurado y recuperación aumentada (RAG) para detectar menciones tanto explícitas como implícitas de competencias, con adaptabilidad multilingüe.
+
+El trabajo de Nguyen et al. (2024), presentado en el taller NLP4HR de ACL, es un referente en esta categoría. Los autores replantean la tarea clásica de extracción como una generación de texto supervisada, donde al modelo se le presentan ejemplos dentro del prompt (few-shot in-context learning) y se le solicita extraer las habilidades relevantes. Comparan dos formatos: uno tipo extracción directa (EXTRACTION-STYLE) y otro tipo etiquetado secuencial (NER-STYLE), utilizando GPT-3.5 turbo. Sus hallazgos muestran que, aunque el rendimiento en F1 es inferior al de modelos entrenados, los LLMs manejan mucho mejor frases sintácticamente complejas o ambiguas.
+
+En particular, Nguyen et al. (2024) reportan que el uso de solo cinco ejemplos en el prompt permitió mejorar el F1 en un rango de \textasciitilde20--28\% frente al escenario zero-shot. Además, observaron que los LLMs capturan con mayor precisión listas mixtas de habilidades técnicas y blandas, incluso cuando están embebidas en estructuras narrativas o poco formales.
+
+Complementariamente, Razumovskaia et al. (2024) presentan en CLiC-it un sistema que combina embeddings E5 multilingües con LLMs como Llama-3, aplicando clasificación multilabel de vacantes según la taxonomía ESCO. Las ofertas en español e italiano son vectorizadas con E5, luego las 30 ocupaciones más similares se recuperan vía cosine similarity, y se construye un prompt para el LLM que realiza el etiquetado final. Esta arquitectura híbrida entre recuperación semántica y razonamiento contextual logra una precisión considerable en clasificación de ocupaciones, sin necesidad de entrenamiento supervisado.
+
+Por su parte, López et al. (2025), en el marco del GenAIK workshop, proponen una solución completa basada en knowledge graphs laborales. El sistema integra entity linking con embeddings de tipo fastText y Node2Vec, usando razonamiento Chain-of-Thought (CoT) para validar habilidades inferidas. La extracción se realiza a través de clasificación multietiqueta extrema (XMC) y se ancla a la taxonomía ESCO. Su pipeline multilingüe opera en español, y utiliza prompts en inglés sobre entradas hispanas, estrategia que ha demostrado ser más eficaz que traducir previamente los textos. Este enfoque demuestra ser robusto y preciso, incluso para detectar habilidades implícitas en contextos ambiguos.
+
+\textbf{Impacto técnico:} Estos métodos representan el estado del arte en extracción semántica. Permiten abordar textos en español informal o con lenguaje mixto (spanglish), y extraer competencias no mencionadas literalmente. En contextos universitarios o de formación técnica, pueden utilizarse como prototipos rápidos para cursos avanzados de NLP o como herramientas exploratorias en observatorios laborales sin requerir re-etiquetado masivo. Sin embargo, requieren acceso a LLMs potentes (como GPT-4 o LLaMA-3) y GPUs para ejecución eficiente. Son difíciles de auditar y pueden generar resultados inconsistentes sin mecanismos de validación.
+
+\textbf{Impacto social:} Al captar habilidades implícitas, visibilizan competencias valiosas que no se nombran explícitamente en las ofertas. Esto puede beneficiar a sectores poblacionales con trayectorias laborales no convencionales. También permiten mayor actualización y adaptabilidad, ajustándose a los cambios en el lenguaje laboral.
+
+\textbf{Impacto económico:} Aunque su implementación inicial es costosa, reducen drásticamente la necesidad de anotación manual y escalabilidad limitada. Pueden implementarse en observatorios o empresas para análisis automatizado de miles de vacantes. Sin embargo, la dependencia de proveedores externos (OpenAI, Anthropic, etc.) conlleva riesgos de sostenibilidad y costos recurrentes.
+
+\subsubsection*{Alternativa 3: Pipelines de análisis semántico y agrupamiento (casos Lituania, BID, OIT)}
+
+Una tercera alternativa metodológica combina técnicas tradicionales de extracción con representaciones vectoriales semánticas y algoritmos de agrupamiento (clustering) no supervisado. Esta línea permite no solo identificar habilidades, sino agruparlas en perfiles o clústeres dinámicos, facilitando visualizaciones de tendencias y análisis estructurales del mercado laboral.
+
+El estudio de Lukauskas et al. (2023), publicado en Applied Sciences, es pionero en esta aproximación. El equipo lituano procesó más de 500.000 vacantes mediante un pipeline que comienza con extracción de requerimientos por expresiones regulares (regex) y segmentación por secciones (ej. ``Requirements'' → ``Company Offers''). Luego, los fragmentos relevantes son vectorizados con Sentence-BERT, y se aplica reducción de dimensionalidad con UMAP. Finalmente, se emplea HDBSCAN para identificar clusters de habilidades emergentes. El estudio concluye que esta metodología es capaz de descubrir perfiles laborales y generar descripciones automáticas mediante GPT-4 para cada cluster. Aunque el corpus está en lituano, las herramientas y técnicas utilizadas son multilingües, y la metodología es replicable con modelos entrenados en español.
+
+Desde una perspectiva institucional, el Banco Interamericano de Desarrollo (Echeverría \& Rucci, 2022) ha identificado pipelines similares en América Latina, articulando scraping, clasificación por taxonomías (ESCO, CIUO), y visualización dinámica. En países como Uruguay, Paraguay y República Dominicana se han implementado tableros interactivos que monitorean tendencias de habilidades en tiempo real. Sin embargo, la mayoría de estos sistemas se basan en reglas fijas o matching manual, y aún no incorporan técnicas de embeddings ni NLP avanzado.
+
+Un enfoque intermedio es el de la OIT/CINTERFOR (2015), que propone un pipeline desde el scraping hasta el análisis ocupacional, apoyado en bigramas y emparejamiento manual contra clasificaciones internacionales. Aunque más cercano a la práctica regional, este enfoque carece de automatización robusta y no aborda habilidades implícitas ni clustering semántico.
+
+\textbf{Impacto técnico:} Estos pipelines ofrecen robustez y escalabilidad. El uso de embeddings (ej. BETO, LaBSE), UMAP y HDBSCAN permite construir representaciones dinámicas del mercado laboral, detectar nuevas combinaciones de competencias y monitorear perfiles emergentes. Sin embargo, requieren infraestructura de análisis y conocimiento especializado para su correcta configuración y evaluación.
+
+\textbf{Impacto social:} Facilitan la comprensión de cambios estructurales en la demanda de habilidades, beneficiando a instituciones educativas, empleadores y trabajadores. Los dashboards derivados pueden convertirse en herramientas de planificación estratégica, adaptadas a contextos locales. Además, el uso combinado de expresiones regulares y modelos como BERT permite mantener cierto grado de explicabilidad y transparencia, lo que favorece la confianza entre usuarios institucionales o no expertos, en comparación con enfoques completamente basados en LLMs.
+
+\textbf{Impacto económico:} Aunque más costosos en implementación que enfoques léxicos simples, estos pipelines permiten análisis replicables y actualizables, reduciendo costos de investigación a largo plazo. Además, su potencial para caracterizar clústeres emergentes puede ayudar a diseñar programas de formación más alineados con el mercado.
+
+Las tres alternativas exploradas ofrecen enfoques complementarios para abordar el desafío de extraer, representar y analizar habilidades desde ofertas de empleo publicadas en línea. Sin embargo, ninguna de ellas (y ninguno de los estudios asociados) resuelve de forma integral los requerimientos de automatización, adaptabilidad lingüística y escalabilidad técnica que exige un observatorio laboral moderno, especialmente en contextos latinoamericanos multilingües y altamente heterogéneos. Si bien algunos alcanzan a aproximarse a los requerimientos generales de los componentes propuestos, ninguno de esa complejidad publica resultados en el contexto latinoamericano, especialmente en Colombia, México, y Argentina, ni estrictamente enfocados al idioma español.
+
+La primera alternativa, basada en scraping y análisis léxico con reglas manuales, ha demostrado ser efectiva para caracterizar tendencias generales en demanda laboral, particularmente en países como Colombia, Argentina y México. Su principal ventaja radica en su bajo costo de implementación y su claridad metodológica, lo que facilita su adopción por universidades, gobiernos y actores del tercer sector. No obstante, esta línea metodológica presenta limitaciones importantes: su dependencia de listas estáticas de palabras clave impide detectar habilidades implícitas, emergentes o mal redactadas, y su falta de representaciones semánticas profundas restringe la capacidad de generalización del sistema ante nuevas formas lingüísticas o sectores no previamente tipificados. Además, el mantenimiento de los diccionarios y expresiones requiere esfuerzo manual constante y conocimiento experto del dominio.
+
+La segunda alternativa, centrada en el uso de LLMs y aprendizaje por instrucciones, representa el estado del arte en procesamiento de lenguaje natural aplicado al dominio laboral. Estos modelos permiten extraer habilidades complejas con prompts bien diseñados, manejar lenguaje mixto (español-inglés), y operar sin necesidad de entrenamiento supervisado. Su flexibilidad los hace especialmente útiles para detectar competencias blandas, inferencias implícitas y relaciones contextuales. Sin embargo, esta potencia técnica viene acompañada de desafíos importantes: el acceso a modelos avanzados suele requerir infraestructura de alto costo o dependencias de proveedores externos, su comportamiento puede ser opaco y difícil de auditar, y existe un riesgo potencial de sesgos si no se aplican filtros culturales y lingüísticos adecuados. En el contexto latinoamericano, su adopción requiere una cuidadosa adaptación semántica y una evaluación ética del impacto social de los modelos generativos.
+
+La tercera alternativa, basada en pipelines de análisis semántico y agrupamiento no supervisado, ofrece un compromiso interesante entre complejidad técnica, interpretabilidad y escalabilidad. Al integrar técnicas como embeddings multilingües, reducción de dimensionalidad (UMAP) y clustering (HDBSCAN), estos enfoques permiten construir visualizaciones dinámicas de perfiles laborales, detectar clústeres emergentes de habilidades y ofrecer una segmentación más robusta del mercado de trabajo. En comparación con los LLMs, estos métodos son más eficientes computacionalmente, más explicables, y pueden implementarse con modelos preentrenados accesibles en español (como BETO o LaBSE). Sin embargo, requieren una etapa previa de extracción bien resuelta (idealmente por regex o NLP tradicional) y una calibración cuidadosa de parámetros de agrupamiento para evitar la generación de clusters artificiales o incoherentes.
+
+En conjunto, estas alternativas muestran un panorama metodológico rico pero fragmentado. Los enfoques simples basados en scraping y reglas ofrecen confiabilidad y bajo costo, pero escasa adaptabilidad semántica. Los LLMs ofrecen potencia inferencial y aprendizaje contextual, pero imponen barreras de costo, auditoría y replicabilidad. Los pipelines semántico-clusterizados facilitan la estructuración macro de perfiles laborales, pero requieren componentes previos bien diseñados y cierto conocimiento técnico para su ajuste.
+
+Para el contexto de América Latina, marcado por la alta informalidad laboral, la ambigüedad textual de las ofertas, y la coexistencia de múltiples registros lingüísticos (incluyendo spanglish y terminología local), ninguna de estas alternativas resulta suficiente por sí sola. La solución óptima debe articular las fortalezas de cada enfoque: combinar scraping automatizado y modular (Alternativa 1), extracción híbrida e inferencial con LLMs adaptados (Alternativa 2), y representación semántica con agrupamiento dinámico (Alternativa 3). Esta articulación permitiría construir un observatorio laboral flexible, multilingüe, transparente y escalable, capaz de detectar tanto las macro-tendencias como los matices implícitos de un mercado laboral digital en constante transformación.
+
+\subsection{Comparación de alternativas}
+
+La siguiente tabla resume los principales aportes, limitaciones y elementos aprovechables de los estudios analizados:
+
+\begin{longtable}{|p{3.5cm}|p{3.5cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{Estudio} & \textbf{Aportes principales} & \textbf{Limitaciones técnicas y conceptuales} & \textbf{Qué podemos aprovechar} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Estudio} & \textbf{Aportes principales} & \textbf{Limitaciones técnicas y conceptuales} & \textbf{Qué podemos aprovechar} \\
+\hline
+\endhead
+
+\hline
+\endfoot
+
+Rubio Arrubla (2024) & Scraping masivo en Colombia. Tipología de habilidades (TIC, teletrabajo, especializadas). Matching léxico y CIUO. & No usa embeddings avanzados, LLMs, ni clustering. Extracción explícita dependiente de n-gramas. & Tipología de habilidades adaptada al contexto colombiano. Corpus base útil para comparación temporal. \\
+\hline
+
+Aguilera y Méndez (2018) & Scraping en Argentina. Análisis léxico con bigramas. Enfoque geográfico. & Análisis muy dependiente de reglas. Sin vectorización ni detección implícita. & Lecciones sobre desigualdad regional y vocabulario técnico informal en español. \\
+\hline
+
+Martínez Sánchez (2024) & Cruce entre encuestas y scraping. Segmentación de habilidades blandas/cognitivas. & Procesamiento manual de términos. Falta de automatización. & Modelo de integración institucional (INEGI + scraping). Fundamento para dashboards nacionales. \\
+\hline
+
+Nguyen et al. (2024) -- ACL NLP4HR & LLMs en few-shot. Manejo superior de menciones complejas. & No incluye scraping. Requiere LLM potente. Limitado por sesgos. & Estructura de prompting y validación útil para detección implícita. \\
+\hline
+
+Razumovskaia et al. (2024) -- CLiC-it & Embeddings E5 + LLM para clasificación multilabel. Uso de ESCO. & Asume embeddings preexistentes y datasets estructurados. & Arquitectura híbrida (vectorización + razonamiento) para normalización de ocupaciones. \\
+\hline
+
+López et al. (2025) -- GenAIK & Entity linking + CoT reasoning + XMC. Extracción multilingüe. & Alta complejidad técnica. Uso de vocabularios no localizados. & Pipeline de última generación replicable con glosarios regionales. \\
+\hline
+
+Lukauskas et al. (2023) -- Applied Sciences & Regex + BERT + UMAP + HDBSCAN. Segmentación por clústeres. GPT para síntesis de perfiles. & No incluye scraping. Formato lituano. Fuerte dependencia de patrones iniciales. & Pipeline vectorial + clustering útil para construir dashboards e identificar perfiles emergentes. \\
+\hline
+
+BID (2022) & Panorama regional. Casos en Uruguay, Paraguay, Colombia, y más. & No menciona técnicas modernas (regex, NLP clásico). No multilingüe. & Justificación institucional del uso de scraping y falta de pipeline moderno. \\
+\hline
+
+OIT/CINTERFOR (2015) & Pipeline básico desde scraping hasta análisis ocupacional. & Sin embeddings ni clustering. Manual. & Inspiración estructural para etapas de matching y validación ocupacional. \\
+\hline
+
+Puello \& Gomez (2019) & Scraping robusto con Scrapy + Selenium. Arquitectura modular. & Sin análisis de lenguaje. Extrae texto sin semántica. & Infraestructura de scraping adaptable a portales latinoamericanos dinámicos. \\
+\hline
+
+\end{longtable}
+
+A partir del análisis detallado de los estudios y soluciones existentes, es evidente que ninguna alternativa actual resuelve de manera integral los desafíos que enfrenta la caracterización de la demanda de habilidades tecnológicas en América Latina. Si bien cada línea de trabajo aporta elementos valiosos, todas presentan limitaciones críticas en términos de cobertura, adaptabilidad lingüística, automatización, o profundidad analítica. Por esta razón, el enfoque propuesto en este proyecto no se posiciona como una cuarta alternativa más, sino como una síntesis estratégica de lo mejor de cada una, articulada específicamente para el contexto de Colombia, México y Argentina, y diseñada para operar en entornos hispanohablantes con alta variabilidad textual y carencia de recursos anotados.

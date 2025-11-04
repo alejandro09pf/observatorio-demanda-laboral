@@ -1,0 +1,21 @@
+\section{Objetivo}
+
+El presente documento tiene como propósito ofrecer una visión detallada de la arquitectura del sistema Observatorio de Demanda Laboral en América Latina, abordando aspectos clave como los atributos de calidad, la arquitectura de alto nivel y los factores de riesgo y restricciones asociados. Se establecerá una estructura clara del sistema, alineada con sus objetivos y requisitos arquitectónicos, tanto funcionales como no funcionales.
+
+A lo largo del documento, se analizarán las decisiones arquitectónicas tomadas, justificando su elección y evaluando su impacto en el desarrollo del proyecto. Además, se incluirán representaciones gráficas para facilitar la comprensión de la estructura del sistema, y se definirán los pasos a seguir para asegurar que la arquitectura se mantenga alineada con los objetivos estratégicos del observatorio.
+
+Este sistema está diseñado para automatizar el análisis de demanda laboral en el sector tecnológico de América Latina mediante técnicas avanzadas de procesamiento de lenguaje natural, embeddings semánticos y análisis de clustering, proporcionando insights valiosos sobre las habilidades técnicas más demandadas en Colombia, México y Argentina.
+
+\subsection{Alcance del Sistema}
+
+El Observatorio de Demanda Laboral es un sistema académico de investigación que integra las siguientes capacidades:
+
+\begin{itemize}
+    \item Recolección automatizada: Web scraping de 11 portales de empleo en 3 países (Colombia, México, Argentina)
+    \item Procesamiento de lenguaje natural: Extracción de habilidades técnicas mediante NER, Regex y LLMs
+    \item Normalización semántica: Matching contra taxonomías ESCO y O*NET con estrategia de 3 capas
+    \item Análisis de clustering: Identificación de perfiles y tendencias mediante UMAP y HDBSCAN
+    \item Generación de reportes: Visualizaciones y análisis comparativos por país y período
+\end{itemize}
+
+El sistema opera en modo batch procesando aproximadamente 60,000 ofertas laborales reales recolectadas entre marzo y diciembre de 2024, con capacidad de escalar hasta 600,000 ofertas en fases posteriores del proyecto.

@@ -1,0 +1,175 @@
+\chapter{Monitoreo y Control del Proyecto}
+
+\section{Administración de Requerimientos}
+
+La administración de requerimientos en este proyecto sigue un enfoque pragmático y orientado a la adaptabilidad técnica, en el que se priorizan los requerimientos funcionales directamente vinculados con las fases metodológicas definidas y se permite cierto grado de flexibilidad en la implementación cuando surgen limitantes técnicas, cambios en herramientas disponibles o imprevistos identificados durante las retrospectivas semanales.
+
+Dada la naturaleza académica del proyecto y su metodología híbrida basada en CRISP-DM y Scrum no estricto, los requerimientos serán gestionados de forma iterativa, sin pretender alcanzar niveles de rigidez formal propios de proyectos empresariales bajo contratos estrictos. En cambio, se promoverá la documentación continua de decisiones técnicas, la trazabilidad modular de los cambios, y la validación interna de que cada fase cumple con los objetivos esperados antes de avanzar a la siguiente.
+
+El proceso general de gestión de requerimientos se presenta en el siguiente diagrama BPMN:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/BPMNAdministraciondeRequerimientos.png}
+\caption{Proceso de Administración de Requerimientos (BPMN)}
+\label{fig:bpmn-requerimientos}
+\end{figure}
+
+\subsection{Proceso de Gestión de Cambios}
+
+Los cambios a los requerimientos podrán ser propuestos por cualquier miembro del equipo, el asesor del proyecto, o por descubrimiento técnico en ejecución. Todo cambio seguirá el siguiente flujo:
+
+\begin{enumerate}
+    \item \textbf{Identificación del cambio:} El integrante que identifica la necesidad de cambio documenta el motivo, impacto esperado y alternativas posibles.
+
+    \item \textbf{Evaluación de impacto:} Se discute en la reunión semanal si el cambio afecta cronograma, carga de trabajo, dependencias técnicas o entregables.
+
+    \item \textbf{Decisión por consenso:} Se aprueba o rechaza por acuerdo del equipo. Si hay desacuerdo, el asesor tendrá voz decisoria.
+
+    \item \textbf{Actualización de documentación:} Si se aprueba, se registra el cambio en el acta semanal, en el documento técnico del proyecto, y se actualiza la planificación afectada.
+
+    \item \textbf{Comunicación y ajuste:} Los integrantes afectados ajustan su trabajo conforme al cambio aprobado. Se notifica formalmente en la siguiente sesión de seguimiento.
+\end{enumerate}
+
+\subsection{Trazabilidad de Requerimientos}
+
+Los requerimientos funcionales están vinculados directamente a las fases del proyecto y sus entregables asociados. La trazabilidad se mantiene mediante los siguientes mecanismos:
+
+\begin{itemize}
+    \item \textbf{Tabla de requerimientos funcionales y fases:} Cada requerimiento está asociado a una o más fases metodológicas, lo que facilita identificar el momento de su validación y prueba.
+
+    \item \textbf{Repositorio de código en GitHub:} Cada módulo tiene una carpeta identificada y commits descriptivos que referencian la fase técnica correspondiente.
+
+    \item \textbf{Actas de seguimiento:} Registro semanal de avances, donde se indica qué requerimientos fueron implementados, probados o modificados.
+
+    \item \textbf{Documento técnico final:} En la documentación se incluirá una matriz de trazabilidad que vincule cada requerimiento funcional con su fase de diseño, implementación, prueba y validación.
+\end{itemize}
+
+\subsection{Aprobación y Validación de Cambios}
+
+Todos los cambios a requerimientos deben ser validados por:
+
+\begin{itemize}
+    \item El equipo de desarrollo (validación técnica de viabilidad)
+    \item El asesor del proyecto (validación académica y coherencia con los objetivos)
+    \item El director del proyecto (aprobación formal si el cambio implica modificación del alcance o fechas)
+\end{itemize}
+
+La aprobación se formaliza mediante firma digital o confirmación escrita en el acta correspondiente.
+
+\section{Monitoreo y Control de Progreso}
+
+El monitoreo del proyecto se realizará de forma continua mediante reuniones semanales, indicadores de avance y mecanismos de reporte estructurado que permitan detectar desviaciones de forma temprana y aplicar correcciones con suficiente anticipación.
+
+\subsection{Métricas de Seguimiento}
+
+Se emplearán las siguientes métricas para evaluar el avance del proyecto:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{3cm}|p{3cm}|}
+\hline
+\textbf{Métrica} & \textbf{Descripción} & \textbf{Frecuencia de medición} & \textbf{Responsable} \\
+\hline
+Porcentaje de avance por fase & Proporción de actividades completadas en cada fase metodológica & Semanal & Líder técnico \\
+\hline
+Horas trabajadas acumuladas & Total de horas dedicadas por cada integrante & Semanal & Cada integrante \\
+\hline
+Número de requerimientos implementados & Cantidad de funcionalidades técnicas completadas y validadas & Quincenal & Líder técnico \\
+\hline
+Tasa de cumplimiento del cronograma & Relación entre fechas planificadas y fechas reales de finalización de fases & Al finalizar cada fase & Coordinador de proyecto \\
+\hline
+Cantidad de defectos encontrados en validación & Errores técnicos detectados en pruebas funcionales & Al finalizar cada fase & Encargado de pruebas \\
+\hline
+\end{tabular}
+\caption{Métricas de Seguimiento del Proyecto}
+\end{table}
+
+\subsection{Actividades de Reporte}
+
+El reporte del avance del proyecto se realizará mediante los siguientes mecanismos:
+
+\begin{itemize}
+    \item \textbf{Reuniones semanales de seguimiento:} Cada lunes, de 1 hora de duración, con presencia de todo el equipo. Se discute el avance de la semana anterior, se presentan los bloqueos encontrados, se revisan las métricas de avance y se planifican las tareas de la siguiente semana.
+
+    \item \textbf{Actas de reunión:} Se redactará un acta resumida al final de cada reunión semanal, incluyendo asistencia, temas tratados, decisiones tomadas, compromisos adquiridos y fecha de próxima reunión. Las actas serán almacenadas en Google Drive compartido.
+
+    \item \textbf{Reportes quincenales al asesor:} Cada dos semanas, el equipo enviará un reporte técnico breve (1–2 páginas) al asesor del proyecto, indicando el estado de las fases, problemas técnicos detectados, soluciones aplicadas y planes próximos.
+
+    \item \textbf{Revisión de fase:} Al finalizar cada fase metodológica, se llevará a cabo una reunión de revisión extendida (de hasta 2 horas) con el asesor, donde se presenta el entregable correspondiente, se valida su calidad y se ajusta el plan para las siguientes fases si es necesario.
+\end{itemize}
+
+\subsection{Acciones Correctivas}
+
+Cuando se detecte una desviación significativa en el cronograma, los recursos disponibles, o la calidad técnica de los entregables, el equipo podrá aplicar las siguientes acciones correctivas:
+
+\begin{itemize}
+    \item \textbf{Reprogramación de actividades:} Si una fase se retrasa más de una semana, se evalúa reducir el alcance técnico de otras fases menos críticas, redistribuir tareas entre integrantes, o ajustar el cronograma global con aprobación del asesor.
+
+    \item \textbf{Refuerzo técnico colaborativo:} Ante bloqueos técnicos, Nicolás Camacho brindará acompañamiento adicional a los integrantes afectados, incluyendo sesiones de pair programming o revisión de código guiada.
+
+    \item \textbf{Simplificación técnica:} Si una técnica planificada resulta inviable por limitaciones computacionales, falta de datos o complejidad excesiva, se reemplazará por una alternativa más simple pero válida técnicamente (por ejemplo, pasar de fine-tuning a prompting directo con LLMs).
+
+    \item \textbf{Extensión controlada del cronograma:} Como último recurso, si la calidad del entregable está comprometida, se podrá solicitar una extensión de hasta 2 semanas, previa validación con el director del proyecto y ajuste formal del plan.
+\end{itemize}
+
+Todas las acciones correctivas deberán quedar documentadas en el acta correspondiente, indicando el problema detectado, la decisión tomada, el responsable de implementarla y el plazo de ejecución.
+
+\section{Cierre del Proyecto}
+
+El cierre del proyecto contempla un conjunto de actividades formales que garantizan la entrega completa de los resultados, la documentación adecuada de aprendizajes, la transferencia de conocimiento y la validación final por parte de los evaluadores designados.
+
+\subsection{Entrega del Producto}
+
+La entrega final del proyecto incluirá los siguientes componentes:
+
+\begin{itemize}
+    \item \textbf{Repositorio de código funcional:} Alojado en GitHub, con estructura modular clara, código comentado, archivo README con instrucciones de instalación y ejecución, requirements.txt con dependencias, y ejemplos de ejecución del pipeline completo.
+
+    \item \textbf{Dataset procesado:} Base de datos PostgreSQL exportada (dump SQL) con las tablas de vacantes, habilidades extraídas, embeddings y clusters. Incluye un diccionario de datos explicativo.
+
+    \item \textbf{Documento técnico final:} Informe completo del proyecto en formato PDF, con introducción, metodología, arquitectura del sistema, descripción de cada fase técnica, resultados obtenidos, análisis de validación, conclusiones y recomendaciones. Mínimo 60 páginas, formato IEEE o plantilla institucional.
+
+    \item \textbf{Visualizaciones y notebooks:} Carpeta con gráficos generados (histogramas, clusters, mapas de calor, nubes de palabras) y notebooks de Jupyter con análisis exploratorios y explicaciones técnicas detalladas.
+
+    \item \textbf{Manual de usuario técnico:} Guía breve para ejecutar el sistema en otro equipo, incluyendo requisitos de hardware, instalación de dependencias, configuración de variables de entorno, y pasos para replicar las fases del pipeline.
+
+    \item \textbf{Evidencias de validación:} Logs de ejecución, métricas de evaluación (precisión de NER, coherencia de clusters, ejemplos de habilidades enriquecidas), y capturas de pantalla de visualizaciones funcionales.
+\end{itemize}
+
+\subsection{Actividades de Cierre}
+
+Al finalizar el desarrollo del proyecto, se llevarán a cabo las siguientes actividades de cierre:
+
+\begin{enumerate}
+    \item \textbf{Revisión final de entregables:} El equipo verifica que todos los componentes estén completos, funcionales y correctamente documentados.
+
+    \item \textbf{Sesión de retrospectiva final:} Reunión de 2 horas donde el equipo reflexiona sobre aprendizajes técnicos, dificultades enfrentadas, decisiones acertadas y mejoras aplicables a futuros proyectos similares. Se documenta en un acta de lecciones aprendidas.
+
+    \item \textbf{Presentación final al asesor:} Se expone el sistema completo al asesor del proyecto, demostrando su funcionamiento end-to-end, explicando decisiones técnicas clave y respondiendo preguntas técnicas y metodológicas.
+
+    \item \textbf{Preparación de defensa pública:} El equipo elabora una presentación de entre 20 y 30 minutos para la sustentación formal ante jurados, enfocada en los resultados técnicos, validación empírica y aportes del proyecto.
+
+    \item \textbf{Archivo del proyecto:} Todos los entregables finales se suben a un repositorio institucional (si aplica) y se entrega copia a la universidad en los formatos solicitados (PDF, código fuente, datasets).
+
+    \item \textbf{Liberación pública (opcional):} Si el equipo lo decide y el asesor lo autoriza, se puede liberar el código bajo licencia open source (MIT o Apache 2.0) para beneficio de la comunidad técnica y académica.
+\end{enumerate}
+
+\subsection{Criterios de Aceptación Final}
+
+El proyecto será considerado completo y aceptable cuando:
+
+\begin{itemize}
+    \item Todos los requerimientos funcionales prioritarios hayan sido implementados y validados técnicamente.
+
+    \item El sistema sea capaz de ejecutar el pipeline completo desde scraping hasta visualización sin errores críticos.
+
+    \item La documentación técnica esté completa, coherente y permita replicar el sistema por terceros con conocimientos técnicos medios.
+
+    \item El asesor del proyecto apruebe formalmente la calidad técnica y académica del trabajo.
+
+    \item Se hayan cumplido las entregas programadas según el cronograma ajustado, o se hayan justificado formalmente las extensiones aplicadas.
+\end{itemize}
+
+Una vez cumplidos estos criterios, el proyecto podrá ser presentado a evaluación formal por parte de los jurados designados.

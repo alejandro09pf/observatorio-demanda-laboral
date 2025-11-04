@@ -1,0 +1,299 @@
+\chapter{Procesos de Soporte}
+
+\section{Gestión de la Configuración}
+
+La gestión de la configuración del proyecto tiene como propósito mantener la integridad, trazabilidad y control de versiones de todos los artefactos generados durante el desarrollo, incluyendo código fuente, datasets, documentación técnica, modelos entrenados, scripts de procesamiento y archivos de configuración. Dado el carácter académico del proyecto y su naturaleza modular, se adoptará un enfoque pragmático basado en Git, GitHub y herramientas colaborativas de documentación, sin pretender alcanzar niveles de formalidad propios de entornos empresariales regulados.
+
+\subsection{Elementos de Configuración}
+
+Los elementos que estarán bajo control de configuración incluyen:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{5cm}|p{3cm}|p{2.5cm}|}
+\hline
+\textbf{Elemento de configuración} & \textbf{Descripción} & \textbf{Herramienta de gestión} & \textbf{Responsable} \\
+\hline
+Código fuente del sistema & Scripts de scraping, NER, LLMs, clustering y visualización en Python & GitHub & Nicolás \\
+\hline
+Configuraciones de entorno & Archivos .env, config.json, requirements.txt, docker-compose.yml & GitHub & Nicolás \\
+\hline
+Bases de datos y esquemas & Dump SQL de PostgreSQL con estructura de tablas y datos procesados & GitHub + Google Drive & Nicolás \\
+\hline
+Documentación técnica del proyecto & Documento SPMP, SRS, memoria técnica, manuales & Google Docs + Overleaf & Alejandro \\
+\hline
+Notebooks de análisis & Jupyter notebooks con pruebas exploratorias, validaciones y visualizaciones & GitHub & Nicolás \\
+\hline
+Datasets intermedios & Archivos CSV, JSON o pickle con datos procesados por fase & Google Drive & Nicolás \\
+\hline
+Modelos y embeddings & Archivos de modelos descargados o ajustados, vectores precomputados & Google Drive & Nicolás \\
+\hline
+Actas de reunión y seguimiento & Registros de reuniones semanales y decisiones de equipo & Google Docs & Alejandro \\
+\hline
+\end{tabular}
+\caption{Elementos de Configuración del Proyecto}
+\end{table}
+
+\subsection{Proceso de Control de Versiones}
+
+El control de versiones del código y de los artefactos técnicos se realizará mediante Git y GitHub, siguiendo las siguientes prácticas:
+
+\begin{itemize}
+    \item \textbf{Rama principal (main):} Contiene la versión estable del sistema, probada y validada al cierre de cada fase metodológica. Los commits a esta rama requieren revisión previa.
+
+    \item \textbf{Ramas de desarrollo por fase (dev-fase-X):} Cada fase metodológica tendrá una rama temporal donde se desarrollarán las funcionalidades correspondientes. Al validarse técnicamente, se fusionará a main mediante pull request.
+
+    \item \textbf{Commits descriptivos:} Todo commit debe tener un mensaje claro que indique qué cambio se realizó, por qué y en qué fase del proyecto se hizo. Formato sugerido: ``[FASE-X] Descripción breve del cambio''.
+
+    \item \textbf{Versionado semántico para entregas:} Cada entregable mayor será etiquetado con un tag de versión (v0.1, v0.2, v1.0, etc.) para facilitar la trazabilidad histórica.
+
+    \item \textbf{Sincronización diaria:} Los integrantes deberán hacer push de sus avances al menos una vez al día, para evitar conflictos de integración y facilitar la colaboración.
+\end{itemize}
+
+\subsection{Gestión de Cambios en la Configuración}
+
+Cualquier cambio en la configuración del sistema (por ejemplo, modificación de estructura de base de datos, cambio de librerías clave, ajuste de arquitectura de scraping) deberá seguir este procedimiento:
+
+\begin{enumerate}
+    \item El integrante que propone el cambio documenta la razón técnica, el impacto esperado y las alternativas evaluadas.
+
+    \item Se discute en reunión semanal si el cambio es necesario, viable y justificado.
+
+    \item Si se aprueba, se implementa en una rama específica, se prueba localmente, y se documenta en el README o en comentarios del código.
+
+    \item Se abre un pull request para revisión por parte de Nicolás antes de fusionar a la rama principal.
+
+    \item Se actualiza el archivo de configuración correspondiente, se registra el cambio en el acta semanal y se comunica formalmente al equipo.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/BPMNControldeCambios.png}
+\caption{Proceso de Gestión de Cambios en la Configuración (BPMN)}
+\label{fig:bpmn-cambios}
+\end{figure}
+
+\subsection{Backup y Recuperación}
+
+Para garantizar la disponibilidad de los artefactos del proyecto ante pérdidas accidentales, se implementarán las siguientes medidas:
+
+\begin{itemize}
+    \item \textbf{GitHub como repositorio central:} Todo el código y documentación técnica se alojará en GitHub, que ofrece redundancia automática y permite recuperar versiones previas en caso de errores.
+
+    \item \textbf{Google Drive compartido:} Los datasets grandes, modelos preentrenados, documentos en edición activa y archivos binarios se almacenarán en una carpeta compartida de Google Drive con acceso restringido al equipo.
+
+    \item \textbf{Backups semanales locales:} Cada integrante mantendrá una copia local actualizada del repositorio completo, sincronizada semanalmente mediante git pull.
+
+    \item \textbf{Exportaciones SQL periódicas:} La base de datos PostgreSQL será exportada (dump) al finalizar cada fase técnica, con fecha y versión identificada, y almacenada en GitHub y Google Drive.
+\end{itemize}
+
+En caso de pérdida de datos, se recurrirá al historial de GitHub o a los backups de Google Drive, según corresponda. Si un integrante pierde su copia local, podrá clonar nuevamente el repositorio completo y descargar los archivos grandes desde Drive.
+
+\section{Aseguramiento de Calidad}
+
+El aseguramiento de calidad tiene como objetivo garantizar que los entregables del proyecto cumplan con los estándares técnicos esperados, funcionen correctamente en distintos escenarios de uso, y estén adecuadamente documentados para facilitar su comprensión, validación y réplica por terceros. Dado el contexto académico, se priorizará la validación funcional, la coherencia metodológica y la transparencia técnica por encima de métricas formales de calidad de software empresarial.
+
+\subsection{Estándares de Calidad Aplicados}
+
+Se aplicarán los siguientes estándares de calidad técnica en el desarrollo del proyecto:
+
+\begin{itemize}
+    \item \textbf{PEP 8 (Python):} Todo el código Python seguirá las convenciones de estilo de PEP 8, incluyendo nombres de variables descriptivos, separación clara de funciones, indentación de 4 espacios y límite de 100 caracteres por línea cuando sea posible.
+
+    \item \textbf{Modularidad y reutilización:} Cada fase del pipeline será implementada como un módulo independiente con entradas y salidas claramente definidas, facilitando la depuración, el testing y la reutilización futura.
+
+    \item \textbf{Documentación interna del código:} Funciones complejas deberán incluir docstrings explicativas en español, indicando propósito, parámetros de entrada, salida esperada y ejemplo de uso.
+
+    \item \textbf{Manejo de errores:} Se implementarán validaciones básicas de entrada, manejo de excepciones con mensajes claros, y logging de eventos críticos para facilitar el diagnóstico de problemas.
+
+    \item \textbf{Reproducibilidad técnica:} Todos los procesos estarán documentados con suficiente detalle como para que un tercero con conocimientos técnicos medios pueda replicar el pipeline completo.
+\end{itemize}
+
+\subsection{Actividades de Verificación y Validación}
+
+Las actividades de verificación (¿construimos el sistema correctamente?) y validación (¿construimos el sistema correcto?) se llevarán a cabo de forma iterativa en cada fase del proyecto:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{4.5cm}|p{4cm}|p{2.5cm}|}
+\hline
+\textbf{Fase} & \textbf{Actividad de verificación} & \textbf{Actividad de validación} & \textbf{Responsable} \\
+\hline
+Scraping & Revisar que las vacantes extraídas tengan estructura completa y datos válidos & Comparar muestra manual con resultados del scraper para verificar precisión & Nicolás \\
+\hline
+NER y regex & Ejecutar el script sobre un conjunto de prueba y verificar que extrae habilidades sin errores de sintaxis & Revisar manualmente 50 vacantes y evaluar si las habilidades extraídas son correctas y relevantes & Alejandro \\
+\hline
+LLMs & Probar distintos prompts y verificar que el formato de salida es consistente & Evaluar cualitativamente si las habilidades enriquecidas tienen sentido técnico y semántico & Nicolás \\
+\hline
+Embeddings y clustering & Verificar que las dimensiones de los vectores son correctas y que HDBSCAN no arroja errores & Inspeccionar visualmente los clusters generados y verificar que agrupan habilidades coherentes & Nicolás \\
+\hline
+Visualización & Comprobar que los gráficos se generan sin errores y se exportan correctamente & Revisar con el asesor si las visualizaciones comunican información relevante de forma clara & Alejandro \\
+\hline
+\end{tabular}
+\caption{Actividades de Verificación y Validación por Fase}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/BPMNControlCalidad.png}
+\caption{Proceso de Control de Calidad del Proyecto (BPMN)}
+\label{fig:bpmn-calidad}
+\end{figure}
+
+\subsection{Revisión Técnica de Entregables}
+
+Al finalizar cada fase metodológica, se realizará una revisión técnica formal del entregable correspondiente, siguiendo este procedimiento:
+
+\begin{enumerate}
+    \item El responsable de la fase presenta el entregable al equipo completo en reunión semanal, explicando la implementación técnica, las decisiones tomadas y los resultados obtenidos.
+
+    \item Los demás integrantes revisan el código, prueban el módulo localmente, y formulan preguntas técnicas o identifican posibles mejoras.
+
+    \item Se redacta un checklist de verificación con criterios mínimos de aceptación (por ejemplo: ``¿El código ejecuta sin errores?'', ``¿Los datos de salida tienen la estructura esperada?'', ``¿Está documentado el proceso?'').
+
+    \item Si el entregable cumple todos los criterios, se aprueba y se fusiona a la rama principal. Si no, se registra una lista de correcciones pendientes y se establece un plazo para aplicarlas.
+
+    \item El asesor del proyecto revisa el entregable en la reunión quincenal de seguimiento y valida que esté alineado con los objetivos técnicos y académicos del proyecto.
+\end{enumerate}
+
+\subsection{Métricas de Calidad}
+
+Se emplearán las siguientes métricas cualitativas y cuantitativas para evaluar la calidad del sistema:
+
+\begin{itemize}
+    \item \textbf{Cobertura de requisitos funcionales:} Porcentaje de requisitos implementados respecto al total definido en el documento SRS.
+
+    \item \textbf{Tasa de errores en validación manual:} Proporción de habilidades extraídas o enriquecidas que son incorrectas o irrelevantes, evaluada sobre una muestra de 100 registros.
+
+    \item \textbf{Coherencia de clusters:} Evaluación cualitativa de si los grupos de habilidades generados tienen sentido semántico y técnico, mediante inspección visual y discusión con el asesor.
+
+    \item \textbf{Complejidad ciclomática moderada:} Funciones con complejidad razonable, evitando bloques de código excesivamente largos o anidados.
+
+    \item \textbf{Legibilidad del código:} Evaluación subjetiva de si el código es comprensible para un desarrollador externo, verificada mediante revisión cruzada entre integrantes.
+\end{itemize}
+
+\section{Gestión de Riesgos}
+
+La gestión de riesgos del proyecto tiene como objetivo identificar de forma anticipada las amenazas potenciales que puedan afectar el cronograma, la calidad técnica, los recursos disponibles o el cumplimiento de los objetivos, y definir estrategias de mitigación y contingencia para minimizar su impacto en caso de materializarse.
+
+\subsection{Identificación de Riesgos}
+
+A continuación, se presentan los principales riesgos identificados para el proyecto, clasificados por categoría:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|p{5cm}|c|c|p{4cm}|}
+\hline
+\textbf{ID} & \textbf{Descripción del riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Categoría} \\
+\hline
+R01 & Cambios en la estructura HTML de portales de empleo que rompan el scraper & Media & Alto & Técnico \\
+\hline
+R02 & Bloqueo o limitación de acceso por parte de los portales web (anti-scraping) & Media & Alto & Técnico \\
+\hline
+R03 & Rendimiento insuficiente del modelo NER en español para el dominio laboral & Media & Medio & Técnico \\
+\hline
+R04 & Falta de datos suficientes o de calidad en portales de algunos países & Baja & Alto & Técnico \\
+\hline
+R05 & Complejidad técnica excesiva en implementación de clustering semántico & Media & Medio & Técnico \\
+\hline
+R06 & Sobrecarga académica de los integrantes afectando disponibilidad semanal & Alta & Medio & Organizacional \\
+\hline
+R07 & Retrasos acumulados que comprometan el cronograma general del proyecto & Media & Alto & Organizacional \\
+\hline
+R08 & Falta de coordinación o conflictos internos en el equipo & Baja & Medio & Organizacional \\
+\hline
+R09 & Fallas técnicas en equipos personales (hardware, conectividad, software) & Baja & Medio & Infraestructura \\
+\hline
+R10 & Pérdida de datos por falta de backups adecuados & Baja & Alto & Infraestructura \\
+\hline
+\end{tabular}
+\caption{Identificación y Clasificación de Riesgos}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/BPMNIdentificaciondeRiesgos.png}
+\caption{Proceso de Identificación y Gestión de Riesgos (BPMN)}
+\label{fig:bpmn-riesgos}
+\end{figure}
+
+\subsection{Análisis de Riesgos}
+
+Cada riesgo ha sido evaluado en términos de probabilidad de ocurrencia (Baja, Media, Alta) e impacto en el proyecto (Bajo, Medio, Alto), permitiendo priorizarlos según su nivel de criticidad.
+
+Los riesgos de mayor criticidad (probabilidad media-alta e impacto alto) son:
+
+\begin{itemize}
+    \item \textbf{R01 y R02:} Problemas con el scraping, que afectarían directamente la disponibilidad de datos y podrían paralizar las fases posteriores.
+    \item \textbf{R06 y R07:} Problemas organizacionales relacionados con disponibilidad de tiempo y cumplimiento del cronograma, que podrían generar retrasos en cascada.
+\end{itemize}
+
+Estos riesgos recibirán especial atención en las estrategias de mitigación y monitoreo continuo.
+
+\subsection{Estrategias de Mitigación}
+
+Para cada riesgo prioritario, se definen las siguientes estrategias de mitigación:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{ID} & \textbf{Estrategia de mitigación (preventiva)} & \textbf{Plan de contingencia (reactiva)} \\
+\hline
+R01 & Diseñar scrapers modulares y flexibles. Revisar semanalmente la estructura de los portales durante la fase de scraping. & Si un portal cambia, ajustar el scraper en un plazo máximo de 3 días. Si no es viable, reemplazar por otro portal del mismo país. \\
+\hline
+R02 & Implementar delays aleatorios entre peticiones, rotar user agents, respetar robots.txt y usar Selenium/Playwright cuando sea necesario. & Si un portal bloquea el acceso, cambiar a scraping manual asistido o buscar datasets públicos alternativos (APIs, Kaggle). \\
+\hline
+R03 & Probar varios modelos NER en español (spaCy, BETO, modelos de HuggingFace) en etapa temprana. Validar con muestras pequeñas antes de procesar todo el corpus. & Si el rendimiento es bajo, complementar con expresiones regulares ad-hoc, diccionarios de habilidades predefinidos, o ajuste manual de resultados. \\
+\hline
+R04 & Validar acceso a portales y disponibilidad de vacantes antes de iniciar scraping masivo. Tener al menos 2 portales por país como respaldo. & Si un país tiene datos insuficientes, reducir su alcance o reemplazarlo por otro país latinoamericano con mayor disponibilidad. \\
+\hline
+R05 & Comenzar con técnicas simples (K-Means, DBSCAN) antes de pasar a HDBSCAN. Realizar pruebas con datasets sintéticos pequeños. & Si HDBSCAN no converge o genera clusters poco útiles, reducir dimensionalidad con PCA en lugar de UMAP, o aplicar clustering jerárquico tradicional. \\
+\hline
+R06 & Planificar cronograma considerando semanas de exámenes y entregas paralelas. Distribuir carga de trabajo de forma flexible. & Si un integrante tiene sobrecarga puntual, redistribuir tareas urgentes entre el resto del equipo temporalmente. \\
+\hline
+R07 & Hacer seguimiento semanal estricto del cronograma. Detectar retrasos tempranamente y aplicar correcciones inmediatas. & Si el retraso es mayor a 2 semanas, reducir el alcance de fases menos críticas o solicitar extensión formal del plazo final. \\
+\hline
+R09 & Mantener backups semanales en GitHub y Google Drive. Documentar configuraciones de entorno en README. & Si un equipo falla, el integrante afectado podrá clonar el repositorio completo en otro equipo y continuar trabajando con mínima pérdida de tiempo. \\
+\hline
+R10 & Implementar sistema de backups automáticos semanales en GitHub y Google Drive. Verificar integridad de backups mensualmente. & Si hay pérdida de datos, restaurar desde el último backup disponible. Si no hay backup, repetir el trabajo perdido priorizando lo más crítico. \\
+\hline
+\end{tabular}
+\caption{Estrategias de Mitigación y Planes de Contingencia}
+\end{table}
+
+\subsection{Monitoreo de Riesgos}
+
+El seguimiento de riesgos se realizará de forma continua durante todo el proyecto, mediante las siguientes actividades:
+
+\begin{itemize}
+    \item \textbf{Revisión semanal de riesgos:} En cada reunión de seguimiento, se dedicará un espacio breve (10 minutos) para revisar si algún riesgo identificado se ha materializado, si han surgido nuevos riesgos, y si las estrategias de mitigación están funcionando.
+
+    \item \textbf{Indicadores de alerta temprana:} Se monitorearán señales que indiquen la proximidad de riesgos, tales como:
+    \begin{itemize}
+        \item Errores frecuentes en el scraper (indicador de R01)
+        \item Aumento en tiempo de respuesta de portales o CAPTCHAs (indicador de R02)
+        \item Bajo rendimiento en métricas de NER (indicador de R03)
+        \item Retrasos superiores a 3 días en tareas asignadas (indicador de R06 y R07)
+    \end{itemize}
+
+    \item \textbf{Registro de incidentes:} Cualquier materialización de riesgo será documentada en el acta semanal, indicando el riesgo activado, la acción correctiva aplicada, el responsable y el resultado obtenido.
+
+    \item \textbf{Actualización de la matriz de riesgos:} Si durante el proyecto se identifica un nuevo riesgo relevante, se agregará a la tabla de riesgos con su respectiva evaluación y estrategia de mitigación.
+\end{itemize}
+
+\subsection{Responsabilidades en Gestión de Riesgos}
+
+\begin{itemize}
+    \item \textbf{Nicolás Camacho (Líder técnico):} Responsable de identificar y monitorear riesgos técnicos (R01–R05), proponer soluciones técnicas y coordinar la aplicación de estrategias de mitigación.
+
+    \item \textbf{Alejandro Pinzón (Coordinador de proyecto):} Responsable de monitorear riesgos organizacionales (R06–R08), gestionar el cronograma, detectar desviaciones y proponer acciones correctivas.
+
+    \item \textbf{Todo el equipo:} Responsable de reportar cualquier riesgo detectado, participar en la evaluación de impacto, y colaborar en la implementación de planes de contingencia cuando sea necesario.
+\end{itemize}
+
+La gestión de riesgos será un proceso continuo y colaborativo, integrado a las actividades semanales del proyecto, con el objetivo de minimizar incertidumbre y maximizar la probabilidad de éxito en la entrega final del observatorio laboral.

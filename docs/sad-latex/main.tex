@@ -1,0 +1,145 @@
+% ============================================================================
+% PONTIFICIA UNIVERSIDAD JAVERIANA
+% FACULTAD DE INGENIERIA - SISTEMAS
+% Observatorio de Demanda Laboral en América Latina
+% DOCUMENTO SAD (Software Architecture Document)
+% ============================================================================
+
+\documentclass[11pt,oneside,letterpaper]{article}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[letterpaper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[backend=biber,style=ieee,citestyle=numeric-comp,sorting=none]{biblatex}
+
+% TikZ para diagramas
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, shadows, fit, shapes.multipart, babel}
+
+% ============================================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA
+% ============================================================================
+\addbibresource{bibliografia.bib}
+
+% ============================================================================
+% CONFIGURACIÓN DE CÓDIGO
+% ============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE INTERLINEADO
+% ============================================================================
+\onehalfspacing
+
+% ============================================================================
+% CONFIGURACIÓN DE ENCABEZADOS Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pontificia Universidad Javeriana}
+\fancyhead[R]{Documento SAD}
+\fancyfoot[R]{Página \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ============================================================================
+% CONFIGURACIÓN DE TÍTULOS DE SECCIONES
+% ============================================================================
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ============================================================================
+% INFORMACIÓN DEL PROYECTO
+% ============================================================================
+\newcommand{\proyectoTitulo}{Observatorio de demanda laboral en América Latina}
+\newcommand{\proyectoCodigo}{CIS2025CP08}
+\newcommand{\autorUno}{Nicolás Francisco Camacho Alarcón}
+\newcommand{\autorDos}{Alejandro Pinzón Fajardo}
+\newcommand{\director}{Ing. Luis Gabriel Moreno Sandoval}
+\newcommand{\anio}{2025}
+\newcommand{\mes}{Noviembre}
+\newcommand{\versionDocumento}{1.0}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% Portada
+\input{portada}
+\newpage
+
+% Tabla de Control de Cambios
+\section*{Tabla de Control de Cambios}
+\addcontentsline{toc}{section}{Tabla de Control de Cambios}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|p{3.5cm}|p{3.5cm}|p{3cm}|}
+\hline
+\textbf{Sección} & \textbf{Fecha} & \textbf{Sección del documento modificada} & \textbf{Descripción del Cambio} & \textbf{Responsables} \\
+\hline
+1. & DD/MM/2025 & Objetivo, Atributos de calidad & Documento inicial & \autorUno, \autorDos \\
+\hline
+2. & DD/MM/2025 & Arquitectura & Definición arquitectura y atributos de calidad & \autorUno, \autorDos \\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+% Tabla de contenidos
+\tableofcontents
+\newpage
+
+% ============================================================================
+% SECCIONES PRINCIPALES
+% ============================================================================
+
+\input{sections/01-objetivo}
+\input{sections/02-atributos-calidad}
+\input{sections/03-arquitectura}
+\input{sections/04-riesgos}
+\input{sections/05-restricciones}
+
+% ============================================================================
+% REFERENCIAS
+% ============================================================================
+\newpage
+\printbibliography[title={Referencias}]
+\addcontentsline{toc}{section}{Referencias}
+
+\end{document}

@@ -1,0 +1,101 @@
+\chapter{Visión global}
+
+\section{Antecedentes, problema y solución propuesta}
+
+\subsection{Descripción de la problemática u oportunidad}
+
+El sector tecnológico en América Latina ha experimentado un crecimiento significativo en la última década, impulsado por procesos de transformación digital, expansión del comercio electrónico, adopción de inteligencia artificial y migración de servicios a la nube \cite{echeverria2022}. Este dinamismo ha incrementado la demanda de profesionales especializados en áreas como ciencia de datos, ingeniería de software, ciberseguridad, machine learning e inteligencia artificial \cite{campos2024,rubio2024}. Sin embargo, la información sobre estas transformaciones sigue siendo fragmentaria y mayormente retrospectiva, basada en encuestas, censos o reportes institucionales que no capturan la evolución dinámica del mercado laboral.
+
+Estudios recientes han demostrado que el uso de datos masivos extraídos directamente de portales de empleo permite caracterizar con mayor granularidad y actualidad la demanda de habilidades \cite{lukauskas2023,cardenas2015}. No obstante, en América Latina estos enfoques están poco implementados, con escasa articulación entre actores públicos, privados y académicos, y con grandes diferencias entre países en cuanto a disponibilidad de datos, estándares de ocupaciones y cobertura digital \cite{echeverria2022}.
+
+Existe entonces una oportunidad concreta: construir un sistema automatizado, robusto y replicable que permita analizar en tiempo casi real la evolución de las habilidades tecnológicas requeridas en la región, utilizando técnicas modernas de procesamiento de lenguaje natural (NLP), extracción de entidades, embeddings semánticos y algoritmos de agrupamiento.
+
+La selección de Colombia, México y Argentina como casos de estudio responde a tres razones principales. Primero, son países con alto volumen de publicaciones laborales digitales, lo que facilita el scraping y el entrenamiento de modelos robustos \cite{rubio2024,martinez2024,aguilera2018}. Segundo, cuentan con estudios previos que explican parcialmente esta problemática, aunque con enfoques no automatizados o sin un pipeline completo de procesamiento \cite{cardenas2015,campos2024}. Y tercero, representan distintas realidades económicas, territoriales y de madurez digital, lo que permite validar la portabilidad del sistema propuesto a contextos latinoamericanos diversos.
+
+\subsection{Formulación del problema}
+
+Actualmente, no existe una herramienta automatizada en español que permita extraer, estructurar, analizar y visualizar de forma periódica la evolución de habilidades tecnológicas en el mercado laboral de América Latina. Las metodologías existentes en el ámbito académico o institucional suelen depender de enfoques manuales, encuestas o bases de datos cerradas, lo que limita su frecuencia de actualización, granularidad y representatividad \cite{echeverria2022,cardenas2015}.
+
+Además, muchas de las soluciones internacionales basadas en NLP fueron desarrolladas para el idioma inglés y no consideran los retos particulares del español latinoamericano, como el uso frecuente de anglicismos, expresiones mixtas o abreviaturas propias del sector tecnológico \cite{lopez2025,nguyen2024}. Esto dificulta la correcta identificación y agrupación de habilidades, y obstaculiza el análisis semántico con herramientas de clasificación o embeddings multilingües.
+
+\subsection{Propuesta de solución}
+
+Se propone diseñar e implementar un observatorio de demanda laboral tecnológica para América Latina, basado en un pipeline modular que integre las siguientes etapas:
+
+\begin{enumerate}
+    \item Scraping de portales de empleo abiertos como Computrabajo, Bumeran, elempleo.com, entre otros, priorizando los sitios con alto volumen y cobertura nacional \cite{aguilera2018,rubio2024}.
+
+    \item Extracción inicial de habilidades mediante técnicas de Named Entity Recognition (NER) adaptadas al español y expresiones regulares (regex), aplicadas sobre títulos, descripciones y requisitos de las vacantes \cite{aito,vasquez2024}.
+
+    \item Enriquecimiento semántico y depuración de habilidades utilizando Large Language Models (LLMs) preentrenados, como GPT o T5, para completar y normalizar las habilidades detectadas \cite{nguyen2024,razumovskaia2024}.
+
+    \item Vectorización semántica mediante modelos de embeddings multilingües como E5, BETO o fastText español, para obtener representaciones densas de cada habilidad o perfil laboral \cite{lopez2025,kavas2024}.
+
+    \item Reducción de dimensionalidad mediante técnicas como UMAP, y posterior clustering con algoritmos robustos a ruido como HDBSCAN, para identificar grupos de habilidades o perfiles emergentes \cite{lukauskas2023}.
+
+    \item Visualización macro de resultados a través de gráficos estáticos y reportes interpretables que faciliten la validación cualitativa por expertos, sin necesidad de construir dashboards interactivos ni portales web \cite{rubio2024}.
+\end{enumerate}
+
+Este sistema buscará ser ejecutable localmente, modular, eficiente y ético, con documentación clara y código versionado.
+
+\subsection{Justificación de la solución}
+
+La solución propuesta responde a las debilidades identificadas en los estudios actuales sobre demanda de habilidades en Latinoamérica, aportando una alternativa automatizada, escalable y científicamente sólida. A diferencia de enfoques manuales o herramientas genéricas desarrolladas para otras regiones, este sistema estará adaptado al idioma español, a las expresiones híbridas típicas del sector tech, y a la estructura irregular de las vacantes latinoamericanas \cite{echeverria2022,aguilera2018,martinez2024}.
+
+Además, al integrar técnicas modernas como embeddings multilingües, clustering basado en densidad, y limpieza semántica con LLMs, el observatorio permitirá agrupar habilidades emergentes que no estén explícitamente listadas, facilitando la detección temprana de tendencias y brechas \cite{lopez2025,lukauskas2023}. Esto es especialmente útil para instituciones educativas, gobiernos y profesionales que necesitan tomar decisiones formativas, laborales o políticas basadas en evidencia actualizada.
+
+El sistema también será replicable en otros países de la región, gracias a su arquitectura modular, dependencias abiertas, y uso de portales laborales públicos, con consideraciones éticas y legales adecuadas \cite{orozco2019}.
+
+\section{Descripción general del proyecto}
+
+\subsection{Objetivo general}
+
+Desarrollar un sistema que permita procesar y segmentar la demanda de habilidades tecnológicas en Colombia, México y Argentina, mediante técnicas de procesamiento de lenguaje natural.
+
+\subsection{Objetivos Específicos}
+
+\begin{itemize}
+    \item Construir un estado del arte exhaustivo para comparar trabajos existentes en el ámbito de observatorios laborales automatizados y técnicas de procesamiento de lenguaje natural en español.
+
+    \item Diseñar una arquitectura modular, escalable y reutilizable para el observatorio laboral automatizado, fundamentada en las mejores prácticas identificadas en el estado del arte.
+
+    \item Implementar e integrar técnicas de inteligencia artificial para la identificación, normalización y agrupación semántica de habilidades tecnológicas en ofertas laborales en español.
+
+    \item Validar el desempeño y la robustez de la arquitectura y los modelos propuestos mediante métricas cuantitativas y estudios empíricos.
+\end{itemize}
+
+\section{Entregables, estándares utilizados y justificación}
+
+\begin{longtable}{|p{4cm}|p{3.5cm}|p{7cm}|}
+\hline
+\textbf{Entregable} & \textbf{Estándares asociados} & \textbf{Justificación} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Entregable} & \textbf{Estándares asociados} & \textbf{Justificación} \\
+\hline
+\endhead
+
+\hline
+\endfoot
+
+Documento de diseño técnico y modelo arquitectónico & UML, IEEE 1074 & Producto de la Fase 1, establece la arquitectura modular del sistema. Se apoya en UML para modelar flujos y en IEEE 1074 como referencia de ciclo de vida del software. \\
+\hline
+
+Dataset limpio, script funcional, cronograma de ejecución & CRISP-DM, robots.txt & Resultado de la Fase 2. Incluye scraping legalmente respetuoso, aplicado de forma sistemática con base en CRISP-DM. \\
+\hline
+
+Diccionario de habilidades, embeddings vectoriales, código del módulo & ISO/IEC 25010, CRISP-DM & Entregable clave de la Fase 3. Evalúa funcionalidad y precisión del procesamiento semántico con NLP y embeddings. \\
+\hline
+
+Clusters rotulados, visualización exploratoria, notebook de análisis & ISO/IEC 25010, CRISP-DM & Producto de la Fase 4. Se enfoca en la segmentación de perfiles usando técnicas de clustering, evaluando calidad del agrupamiento. \\
+\hline
+
+Informe de pruebas, logs de ejecución, gráficos de resultados & ISO/IEC 29110 & Documento de la Fase 5. Refleja la validación funcional del sistema usando pruebas ligeras según ISO/IEC 29110, adaptadas a proyectos pequeños. \\
+\hline
+
+Documento final reutilizable, instructivo técnico, repositorio del sistema & IEEE 1074, buenas prácticas de documentación & Consolidación de la Fase 6. Resume el sistema completo y permite su replicabilidad y transferencia de conocimiento. \\
+\hline
+
+\end{longtable}

@@ -1,0 +1,197 @@
+\section{Atributos de Calidad}
+
+Los atributos de calidad son características esenciales de un sistema de software que determinan su comportamiento y desempeño más allá de sus funcionalidades principales. Estos atributos permiten evaluar el sistema en términos de factores como eficiencia, precisión, mantenibilidad y escalabilidad, asegurando que la aplicación cumpla con los requerimientos tanto funcionales como no funcionales.
+
+En arquitectura de software, cada decisión conlleva \textit{trade-offs}, lo que implica que mejorar un atributo de calidad puede afectar negativamente a otro. Por ejemplo, aumentar la precisión del sistema de extracción mediante procesamiento con LLMs puede impactar el desempeño al requerir mayor capacidad de procesamiento y tiempo de ejecución. De esta manera, el diseño arquitectónico debe encontrar un balance adecuado entre estos atributos, alineándose con los objetivos del sistema y las necesidades del proyecto.
+
+\subsection{Descripción de atributos de calidad}
+
+Para estructurar la evaluación de los atributos de calidad, se utilizará el marco de referencia de la norma ISO 25010 \cite{iso25010}, que define diferentes categorías de atributos de calidad, cada una con subcaracterísticas específicas. En el contexto del Observatorio de Demanda Laboral, se han identificado los siguientes atributos como los más relevantes para la arquitectura del sistema:
+
+\begin{itemize}
+    \item Funcionalidad: Evalúa si el sistema proporciona las funciones necesarias para cumplir con los objetivos de análisis de demanda laboral de manera precisa y completa.
+
+    \item Desempeño: Analiza el uso eficiente de los recursos y el tiempo de procesamiento del sistema al ejecutar tareas de scraping, extracción, matching y clustering sobre grandes volúmenes de datos.
+
+    \item Precisión: Determina la exactitud con la que el sistema extrae, clasifica y mapea habilidades técnicas contra taxonomías de referencia (ESCO, O*NET).
+
+    \item Fiabilidad: Examina la estabilidad del sistema y su capacidad para operar sin fallos o pérdidas de datos durante el procesamiento batch de miles de ofertas laborales.
+
+    \item Mantenibilidad: Evalúa la facilidad con la que el sistema puede ser actualizado, corregido y adaptado a nuevas necesidades sin comprometer su estabilidad.
+
+    \item Escalabilidad: Determina la capacidad del sistema para manejar un crecimiento en el volumen de datos (de 23,000 a 600,000 ofertas) sin degradar su rendimiento.
+
+    \item Reproducibilidad: Garantiza que los experimentos y análisis puedan ser replicados con resultados consistentes, esencial para un proyecto de investigación académica.
+
+    \item Trazabilidad: Mide la capacidad del sistema para rastrear cada transformación de datos desde la oferta cruda hasta los resultados de clustering, permitiendo auditoría y debugging.
+\end{itemize}
+
+\subsection{Atributos de calidad en el Observatorio}
+
+A continuación, se describe cómo cada uno de estos atributos de calidad se aplican específicamente en el contexto del Observatorio de Demanda Laboral.
+
+\subsubsection{Funcionalidad}
+
+El sistema debe garantizar que todas las funciones necesarias para el análisis automatizado de demanda laboral sean implementadas de manera completa y precisa. La funcionalidad del sistema debe estar alineada con las necesidades de investigación académica, asegurando que los resultados obtenidos sean válidos, relevantes y comparables con el estado del arte en análisis de mercado laboral.
+
+\subsubsection{Desempeño}
+
+El desempeño es crítico dado el volumen objetivo de 600,000 ofertas laborales. El sistema debe gestionar los recursos computacionales de manera eficiente, aprovechando paralelismo cuando sea posible y evitando cuellos de botella en I/O de base de datos. Métricas objetivo incluyen:
+\begin{itemize}
+    \item Scraping asíncrono sin bloqueos por rate limiting
+    \item Extracción con latencias $<$2 segundos por oferta (Pipeline A)
+    \item Throughput de embeddings $>$700 skills/segundo
+    \item Búsquedas FAISS $>$30,000 queries/segundo
+\end{itemize}
+
+\subsubsection{Precisión}
+
+Dado que se trata de un sistema de investigación académica, la precisión es fundamental. El sistema debe garantizar:
+\begin{itemize}
+    \item Extracción: Precision $>$78\% en regex patterns
+    \item Matching ESCO: Confidence 1.00 en exact match, threshold $\geq$0.85 en fuzzy
+    \item Deduplicación: SHA-256 con 100\% de exactitud
+    \item Clustering: Parámetros HDBSCAN ajustados para minimizar ruido
+\end{itemize}
+
+\subsubsection{Fiabilidad}
+
+La fiabilidad implica que el sistema debe ser capaz de operar de manera continua durante procesamiento batch sin errores críticos. La pérdida de datos debe minimizarse mediante backups regulares de PostgreSQL y trazabilidad completa de cada registro desde su origen hasta los resultados finales.
+
+\subsubsection{Mantenibilidad}
+
+El sistema debe estar diseñado de manera modular para facilitar su mantenimiento y evolución. La implementación de nuevas funcionalidades debe realizarse sin afectar módulos existentes, siguiendo el principio de Open/Closed.
+
+\subsubsection{Escalabilidad}
+
+El sistema debe ser capaz de escalar desde el corpus actual de 23,000 ofertas hasta el objetivo de 600,000 mediante procesamiento batch con tamaño de lote configurable, particionamiento de tablas PostgreSQL, e índices optimizados.
+
+\subsubsection{Reproducibilidad}
+
+Como proyecto de investigación académica, la reproducibilidad es esencial mediante control de versiones de dependencias, semillas fijas para componentes estocásticos, y documentación completa de experimentos y parámetros.
+
+\subsubsection{Trazabilidad}
+
+El sistema debe permitir rastrear cada transformación con foreign keys que mantienen relación con raw\_jobs, timestamps de cada operación, y logs estructurados con niveles (DEBUG, INFO, WARNING, ERROR).
+
+\subsection{Priorización de atributos de calidad}
+
+Para garantizar que el Observatorio cumpla con sus objetivos y ofrezca resultados científicamente válidos, es esencial priorizar los atributos de calidad en función de su impacto en el sistema.
+
+\subsubsection{Prioridad Alta}
+
+Precisión es el atributo más crítico ya que el valor científico del observatorio depende directamente de la exactitud de sus resultados. Si el sistema extrae habilidades incorrectas o las mapea erróneamente a ESCO, todo el análisis posterior será inválido.
+
+Fiabilidad es fundamental porque los registros de 23,000+ ofertas laborales representan meses de scraping. La pérdida de datos o corrupción de resultados sería catastrófica.
+
+Reproducibilidad es obligatoria como proyecto académico. Los experimentos deben ser replicables por revisores y la comunidad científica.
+
+Trazabilidad es esencial para debugging, validación de resultados y auditoría científica. Sin trazabilidad completa, es imposible identificar y corregir errores sistemáticos.
+
+\subsubsection{Prioridad Media}
+
+Funcionalidad puede desarrollarse incrementalmente mediante entregas iterativas.
+
+Desempeño es importante para viabilidad del proyecto pero puede optimizarse progresivamente.
+
+Mantenibilidad es relevante para evolución futura pero puede gestionarse progresivamente con buenas prácticas.
+
+\subsubsection{Prioridad Baja}
+
+Escalabilidad no es crítico en esta fase ya que el volumen de 600K ofertas es procesable con arquitectura actual.
+
+\subsection{Escenarios de calidad}
+
+A continuación se presentan escenarios concretos que ilustran cómo el sistema debe comportarse respecto a los atributos de calidad priorizados.
+
+\begin{table}[H]
+\centering
+\caption{Escenario de calidad N-1: Precisión en Extracción}
+\label{tab:escenario-1}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Atributo} & Precisión \\
+\hline
+\textbf{Fuente del estímulo} & Un investigador procesa un batch de 100 ofertas laborales de México \\
+\hline
+\textbf{Estímulo} & Ejecución del Pipeline A (NER + Regex) sobre ofertas en español técnico mezclado con Spanglish \\
+\hline
+\textbf{Artefacto} & Módulo de extracción (ner\_extractor.py y regex\_patterns.py) \\
+\hline
+\textbf{Ambiente} & Condiciones normales, ofertas previamente limpias en tabla cleaned\_jobs \\
+\hline
+\textbf{Respuesta} & El sistema extrae skills candidatas, las filtra, y persiste en extracted\_skills con scores de confianza \\
+\hline
+\textbf{Medida de Respuesta} & Precision $\geq$78\% en regex patterns, $\geq$90\% después de filtros NER \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Escenario de calidad N-2: Desempeño en Matching ESCO}
+\label{tab:escenario-2}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Atributo} & Desempeño \\
+\hline
+\textbf{Fuente del estímulo} & El sistema procesa 2,756 skills extraídas de 100 ofertas laborales \\
+\hline
+\textbf{Estímulo} & Ejecución del matcher de 3 capas (exact $\rightarrow$ fuzzy $\rightarrow$ semantic deshabilitada) \\
+\hline
+\textbf{Artefacto} & Módulo esco\_matcher\_3layers.py con búsquedas SQL y fuzzywuzzy \\
+\hline
+\textbf{Ambiente} & PostgreSQL con 14,174 skills ESCO indexadas, servidor con 16GB RAM \\
+\hline
+\textbf{Respuesta} & El sistema completa matching de todas las skills y retorna resultados con confidence scores \\
+\hline
+\textbf{Medida de Respuesta} & Latencia total $\leq$5 segundos para 2,756 skills (1.8ms promedio por skill) \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Escenario de calidad N-3: Fiabilidad ante Fallos de Scraping}
+\label{tab:escenario-3}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Atributo} & Fiabilidad \\
+\hline
+\textbf{Fuente del estímulo} & Portal Bumeran.mx retorna HTTP 503 (Service Unavailable) durante scraping \\
+\hline
+\textbf{Estímulo} & 10 requests consecutivos fallan con timeout o error de servidor \\
+\hline
+\textbf{Artefacto} & Scrapy spider para Bumeran con middleware de reintentos \\
+\hline
+\textbf{Ambiente} & Scraping nocturno automatizado, 5 portales siendo scrapeados concurrentemente \\
+\hline
+\textbf{Respuesta} & El sistema registra el error, pausa temporalmente ese spider (backoff exponencial), continúa con otros portales, y reintenta después de 5 minutos \\
+\hline
+\textbf{Medida de Respuesta} & 0\% pérdida de datos, reintentos exitosos en siguiente ventana, logging completo de errores \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Escenario de calidad N-4: Reproducibilidad de Clustering}
+\label{tab:escenario-4}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Atributo} & Reproducibilidad \\
+\hline
+\textbf{Fuente del estímulo} & Un investigador externo ejecuta el pipeline de clustering con parámetros documentados \\
+\hline
+\textbf{Estímulo} & Ejecución de UMAP (n\_neighbors=15, min\_dist=0.1, random\_state=42) + HDBSCAN (min\_cluster\_size=50) \\
+\hline
+\textbf{Artefacto} & Scripts de clustering con parámetros fijos y semilla aleatoria \\
+\hline
+\textbf{Ambiente} & Mismos embeddings E5 v1.0, mismas versiones de bibliotecas (umap-learn==0.5.3, hdbscan==0.8.29) \\
+\hline
+\textbf{Respuesta} & El sistema genera exactamente los mismos clústeres con las mismas etiquetas y probabilidades \\
+\hline
+\textbf{Medida de Respuesta} & 100\% coincidencia en cluster assignments \\
+\hline
+\end{tabular}
+\end{table}

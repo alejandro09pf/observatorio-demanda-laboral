@@ -1,0 +1,152 @@
+% ============================================================================
+% PROPUESTA PARA PROYECTO DE GRADO
+% Observatorio de Demanda Laboral en Tecnología en Latinoamérica
+% ============================================================================
+
+\documentclass[11pt,oneside,letterpaper]{report}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[backend=biber,style=ieee,citestyle=numeric-comp,sorting=none]{biblatex}
+
+% TikZ para diagramas
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, shadows, fit, shapes.multipart}
+
+% ============================================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA
+% ============================================================================
+\addbibresource{bibliografia.bib}
+
+% ============================================================================
+% CONFIGURACIÓN DE CÓDIGO
+% ============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE INTERLINEADO
+% ============================================================================
+\onehalfspacing
+
+% ============================================================================
+% CONFIGURACIÓN DE ENCABEZADOS Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pontificia Universidad Javeriana}
+\fancyhead[R]{Propuesta Proyecto de Grado}
+\fancyfoot[R]{Página \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[L]{Pontificia Universidad Javeriana}
+  \fancyhead[R]{Propuesta Proyecto de Grado}
+  \fancyfoot[R]{Página \thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE TÍTULOS
+% ============================================================================
+\titleformat{\chapter}[display]
+{\normalfont\Large\bfseries\centering}
+{}{0pt}{\Large}
+
+\titlespacing*{\chapter}{0pt}{20pt}{20pt}
+
+\titleformat{\section}
+{\normalfont\large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ============================================================================
+% INFORMACIÓN DEL DOCUMENTO
+% ============================================================================
+\newcommand{\proyectoTitulo}{Observatorio de Demanda Laboral en Tecnología en Latinoamérica}
+\newcommand{\estudianteUno}{Nicolas Camacho Alarcón}
+\newcommand{\cedulaUno}{cc. 1000942178}
+\newcommand{\celularUno}{3175714599}
+\newcommand{\correoUno}{camachoa.nicolas@javeriana.edu.co}
+\newcommand{\estudianteDos}{Alejandro Pinzón Fajardo}
+\newcommand{\cedulaDos}{cc. 1052411260}
+\newcommand{\celularDos}{3115369454}
+\newcommand{\correoDos}{alejandro\_pinzon@javeriana.edu.co}
+\newcommand{\director}{Ing. Luis Gabriel Moreno Sandoval}
+\newcommand{\cedulaDirector}{cc.}
+\newcommand{\celularDirector}{3016278993}
+\newcommand{\correoDirector}{morenoluis@javeriana.edu.co}
+\newcommand{\trabajoDirector}{Pontificia Universidad Javeriana; Profesor Temporal Departamento de Sistemas}
+\newcommand{\anio}{2025}
+\newcommand{\mes}{Noviembre}
+\newcommand{\fecha}{Noviembre 2025}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% PORTADA
+% ============================================================================
+\input{portada}
+
+% ============================================================================
+% TABLA DE CONTENIDOS
+% ============================================================================
+\renewcommand{\contentsname}{CONTENIDO}
+\tableofcontents
+\newpage
+
+% ============================================================================
+% CAPÍTULOS
+% ============================================================================
+\input{sections/01-vision-global}
+\input{sections/02-analisis-impacto}
+\input{sections/03-proceso}
+\input{sections/04-aspectos-generales}
+\input{sections/05-marco-teorico}
+
+% ============================================================================
+% REFERENCIAS
+% ============================================================================
+\chapter*{BIBLIOGRAFÍA}
+\addcontentsline{toc}{chapter}{BIBLIOGRAFÍA}
+\printbibliography[heading=none]
+
+\end{document}

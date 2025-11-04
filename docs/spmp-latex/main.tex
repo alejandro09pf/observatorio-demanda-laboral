@@ -1,0 +1,208 @@
+% ============================================================================
+% PLAN DE ADMINISTRACIÓN DE PROYECTO (SPMP)
+% Observatorio de Demanda Laboral en Tecnología en Latinoamérica
+% ============================================================================
+
+\documentclass[11pt,oneside,letterpaper]{report}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[backend=biber,style=ieee,citestyle=numeric-comp,sorting=none]{biblatex}
+
+% TikZ para diagramas
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, shadows, fit, shapes.multipart}
+
+% ============================================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA
+% ============================================================================
+\addbibresource{bibliografia.bib}
+
+% ============================================================================
+% CONFIGURACIÓN DE CÓDIGO
+% ============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE INTERLINEADO
+% ============================================================================
+\onehalfspacing
+
+% ============================================================================
+% CONFIGURACIÓN DE ENCABEZADOS Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pontificia Universidad Javeriana}
+\fancyhead[R]{Plan de Administración de Proyecto}
+\fancyfoot[R]{Página \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[L]{Pontificia Universidad Javeriana}
+  \fancyhead[R]{Plan de Administración de Proyecto}
+  \fancyfoot[R]{Página \thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE TÍTULOS
+% ============================================================================
+\titleformat{\chapter}[display]
+{\normalfont\Large\bfseries\centering}
+{}{0pt}{\Large}
+
+\titlespacing*{\chapter}{0pt}{20pt}{20pt}
+
+\titleformat{\section}
+{\normalfont\large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ============================================================================
+% INFORMACIÓN DEL DOCUMENTO
+% ============================================================================
+\newcommand{\proyectoTitulo}{Observatorio de Demanda Laboral en Tecnología en Latinoamérica}
+\newcommand{\estudianteUno}{Nicolas Camacho Alarcón}
+\newcommand{\cedulaUno}{cc. 1000942178}
+\newcommand{\celularUno}{3175714599}
+\newcommand{\correoUno}{camachoa.nicolas@javeriana.edu.co}
+\newcommand{\estudianteDos}{Alejandro Pinzón Fajardo}
+\newcommand{\cedulaDos}{cc. 1052411260}
+\newcommand{\celularDos}{3115369454}
+\newcommand{\correoDos}{alejandro\_pinzon@javeriana.edu.co}
+\newcommand{\director}{Ing. Luis Gabriel Moreno Sandoval}
+\newcommand{\cedulaDirector}{cc.}
+\newcommand{\celularDirector}{3016278993}
+\newcommand{\correoDirector}{morenoluis@javeriana.edu.co}
+\newcommand{\trabajoDirector}{Pontificia Universidad Javeriana; Profesor Temporal Departamento de Sistemas}
+\newcommand{\anio}{2025}
+\newcommand{\mes}{Noviembre}
+\newcommand{\fecha}{Noviembre de 2025}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% PORTADA
+% ============================================================================
+\input{portada}
+
+% ============================================================================
+% PREFACIO
+% ============================================================================
+\chapter*{Prefacio}
+\addcontentsline{toc}{chapter}{Prefacio}
+
+Este documento tiene como objetivo presentar el plan de gestión del proyecto titulado ``Observatorio Automatizado de Demanda Laboral en Tecnología para Latinoamérica'', con el fin de que el lector determine si le interesa profundizar en su contenido. En él se describen los objetivos, alcance, entregables, cronograma, riesgos y herramientas del proyecto, con un enfoque académico y técnico. Está dirigido principalmente a los estudiantes integrantes del equipo, al director del trabajo, a los docentes evaluadores y a cualquier interesado en comprender la planificación de un proyecto de software de mediano alcance con componentes de inteligencia artificial, procesamiento de lenguaje natural y scraping de datos en contexto latinoamericano.
+
+% ============================================================================
+% HISTORIAL DE CAMBIOS
+% ============================================================================
+\chapter*{Historial de Cambios}
+\addcontentsline{toc}{chapter}{Historial de Cambios}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|p{2cm}|p{3.5cm}|p{6cm}|p{2.5cm}|}
+\hline
+\textbf{Versión} & \textbf{Fecha} & \textbf{Autor(es)} & \textbf{Descripción del cambio} & \textbf{Sección afectada} \\
+\hline
+0.1 & 2025-06-05 & Nicolás Camacho, Alejandro Pinzón & Creación inicial del documento con estructura base & Todas \\
+\hline
+0.2 & 2025-07-01 & Alejandro Pinzón & Actualización del cronograma y ajuste de estimaciones de esfuerzo & Cap. 4 - Administración \\
+\hline
+0.3 & 2025-07-20 & Nicolás Camacho & Expansión del análisis de alternativas tecnológicas para scraping y NLP & Cap. 3 - Contexto \\
+\hline
+0.4 & 2025-08-05 & Alejandro Pinzón & Incorporación de glosario técnico completo con 29 términos y referencias bibliográficas & Glosario y Bibliografía \\
+\hline
+0.5 & 2025-08-25 & Nicolás Camacho, Alejandro Pinzón & Detalle de criterios de aceptación cuantitativos por fase & Cap. 3 - Plan de Aceptación \\
+\hline
+0.6 & 2025-09-15 & Alejandro Pinzón & Inclusión de diagramas BPMN para procesos de administración, calidad y riesgos & Cap. 5, 6 \\
+\hline
+1.0 & 2025-11-15 & Nicolás Camacho, Alejandro Pinzón & Versión final aprobada para entrega formal & Todas \\
+\hline
+\end{tabular}
+\caption{Historial de versiones del documento SPMP}
+\end{table}
+
+\textbf{Nota:} Este historial refleja las versiones principales del documento durante su desarrollo. Cambios menores de formato, corrección de errores tipográficos y ajustes de redacción no se registran individualmente. El control de versiones detallado del código y documentación técnica se gestiona mediante Git y GitHub según lo descrito en el Capítulo 6.
+
+% ============================================================================
+% TABLA DE CONTENIDOS
+% ============================================================================
+\renewcommand{\contentsname}{CONTENIDO}
+\tableofcontents
+\newpage
+
+% ============================================================================
+% LISTA DE TABLAS
+% ============================================================================
+\renewcommand{\listtablename}{LISTA DE TABLAS}
+\listoftables
+\newpage
+
+% ============================================================================
+% LISTA DE FIGURAS
+% ============================================================================
+\renewcommand{\listfigurename}{LISTA DE FIGURAS}
+\listoffigures
+\newpage
+
+% ============================================================================
+% CAPÍTULOS
+% ============================================================================
+\input{sections/01-vista-general}
+\input{sections/02-glosario}
+\input{sections/03-contexto}
+\input{sections/04-administracion}
+\input{sections/05-monitoreo-control}
+\input{sections/06-procesos-soporte}
+
+% ============================================================================
+% REFERENCIAS
+% ============================================================================
+\chapter*{BIBLIOGRAFÍA}
+\addcontentsline{toc}{chapter}{BIBLIOGRAFÍA}
+\printbibliography[heading=none]
+
+\end{document}

@@ -1,0 +1,183 @@
+% ============================================================================
+% ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE (SRS)
+% Observatorio de Demanda Laboral en Tecnología en Latinoamérica
+% ============================================================================
+
+\documentclass[11pt,oneside,letterpaper]{report}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[backend=biber,style=ieee,citestyle=numeric-comp,sorting=none]{biblatex}
+
+% TikZ para diagramas
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, shadows, fit, shapes.multipart}
+
+% ============================================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA
+% ============================================================================
+\addbibresource{bibliografia.bib}
+
+% ============================================================================
+% CONFIGURACIÓN DE CÓDIGO
+% ============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE INTERLINEADO
+% ============================================================================
+\onehalfspacing
+
+% ============================================================================
+% CONFIGURACIÓN DE ENCABEZADOS Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pontificia Universidad Javeriana}
+\fancyhead[R]{SRS - Observatorio de Demanda Laboral}
+\fancyfoot[R]{Página \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[L]{Pontificia Universidad Javeriana}
+  \fancyhead[R]{SRS - Observatorio de Demanda Laboral}
+  \fancyfoot[R]{Página \thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE TÍTULOS
+% ============================================================================
+\titleformat{\chapter}[display]
+{\normalfont\Large\bfseries\centering}
+{}{0pt}{\Large}
+
+\titlespacing*{\chapter}{0pt}{20pt}{20pt}
+
+\titleformat{\section}
+{\normalfont\large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ============================================================================
+% INFORMACIÓN DEL DOCUMENTO
+% ============================================================================
+\newcommand{\proyectoTitulo}{Observatorio de Demanda Laboral en Tecnología en Latinoamérica}
+\newcommand{\proyectoCodigo}{CIS2025CP08}
+\newcommand{\autorUno}{Nicolas Francisco Camacho Alarcón}
+\newcommand{\autorDos}{Alejandro Pinzón Fajardo}
+\newcommand{\director}{Ing. Luis Gabriel Moreno Sandoval}
+\newcommand{\anio}{2025}
+\newcommand{\mes}{Noviembre}
+\newcommand{\version}{Versión 2.1 - Fase 0 Implementada}
+\newcommand{\fecha}{Noviembre 2025}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% PORTADA
+% ============================================================================
+\input{portada}
+
+% ============================================================================
+% TABLA DE CONTENIDOS
+% ============================================================================
+\renewcommand{\contentsname}{CONTENIDO}
+\tableofcontents
+\newpage
+
+% ============================================================================
+% CAPÍTULOS
+% ============================================================================
+\input{sections/01-introduccion}
+\input{sections/02-descripcion-general}
+\input{sections/03-requerimientos-especificos}
+
+% ============================================================================
+% REFERENCIAS
+% ============================================================================
+\chapter*{REFERENCIAS}
+\addcontentsline{toc}{chapter}{REFERENCIAS}
+\printbibliography[heading=none]
+
+% ============================================================================
+% APÉNDICES
+% ============================================================================
+\chapter*{APÉNDICES}
+\addcontentsline{toc}{chapter}{APÉNDICES}
+
+En esta sección del documento se presentan los apéndices relacionados con el SRS, incluyendo diagramas adicionales, especificaciones técnicas detalladas y documentación complementaria.
+
+\section*{A. Diagramas del Sistema}
+
+\subsection*{A.1 Diagrama de Casos de Uso}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth,height=0.85\textheight,keepaspectratio]{figures/DiagramaCasosdeUso.png}
+    \caption{Diagrama de Casos de Uso del Sistema}
+    \label{fig:casos-uso}
+\end{figure}
+
+\newpage
+
+\subsection*{A.2 Esquema de Base de Datos}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\textwidth,height=0.75\textheight,keepaspectratio]{figures/DiagramaER.png}
+    \caption{Diagrama Entidad-Relación de la Base de Datos PostgreSQL}
+    \label{fig:diagrama-er}
+\end{figure}
+
+\newpage
+
+\subsection*{A.3 Arquitectura del Sistema}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth,height=0.75\textheight,keepaspectratio]{figures/pipeline_arquitectura.png}
+    \caption{Arquitectura del Pipeline de Procesamiento}
+    \label{fig:arquitectura}
+\end{figure}
+
+\end{document}
