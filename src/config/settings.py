@@ -20,16 +20,35 @@ class Settings(BaseSettings):
     esco_version: str = Field('1.1.0', env='ESCO_VERSION')
     esco_language: str = Field('es', env='ESCO_LANGUAGE')
     
-    # LLM
-    llm_model_path: str = Field(..., env='LLM_MODEL_PATH')
-    llm_context_length: int = Field(4096, env='LLM_CONTEXT_LENGTH')
-    llm_max_tokens: int = Field(512, env='LLM_MAX_TOKENS')
-    llm_temperature: float = Field(0.7, env='LLM_TEMPERATURE')
-    llm_n_gpu_layers: int = Field(35, env='LLM_N_GPU_LAYERS')
-    
-    # OpenAI (Optional)
+    # LLM Configuration
+    llm_model_name: str = Field('gemma-2-3b-instruct', env='LLM_MODEL_NAME')  # gemma-2-3b-instruct, llama-3.2-3b-instruct, mistral-7b-instruct
+    llm_models_dir: str = Field('./data/models', env='LLM_MODELS_DIR')
+    llm_context_length: int = Field(8192, env='LLM_CONTEXT_LENGTH')
+    llm_max_tokens: int = Field(2048, env='LLM_MAX_TOKENS')  # Increased from 512 for long job descriptions
+    llm_temperature: float = Field(0.3, env='LLM_TEMPERATURE')  # Lower for more deterministic skill extraction
+    llm_top_p: float = Field(0.9, env='LLM_TOP_P')
+    llm_top_k: int = Field(40, env='LLM_TOP_K')
+    llm_repeat_penalty: float = Field(1.1, env='LLM_REPEAT_PENALTY')
+
+    # GPU Configuration
+    llm_n_gpu_layers: int = Field(-1, env='LLM_N_GPU_LAYERS')  # 0 = CPU only, -1 = all layers to GPU (Metal on Mac)
+    llm_n_threads: int = Field(8, env='LLM_N_THREADS')  # CPU threads when using CPU
+    llm_n_batch: int = Field(512, env='LLM_N_BATCH')
+    llm_use_mmap: bool = Field(True, env='LLM_USE_MMAP')
+    llm_use_mlock: bool = Field(False, env='LLM_USE_MLOCK')
+
+    # Inference Engine
+    llm_backend: str = Field('llama-cpp', env='LLM_BACKEND')  # llama-cpp, vllm, transformers
+    llm_quantization: str = Field('Q4_K_M', env='LLM_QUANTIZATION')  # Q4_K_M, Q5_K_M, Q8_0, fp16
+
+    # OpenAI (Optional Fallback)
     openai_api_key: Optional[str] = Field(None, env='OPENAI_API_KEY')
     openai_model: str = Field('gpt-3.5-turbo', env='OPENAI_MODEL')
+
+    # Benchmarking
+    benchmark_enabled: bool = Field(False, env='BENCHMARK_ENABLED')
+    benchmark_sample_size: int = Field(50, env='BENCHMARK_SAMPLE_SIZE')
+    benchmark_output_dir: str = Field('./outputs/benchmarks', env='BENCHMARK_OUTPUT_DIR')
     
     # Embeddings
     embedding_model: str = Field('intfloat/multilingual-e5-base', env='EMBEDDING_MODEL')
@@ -60,7 +79,7 @@ class Settings(BaseSettings):
     @validator('output_dir', 'log_file', 'embedding_cache_dir')
     def create_directories(cls, v):
         os.makedirs(os.path.dirname(v) if os.path.dirname(v) else v, exist_ok=True)
-        return 
+        return v 
 
 @lru_cache()
 def get_settings() -> Settings:

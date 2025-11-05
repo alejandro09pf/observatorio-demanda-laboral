@@ -184,48 +184,88 @@ def select_gold_standard_jobs():
     conn.commit()
     logger.info(f"✅ Language detection complete: {updated} jobs updated")
 
-    # PHASE 2: Get candidate jobs
+    # PHASE 2: Get candidate jobs with STRICT FILTERS
     logger.info("\n" + "="*60)
-    logger.info("PHASE 2: Pre-selecting Candidates")
+    logger.info("PHASE 2: Pre-selecting Candidates (STRICT FILTERS)")
     logger.info("="*60)
 
     cursor.execute("""
-        SELECT
+        SELECT DISTINCT ON (content_hash)
             job_id,
             country,
             title,
             description,
             requirements,
             portal,
-            language
+            language,
+            content_hash
         FROM raw_jobs
         WHERE
             is_usable = TRUE
             AND (LENGTH(description) + LENGTH(requirements)) > 1000
+            -- Include tech roles
             AND (
                 title ILIKE '%developer%' OR title ILIKE '%engineer%'
                 OR title ILIKE '%desarrollador%' OR title ILIKE '%ingeniero%'
                 OR title ILIKE '%programador%' OR title ILIKE '%devops%'
-                OR title ILIKE '%data%' OR title ILIKE '%scientist%'
-                OR title ILIKE '%analyst%' OR title ILIKE '%qa%'
-                OR title ILIKE '%frontend%' OR title ILIKE '%backend%'
-                OR title ILIKE '%full%stack%' OR title ILIKE '%mobile%'
+                OR title ILIKE '%data scien%' OR title ILIKE '%scientist%'
+                OR title ILIKE '%qa%' OR title ILIKE '%frontend%'
+                OR title ILIKE '%backend%' OR title ILIKE '%full%stack%'
+                OR title ILIKE '%mobile%'
             )
+            -- EXCLUDE non-tech roles
+            AND title NOT ILIKE '%manager%'
+            AND title NOT ILIKE '%director%'
+            AND title NOT ILIKE '%gerente%'
+            AND title NOT ILIKE '%coordinator%'
+            AND title NOT ILIKE '%coordinador%'
+            AND title NOT ILIKE '%business analyst%'
+            AND title NOT ILIKE '%analista de negocio%'
+            AND title NOT ILIKE '%bi engineer%'
+            AND title NOT ILIKE '%business intelligence%'
+            AND title NOT ILIKE '%mechanical%'
+            AND title NOT ILIKE '%chemical%'
+            AND title NOT ILIKE '%civil engineer%'
+            AND title NOT ILIKE '%support engineer%'
+            AND title NOT ILIKE '%help desk%'
+            AND title NOT ILIKE '%scrum master%'
+            AND title NOT ILIKE '%product manager%'
+            AND title NOT ILIKE '%project manager%'
+        ORDER BY content_hash
     """)
 
     candidates = cursor.fetchall()
-    logger.info(f"Found {len(candidates)} candidate jobs")
+    logger.info(f"Found {len(candidates)} candidate jobs (after deduplication)")
 
-    # PHASE 3: Score and classify candidates
-    logger.info("\nScoring and classifying candidates...")
+    # PHASE 3: Score and classify candidates with additional filters
+    logger.info("\nScoring, classifying and filtering candidates...")
+
+    # Blacklist of generic titles
+    GENERIC_TITLES = [
+        'ingeniero de sistemas', 'ingeniero', 'developer', 'engineer',
+        'desarrollador', 'programador', 'software engineer'
+    ]
 
     scored_candidates = []
+    filtered_out = {'generic_title': 0, 'other_role': 0}
+
     for job in candidates:
-        job_id, country, title, desc, req, portal, lang = job
+        job_id, country, title, desc, req, portal, lang, content_hash = job
+
+        # Skip generic titles (unless they have specific context)
+        title_lower = title.lower().strip()
+        if title_lower in GENERIC_TITLES and len(title.split()) <= 3:
+            filtered_out['generic_title'] += 1
+            continue
 
         quality_score = calculate_quality_score(job)
         role = classify_role(title, desc)
         seniority = classify_seniority(title, desc)
+
+        # Skip 'other' roles unless quality score is very high (95+)
+        if role == 'other' and quality_score < 95:
+            filtered_out['other_role'] += 1
+            continue
 
         scored_candidates.append({
             'job_id': job_id,
@@ -244,8 +284,11 @@ def select_gold_standard_jobs():
     scored_candidates.sort(key=lambda x: x['quality_score'], reverse=True)
 
     logger.info(f"Candidates scored and classified")
-    logger.info(f"  Top quality score: {scored_candidates[0]['quality_score']}")
-    logger.info(f"  Median quality score: {scored_candidates[len(scored_candidates)//2]['quality_score']}")
+    logger.info(f"  Filtered out: {filtered_out['generic_title']} generic titles, {filtered_out['other_role']} 'other' roles")
+    logger.info(f"  Remaining: {len(scored_candidates)} candidates")
+    if len(scored_candidates) > 0:
+        logger.info(f"  Top quality score: {scored_candidates[0]['quality_score']}")
+        logger.info(f"  Median quality score: {scored_candidates[len(scored_candidates)//2]['quality_score']}")
 
     # PHASE 4: Stratified selection (FLEXIBLE ALGORITHM)
     logger.info("\n" + "="*60)

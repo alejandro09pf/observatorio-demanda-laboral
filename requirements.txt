@@ -43,6 +43,11 @@ sentence-transformers>=2.2.0
 umap-learn>=0.5.5
 # hdbscan==0.8.33  # Commented out due to ARM64 compilation issues
 
+# LLM inference
+llama-cpp-python>=0.2.0  # CPU/GPU inference for GGUF models
+# vllm>=0.3.0  # Optional: High-performance GPU inference (uncomment if using GPU)
+openai>=1.0.0  # Optional: OpenAI API fallback
+
 # Visualization
 matplotlib>=3.7.0
 seaborn>=0.12.0
@@ -78,3 +83,6 @@ kubernetes>=27.0.0
 tqdm>=4.65.0
 click>=8.1.0
 colorama>=0.4.6
+
+# Database enhancements
+pgvector  # PostgreSQL vector extension support

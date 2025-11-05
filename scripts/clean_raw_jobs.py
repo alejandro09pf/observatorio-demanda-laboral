@@ -215,6 +215,8 @@ def fetch_raw_jobs(cursor, batch_size: int = 1000, portal: Optional[str] = None,
         FROM raw_jobs r
         LEFT JOIN cleaned_jobs c ON r.job_id = c.job_id
         WHERE c.job_id IS NULL  -- Not yet cleaned
+          AND r.is_usable = TRUE  -- Only usable jobs
+          AND r.is_duplicate = FALSE  -- Exclude semantic duplicates
           AND r.title IS NOT NULL
           AND r.description IS NOT NULL
     """

@@ -796,5 +796,252 @@ def test_embeddings(
         raise typer.Exit(code=1)
 
 
+# =====================================================================
+# LLM COMMANDS
+# =====================================================================
+
+@app.command("llm-download-models")
+def llm_download_models(
+    models: Optional[List[str]] = typer.Option(None, "--model", "-m", help="Specific models to download"),
+    all_models: bool = typer.Option(False, "--all", help="Download all available models"),
+    force: bool = typer.Option(False, "--force", help="Force re-download even if exists")
+):
+    """Download LLM models for skill extraction (Gemma 2 2.6B, Llama 3.2 3B, Mistral 7B)."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("LLM MODEL DOWNLOADER")
+    typer.echo("="*60)
+    typer.echo()
+
+    script_path = Path(__file__).parent.parent / "scripts" / "download_llm_models.py"
+    cmd = [sys.executable, str(script_path)]
+
+    if all_models:
+        cmd.append("--all")
+    elif models:
+        cmd.extend(models)
+
+    if force:
+        cmd.append("--force")
+
+    try:
+        result = subprocess.run(cmd, check=True)
+        if result.returncode == 0:
+            typer.echo("\n Models downloaded successfully!")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error downloading models: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command("llm-list-models")
+def llm_list_models():
+    """List available LLM models."""
+    try:
+        from llm_processor.model_registry import MODEL_REGISTRY
+        from llm_processor.model_downloader import ModelDownloader
+
+        downloader = ModelDownloader()
+
+        typer.echo("\n" + "="*60)
+        typer.echo("AVAILABLE LLM MODELS")
+        typer.echo("="*60)
+        typer.echo()
+
+        for name, config in MODEL_REGISTRY.items():
+            downloaded = "[X]" if downloader.is_model_downloaded(name) else "[ ]"
+            typer.echo(f"{downloaded} {name}")
+            typer.echo(f"    {config.display_name}")
+            typer.echo(f"    Size: {config.size_gb} GB | Quantization: {config.quantization}")
+            typer.echo(f"    Context: {config.context_length} tokens")
+            typer.echo(f"    {config.description}")
+            typer.echo()
+
+        typer.echo("\nRecommended models:")
+        typer.echo("  - Fastest: gemma-2-2.6b-instruct")
+        typer.echo("  - Best quality: mistral-7b-instruct")
+        typer.echo("  - Best balance: llama-3.2-3b-instruct")
+
+    except Exception as e:
+        typer.echo(f"\n Error listing models: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command("llm-process-jobs")
+def llm_process_jobs(
+    batch_size: int = typer.Option(10, "--batch-size", "-b", help="Number of jobs to process"),
+    model: Optional[str] = typer.Option("gemma-3-1b-instruct", "--model", "-m", help="Model to use (default: gemma-3-1b-instruct)")
+):
+    """Process jobs through LLM extraction pipeline (Pipeline B)."""
+    try:
+        from llm_processor.pipeline import LLMExtractionPipeline
+        import psycopg2
+        from config.settings import get_settings
+
+        typer.echo("\n" + "="*60)
+        typer.echo("🤖 LLM EXTRACTION PIPELINE (Pipeline B)")
+        typer.echo("="*60)
+        typer.echo()
+
+        typer.echo(f"Model: {model}")
+        typer.echo(f"Batch size: {batch_size}")
+        typer.echo()
+
+        # Initialize pipeline
+        typer.echo("Loading model...")
+        pipeline = LLMExtractionPipeline(model_name=model)
+
+        # Display model info
+        model_info = pipeline.get_model_info()
+        typer.echo(f"✅ Loaded: {model_info['display_name']}")
+        typer.echo(f"   Backend: {model_info['backend']}")
+        typer.echo(f"   Context: {model_info['context_length']} tokens")
+        typer.echo()
+
+        # Get jobs from database
+        settings = get_settings()
+        db_url = settings.database_url
+        if db_url.startswith('postgresql://'):
+            db_url = db_url.replace('postgresql://', 'postgres://')
+
+        typer.echo(f"Fetching {batch_size} jobs from database...")
+        conn = psycopg2.connect(db_url)
+        cur = conn.cursor()
+
+        # Get extraction-ready jobs (same as Pipeline A)
+        cur.execute("""
+            SELECT job_id, title_cleaned, description_cleaned, requirements_cleaned,
+                   combined_text, portal, country
+            FROM extraction_ready_jobs
+            ORDER BY scraped_at ASC
+            LIMIT %s
+        """, (batch_size,))
+
+        jobs_data = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        if not jobs_data:
+            typer.echo("❌ No jobs found to process")
+            return
+
+        typer.echo(f"Found {len(jobs_data)} jobs to process")
+        typer.echo()
+
+        # Convert to list of dicts
+        jobs = []
+        for row in jobs_data:
+            jobs.append({
+                'job_id': row[0],
+                'title': row[1],
+                'description': row[2],
+                'requirements': row[3],
+                'combined_text': row[4],  # Use full cleaned text
+                'portal': row[5],
+                'country': row[6]
+            })
+
+        # Process jobs
+        typer.echo("Starting extraction...")
+        result = pipeline.process_batch(jobs, save_to_db=True)
+
+        # Display results
+        typer.echo("\n" + "="*60)
+        typer.echo("📊 PROCESSING RESULTS")
+        typer.echo("="*60)
+        typer.echo(f"Jobs processed: {result['successful']}/{result['total_jobs']}")
+        typer.echo(f"Failed: {result['failed']}")
+        typer.echo(f"Total skills extracted: {result['total_skills']}")
+        typer.echo(f"Avg skills/job: {result['avg_skills_per_job']:.1f}")
+        typer.echo()
+
+    except Exception as e:
+        typer.echo(f"\n❌ Error processing jobs: {e}")
+        logger.exception("LLM processing failed")
+        raise typer.Exit(code=1)
+
+
+@app.command("llm-compare-models")
+def llm_compare_models(
+    models: Optional[List[str]] = typer.Option(None, "--model", "-m", help="Models to compare"),
+    sample_size: int = typer.Option(50, "--sample-size", "-s", help="Number of jobs per model"),
+    output_dir: Optional[str] = typer.Option(None, "--output-dir", "-o", help="Output directory for results")
+):
+    """Compare multiple LLM models for skill extraction quality."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("LLM MODEL COMPARISON BENCHMARK")
+    typer.echo("="*60)
+    typer.echo()
+
+    script_path = Path(__file__).parent.parent / "scripts" / "compare_llm_models.py"
+    cmd = [sys.executable, str(script_path)]
+
+    if models:
+        cmd.append("--models")
+        cmd.extend(models)
+
+    cmd.extend(["--sample-size", str(sample_size)])
+
+    if output_dir:
+        cmd.extend(["--output-dir", output_dir])
+
+    try:
+        result = subprocess.run(cmd, check=True)
+        if result.returncode == 0:
+            typer.echo("\n Benchmark completed successfully!")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error running benchmark: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command("llm-test")
+def llm_test(
+    model: Optional[str] = typer.Option(None, "--model", "-m", help="Model to test"),
+    prompt: Optional[str] = typer.Option(None, "--prompt", "-p", help="Test prompt")
+):
+    """Test LLM inference with a sample prompt."""
+    try:
+        from llm_processor.llm_handler import LLMHandler
+
+        typer.echo("\n" + "="*60)
+        typer.echo("LLM INFERENCE TEST")
+        typer.echo("="*60)
+        typer.echo()
+
+        # Load model
+        typer.echo("Loading model...")
+        llm = LLMHandler(model_name=model)
+
+        model_info = llm.get_model_info()
+        typer.echo(f"Loaded: {model_info['display_name']}")
+        typer.echo(f"  Backend: {model_info['backend']}")
+        typer.echo(f"  GPU layers: {model_info['gpu_layers']}")
+        typer.echo()
+
+        # Test prompt
+        test_prompt = prompt or "Normaliza la siguiente habilidad: 'python programming'. Responde en JSON."
+
+        typer.echo("Generating response...")
+        typer.echo(f"Prompt: {test_prompt[:100]}...")
+        typer.echo()
+
+        response = llm.generate(test_prompt, max_tokens=256)
+
+        typer.echo("="*60)
+        typer.echo("RESPONSE:")
+        typer.echo("="*60)
+        typer.echo(response.get('text', ''))
+        typer.echo()
+        typer.echo(f"Tokens used: {response.get('tokens_used', 0)}")
+        typer.echo(f"Finish reason: {response.get('finish_reason', 'unknown')}")
+
+    except Exception as e:
+        typer.echo(f"\n Error testing model: {e}")
+        logger.exception("LLM test failed")
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":
     app()

@@ -10,7 +10,7 @@ Base = declarative_base()
 
 class RawJob(Base):
     __tablename__ = 'raw_jobs'
-    
+
     job_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     portal = Column(String(50), nullable=False)
     country = Column(String(2), nullable=False)
@@ -28,10 +28,17 @@ class RawJob(Base):
     content_hash = Column(String(64), unique=True)
     raw_html = Column(Text)
     is_processed = Column(Boolean, default=False)
-    
+
+    # Semantic deduplication columns (Migration 007)
+    is_duplicate = Column(Boolean, default=False)
+    duplicate_of = Column(UUID(as_uuid=True), ForeignKey('raw_jobs.job_id'))
+    duplicate_similarity_score = Column(Float)
+    duplicate_detection_method = Column(String(50))
+
     # Relationships
     extracted_skills = relationship("ExtractedSkill", back_populates="job")
     enhanced_skills = relationship("EnhancedSkill", back_populates="job")
+    gold_standard_annotations = relationship("GoldStandardAnnotation", back_populates="job")
 
 class ExtractedSkill(Base):
     __tablename__ = 'extracted_skills'
@@ -83,7 +90,7 @@ class SkillEmbedding(Base):
 
 class AnalysisResult(Base):
     __tablename__ = 'analysis_results'
-    
+
     analysis_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     analysis_type = Column(String(50))
     country = Column(String(2))
@@ -91,4 +98,24 @@ class AnalysisResult(Base):
     date_range_end = Column(Date)
     parameters = Column(JSONB)
     results = Column(JSONB)
-    created_at = Column(DateTime, server_default=func.now()) 
+    created_at = Column(DateTime, server_default=func.now())
+
+class GoldStandardAnnotation(Base):
+    """Manually annotated skills from gold standard dataset (300 jobs) for pipeline evaluation"""
+    __tablename__ = 'gold_standard_annotations'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    job_id = Column(UUID(as_uuid=True), ForeignKey('raw_jobs.job_id', ondelete='CASCADE'), nullable=False)
+    skill_text = Column(Text, nullable=False)
+    skill_type = Column(String(10), nullable=False)  # 'hard' or 'soft'
+
+    # Metadata specific to manual annotation
+    annotator = Column(String(50), default='manual')
+    annotation_date = Column(DateTime, server_default=func.now())
+    notes = Column(Text)  # Additional notes or comments from manual annotation
+
+    # Relationships
+    job = relationship("RawJob", back_populates="gold_standard_annotations")
+
+    def __repr__(self):
+        return f"<GoldStandardAnnotation(job_id={self.job_id}, skill='{self.skill_text[:30]}...', type={self.skill_type})>" 
