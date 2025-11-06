@@ -1,0 +1,4 @@
+Pipeline,Precision,Recall,F1,ESCO_Coverage
+Pipeline A (NER+Regex) (hard),1.0000,0.9118,0.9538,0.1358
+Pipeline B (llama-3.2-3b-instruct-MOCK) (hard),1.0000,0.9412,0.9697,0.1336
+Pipeline B (gemma-3-4b-instruct-MOCK) (hard),1.0000,0.9363,0.9671,0.1343

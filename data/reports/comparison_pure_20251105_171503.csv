@@ -1,0 +1,2 @@
+Pipeline,Precision,Recall,F1,Support,Predicted
+Pipeline A (NER+Regex) (hard),1.0000,0.8138,0.8973,1783,1451

@@ -1,0 +1,122 @@
+{
+  "pure_text_results": {
+    "Pipeline A (NER+Regex) (hard)": {
+      "metrics": {
+        "precision": 0.2057,
+        "recall": 0.2827,
+        "f1_score": 0.2381,
+        "accuracy": 0.1352,
+        "support": 1836,
+        "predicted_count": 2523
+      },
+      "pipeline_name": "Pipeline A (NER+Regex) (hard)"
+    },
+    "Pipeline B (gemma-3-4b-instruct) (hard)": {
+      "metrics": {
+        "precision": 0.4873,
+        "recall": 0.4364,
+        "f1_score": 0.4605,
+        "accuracy": 0.2991,
+        "support": 1888,
+        "predicted_count": 1691
+      },
+      "pipeline_name": "Pipeline B (gemma-3-4b-instruct) (hard)"
+    }
+  },
+  "post_esco_results": {
+    "Pipeline A (NER+Regex) (hard)": {
+      "metrics": {
+        "precision": 0.6484,
+        "recall": 0.8137,
+        "f1_score": 0.7217,
+        "accuracy": 0.5646,
+        "support": 204,
+        "predicted_count": 256
+      },
+      "coverage_esco": 0.10899722552516845,
+      "skills_lost_count": 2248
+    },
+    "Pipeline B (gemma-3-4b-instruct) (hard)": {
+      "metrics": {
+        "precision": 0.8925,
+        "recall": 0.7981,
+        "f1_score": 0.8426,
+        "accuracy": 0.7281,
+        "support": 208,
+        "predicted_count": 186
+      },
+      "coverage_esco": 0.12596096984033117,
+      "skills_lost_count": 1478
+    }
+  },
+  "esco_impact": {
+    "Pipeline A (NER+Regex) (hard)": {
+      "delta_f1": 0.4836111194230826,
+      "delta_precision": 0.4427300089179548,
+      "delta_recall": 0.5310457516339869,
+      "delta_f1_percent": 203.08871575772804,
+      "esco_coverage": 0.10899722552516845,
+      "skills_lost_count": 2248,
+      "skills_lost_sample": [
+        "We have a strong commitment to high quality engineering and customer service and are recognized innovators in the very large company market",
+        "Consulting",
+        "POST",
+        "Selfcheckout",
+        "Candidato",
+        "El candidato ideal tendrá experiencia sólida en el desarrollo de aplicaciones backend",
+        "Once",
+        "One Foot In Code",
+        "DAX Studio",
+        "USA"
+      ]
+    },
+    "Pipeline B (gemma-3-4b-instruct) (hard)": {
+      "delta_f1": 0.38217577720005164,
+      "delta_precision": 0.4051874884747207,
+      "delta_recall": 0.36163624511082143,
+      "delta_f1_percent": 82.99800404120055,
+      "esco_coverage": 0.12596096984033117,
+      "skills_lost_count": 1478,
+      "skills_lost_sample": [
+        "Calidad De Datos",
+        ".NET",
+        "Automatización de tareas",
+        "DAX Studio",
+        "Visualización de datos",
+        "Despliegue de aplicaciones",
+        "Collections",
+        "Artefactos",
+        "Virtualización",
+        "Optimización"
+      ]
+    }
+  },
+  "emergent_skills_count": 3408,
+  "emergent_skills": [
+    ".NET",
+    "12-Factor App Methodology",
+    "2+ Years Cloud",
+    "2+ years hands-on experience with Applicative Infrastructure troubleshooting of key life cycle management tools",
+    "3 Years Fullstack Development Experience Strong",
+    "3 Years Of Full-Stack Engineering Experience With Proficiency In",
+    "3D Rendering",
+    "3D object implementation",
+    "4 Years Backend Or",
+    "5 Years In Backend Engineering",
+    "A Sharp Feedback Loop Into Engineering",
+    "A Strong Engineering Background",
+    "A key aspect of this position is staying ahead of technological advancements and contributing innovative ideas to enhance our tech stack and security practices",
+    "A/B testing",
+    "ABOUT",
+    "ACE",
+    "ACF",
+    "ADA",
+    "ADO",
+    "AEM"
+  ],
+  "total_jobs": 300,
+  "pipeline_names": [
+    "Pipeline A (NER+Regex) (hard)",
+    "Pipeline B (gemma-3-4b-instruct) (hard)"
+  ]
+}
