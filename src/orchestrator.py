@@ -603,6 +603,144 @@ def process_jobs(
 
 
 @app.command()
+def process_pipeline_a():
+    """Process all 300 gold standard jobs with Pipeline A (NER + Regex + ESCO)."""
+    try:
+        import psycopg2
+        from config.database import get_database_url
+        from extractor.pipeline import ExtractionPipeline
+
+        typer.echo("\n" + "=" * 80)
+        typer.echo("PIPELINE A - GOLD STANDARD PROCESSING (300 jobs)")
+        typer.echo("=" * 80)
+
+        # 1. Get all gold standard job IDs
+        typer.echo("\n[1/4] Loading gold standard jobs from database...")
+
+        db_url = get_database_url()
+        conn = psycopg2.connect(db_url)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT
+                cj.job_id,
+                cj.title_cleaned,
+                cj.description_cleaned,
+                cj.requirements_cleaned,
+                rj.portal,
+                rj.country
+            FROM cleaned_jobs cj
+            JOIN raw_jobs rj ON cj.job_id = rj.job_id
+            WHERE cj.job_id IN (SELECT DISTINCT job_id FROM gold_standard_annotations)
+            ORDER BY cj.job_id
+        """)
+
+        jobs = cursor.fetchall()
+        typer.echo(f"  ✅ Loaded {len(jobs)} gold standard jobs")
+
+        # 2. Initialize Pipeline A
+        typer.echo("\n[2/4] Initializing Pipeline A (NER + Regex + ESCO)...")
+        import time
+        pipeline_init_start = time.time()
+        pipeline = ExtractionPipeline()
+        pipeline_init_time = time.time() - pipeline_init_start
+        typer.echo(f"  ✅ Pipeline initialized in {pipeline_init_time:.2f}s")
+
+        # 3. Process each job
+        typer.echo(f"\n[3/4] Processing {len(jobs)} jobs with Pipeline A...")
+        typer.echo("-" * 80)
+
+        start_time = time.time()
+        total_skills = 0
+        processed = 0
+        errors = 0
+        job_times = []
+
+        for idx, job in enumerate(jobs, 1):
+            job_id, title, description, requirements, portal, country = job
+            job_start = time.time()
+
+            try:
+                # Prepare job data
+                job_data = {
+                    'job_id': job_id,
+                    'title': title or '',
+                    'description': description or '',
+                    'requirements': requirements or '',
+                    'portal': portal,
+                    'country': country
+                }
+
+                # Extract skills
+                extracted_skills = pipeline.extract_skills_from_job(job_data)
+
+                # Save to database
+                pipeline._save_extracted_skills(cursor, job_id, extracted_skills)
+
+                # Count and timing
+                job_time = time.time() - job_start
+                job_times.append(job_time)
+                total_skills += len(extracted_skills)
+                processed += 1
+
+                # Progress log every 50 jobs
+                if idx % 50 == 0:
+                    elapsed = time.time() - start_time
+                    avg_time = elapsed / processed
+                    eta_seconds = avg_time * (len(jobs) - processed)
+                    eta_minutes = eta_seconds / 60
+
+                    typer.echo(f"  📊 Progress: {idx}/{len(jobs)} ({(idx/len(jobs)*100):.1f}%)")
+                    typer.echo(f"     Skills: {total_skills} total | Avg: {total_skills/processed:.1f}/job")
+                    typer.echo(f"     Speed: {avg_time:.2f}s/job | ETA: {eta_minutes:.1f} min")
+
+            except Exception as e:
+                errors += 1
+                typer.echo(f"  ❌ Error processing job {job_id}: {e}")
+                continue
+
+        # Commit all changes
+        conn.commit()
+        typer.echo("\n✅ All skills saved to database")
+
+        # 4. Final summary with detailed timing
+        total_time = time.time() - start_time
+        typer.echo("\n" + "=" * 80)
+        typer.echo("PIPELINE A - PROCESSING COMPLETE")
+        typer.echo("=" * 80)
+        typer.echo(f"  Jobs processed: {processed}/{len(jobs)}")
+        typer.echo(f"  Errors: {errors}")
+        typer.echo(f"  Total skills extracted: {total_skills}")
+        typer.echo(f"  Average skills/job: {total_skills/processed if processed > 0 else 0:.1f}")
+        typer.echo("")
+        typer.echo("⏱️  TIMING METRICS:")
+        typer.echo(f"  Pipeline initialization: {pipeline_init_time:.2f}s")
+        typer.echo(f"  Total processing time: {total_time:.2f}s ({total_time/60:.2f} min)")
+        typer.echo(f"  Average time/job: {total_time/processed if processed > 0 else 0:.2f}s")
+        if job_times:
+            import statistics
+            typer.echo(f"  Median time/job: {statistics.median(job_times):.2f}s")
+            typer.echo(f"  Min time/job: {min(job_times):.2f}s")
+            typer.echo(f"  Max time/job: {max(job_times):.2f}s")
+        typer.echo("=" * 80)
+
+        # Close connection
+        cursor.close()
+        conn.close()
+
+        typer.echo("\n✅ All gold standard jobs processed!")
+        typer.echo("Next step: Run evaluation:")
+        typer.echo("  venv/bin/python3 scripts/evaluate_pipelines.py --mode gold-standard --pipelines pipeline-a --skill-type hard\n")
+
+    except ImportError as e:
+        typer.echo(f"❌ Missing dependencies: {e}")
+    except Exception as e:
+        typer.echo(f"❌ Error processing gold standard: {e}")
+        import traceback
+        traceback.print_exc()
+
+
+@app.command()
 def list_jobs():
     """List all scheduled jobs and their status."""
     try:
@@ -958,6 +1096,140 @@ def llm_process_jobs(
     except Exception as e:
         typer.echo(f"\n❌ Error processing jobs: {e}")
         logger.exception("LLM processing failed")
+        raise typer.Exit(code=1)
+
+
+@app.command("process-gold-standard")
+def process_gold_standard(
+    model: str = typer.Option("gemma-3-4b-instruct", "--model", "-m", help="LLM model to use"),
+    limit: Optional[int] = typer.Option(None, "--limit", "-l", help="Limit number of jobs (default: all 300)"),
+    batch_size: int = typer.Option(50, "--batch-size", "-b", help="Batch size for processing")
+):
+    """Process gold standard jobs through LLM Pipeline B for evaluation."""
+    try:
+        from llm_processor.pipeline import LLMExtractionPipeline
+        import psycopg2
+        from config.settings import get_settings
+
+        typer.echo("\n" + "="*80)
+        typer.echo("🌟 PIPELINE B - GOLD STANDARD PROCESSING")
+        typer.echo("="*80)
+        typer.echo()
+
+        typer.echo(f"Model: {model}")
+        typer.echo(f"Batch size: {batch_size}")
+        if limit:
+            typer.echo(f"Limit: {limit} jobs")
+        else:
+            typer.echo(f"Processing: ALL gold standard jobs")
+        typer.echo()
+
+        # Initialize pipeline
+        typer.echo("Loading model...")
+        pipeline = LLMExtractionPipeline(model_name=model)
+
+        # Display model info
+        model_info = pipeline.get_model_info()
+        typer.echo(f"✅ Loaded: {model_info['display_name']}")
+        typer.echo(f"   Backend: {model_info['backend']}")
+        typer.echo(f"   Context: {model_info['context_length']} tokens")
+        typer.echo()
+
+        # Get gold standard jobs from database
+        settings = get_settings()
+        db_url = settings.database_url
+        if db_url.startswith('postgresql://'):
+            db_url = db_url.replace('postgresql://', 'postgres://')
+
+        typer.echo("Fetching gold standard jobs from database...")
+        conn = psycopg2.connect(db_url)
+        cur = conn.cursor()
+
+        # Get gold standard job IDs and join with cleaned_jobs + raw_jobs
+        query = """
+            SELECT DISTINCT
+                c.job_id,
+                c.title_cleaned,
+                c.description_cleaned,
+                c.requirements_cleaned,
+                c.combined_text,
+                r.portal,
+                r.country
+            FROM gold_standard_annotations g
+            JOIN cleaned_jobs c ON g.job_id = c.job_id
+            JOIN raw_jobs r ON c.job_id = r.job_id
+            ORDER BY c.job_id
+        """
+
+        if limit:
+            query += f" LIMIT {limit}"
+
+        cur.execute(query)
+        jobs_data = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        if not jobs_data:
+            typer.echo("❌ No gold standard jobs found")
+            return
+
+        typer.echo(f"Found {len(jobs_data)} gold standard jobs to process")
+        typer.echo()
+
+        # Convert to list of dicts
+        jobs = []
+        for row in jobs_data:
+            jobs.append({
+                'job_id': row[0],
+                'title': row[1],
+                'description': row[2],
+                'requirements': row[3],
+                'combined_text': row[4],
+                'portal': row[5],
+                'country': row[6]
+            })
+
+        # Process jobs through Pipeline B
+        typer.echo("Starting LLM extraction...")
+        typer.echo(f"(This will save to enhanced_skills with full metadata: processing_time, tokens_used, esco_match_method)")
+        typer.echo()
+
+        # Process in batches
+        total_processed = 0
+        total_skills = 0
+
+        for i in range(0, len(jobs), batch_size):
+            batch = jobs[i:i+batch_size]
+            batch_num = (i // batch_size) + 1
+            total_batches = (len(jobs) + batch_size - 1) // batch_size
+
+            typer.echo(f"📦 Batch {batch_num}/{total_batches} ({len(batch)} jobs)")
+            result = pipeline.process_batch(batch, save_to_db=True)
+
+            total_processed += result['successful']
+            total_skills += result['total_skills']
+
+            typer.echo(f"   ✅ {result['successful']}/{len(batch)} jobs | {result['total_skills']} skills")
+            typer.echo()
+
+        # Display final results
+        typer.echo("="*80)
+        typer.echo("📊 FINAL RESULTS")
+        typer.echo("="*80)
+        typer.echo(f"Total jobs processed: {total_processed}/{len(jobs)}")
+        typer.echo(f"Total skills extracted: {total_skills}")
+        typer.echo(f"Avg skills/job: {total_skills/total_processed if total_processed > 0 else 0:.1f}")
+        typer.echo()
+        typer.echo("✅ Results saved to enhanced_skills table with metadata:")
+        typer.echo(f"   - llm_model: {model}")
+        typer.echo(f"   - processing_time_seconds: ⏱️")
+        typer.echo(f"   - tokens_used: 🪙")
+        typer.echo(f"   - esco_match_method: 🏷️")
+        typer.echo()
+
+    except Exception as e:
+        typer.echo(f"\n❌ Error processing gold standard: {e}")
+        logger.exception("Gold standard processing failed")
         raise typer.Exit(code=1)
 
 

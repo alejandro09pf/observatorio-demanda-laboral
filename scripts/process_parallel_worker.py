@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""
+Individual worker script for parallel processing.
+Each worker processes jobs using SKIP LOCKED strategy.
+"""
+
+import sys
+import os
+from pathlib import Path
+
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+from extractor.parallel_pipeline import ParallelExtractionPipeline
+import logging
+
+def main():
+    """Process jobs with parallel worker."""
+    if len(sys.argv) < 3:
+        print("Usage: process_parallel_worker.py <worker_id> <total_workers> [max_jobs]")
+        sys.exit(1)
+
+    worker_id = int(sys.argv[1])
+    total_workers = int(sys.argv[2])
+    max_jobs = int(sys.argv[3]) if len(sys.argv) > 3 else None
+
+    # Setup logging for this worker
+    logging.basicConfig(
+        level=logging.INFO,
+        format=f'%(asctime)s - W{worker_id+1} - %(levelname)s - %(message)s',
+        datefmt='%H:%M:%S'
+    )
+
+    logger = logging.getLogger(__name__)
+
+    logger.info("=" * 80)
+    logger.info(f"PARALLEL WORKER {worker_id + 1}/{total_workers}")
+    logger.info("=" * 80)
+    logger.info(f"Worker ID: {worker_id}")
+    logger.info(f"Total workers: {total_workers}")
+    logger.info(f"Max jobs: {max_jobs or 'unlimited'}")
+    logger.info("")
+
+    # Initialize pipeline for this worker
+    logger.info(f"[1/2] Initializing Pipeline A for Worker {worker_id + 1}...")
+    pipeline = ParallelExtractionPipeline(worker_id=worker_id, total_workers=total_workers)
+    logger.info("  ✅ Pipeline initialized")
+    logger.info("")
+
+    # Process jobs
+    logger.info(f"[2/2] Processing jobs with parallel-safe strategy...")
+    logger.info("")
+
+    results = pipeline.process_batch_parallel(batch_size=100, max_jobs=max_jobs)
+
+    # Final summary
+    logger.info("")
+    logger.info("=" * 80)
+    logger.info(f"WORKER {worker_id + 1} FINISHED")
+    logger.info("=" * 80)
+
+    if 'error' in results:
+        logger.error(f"Error: {results['error']}")
+        return 1
+
+    logger.info(f"✅ Successfully processed {results['success']} jobs")
+    logger.info(f"❌ Errors: {results['errors']}")
+    logger.info(f"📊 Total skills: {results['total_skills']}")
+    logger.info(f"🗺️  ESCO matches: {results['esco_matches']}")
+
+    if 'timing' in results:
+        timing = results['timing']
+        logger.info("")
+        logger.info("⏱️  TIMING:")
+        logger.info(f"  Total: {timing['total_time_minutes']:.2f} min ({timing['total_time_hours']:.2f} hours)")
+        logger.info(f"  Avg/job: {timing['avg_time_per_job']:.2f}s")
+        logger.info(f"  Median: {timing['median_time_per_job']:.2f}s")
+
+    logger.info("=" * 80)
+    logger.info("")
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())

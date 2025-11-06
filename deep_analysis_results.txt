@@ -1,0 +1,248 @@
+14:58:44 - INFO - Loading faiss.
+14:58:44 - INFO - Successfully loaded faiss.
+14:58:46 - INFO - Initializing Extraction Pipeline...
+14:58:47 - INFO - ✅ Loaded Spanish spaCy LARGE model (es_core_news_lg)
+14:58:47 - INFO - ✅ Added EntityRuler with 666 ESCO technical skill patterns (from 392 skills)
+14:58:47 - INFO - Layer 3 (semantic matching) is DISABLED - skipping FAISS index load
+14:58:47 - INFO - ✅ ESCOMatcher3Layers initialized
+14:58:47 - INFO - ✅ Extraction Pipeline initialized successfully
+14:58:47 - INFO - 🔍 Starting skill extraction for job: d942e87a-a716-4473-ae6f-db95cea82d64
+14:58:47 - INFO -    Using cleaned combined_text (4604 characters)
+14:58:47 - INFO - 📋 Step 1: Regex-based skill extraction...
+14:58:47 - INFO - Extracting skills with regex from text (length: 4604)
+14:58:47 - INFO - Found 45 unique skills with regex
+14:58:47 - INFO -    Found 45 skills with regex
+14:58:47 - INFO - 🧠 Step 2: NER-based skill extraction...
+14:58:47 - INFO - Extracting skills with NER from text (length: 4604)
+14:58:47 - INFO - Found 56 unique skills with NER (filtered from 69 raw extractions)
+14:58:47 - INFO -    Found 56 skills with NER
+14:58:47 - INFO - 🔄 Step 3: Combining and deduplicating skills...
+14:58:47 - INFO -    Combined into 81 unique skills
+14:58:47 - INFO - 🗺️ Step 4: Mapping skills to ESCO taxonomy...
+14:58:51 - INFO - ✨ Step 5: Creating final extraction results...
+14:58:51 - INFO - 🎯 Extraction completed: 81 skills extracted and mapped
+14:58:51 - INFO - Initializing Extraction Pipeline...
+14:58:52 - INFO - ✅ Loaded Spanish spaCy LARGE model (es_core_news_lg)
+14:58:52 - INFO - ✅ Added EntityRuler with 666 ESCO technical skill patterns (from 392 skills)
+14:58:52 - INFO - Layer 3 (semantic matching) is DISABLED - skipping FAISS index load
+14:58:52 - INFO - ✅ ESCOMatcher3Layers initialized
+14:58:52 - INFO - ✅ Extraction Pipeline initialized successfully
+14:58:52 - INFO - 🔍 Starting skill extraction for job: 3550cbc4-5ca7-4ec6-ab33-9a257c67ae28
+14:58:52 - INFO -    Using cleaned combined_text (4200 characters)
+14:58:52 - INFO - 📋 Step 1: Regex-based skill extraction...
+14:58:52 - INFO - Extracting skills with regex from text (length: 4200)
+14:58:52 - INFO - Found 26 unique skills with regex
+14:58:52 - INFO -    Found 26 skills with regex
+14:58:52 - INFO - 🧠 Step 2: NER-based skill extraction...
+14:58:52 - INFO - Extracting skills with NER from text (length: 4200)
+14:58:52 - INFO - Found 49 unique skills with NER (filtered from 62 raw extractions)
+14:58:52 - INFO -    Found 49 skills with NER
+14:58:52 - INFO - 🔄 Step 3: Combining and deduplicating skills...
+14:58:52 - INFO -    Combined into 62 unique skills
+14:58:52 - INFO - 🗺️ Step 4: Mapping skills to ESCO taxonomy...
+14:58:55 - INFO - ✨ Step 5: Creating final extraction results...
+14:58:55 - INFO - 🎯 Extraction completed: 62 skills extracted and mapped
+14:58:55 - INFO - Initializing Extraction Pipeline...
+14:58:56 - INFO - ✅ Loaded Spanish spaCy LARGE model (es_core_news_lg)
+14:58:56 - INFO - ✅ Added EntityRuler with 666 ESCO technical skill patterns (from 392 skills)
+14:58:56 - INFO - Layer 3 (semantic matching) is DISABLED - skipping FAISS index load
+14:58:56 - INFO - ✅ ESCOMatcher3Layers initialized
+14:58:56 - INFO - ✅ Extraction Pipeline initialized successfully
+14:58:56 - INFO - 🔍 Starting skill extraction for job: 39e75f82-c466-4721-9521-cf90a6e7ded1
+14:58:56 - INFO -    Using cleaned combined_text (3538 characters)
+14:58:56 - INFO - 📋 Step 1: Regex-based skill extraction...
+14:58:56 - INFO - Extracting skills with regex from text (length: 3538)
+14:58:56 - INFO - Found 14 unique skills with regex
+14:58:56 - INFO -    Found 14 skills with regex
+14:58:56 - INFO - 🧠 Step 2: NER-based skill extraction...
+14:58:56 - INFO - Extracting skills with NER from text (length: 3538)
+14:58:56 - INFO - Found 24 unique skills with NER (filtered from 29 raw extractions)
+14:58:56 - INFO -    Found 24 skills with NER
+14:58:56 - INFO - 🔄 Step 3: Combining and deduplicating skills...
+14:58:56 - INFO -    Combined into 35 unique skills
+14:58:56 - INFO - 🗺️ Step 4: Mapping skills to ESCO taxonomy...
+14:58:58 - INFO - ✨ Step 5: Creating final extraction results...
+14:58:58 - INFO - 🎯 Extraction completed: 35 skills extracted and mapped
+
+====================================================================================================
+🔍 JOB: Desarrollador Java Backend Microservicios Sr | AMAZON
+   ID: d942e87a-a716-4473-ae6f-db95cea82d64
+   Gold Standard: 47 hard skills
+====================================================================================================
+
+📊 EXTRACTION BREAKDOWN:
+   Regex extracted: 45 unique skills
+   NER extracted: 36 unique skills
+   Combined (deduplicated): 81 unique skills
+   Gold Standard: 47 hard skills
+
+✅ FOUND BY REGEX ONLY: 25
+✅ FOUND BY NER ONLY: 9
+✅ FOUND BY BOTH: 0
+✅ TOTAL FOUND: 34
+❌ MISSING: 13
+
+📈 RECALL BREAKDOWN:
+   Regex recall: 53.19% (25/47)
+   NER recall: 19.15% (9/47)
+   Total recall: 72.34% (34/47)
+
+❌ MISSING SKILLS ANALYSIS (13 skills):
+
+Searching for each missing skill in the text...
+
+🔍 MISSING SKILL CATEGORIES:
+   ✅ Exact match in text, not extracted: 9
+   ⚠️  Variation in text: 3
+   📝 Acronym issue: 1
+   ❓ Not found in text: 0
+
+⚠️  CRITICAL: Skills EXACTLY in text but NOT extracted (sample):
+   • 'bases de datos relacionales' → ...ertes de POO, RESTful, bases sólidas de Bases de Datos relacionales (Oracle principalmente) y no relacional...
+   • 'ibmmq' → ...icación entre Servicios · Spring Boot · IBMMQ o RabbitMQ · REST/JSON 7. Pruebas y Ase...
+   • 'java 17+' → ... Servers/App Servers, IAM, API Gateway, JAVA 17+ , Marco de trabajo Agile (Scrum), Docke...
+   • 'jpa' → ...e de Datos y Persistencia · Hibernate · JPA (Java Persistence API) · Oracle (Manejo...
+   • 'oauth2' → ...rnetes 9. Seguridad · Spring Security · OAuth2 / JWT (JSON Web Tokens) · SLF4J + Logba...
+   • 'rabbitmq' → ...entre Servicios · Spring Boot · IBMMQ o RabbitMQ · REST/JSON 7. Pruebas y Aseguramiento ...
+   • 'slf4j' → ...rity · OAuth2 / JWT (JSON Web Tokens) · SLF4J + Logback/Log4j 10. Gestión de APIs · S...
+   • 'sybase' → ...tos, bloques anónimos, transacciones) · Sybase(Funciones, procedimientos, bloques anón...
+   • 'visual studio code' → ...grado (IDE) · Eclipse · IntelliJ IDEA · Visual Studio Code 2. Herramientas de Construcción y Gesti...
+
+📝 Skills with variations in text (sample):
+   • 'arquitectura soa'
+   • 'bases de datos no relacionales'
+   • 'rest api'
+
+🔤 Acronym/full form mismatch (sample):
+   • 'programación orientada a objetos'
+
+====================================================================================================
+🔍 JOB: Full Stack Developer (Laravel/PHP + Angular/TypeScript)
+   ID: 3550cbc4-5ca7-4ec6-ab33-9a257c67ae28
+   Gold Standard: 38 hard skills
+====================================================================================================
+
+📊 EXTRACTION BREAKDOWN:
+   Regex extracted: 26 unique skills
+   NER extracted: 36 unique skills
+   Combined (deduplicated): 62 unique skills
+   Gold Standard: 38 hard skills
+
+✅ FOUND BY REGEX ONLY: 17
+✅ FOUND BY NER ONLY: 9
+✅ FOUND BY BOTH: 0
+✅ TOTAL FOUND: 26
+❌ MISSING: 12
+
+📈 RECALL BREAKDOWN:
+   Regex recall: 44.74% (17/38)
+   NER recall: 23.68% (9/38)
+   Total recall: 68.42% (26/38)
+
+❌ MISSING SKILLS ANALYSIS (12 skills):
+
+Searching for each missing skill in the text...
+
+🔍 MISSING SKILL CATEGORIES:
+   ✅ Exact match in text, not extracted: 11
+   ⚠️  Variation in text: 1
+   📝 Acronym issue: 0
+   ❓ Not found in text: 0
+
+⚠️  CRITICAL: Skills EXACTLY in text but NOT extracted (sample):
+   • 'autenticación' → ...úblicas (GCP deseable). Experiencia con autenticación/seguridad, optimización y pruebas (PHPU...
+   • 'gcp' → ...con CI/CD, Kubernetes y nubes públicas (GCP deseable). Experiencia con autenticació...
+   • 'html5' → ...nzado en Angular 15+, TypeScript, RxJS, HTML5, SCSS. Experiencia con CI/CD, Kubernete...
+   • 'infrastructure as code' → ...ulti-tenant. Familiaridad con Terraform/Infrastructure as Code. Experiencia en marketplaces o platafor...
+   • 'ngrx' → ... (XSS, CSRF, sanitización). Implementar NgRx (Store, Effects, Component Store) y RxJ...
+   • 'oauth2' → ...mentar autenticación/autorización (JWT, OAuth2, guards) con múltiples perfiles. Gestio...
+   • 'observabilidad' → ...demand. Conocimiento de herramientas de observabilidad (Sentry, New Relic, Datadog). Responsab...
+   • 'rest api' → ...l 8+, PHP 8.1+, MySQL 8, Redis, Docker, REST APIs. Conocimiento avanzado en Angular 15+,...
+   • 'rxjs' → ...to avanzado en Angular 15+, TypeScript, RxJS, HTML5, SCSS. Experiencia con CI/CD, Ku...
+   • 'seguridad' → ...eseable). Experiencia con autenticación/seguridad, optimización y pruebas (PHPUnit, Jest,...
+
+📝 Skills with variations in text (sample):
+   • 'arquitectura multi-tenant'
+
+====================================================================================================
+🔍 JOB: Senior BI Developer - Bilingüe
+   ID: 39e75f82-c466-4721-9521-cf90a6e7ded1
+   Gold Standard: 37 hard skills
+====================================================================================================
+
+📊 EXTRACTION BREAKDOWN:
+   Regex extracted: 14 unique skills
+   NER extracted: 21 unique skills
+   Combined (deduplicated): 35 unique skills
+   Gold Standard: 37 hard skills
+
+✅ FOUND BY REGEX ONLY: 7
+✅ FOUND BY NER ONLY: 9
+✅ FOUND BY BOTH: 0
+✅ TOTAL FOUND: 16
+❌ MISSING: 21
+
+📈 RECALL BREAKDOWN:
+   Regex recall: 18.92% (7/37)
+   NER recall: 24.32% (9/37)
+   Total recall: 43.24% (16/37)
+
+❌ MISSING SKILLS ANALYSIS (21 skills):
+
+Searching for each missing skill in the text...
+
+🔍 MISSING SKILL CATEGORIES:
+   ✅ Exact match in text, not extracted: 13
+   ⚠️  Variation in text: 7
+   📝 Acronym issue: 0
+   ❓ Not found in text: 1
+
+⚠️  CRITICAL: Skills EXACTLY in text but NOT extracted (sample):
+   • 'control de versiones' → ...entos en modelado de datos, sistemas de control de versiones, metodologías agiles y arquitecturas mo...
+   • 'dataflows gen2' → ...o (Lakehouse + OneLake (Delta/Parquet), Dataflows Gen2, Pipelines) Experiencia laboral en entr...
+   • 'dax studio' → ... en Power BI: Avanzado (Tabular Editor, DAX Studio, Incremental Refresh, RLS/OLS) Python p...
+   • 'incremental refresh' → ...: Avanzado (Tabular Editor, DAX Studio, Incremental Refresh, RLS/OLS) Python para analítica: Interm...
+   • 'lakehouse' → ...tabricks) Microsoft Fabric: Intermedio (Lakehouse + OneLake (Delta/Parquet), Dataflows Ge...
+   • 'microsoft fabric' → ...-learn, notebooks en Fabric/Databricks) Microsoft Fabric: Intermedio (Lakehouse + OneLake (Delta...
+   • 'modelado de datos' → ...ntornos empresariales. Conocimientos en modelado de datos, sistemas de control de versiones, meto...
+   • 'onelake' → ...crosoft Fabric: Intermedio (Lakehouse + OneLake (Delta/Parquet), Dataflows Gen2, Pipeli...
+   • 'particionado' → ... en SQL (CTE, window functions, tuning, particionado) Inglés C1. Excel: Avanzado. Modelado s...
+   • 'procedimientos almacenados' → ... y desarrollar consultas SQL complejas, procedimientos almacenados y objetos de base de datos para apoyar ...
+
+📝 Skills with variations in text (sample):
+   • 'documentación técnica'
+   • 'integración de datos'
+   • 'metodologías ágiles'
+   • 'power bi report server'
+   • 'power bi service'
+
+❓ NOT found in text (possible annotation error, sample):
+   • 'business intelligence'
+
+====================================================================================================
+📊 SUMMARY: REGEX vs NER PERFORMANCE
+====================================================================================================
+
+📈 AVERAGE RECALL:
+   Regex: 40.16% (49/122)
+   NER: 22.13% (27/122)
+   Total: 62.30% (76/122)
+
+🔄 OVERLAP:
+   Found by BOTH: 0 (0.0% of found skills)
+   Regex ONLY: 49
+   NER ONLY: 27
+
+❌ MISSING SKILLS BREAKDOWN:
+   ✅ Exact in text, not extracted: 33 (71.7%)
+   ⚠️  Variation in text: 11 (23.9%)
+   📝 Acronym mismatch: 1 (2.2%)
+   ❓ Not in text: 1 (2.2%)
+
+====================================================================================================
+🎯 CONCLUSION: Where to focus improvements?
+====================================================================================================
+1. PRIORITY HIGH: 33 skills are EXACTLY in text but we don't extract them
+2. PRIORITY MEDIUM: 11 skills have variations we don't recognize
+3. PRIORITY LOW: 1 acronym/full form mismatches
+4. REVIEW: 1 skills not found in text (annotation issues?)

@@ -43,9 +43,14 @@ class ESCOMatch:
 class ESCOMatcher3Layers:
     """Match skills to ESCO taxonomy using 3-layer strategy."""
 
-    # Thresholds (optimized after extensive testing)
-    FUZZY_THRESHOLD = 0.85
+    # Thresholds (optimized after extensive testing + Experimento #1)
+    # Increased from 0.85 to 0.92 to eliminate absurd matches like "REST"→"restaurar dentaduras"
+    FUZZY_THRESHOLD = 0.92  # Was 0.85 (2025-01-05 - Mejora 1.3)
     SEMANTIC_THRESHOLD = 0.87  # Not used when Layer 3 disabled
+
+    # Adaptive threshold for very short strings (≤4 chars)
+    # Short strings like "REST", "CI", "IT" require stricter matching
+    FUZZY_THRESHOLD_SHORT = 0.95  # For strings ≤4 chars
 
     # Layer 3 Control Flag
     LAYER3_ENABLED = False  # DISABLED: E5 model not suitable for technical vocabulary (see FAISS_ANALYSIS_AND_RECOMMENDATION.md)
@@ -259,12 +264,23 @@ class ESCOMatcher3Layers:
                         score_ratio = fuzz.ratio(skill_text.lower(), label_es.lower()) / 100.0
                         score_partial = fuzz.partial_ratio(skill_text.lower(), label_es.lower()) / 100.0
 
-                        # IMPORTANT: Only use partial_ratio if:
-                        # 1. The label is longer than search term (prevents "C" matching everything with 'c')
-                        # 2. The search term is short (≤ 6 chars) - typical acronyms/tech terms
-                        if len(label_es) > len(skill_text) and len(skill_text) <= 6:
+                        # CRITICAL FIX (2025-01-05 - Mejora 1.3.1):
+                        # For very short strings (≤4 chars), partial_ratio causes absurd matches:
+                        #   "REST" → "RESTaurar dentaduras" (partial_ratio = 1.00)
+                        #   "CI" → "CIsco Webex" (partial_ratio = 1.00)
+                        #
+                        # Strategy:
+                        # - Skills ≤4 chars: ONLY use ratio (NO partial_ratio) - prevents substring abuse
+                        # - Skills 5-6 chars: Allow partial_ratio (valid use case: "React" in "React.js")
+                        # - Skills >6 chars: Only ratio (full string comparison)
+                        if len(skill_text) <= 4:
+                            # Very short: strict exact matching only
+                            score = score_ratio
+                        elif len(label_es) > len(skill_text) and len(skill_text) <= 6:
+                            # Medium short: allow partial (e.g., "React" in "React Native")
                             score = max(score_ratio, score_partial)
                         else:
+                            # Normal/long: ratio only
                             score = score_ratio
 
                         # Tiebreaker: if same score, prefer match at start of label
@@ -279,7 +295,10 @@ class ESCOMatcher3Layers:
                         score_ratio = fuzz.ratio(skill_text.lower(), label_en.lower()) / 100.0
                         score_partial = fuzz.partial_ratio(skill_text.lower(), label_en.lower()) / 100.0
 
-                        if len(label_en) > len(skill_text) and len(skill_text) <= 6:
+                        # Same strategy as Spanish labels (Mejora 1.3.1)
+                        if len(skill_text) <= 4:
+                            score = score_ratio  # Very short: NO partial_ratio
+                        elif len(label_en) > len(skill_text) and len(skill_text) <= 6:
                             score = max(score_ratio, score_partial)
                         else:
                             score = score_ratio
@@ -290,7 +309,11 @@ class ESCOMatcher3Layers:
                             best_match = (uri, label_en, skill_type, skill_group)
                             best_match_starts_with = starts_with
 
-                if best_match and best_score >= self.FUZZY_THRESHOLD:
+                # Adaptive threshold: stricter for short strings (≤4 chars)
+                # This prevents absurd matches like "REST"→"restaurar dentaduras" or "IT"→"italiano"
+                effective_threshold = self.FUZZY_THRESHOLD_SHORT if len(skill_text) <= 4 else self.FUZZY_THRESHOLD
+
+                if best_match and best_score >= effective_threshold:
                     uri, matched_label, skill_type, skill_group = best_match
 
                     return ESCOMatch(

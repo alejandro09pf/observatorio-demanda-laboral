@@ -104,7 +104,7 @@ class ExtractionPipeline:
                 original_confidence=skill.confidence,
                 esco_match=esco_match,
                 final_confidence=final_confidence,
-                skill_type=skill.skill_type,
+                skill_type='hard',  # Pipeline A extracts only hard/technical skills
                 context=skill.context,
                 context_position=skill.position,
                 extraction_timestamp=datetime.now()
@@ -116,6 +116,9 @@ class ExtractionPipeline:
     
     def process_batch(self, batch_size: int = 10) -> Dict[str, Any]:
         """Process a batch of jobs for skill extraction."""
+        import time
+        import statistics
+
         logger.info(f"🚀 Starting batch processing (batch size: {batch_size})")
 
         try:
@@ -135,11 +138,15 @@ class ExtractionPipeline:
 
                 pending_jobs = cursor.fetchall()
                 logger.info(f"📊 Found {len(pending_jobs)} extraction-ready jobs (cleaned, usable, pending)")
-                
+
                 if not pending_jobs:
                     logger.info("No pending jobs found")
                     return {'processed': 0, 'success': 0, 'errors': 0}
-                
+
+                # Initialize timing metrics
+                batch_start_time = time.time()
+                job_times = []
+
                 # Process each job
                 results = {
                     'processed': len(pending_jobs),
@@ -149,9 +156,12 @@ class ExtractionPipeline:
                     'esco_matches': 0,
                     'job_details': []
                 }
-                
-                for job_data in pending_jobs:
+
+                for idx, job_data in enumerate(pending_jobs, 1):
                     try:
+                        # Start timing for this job
+                        job_start_time = time.time()
+
                         # Mark as processing
                         cursor.execute("""
                             UPDATE raw_jobs
@@ -171,34 +181,54 @@ class ExtractionPipeline:
                             'country': job_data[6],
                             'word_count': job_data[7]  # combined_word_count
                         }
-                        
+
                         extracted_skills = self.extract_skills_from_job(job_dict)
-                        
+
                         # Save extracted skills to database
                         self._save_extracted_skills(cursor, job_data[0], extracted_skills)
-                        
+
+                        # Calculate job processing time
+                        job_time = time.time() - job_start_time
+                        job_times.append(job_time)
+
                         # Mark as completed
                         cursor.execute("""
-                            UPDATE raw_jobs 
+                            UPDATE raw_jobs
                             SET extraction_status = 'completed',
                                 extraction_completed_at = NOW()
                             WHERE job_id = %s
                         """, (job_data[0],))
-                        
+
                         # Update results
                         results['success'] += 1
                         results['total_skills'] += len(extracted_skills)
                         results['esco_matches'] += sum(1 for s in extracted_skills if s.esco_match)
-                        
+
                         job_result = {
                             'job_id': job_data[0],
                             'title': job_data[1][:50] + '...',
                             'skills_extracted': len(extracted_skills),
-                            'esco_matches': sum(1 for s in extracted_skills if s.esco_match)
+                            'esco_matches': sum(1 for s in extracted_skills if s.esco_match),
+                            'processing_time': job_time
                         }
                         results['job_details'].append(job_result)
-                        
-                        logger.info(f"✅ Job {job_data[0]}: {len(extracted_skills)} skills extracted")
+
+                        logger.info(f"✅ Job {job_data[0]}: {len(extracted_skills)} skills extracted ({job_time:.2f}s)")
+
+                        # Progress report every 500 jobs
+                        if idx % 500 == 0:
+                            elapsed_time = time.time() - batch_start_time
+                            avg_time = elapsed_time / idx
+                            eta_seconds = avg_time * (len(pending_jobs) - idx)
+
+                            logger.info("")
+                            logger.info(f"📊 PROGRESS REPORT - Batch {idx}/{len(pending_jobs)}")
+                            logger.info(f"   Progress: {idx/len(pending_jobs)*100:.1f}% complete")
+                            logger.info(f"   Speed: {avg_time:.2f}s/job")
+                            logger.info(f"   ETA: {eta_seconds/60:.1f} minutes ({eta_seconds/3600:.1f} hours)")
+                            logger.info(f"   Success rate: {results['success']}/{idx} ({results['success']/idx*100:.1f}%)")
+                            logger.info(f"   Avg skills/job: {results['total_skills']/results['success']:.1f}")
+                            logger.info("")
                         
                     except Exception as e:
                         logger.error(f"❌ Error processing job {job_data[0]}: {e}")
@@ -214,7 +244,47 @@ class ExtractionPipeline:
                         results['errors'] += 1
                 
                 conn.commit()
-                logger.info(f"🎉 Batch processing completed: {results['success']} success, {results['errors']} errors")
+
+                # Calculate final timing statistics
+                total_time = time.time() - batch_start_time
+
+                # Add timing metrics to results
+                if job_times:
+                    results['timing'] = {
+                        'total_time_seconds': total_time,
+                        'total_time_minutes': total_time / 60,
+                        'total_time_hours': total_time / 3600,
+                        'avg_time_per_job': statistics.mean(job_times),
+                        'median_time_per_job': statistics.median(job_times),
+                        'min_time_per_job': min(job_times),
+                        'max_time_per_job': max(job_times),
+                        'std_dev_time': statistics.stdev(job_times) if len(job_times) > 1 else 0
+                    }
+
+                # Log comprehensive summary
+                logger.info("")
+                logger.info("=" * 80)
+                logger.info("🎉 BATCH PROCESSING COMPLETED")
+                logger.info("=" * 80)
+                logger.info(f"Jobs processed: {results['success']} success, {results['errors']} errors")
+                logger.info(f"Total skills extracted: {results['total_skills']}")
+                logger.info(f"ESCO matches: {results['esco_matches']} ({results['esco_matches']/results['total_skills']*100:.1f}%)")
+                logger.info(f"Emergent skills: {results['total_skills'] - results['esco_matches']} ({(results['total_skills']-results['esco_matches'])/results['total_skills']*100:.1f}%)")
+                logger.info(f"Avg skills/job: {results['total_skills']/results['success']:.1f}")
+
+                if job_times:
+                    logger.info("")
+                    logger.info("⏱️  TIMING METRICS")
+                    logger.info(f"Total time: {total_time/60:.2f} min ({total_time/3600:.2f} hours)")
+                    logger.info(f"Avg time/job: {statistics.mean(job_times):.2f}s")
+                    logger.info(f"Median time/job: {statistics.median(job_times):.2f}s")
+                    logger.info(f"Min time/job: {min(job_times):.2f}s")
+                    logger.info(f"Max time/job: {max(job_times):.2f}s")
+                    logger.info(f"Std deviation: {statistics.stdev(job_times) if len(job_times) > 1 else 0:.2f}s")
+
+                logger.info("=" * 80)
+                logger.info("")
+
                 return results
                 
         except Exception as e:

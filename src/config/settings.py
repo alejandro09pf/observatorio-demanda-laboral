@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # LLM Configuration
     llm_model_name: str = Field('gemma-2-3b-instruct', env='LLM_MODEL_NAME')  # gemma-2-3b-instruct, llama-3.2-3b-instruct, mistral-7b-instruct
     llm_models_dir: str = Field('./data/models', env='LLM_MODELS_DIR')
-    llm_context_length: int = Field(8192, env='LLM_CONTEXT_LENGTH')
+    llm_context_length: int = Field(16384, env='LLM_CONTEXT_LENGTH')  # Increased from 8192 for Mistral
     llm_max_tokens: int = Field(2048, env='LLM_MAX_TOKENS')  # Increased from 512 for long job descriptions
     llm_temperature: float = Field(0.3, env='LLM_TEMPERATURE')  # Lower for more deterministic skill extraction
     llm_top_p: float = Field(0.9, env='LLM_TOP_P')
