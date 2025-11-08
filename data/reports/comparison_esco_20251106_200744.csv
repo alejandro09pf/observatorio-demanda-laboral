@@ -1,0 +1,2 @@
+Pipeline,Precision,Recall,F1,ESCO_Coverage
+Pipeline A (NER+Regex) (hard),0.6550,0.8125,0.7253,0.1153

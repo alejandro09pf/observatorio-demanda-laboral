@@ -1,0 +1,3 @@
+Pipeline,Precision,Recall,F1,Support,Predicted
+Pipeline A (NER+Regex),0.2066,0.2520,0.2270,2159,2633
+Pipeline A.1 (N-gram + TF-IDF),0.0875,0.1762,0.1169,2038,4103

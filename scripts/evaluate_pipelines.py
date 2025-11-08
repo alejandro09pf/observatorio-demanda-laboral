@@ -5,12 +5,12 @@ Script de evaluación de pipelines - Único script necesario.
 MODOS DE USO:
 
 1. MODO GOLD STANDARD - Evaluación completa vs ground truth
-   Compara Pipeline A y/o Pipeline B contra gold standard (300 jobs anotados)
+   Compara Pipeline A, A.1 (N-gram+TF-IDF) y/o Pipeline B contra gold standard (300 jobs anotados)
    Incluye: comparación texto normalizado + post-ESCO + análisis de impacto
 
    python scripts/evaluate_pipelines.py \\
      --mode gold-standard \\
-     --pipelines pipeline-a llama-3.2-3b gemma-3-4b
+     --pipelines pipeline-a pipeline-a1 llama-3.2-3b gemma-3-4b
 
 2. MODO LLM COMPARISON - Comparar múltiples LLMs entre sí
    Compara LLMs head-to-head: overlap, avg skills/job, estadísticas
@@ -90,6 +90,16 @@ def mode_gold_standard(comparator: DualPipelineComparator, pipelines: List[str],
                 pipeline_data.append(pipeline)
             else:
                 logger.warning(f"  ⚠️  Pipeline A has no data")
+        elif pipeline_name.lower() == 'pipeline-a1':
+            logger.info(f"  Running Pipeline A.1 (N-gram + TF-IDF)...")
+            try:
+                pipeline = comparator.load_pipeline_a1(job_ids=job_ids)
+                if pipeline.skills_by_job:
+                    pipeline_data.append(pipeline)
+                else:
+                    logger.warning(f"  ⚠️  Pipeline A.1 has no data")
+            except Exception as e:
+                logger.error(f"  ❌ Error running Pipeline A.1: {e}")
         else:
             # Assume it's an LLM model
             logger.info(f"  Loading Pipeline B ({pipeline_name})...")

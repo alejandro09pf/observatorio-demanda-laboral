@@ -1,0 +1,2 @@
+Pipeline,Precision,Recall,F1,ESCO_Coverage
+Pipeline A.1 (N-gram + TF-IDF),0.4789,0.4811,0.4800,0.0570

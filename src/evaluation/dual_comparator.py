@@ -269,6 +269,176 @@ class DualPipelineComparator:
             logger.error(f"Error loading Pipeline A: {e}")
             raise
 
+    def load_pipeline_a1(self, job_ids: Optional[List[str]] = None, persist_to_db: bool = False) -> PipelineData:
+        """
+        Ejecuta Pipeline A.1 (N-gram + TF-IDF) y retorna skills extraídas.
+
+        A diferencia de Pipeline A y B que leen de DB, este pipeline
+        ejecuta extracción en tiempo real usando NGramExtractor.
+
+        Args:
+            job_ids: Lista de job IDs a procesar (None = todos los gold standard)
+            persist_to_db: Si True, guarda las skills extraídas en extracted_skills table
+
+        Returns:
+            PipelineData con skills de Pipeline A.1
+        """
+        from ..extractor.ngram_extractor import NGramExtractor
+
+        logger.info("Running Pipeline A.1 (N-gram + TF-IDF) extraction...")
+
+        skills_by_job = {}
+        skills_with_types = {}
+        total_skills = 0
+
+        try:
+            with psycopg2.connect(self.db_url) as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                    # Step 1: Cargar corpus de textos para fitting TF-IDF
+                    logger.info("  [1/4] Loading corpus for TF-IDF fitting...")
+                    if job_ids:
+                        placeholders = ','.join(['%s'] * len(job_ids))
+                        query = f"""
+                            SELECT cj.job_id, cj.combined_text
+                            FROM cleaned_jobs cj
+                            JOIN raw_jobs rj ON cj.job_id = rj.job_id
+                            WHERE rj.is_gold_standard = TRUE
+                              AND cj.job_id IN ({placeholders})
+                            ORDER BY cj.job_id
+                        """
+                        cursor.execute(query, job_ids)
+                    else:
+                        query = """
+                            SELECT cj.job_id, cj.combined_text
+                            FROM cleaned_jobs cj
+                            JOIN raw_jobs rj ON cj.job_id = rj.job_id
+                            WHERE rj.is_gold_standard = TRUE
+                            ORDER BY cj.job_id
+                        """
+                        cursor.execute(query)
+
+                    rows = cursor.fetchall()
+                    job_texts = [(row['job_id'], row['combined_text']) for row in rows if row['combined_text']]
+
+                    if not job_texts:
+                        logger.warning("No job texts found!")
+                        return PipelineData(
+                            name="Pipeline A.1 (N-gram + TF-IDF)",
+                            skills_by_job={},
+                            skills_with_types={},
+                            total_skills=0,
+                            unique_skills=0
+                        )
+
+                    logger.info(f"  ✅ Loaded {len(job_texts)} job texts")
+
+                    # Step 2: Fit TF-IDF on corpus
+                    logger.info("  [2/4] Fitting TF-IDF on corpus...")
+                    extractor = NGramExtractor()
+                    corpus = [text for _, text in job_texts]
+                    extractor.fit_corpus(corpus)
+
+                    # Step 3: Extract skills from each job
+                    logger.info(f"  [3/4] Extracting skills from {len(job_texts)} jobs...")
+                    for idx, (job_id, text) in enumerate(job_texts, 1):
+                        ngram_skills = extractor.extract_skills(text)
+
+                        # Convert NGramSkill to skill_text for PipelineData format
+                        if job_id not in skills_by_job:
+                            skills_by_job[job_id] = set()
+                            skills_with_types[job_id] = {}
+
+                        for skill in ngram_skills:
+                            skills_by_job[job_id].add(skill.skill_text)
+                            # Pipeline A.1 solo extrae hard skills (no clasifica soft/hard)
+                            skills_with_types[job_id][skill.skill_text] = 'hard'
+                            total_skills += 1
+
+                        if idx % 50 == 0:
+                            logger.info(f"    Progress: {idx}/{len(job_texts)} ({idx/len(job_texts)*100:.1f}%)")
+
+                    logger.info(f"  ✅ Extracted {total_skills} skills from {len(skills_by_job)} jobs")
+
+                    # Step 4: Persist to database if requested
+                    if persist_to_db:
+                        logger.info("  [4/4] Persisting skills to database...")
+                        self._persist_pipeline_a1_skills(skills_by_job, skills_with_types)
+
+            unique_skills = len(set().union(*skills_by_job.values())) if skills_by_job else 0
+
+            logger.info(f"✅ Pipeline A.1 complete: {len(skills_by_job)} jobs, {total_skills} skills, {unique_skills} unique")
+
+            return PipelineData(
+                name="Pipeline A.1 (N-gram + TF-IDF)",
+                skills_by_job=skills_by_job,
+                skills_with_types=skills_with_types,
+                total_skills=total_skills,
+                unique_skills=unique_skills
+            )
+
+        except Exception as e:
+            logger.error(f"Error running Pipeline A.1: {e}")
+            raise
+
+    def _persist_pipeline_a1_skills(self, skills_by_job: Dict[str, Set[str]], skills_with_types: Dict[str, Dict[str, str]]):
+        """
+        Persiste skills de Pipeline A.1 en extracted_skills table.
+
+        Args:
+            skills_by_job: Dict[job_id -> Set[skill_text]]
+            skills_with_types: Dict[job_id -> Dict[skill_text -> skill_type]]
+        """
+        EXTRACTION_METHOD = 'pipeline-a1-tfidf-np'
+
+        try:
+            with psycopg2.connect(self.db_url) as conn:
+                with conn.cursor() as cursor:
+                    # Delete existing Pipeline A.1 extractions for these jobs
+                    job_ids = list(skills_by_job.keys())
+                    if job_ids:
+                        placeholders = ','.join(['%s'] * len(job_ids))
+                        delete_query = f"""
+                            DELETE FROM extracted_skills
+                            WHERE job_id IN ({placeholders})
+                              AND extraction_method = %s
+                        """
+                        cursor.execute(delete_query, job_ids + [EXTRACTION_METHOD])
+                        deleted_count = cursor.rowcount
+                        logger.info(f"    Deleted {deleted_count} existing Pipeline A.1 skills")
+
+                    # Insert new skills
+                    insert_query = """
+                        INSERT INTO extracted_skills (
+                            job_id, skill_text, skill_type,
+                            extraction_method, source_section, confidence_score
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """
+
+                    skills_to_insert = []
+                    for job_id, skills in skills_by_job.items():
+                        for skill_text in skills:
+                            skill_type = skills_with_types.get(job_id, {}).get(skill_text, 'hard')
+                            skills_to_insert.append((
+                                job_id,
+                                skill_text,
+                                skill_type,
+                                EXTRACTION_METHOD,
+                                'combined_text',  # Pipeline A.1 procesa combined_text
+                                None  # Confidence score (podría agregarse TF-IDF score después)
+                            ))
+
+                    if skills_to_insert:
+                        cursor.executemany(insert_query, skills_to_insert)
+                        conn.commit()
+                        logger.info(f"    ✅ Inserted {len(skills_to_insert)} Pipeline A.1 skills into database")
+                    else:
+                        logger.warning("    No skills to insert")
+
+        except Exception as e:
+            logger.error(f"Error persisting Pipeline A.1 skills: {e}")
+            raise
+
     def load_pipeline_b(
         self,
         llm_model: str,

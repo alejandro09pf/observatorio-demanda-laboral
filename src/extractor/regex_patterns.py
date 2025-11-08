@@ -17,9 +17,19 @@ class RegexSkill:
 
 class RegexExtractor:
     """Extract skills using regular expression patterns."""
-    
+
     def __init__(self):
         self.patterns = self._load_patterns()
+        # EXPERIMENT #9.1: Stopwords for bullet_point_skills to fix Precision 20.57%
+        self.BULLET_STOPWORDS = {
+            # Prepositions (from "easy-to-use", "end-to-end")
+            'to', 'in', 'of', 'as', 'by', 'on', 'at', 'or', 'an', 'is', 'it', 'end',
+            # Single letters (from "S.A. de C.V.")
+            'c', 'r', 'd', 'e', 's', 'a', 'b', 'p', 'm', 'n', 'o', 'q', 'u', 'v', 'w', 'x', 'y', 'z',
+            # HTML/JS garbage (from "window.ctLytics Piano")
+            'piano', 'cat', 'true', 'false', 'type', 'search', 'window',
+            'data', 'var', 'const', 'let', 'function', 'document'
+        }
     
     def _load_patterns(self) -> Dict[str, List[str]]:
         """Load regex patterns for skill extraction."""
@@ -536,6 +546,18 @@ class RegexExtractor:
                         # Standard patterns (no capture groups)
                         raw_skill_text = match.group()
                         start, end = match.span()
+
+                    # EXPERIMENT #9.1: Filter bullet_point_skills stopwords
+                    # Skip extraction if it's garbage (prepositions, single letters, HTML/JS)
+                    if skill_type == 'bullet_point_skills':
+                        cleaned_text = raw_skill_text.lower().strip()
+                        # Check exact match
+                        if cleaned_text in self.BULLET_STOPWORDS:
+                            continue
+                        # Check if any stopword is contained (for phrases like "piano analytics")
+                        words = cleaned_text.split()
+                        if any(word in self.BULLET_STOPWORDS for word in words):
+                            continue
 
                     # CRITICAL: Normalize skill text for ESCO matching
                     # Example: "postgres" → "PostgreSQL", "js" → "JavaScript"

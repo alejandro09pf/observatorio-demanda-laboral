@@ -357,6 +357,242 @@ CANONICAL_FORMS = {
 - Complementado por validación post-ESCO para estandarización
 - Permite identificar skills emergentes para actualizar ESCO
 
+#### 3. Algoritmo de Normalización (5 Pasos)
+
+**Código:** `normalizer.py` líneas 265-300
+
+```python
+def normalize(skill_text: str) -> str:
+    """
+    Normaliza un skill a su forma canónica.
+
+    Pasos:
+    1. Limpieza básica
+    2. Remover acentos + lowercase (para lookup)
+    3. Verificar blacklist
+    4. Buscar en diccionario canónico
+    5. Fallback: title case
+    """
+```
+
+**PASO 1: Limpieza Básica**
+```python
+normalized = skill_text.strip()
+# "  python  " → "python"
+# "React.js " → "React.js"
+```
+
+**PASO 2: Remover Acentos + Lowercase (para lookup)**
+```python
+normalized_for_lookup = remove_accents(normalized).lower()
+# "Comunicación" → "comunicacion"
+# "PYTHON" → "python"
+# "K8s" → "k8s"
+```
+
+**PASO 3: Verificar Blacklist** (descarta palabras que NO son skills)
+```python
+if normalized_for_lookup in BLACKLIST:
+    return ""  # Descartada
+
+# Blacklist = {"experiencia", "años", "año", "year", "meses", ...}
+# "3 años de experiencia" → "" (descartada) ❌
+# "experiencia en Python" → "" (descartada) ❌
+```
+
+**PASO 4: Buscar en Diccionario Canónico** (193 mappings)
+```python
+if normalized_for_lookup in CANONICAL_NAMES:
+    return CANONICAL_NAMES[normalized_for_lookup]
+
+# Ejemplos:
+# "python" → "Python" ✅
+# "js" → "JavaScript" ✅
+# "k8s" → "Kubernetes" ✅
+# "postgres" → "PostgreSQL" ✅
+# "react.js" → "React" ✅
+# "nodejs" → "Node.js" ✅
+# "liderazgo" → "Liderazgo" ✅
+# "leadership" → "Liderazgo" ✅ (mapea a español)
+```
+
+**PASO 5: Fallback - Title Case** (si no está en diccionario)
+```python
+return to_title_case(clean_text(normalized))
+
+# "machine learning" → "Machine Learning"
+# "data analysis" → "Data Analysis"
+# "resolución de problemas" → "Resolución De Problemas"
+```
+
+**⚠️ Limitación del Fallback:**
+
+Si una variante NO está en el diccionario canónico, puede NO matchear:
+
+```python
+# Ejemplo problemático:
+Gold: "postgre sql" → NO en diccionario → Fallback: "Postgre Sql"
+Pipeline: "postgres" → En diccionario → "PostgreSQL"
+
+# Resultado: "Postgre Sql" ≠ "PostgreSQL" ❌ NO MATCH
+
+# Solución: Agregar variante al diccionario
+CANONICAL_NAMES = {
+    'postgres': 'PostgreSQL',
+    'postgresql': 'PostgreSQL',
+    'postgre sql': 'PostgreSQL',  # ← Agregar
+    'postgre': 'PostgreSQL',       # ← Agregar
+}
+```
+
+---
+
+### Cálculo de Métricas (Operaciones de Conjuntos)
+
+**Código:** `metrics.py` líneas 94-174
+
+Una vez normalizadas las skills, se calculan las métricas usando **operaciones de conjuntos**:
+
+#### Paso 1: Operaciones de Conjuntos
+
+```python
+# Entrada:
+gold_standard_skills = {"Python", "React", "PostgreSQL", "Docker"}
+predicted_skills = {"Python", "React", "SQL", "Kubernetes"}
+
+# Operación 1: Intersección (∩)
+TP = gold_standard_skills & predicted_skills
+   = {"Python", "React"}  # Skills correctamente identificadas
+
+# Operación 2: Diferencia (-)
+FP = predicted_skills - gold_standard_skills
+   = {"SQL", "Kubernetes"}  # Skills extraídas pero NO en gold
+
+FN = gold_standard_skills - predicted_skills
+   = {"PostgreSQL", "Docker"}  # Skills del gold NO extraídas
+
+# Counts
+tp = len(TP) = 2
+fp = len(FP) = 2
+fn = len(FN) = 2
+```
+
+#### Paso 2: Fórmulas de Métricas
+
+```python
+# Precision: ¿Qué % de lo predicho es correcto?
+Precision = TP / (TP + FP)
+          = 2 / (2 + 2)
+          = 2 / 4
+          = 0.5000 (50%)
+
+# Recall: ¿Qué % del gold se detectó?
+Recall = TP / (TP + FN)
+       = 2 / (2 + 2)
+       = 2 / 4
+       = 0.5000 (50%)
+
+# F1-Score: Media armónica de Precision y Recall
+F1 = 2 * (Precision * Recall) / (Precision + Recall)
+   = 2 * (0.5 * 0.5) / (0.5 + 0.5)
+   = 2 * 0.25 / 1.0
+   = 0.5000 (50%)
+```
+
+#### Paso 3: Interpretación
+
+```python
+Support = len(gold_standard_skills) = 4  # Total en gold
+Predicted = len(predicted_skills) = 4     # Total predicho
+
+# Análisis:
+# - Precision 50% → De 4 skills extraídas, solo 2 son correctas
+# - Recall 50% → De 4 skills del gold, solo se detectaron 2
+# - F1 50% → Balance entre Precision y Recall
+```
+
+---
+
+### Proceso Completo: De BD a Métricas
+
+**Flujo end-to-end de evaluación PRE-ESCO:**
+
+```
+PASO 1: CARGA DESDE BASE DE DATOS
+───────────────────────────────────
+Gold Standard:
+  SELECT job_id, skill_text FROM gold_standard_annotations
+  → {job_1: ["python", "REACT", "postgres"]}
+
+Pipeline A:
+  SELECT job_id, skill_text FROM extracted_skills
+  WHERE extraction_method IN ('ner', 'regex')
+  → {job_1: ["Python", "react.js", "SQL"]}
+
+
+PASO 2: NORMALIZACIÓN POR JOB
+───────────────────────────────────
+for job_id in common_jobs:
+    # Gold
+    raw_gold = ["python", "REACT", "postgres"]
+    normalized_gold = normalize_list(raw_gold)
+                    = ["Python", "React", "PostgreSQL"]
+
+    # Pipeline
+    raw_pipeline = ["Python", "react.js", "SQL"]
+    normalized_pipeline = normalize_list(raw_pipeline)
+                        = ["Python", "React", "SQL"]
+
+
+PASO 3: AGREGACIÓN (todos los jobs)
+───────────────────────────────────
+all_gold = set().union(*[normalized_gold_by_job[j] for j in jobs])
+         = {"Python", "React", "PostgreSQL", ...}  # De todos los jobs
+
+all_pipeline = set().union(*[normalized_pipeline_by_job[j] for j in jobs])
+             = {"Python", "React", "SQL", ...}  # De todos los jobs
+
+
+PASO 4: COMPARACIÓN (set operations)
+───────────────────────────────────
+TP = all_gold & all_pipeline        # Intersección
+FP = all_pipeline - all_gold        # Solo en pipeline
+FN = all_gold - all_pipeline        # Solo en gold
+
+
+PASO 5: CÁLCULO DE MÉTRICAS
+───────────────────────────────────
+Precision = TP / (TP + FP)
+Recall = TP / (TP + FN)
+F1 = 2 * (P * R) / (P + R)
+```
+
+**Ejemplo con 2 jobs:**
+
+```
+Job 1:
+  Gold: ["Python", "React", "PostgreSQL"]
+  Pipeline: ["Python", "React", "SQL"]
+
+Job 2:
+  Gold: ["JavaScript", "Docker", "Git"]
+  Pipeline: ["JavaScript", "Docker", "Kubernetes"]
+
+Agregado:
+  all_gold = {"Python", "React", "PostgreSQL", "JavaScript", "Docker", "Git"}
+  all_pipeline = {"Python", "React", "SQL", "JavaScript", "Docker", "Kubernetes"}
+
+Comparación:
+  TP = {"Python", "React", "JavaScript", "Docker"}  ← 4 correctos
+  FP = {"SQL", "Kubernetes"}  ← 2 falsos positivos
+  FN = {"PostgreSQL", "Git"}  ← 2 falsos negativos
+
+Métricas:
+  Precision = 4 / (4 + 2) = 4/6 = 0.6667 (66.67%)
+  Recall = 4 / (4 + 2) = 4/6 = 0.6667 (66.67%)
+  F1 = 0.6667 (66.67%)
+```
+
 ---
 
 ### ¿Cómo se manejan las Skills Emergentes?
