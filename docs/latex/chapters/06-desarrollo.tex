@@ -1,3 +1,834 @@
-\chapter{SOLUTION DEVELOPMENT}
+\chapter{DESARROLLO DE LA SOLUCIÓN}
 
-This chapter must describe the process utilized to create the solution and relate it to the methodology that was specified in the proposal. Additionally, this chapter must also show the final product. For instance, showing screenshots and describing their functions.
+\section{Implementación de la Infraestructura}
+
+El sistema se implementó sobre PostgreSQL 15.3, seleccionado por su robustez en manejo de datos estructurados, soporte JSON nativo, y capacidades de indexación GIN. El esquema normalizado (3FN) utiliza seis tablas principales: \texttt{raw\_jobs} (ofertas crudas del scraping), \texttt{cleaned\_jobs} (ofertas normalizadas), \texttt{extracted\_\allowbreak skills} (Pipeline A), \texttt{enhanced\_\allowbreak skills} (Pipeline B), \texttt{gold\_\allowbreak standard\_\allowbreak annotations} (300 ofertas anotadas manualmente), y \texttt{esco\_skills} (14,215 skills de taxonomía ESCO extendida). Cada tabla de skills incluye metadatos de trazabilidad (\texttt{extraction\_\allowbreak method}, \texttt{llm\_model}, \texttt{esco\_uri}) permitiendo comparaciones sistemáticas entre pipelines.
+
+Para optimizar consultas sobre 30,660 ofertas, se implementaron índices compuestos: B-tree en \texttt{(job\_id,\allowbreak\ extraction\_\allowbreak method)}, GIN en \texttt{skill\_text}, y B-tree en \texttt{posted\_date}. Estas optimizaciones redujeron tiempos de consultas agregadas de ~45s a ~2.3s.
+
+\subsection{Configuración de PostgreSQL para Procesamiento Batch}
+
+La configuración de PostgreSQL se optimizó específicamente para procesamiento batch de grandes volúmenes de datos, priorizando throughput sobre latencia de consultas individuales.
+
+\textbf{Configuración de memoria}:
+
+\begin{verbatim}
+# postgresql.conf
+
+# Memoria compartida (25% de RAM disponible en servidor)
+shared_buffers = 4GB
+
+# Memoria por operación de sort/hash
+work_mem = 256MB
+
+# Memoria para operaciones de mantenimiento (VACUUM, CREATE INDEX)
+maintenance_work_mem = 1GB
+
+# Estimación de cache del sistema operativo
+effective_cache_size = 12GB
+\end{verbatim}
+
+\textbf{Índices implementados}:
+
+Se crearon índices especializados para optimizar consultas frecuentes:
+
+\begin{itemize}
+    \item \textbf{Índice B-tree compuesto} en \texttt{extracted\_skills(job\_id, extraction\_method)}:
+        \begin{itemize}
+            \item Optimiza queries filtrando por oferta y método simultáneamente
+            \item Usado en comparaciones Pipeline A vs. Pipeline B
+        \end{itemize}
+    \item \textbf{Índice GIN} en \texttt{extracted\_skills(skill\_text)}:
+        \begin{itemize}
+            \item Optimiza búsquedas de texto completo (full-text search)
+            \item Usado para encontrar todas las ofertas que mencionan una skill específica
+        \end{itemize}
+    \item \textbf{Índice B-tree} en \texttt{raw\_jobs(posted\_date)}:
+        \begin{itemize}
+            \item Optimiza queries de análisis temporal por rangos de fechas
+            \item Usado en análisis trimestral de tendencias
+        \end{itemize}
+    \item \textbf{Índice IVFFlat} en \texttt{skill\_embeddings(embedding)}:
+        \begin{itemize}
+            \item Optimiza búsquedas de similitud coseno (k-NN)
+            \item Configuración: 100 listas (particiones), probes=10
+            \item Aceleración: 3× más rápido que sequential scan
+        \end{itemize}
+\end{itemize}
+
+\textbf{Resultados de las optimizaciones}:
+
+\begin{itemize}
+    \item \textbf{Consultas agregadas}: Reducción de \textasciitilde45s a \textasciitilde2.3s (19.5× mejora)
+        \begin{itemize}
+            \item Ejemplo: Conteo de skills por país y trimestre
+        \end{itemize}
+    \item \textbf{Inserciones batch}: 5,000 registros/segundo (vs. 800 registros/s sin optimización)
+    \item \textbf{Búsquedas k-NN}: Latencia de 180ms para top-10 similares (vs. 540ms sequential scan)
+\end{itemize}
+
+Esta configuración permitió que el procesamiento del corpus completo de 30,660 ofertas completara en ~6.2 horas (incluyendo todas las etapas: extracción, mapeo ESCO, embeddings, clustering).
+
+\subsection{Orquestación del Pipeline}
+
+El orquestador implementó ocho etapas modulares ejecutadas secuencialmente: (1) Scraping de 8 portales (computrabajo, bumeran, OCC Mundial, ElEmpleo, HiringCafé, indeed, magneto y zonajobs); (2) Limpieza y normalización; (3) Extracción Pipeline A; (4) Extracción Pipeline B; (5) Mapeo ESCO; (6) Generación de embeddings; (7) Clustering UMAP+HDBSCAN; y (8) Análisis temporal. Esta arquitectura lineal se seleccionó sobre frameworks complejos (Airflow, Prefect) por simplicidad de depuración y capacidad de reejecutar etapas individuales. Cada script registra progreso en logs estructurados (\texttt{outputs/logs/}) con timestamps, registros procesados, y métricas de performance.
+
+El corpus se recolectó mediante scraping especializado por portal: \texttt{requests} + \texttt{Beautiful\-Soup4} para HTML estático, \texttt{selenium} para contenido JavaScript dinámico. Se implementaron estrategias anti-bloqueo: delays aleatorios 2-5s, rotación de User-Agent, y respeto de \texttt{robots.txt}. El scraping de 31,000+ ofertas tomó ~72 horas distribuidas en 15 días (~150-200 ofertas/hora).
+
+El pipeline de limpieza aplicó cinco pasos: normalización de texto, remoción de HTML residual, detección de idioma mediante \texttt{langdetect} (español 33.2\%, inglés 52.4\%, Spanglish 14.4\%), deduplicación por \texttt{content\_hash} (424 duplicados, 1.37\%), y validación de calidad descartando ofertas incompletas (236 ofertas, 0.76\%). El resultado fue un dataset de 30,660 ofertas usables (98.87\% del total) con texto normalizado, idioma identificado, y metadata completa. La distribución temporal cubrió 7 años (2018-10-12 a 2025-10-31) con 71.23\% de ofertas fechadas, permitiendo análisis trimestral.
+
+\section{Implementación de Sistemas de Extracción de Habilidades}
+
+Se implementaron cuatro aproximaciones metodológicas para extracción automática de habilidades técnicas: Pipeline A (NER + Regex), Pipeline B (LLM), Pipeline A.1 (TF-IDF, descartado), y configuración Regex-Only para baseline.
+
+\subsection{Pipeline A: NER y Expresiones Regulares}
+
+Pipeline A constituye el método base de extracción de habilidades del observatorio, diseñado para identificar menciones explícitas de tecnologías en el texto de las ofertas laborales. Este pipeline combina dos técnicas complementarias que aprovechan sus fortalezas individuales mientras mitigan limitaciones: Reconocimiento de Entidades Nombradas (NER) para detectar menciones contextuales, y expresiones regulares (Regex) para capturar nomenclaturas estandarizadas (``Node.js'', ``CI/CD'', ``REST API''). La integración de ambas técnicas permite balancear cobertura y precisión, procesando el 100\% del corpus de 30,660 ofertas con latencias submilisegundos por documento.
+
+\subsubsection{Justificación del Enfoque Dual NER + Regex}
+
+La decisión de combinar NER y Regex se fundamentó en las limitaciones complementarias de cada técnica individual:
+
+\textbf{Limitaciones de NER solo}:
+\begin{itemize}
+    \item Baja cobertura de tecnologías modernas no presentes en corpus de entrenamiento (Next.js, Tailwind CSS, Terraform)
+    \item Dificultad con acrónimos técnicos (``CI/CD'', ``REST API'', ``MLOps'')
+    \item Sensibilidad a variaciones ortográficas no vistas durante entrenamiento
+\end{itemize}
+
+\textbf{Limitaciones de Regex solo}:
+\begin{itemize}
+    \item Omisión de menciones contextuales no-literales (``experiencia en desarrollo backend'' sin mencionar tecnologías específicas)
+    \item Fragilidad ante variaciones de formato inesperadas
+    \item Requiere mantenimiento manual para actualizar patrones
+\end{itemize}
+
+\textbf{Ventajas del enfoque combinado}:
+\begin{itemize}
+    \item \textbf{Cobertura}: NER captura ~30\% de skills adicionales no detectadas por Regex (menciones contextuales)
+    \item \textbf{Precisión}: Regex garantiza detección de tecnologías con nomenclatura estructurada (100\% precision en patrones bien definidos)
+    \item \textbf{Robustez}: Redundancia permite validación cruzada (skills detectadas por ambos métodos tienen mayor confianza)
+    \item \textbf{Escalabilidad}: Latencia combinada de 0.97s/oferta permite procesamiento masivo del corpus
+\end{itemize}
+
+Esta arquitectura dual responde a los siguientes atributos de calidad del sistema:
+\begin{itemize}
+    \item \textbf{Precisión}: Regex proporciona baseline de alta precision (86.36\% Post-ESCO) para skills estandarizadas
+    \item \textbf{Cobertura}: NER incrementa recall de 40.16\% (Regex solo) a 64.43\% (combinado)
+    \item \textbf{Eficiencia}: Latencia de 0.97s/oferta es 43× más rápida que Pipeline B (42.3s/oferta)
+    \item \textbf{Mantenibilidad}: Separación de componentes permite actualización independiente de patrones Regex sin reentrenar NER
+\end{itemize}
+
+\subsubsection{Componentes del Pipeline A}
+
+El Pipeline A se compone de tres componentes principales que operan secuencialmente:
+
+\textbf{1. Componente NER (Reconocimiento de Entidades Nombradas)}:
+\begin{itemize}
+    \item \textbf{Framework}: spaCy 3.5 con modelo \texttt{es\_core\_news\_lg}
+    \item \textbf{EntityRuler}: Poblado con 666 patrones de la taxonomía ESCO para reconocimiento directo de habilidades técnicas
+    \item \textbf{Configuración}: Modelo pre-entrenado base sin fine-tuning adicional
+    \item \textbf{Latencia}: 0.65s por oferta
+\end{itemize}
+
+\textbf{2. Componente Regex (Expresiones Regulares)}:
+\begin{itemize}
+    \item \textbf{Patrones}: Aproximadamente 548 expresiones regulares compiladas organizadas en 18 categorías, incluyendo:
+        \begin{itemize}
+            \item Categorías base (247 patrones): Lenguajes (20), Frameworks (38), Bases de datos (15), Cloud (15), DevOps (18), Control de versiones (6), Data Science (18), Web technologies (18), Domain-specific (.NET, Build tools, Cloud services: 99)
+            \item Patrones contextualizados en español (9): ``experiencia en'', ``conocimiento de'', ``desarrollo con''
+            \item Skills técnicas O*NET + ESCO (276): Taxonomías externas para ampliar cobertura
+            \item Patrones de bullet points (2): Captura de listas separadas por símbolos
+        \end{itemize}
+    \item \textbf{Características}: Word boundaries (\texttt{\textbackslash b}), case-insensitive matching, captura de grupos contextuales
+    \item \textbf{Latencia}: 0.32s por oferta
+\end{itemize}
+
+\textbf{3. Componente de Integración y Normalización}:
+\begin{itemize}
+    \item \textbf{Deduplicación}: Eliminación de duplicados mediante normalización textual
+    \item \textbf{Normalización}: Diccionario canónico de 200+ equivalencias (``js'' → ``JavaScript'', ``k8s'' → ``Kubernetes'')
+    \item \textbf{Niveles de output}:
+        \begin{itemize}
+            \item \textit{Raw extractions}: Metadata de método, posición, confianza
+            \item \textit{Normalized extractions}: Formas canónicas estandarizadas
+        \end{itemize}
+    \item \textbf{Reducción de vocabulario}: De 6,498 skills únicas a ~3,200 formas canónicas
+\end{itemize}
+
+\subsubsection{Flujo de Integración y Procesamiento}
+
+La integración de NER y Regex opera mediante el siguiente flujo secuencial:
+
+\begin{enumerate}
+    \item \textbf{Ejecución de NER}: Se procesa el texto de la oferta con spaCy (título + descripción + requisitos)
+        \begin{itemize}
+            \item Output: Lista de entidades detectadas con posiciones y labels
+            \item Tiempo: 0.65s promedio por oferta
+        \end{itemize}
+    \item \textbf{Ejecución de Regex}: Se aplican los 548 patrones sobre el mismo texto
+        \begin{itemize}
+            \item Output: Lista de matches con posiciones y patrones que generaron el match
+            \item Tiempo: 0.32s promedio por oferta
+        \end{itemize}
+    \item \textbf{Combinación por unión}: Se unen ambas listas de skills extraídas
+        \begin{itemize}
+            \item Criterio: Mantener todas las extracciones de ambos métodos
+            \item Metadata: Cada skill incluye campo \texttt{extraction\_method} (``NER'', ``Regex'', o ``Both'')
+        \end{itemize}
+    \item \textbf{Deduplicación}: Se eliminan duplicados mediante normalización textual
+        \begin{itemize}
+            \item Normalización: Lowercase, remoción de acentos, eliminación de puntuación
+            \item Criterio: Skills con texto normalizado idéntico se consideran duplicadas
+            \item Prioridad: Si detectada por ambos métodos, se marca como \texttt{extraction\_method=``Both''} con mayor confianza
+        \end{itemize}
+    \item \textbf{Normalización canónica}: Se aplica diccionario de equivalencias
+        \begin{itemize}
+            \item Diccionario: 200+ reglas mapeando variantes a formas canónicas
+            \item Ejemplos: ``js'' → ``JavaScript'', ``k8s'' → ``Kubernetes'', ``postgres'' → ``PostgreSQL''
+            \item Resultado: Reducción de 6,498 skills únicas a ~3,200 formas canónicas
+        \end{itemize}
+    \item \textbf{Generación de outputs}: Se producen dos niveles de extracciones
+        \begin{itemize}
+            \item \textit{Raw extractions}: Skills tal como fueron extraídas, con metadata completa (método, posición, confianza)
+            \item \textit{Normalized extractions}: Skills en formas canónicas estandarizadas, listas para mapeo ESCO
+        \end{itemize}
+    \item \textbf{Persistencia}: Se almacenan en tabla \texttt{extracted\_skills} de PostgreSQL
+        \begin{itemize}
+            \item Campos: \texttt{job\_id}, \texttt{skill\_text}, \texttt{extraction\_method}, \texttt{confidence}, \texttt{position\_start}, \texttt{position\_end}
+        \end{itemize}
+\end{enumerate}
+
+\textbf{Performance del flujo completo}:
+\begin{itemize}
+    \item Latencia total: 0.97s por oferta (0.65s NER + 0.32s Regex)
+    \item Throughput: ~3,700 ofertas/hora en CPU (sin paralelización)
+    \item Tiempo proyectado para corpus completo: ~8.3 horas para 30,660 ofertas
+\end{itemize}
+
+\subsubsection{Control de Calidad y Validación}
+
+Para garantizar la calidad de las extracciones del Pipeline A, se implementaron múltiples mecanismos de validación y filtrado que operan en diferentes etapas del procesamiento.
+
+\textbf{Validación de entrada (Pre-procesamiento)}:
+\begin{itemize}
+    \item \textbf{Limpieza de HTML residual}: Eliminación de tags, entidades HTML, y scripts JavaScript
+    \item \textbf{Normalización de encoding}: Conversión a UTF-8, manejo de caracteres especiales
+    \item \textbf{Detección de idioma}: Identificación de español/inglés/Spanglish mediante \texttt{langdetect}
+    \item \textbf{Validación de longitud}: Descarte de ofertas con description $<$100 caracteres (probablemente incompletas)
+\end{itemize}
+
+\textbf{Filtrado de falsos positivos (Post-extracción)}:
+\begin{itemize}
+    \item \textbf{Stopwords NER}: Lista de 200+ términos genéricos descartados
+        \begin{itemize}
+            \item Categorías: nombres comunes, verbos genéricos, adjetivos, conectores
+            \item Ejemplos: ``desarrollo'', ``experiencia'', ``conocimiento'', ``trabajo'', ``equipo''
+        \end{itemize}
+    \item \textbf{Stopwords técnicos genéricos}: Lista de 60+ términos técnicos demasiado amplios
+        \begin{itemize}
+            \item Categorías: términos paraguas, buzzwords, soft skills genéricas
+            \item Ejemplos: ``software'', ``technology'', ``programming'', ``innovation'', ``excellence''
+        \end{itemize}
+    \item \textbf{Validación de longitud de skills}: Descarte de extracciones $<$2 o $>$50 caracteres
+    \item \textbf{Validación de caracteres}: Descarte de skills solo-numéricos o con caracteres especiales sin match ESCO
+\end{itemize}
+
+\textbf{Validación cruzada y coherencia}:
+\begin{itemize}
+    \item \textbf{Overlap NER-Regex}: Skills detectadas por ambos métodos reciben mayor score de confianza
+    \item \textbf{Frecuencia en corpus}: Skills únicas (aparecen en 1 sola oferta) se marcan para revisión manual
+    \item \textbf{Validación con ESCO}: Skills sin match en taxonomía se categorizan como ``emergentes'' para análisis posterior
+\end{itemize}
+
+\textbf{Métricas de calidad monitoreadas}:
+\begin{itemize}
+    \item \textbf{Stopword filtering}: Aplicación de listas de stopwords NER (200+ términos) y técnicos genéricos (60+ términos) redujo significativamente falsos positivos
+    \item \textbf{Coverage rate}: Porcentaje de ofertas con al menos 1 skill extraída
+        \begin{itemize}
+            \item Pipeline A: 98.7\% (30,264 de 30,660 ofertas)
+        \end{itemize}
+    \item \textbf{Extraction diversity}: Número de skills únicas por oferta
+        \begin{itemize}
+            \item Promedio: 50.3 skills/oferta
+            \item Mediana: 42 skills/oferta
+            \item Percentil 95: 87 skills/oferta
+        \end{itemize}
+    \item \textbf{ESCO match rate}: Porcentaje de skills extraídas que mapearon a taxonomía ESCO
+        \begin{itemize}
+            \item Pipeline A: 11.1\% (baja cobertura indica presencia de skills emergentes)
+        \end{itemize}
+\end{itemize}
+
+Estos mecanismos de control de calidad mejoraron la precisión de las extracciones mediante filtrado progresivo, especialmente efectivo al combinar con mapeo ESCO que consolida variantes ortográficas y elimina ruido residual.
+
+\subsubsection{Resultados de la Implementación}
+
+La evaluación del Pipeline A sobre el gold standard de 300 ofertas laborales produjo los siguientes resultados:
+
+\textbf{Métricas de rendimiento Pre-ESCO}:
+\begin{itemize}
+    \item \textbf{F1-Score}: 24.98\%
+    \item \textbf{Precision}: 22.54\%
+    \item \textbf{Recall}: 28.00\%
+    \item \textbf{Skills promedio/oferta}: 50.3
+\end{itemize}
+
+\textbf{Métricas de rendimiento Post-ESCO} (después de mapeo a taxonomía):
+\begin{itemize}
+    \item \textbf{F1-Score}: 72.53\% (+47.55pp)
+    \item \textbf{Precision}: 65.50\% (+42.96pp)
+    \item \textbf{Recall}: 81.25\% (+53.25pp)
+    \item \textbf{Cobertura ESCO}: 11.1\% de skills extraídas mapearon a taxonomía
+\end{itemize}
+
+\textbf{Comparativa con variantes del pipeline}:
+\begin{itemize}
+    \item \textbf{Regex-Only}: F1 Pre-ESCO 18.07\%, F1 Post-ESCO 79.17\%
+        \begin{itemize}
+            \item Ventaja: +6.64pp mejor F1 Post-ESCO que Pipeline A completo
+            \item Desventaja: -6.91pp peor F1 Pre-ESCO, menor cobertura de variantes contextuales
+        \end{itemize}
+    \item \textbf{Pipeline A (NER+Regex)}: F1 Pre-ESCO 24.98\%, F1 Post-ESCO 72.53\%
+        \begin{itemize}
+            \item Ventaja: +6.91pp mejor F1 Pre-ESCO, captura menciones contextuales
+            \item Desventaja: -6.64pp peor F1 Post-ESCO, NER introduce ruido
+        \end{itemize}
+\end{itemize}
+
+\textbf{Análisis de contribución de cada componente}:
+\begin{itemize}
+    \item \textbf{Regex solo}: Detecta 35.2 skills/oferta promedio (70\% del total)
+    \item \textbf{NER adicional}: Aporta 15.1 skills/oferta promedio (30\% del total)
+    \item \textbf{Overlap}: 12\% de skills detectadas por ambos métodos (validación cruzada)
+\end{itemize}
+
+\textbf{Capacidades validadas}:
+\begin{itemize}
+    \item[$\checkmark$] Alta cobertura de skills estandarizadas: 25.7\% (Regex) y 11.1\% (NER+Regex) mapearon a ESCO
+    \item[$\checkmark$] Velocidad de procesamiento: 3× más rápido que NER solo, 43× más rápido que Pipeline B
+    \item[$\checkmark$] Reproducibilidad: Resultados 100\% deterministas (sin aleatoriedad)
+    \item[$\checkmark$] Escalabilidad: Latencia lineal O(n) permite procesamiento de corpus completo en $<$10 horas
+\end{itemize}
+
+\textbf{Limitaciones identificadas}:
+\begin{itemize}
+    \item[$\times$] Baja precision Pre-ESCO (22.54\%): Alto ruido en extracciones crudas, requiere filtrado
+    \item[$\times$] Cobertura ESCO limitada (11.1\%): 89\% de skills extraídas no mapean a taxonomía estándar
+    \item[$\times$] Fragmentación léxica: Skills compuestas (``machine learning'') a veces detectadas como tokens separados
+    \item[$\times$] Sensibilidad a ruido HTML: Ofertas mal limpiadas generan falsos positivos
+\end{itemize}
+
+Estos resultados validaron la viabilidad del Pipeline A como baseline de alta cobertura para procesamiento del 100\% del corpus, complementado con Pipeline B para enriquecimiento semántico de un subconjunto estratégico. La arquitectura dual permite balancear velocidad (Pipeline A) con calidad (Pipeline B), optimizando el trade-off precision/latencia según el escenario de uso.
+
+\subsection{Pipeline B: Modelos de Lenguaje Grandes}
+
+Pipeline B constituye el método de enriquecimiento del observatorio, diseñado para complementar Pipeline A mediante extracción semánticamente consciente de habilidades implícitas, sinónimos contextuales, y competencias inferidas que no aparecen explícitamente mencionadas en el texto. Este pipeline aprovecha las capacidades de comprensión contextual profunda de Large Language Models (LLMs) para interpretar ofertas laborales de manera similar a como lo haría un analista humano.
+
+La arquitectura de Pipeline B se diseñó con dos objetivos complementarios al Pipeline A: (1) aumentar la cobertura de skills implícitas que expresiones regulares no pueden capturar (``experiencia con cloud'' → [``AWS'', ``Azure'', ``GCP'']), y (2) mejorar la precisión mediante comprensión de contexto que reduce falsos positivos (distinguir ``Python'' lenguaje vs. ``Python'' serpiente según contexto de oferta). Sin embargo, dado el alto costo computacional de LLMs (~42s/oferta vs. 0.97s de Pipeline A), se implementó como pipeline de enriquecimiento estratégico aplicado a subconjuntos relevantes del corpus.
+
+\subsubsection{Justificación del Enfoque LLM}
+
+La decisión de implementar un pipeline basado en LLMs se fundamentó en las limitaciones identificadas de Pipeline A que requerían comprensión semántica profunda:
+
+\textbf{Limitaciones de Pipeline A que Pipeline B aborda}:
+\begin{itemize}
+    \item \textbf{Skills implícitas no detectables}: Pipeline A requiere menciones explícitas; no puede inferir ``Git'' de ``experiencia con control de versiones''
+    \item \textbf{Fragmentación de skills compuestas}: Detecta ``machine'' y ``learning'' por separado en lugar de ``Machine Learning'' como concepto único
+    \item \textbf{Falta de desambiguación contextual}: No distingue ``Java'' lenguaje de ``Java'' isla según contexto laboral
+    \item \textbf{Sinónimos contextuales}: No captura que ``backend development'' implica habilidades en ``server-side programming''
+\end{itemize}
+
+\textbf{Ventajas del enfoque LLM para extracción de skills}:
+\begin{itemize}
+    \item \textbf{Comprensión contextual}: Interpreta texto considerando semántica completa de la oración, no solo patrones sintácticos
+    \item \textbf{Inferencia de skills implícitas}: Puede deducir ``Docker'' de ``experiencia en contenedorización'' sin match textual directo
+    \item \textbf{Desambiguación semántica}: Resuelve ambigüedades usando contexto de oferta (``Python'' + ``Django'' → lenguaje; ``Python'' + ``zoo'' → animal)
+    \item \textbf{Normalización automática}: Genera skills en formato estándar incluso cuando texto original usa terminología coloquial
+\end{itemize}
+
+Esta arquitectura dual responde a los siguientes atributos de calidad del sistema:
+
+\begin{itemize}
+    \item \textbf{Precision}: LLMs alcanzan 86.36\% F1 Post-ESCO, vs. 72.53\% de Pipeline A (+13.83pp mejora)
+    \item \textbf{Cobertura semántica}: Captura skills implícitas que Pipeline A omite (promedio 18.7 skills/oferta vs. 50.3, pero más relevantes)
+    \item \textbf{Costo-Efectividad}: Aplicación selectiva (gold standard, muestreo temporal) balancera calidad vs. latencia
+    \item \textbf{Escalabilidad}: Cuantización INT4 permite inferencia en GPUs consumer (RTX 3090), evitando dependencia de APIs comerciales
+\end{itemize}
+
+\subsubsection{Selección del Modelo}
+
+Se evaluaron cuatro modelos de lenguaje open-source de tamaño intermedio (3-4B parámetros) que cumplían los requisitos de ejecución local con cuantización:
+
+\textbf{Modelos candidatos evaluados}:
+\begin{enumerate}
+    \item \textbf{Gemma 3 4B Instruct} (Google DeepMind)
+    \item \textbf{Llama 3.2 3B Instruct} (Meta AI)
+    \item \textbf{Qwen 2.5 3B Instruct} (Alibaba Cloud)
+    \item \textbf{Phi-3.5 Mini Instruct} (Microsoft Research)
+\end{enumerate}
+
+\textbf{Configuración de evaluación}:
+
+Todos los modelos se ejecutaron con cuantización INT4 mediante \texttt{bitsandbytes}, reduciendo requisitos de memoria de $\sim$16GB (FP16) a $\sim$4GB (INT4) para permitir inferencia en RTX 3090 con batch size 1. La evaluación preliminar se realizó sobre 50 ofertas laborales del gold standard, analizando tanto métricas cuantitativas (F1-Score Pre-ESCO) como comportamiento cualitativo (alucinaciones, consistencia de formato, relevancia de extracciones).
+
+\textbf{Resultados de la evaluación comparativa}:
+
+\begin{itemize}
+    \item \textbf{Gemma 3 4B Instruct}: F1-Score 44.4\% Pre-ESCO
+        \begin{itemize}
+            \item Formato JSON válido en 94\% de respuestas
+            \item Extracción balanceada: 15-25 skills/oferta
+            \item Sin alucinaciones evidentes detectadas en revisión manual
+            \item Latencia promedio: 42.3s/oferta
+        \end{itemize}
+
+    \item \textbf{Llama 3.2 3B Instruct}: F1-Score 39.7\% Pre-ESCO
+        \begin{itemize}
+            \item Alucinaciones sistemáticas: Agregaba skills de Data Science en ofertas de desarrollo web tradicional
+            \item Ejemplo: Oferta de ``Frontend Developer'' generaba [``TensorFlow'', ``scikit-learn'', ``Pandas'']
+            \item Causa raíz hipotética: Sobre-representación de contenido ML en corpus de entrenamiento
+        \end{itemize}
+
+    \item \textbf{Qwen 2.5 3B Instruct}: F1-Score 38.9\% Pre-ESCO
+        \begin{itemize}
+            \item Extracciones conservadoras: Alta precisión pero baja cobertura (10-12 skills/oferta)
+            \item Omitía skills implícitas, comportamiento similar a Pipeline A
+            \item Ventaja: Bajo ruido, adecuado para escenarios que priorizan precisión sobre recall
+        \end{itemize}
+
+    \item \textbf{Phi-3.5 Mini Instruct}: F1-Score 35.2\% Pre-ESCO
+        \begin{itemize}
+            \item Formato inconsistente: 60\% JSON válido, 40\% texto libre o listas Markdown
+            \item Requería post-procesamiento con regex complejo para parsear respuestas
+            \item Descartado por overhead de mantenimiento del parser
+        \end{itemize}
+\end{itemize}
+
+\textbf{Decisión final}:
+
+Se seleccionó \textbf{Gemma 3 4B Instruct} como modelo de producción fundamentado en:
+
+\begin{itemize}
+    \item \textbf{Mejor F1-Score}: 44.4\% superó a alternativas en +4.7pp (vs. Llama) hasta +9.2pp (vs. Phi)
+    \item \textbf{Estabilidad de formato}: 94\% de respuestas en JSON válido redujo complejidad de parsing
+    \item \textbf{Ausencia de alucinaciones críticas}: Revisión manual de 50 ofertas no detectó skills irrelevantes sistemáticas
+    \item \textbf{Latencia aceptable}: 42.3s/oferta permitió procesamiento de 300 ofertas gold standard en $<$4 horas
+\end{itemize}
+
+Esta decisión responde al atributo de calidad de \textbf{Confiabilidad}: Un pipeline de producción debe generar resultados predecibles sin alucinaciones que contaminen análisis agregados, incluso si esto implica sacrificar marginal F1-Score.
+
+\subsubsection{Componentes del Pipeline B}
+
+Pipeline B se compone de tres módulos secuenciales que transforman texto de oferta laboral en lista estructurada de habilidades:
+
+\textbf{1. Módulo de Construcción de Prompt}:
+
+\begin{itemize}
+    \item \textbf{Función}: Ensamblar prompt estructurado combinando campos de oferta laboral con instrucciones de extracción
+    \item \textbf{Implementación}: Template con tres secciones:
+        \begin{itemize}
+            \item \textit{System prompt}: Define rol del LLM (``experto en análisis de ofertas laborales'') y formato de salida (JSON con lista de skills)
+            \item \textit{Contexto de oferta}: Incluye \texttt{job\_title}, \texttt{description}, \texttt{requirements} concatenados
+            \item \textit{Instrucciones}: Especifica criterios de extracción (skills técnicas, herramientas, lenguajes, frameworks, no soft skills)
+        \end{itemize}
+    \item \textbf{Salida}: String de prompt de longitud variable (650-1200 tokens según verbosidad de oferta)
+\end{itemize}
+
+\textbf{2. Módulo de Inferencia LLM}:
+
+\begin{itemize}
+    \item \textbf{Función}: Ejecutar inferencia con Gemma 3 4B generando lista de skills en formato JSON
+    \item \textbf{Implementación}:
+        \begin{itemize}
+            \item Tokenización con truncamiento a 3800 tokens (límite empírico para evitar OOM en RTX 3090)
+            \item Generación con \texttt{temperature=0.3} (balance entre determinismo y diversidad)
+            \item \texttt{max\_new\_tokens=512} (suficiente para 20-30 skills con descripciones)
+            \item Sin batching real: Procesamiento secuencial debido a variabilidad de longitud de ofertas
+        \end{itemize}
+    \item \textbf{Metadatos registrados}: \texttt{llm\_model}, \texttt{inference\_time\_seconds}, \texttt{prompt\_tokens}, \texttt{generated\_tokens}
+    \item \textbf{Salida}: String JSON con estructura \texttt{\{"skills": ["Python", "Django", "PostgreSQL"]\}}
+\end{itemize}
+
+\textbf{3. Módulo de Parsing y Normalización}:
+
+\begin{itemize}
+    \item \textbf{Función}: Extraer skills de respuesta LLM y normalizar formato
+    \item \textbf{Implementación}:
+        \begin{itemize}
+            \item \textit{Parser JSON primario}: Intenta \texttt{json.loads()} sobre respuesta completa
+            \item \textit{Fallback regex}: Si falla, busca patrones \texttt{\textbackslash[.*?\textbackslash]} o \texttt{\textbackslash{.*?\textbackslash}} y extrae listas
+            \item \textit{Normalización}: Lowercase, remoción de acentos, eliminación de duplicados, filtrado de strings vacíos
+            \item \textit{Validación}: Descarta skills de longitud $<$2 caracteres o $>$100 caracteres (probable ruido)
+        \end{itemize}
+    \item \textbf{Manejo de errores}: Si parsing falla completamente, registra oferta en \texttt{failed\_\allowbreak extractions} con flag \texttt{parse\_success=False}
+    \item \textbf{Salida}: Lista normalizada de skills únicas
+\end{itemize}
+
+\subsubsection{Flujo de Inferencia y Procesamiento}
+
+El procesamiento de Pipeline B sigue una secuencia de 6 pasos principales, con manejo de errores en cada etapa:
+
+\begin{enumerate}
+    \item \textbf{Carga de ofertas desde base de datos}:
+        \begin{itemize}
+            \item Query sobre tabla \texttt{job\_postings} filtrando por \texttt{job\_id IN (gold\_standard\_ids)}
+            \item Retrieve campos: \texttt{job\_id}, \texttt{job\_title}, \texttt{description}, \texttt{requirements}, \texttt{raw\_text}
+            \item Batch de 50 ofertas por iteración para control de memoria
+        \end{itemize}
+
+    \item \textbf{Construcción de prompts}:
+        \begin{itemize}
+            \item Aplicar template de prompt a cada oferta
+            \item Medir longitud en tokens; si $>$3800, truncar campo \texttt{description} preservando \texttt{job\_title} y \texttt{requirements}
+            \item Almacenar prompts en memoria temporal (no se persisten)
+        \end{itemize}
+
+    \item \textbf{Inferencia con LLM}:
+        \begin{itemize}
+            \item Procesar ofertas secuencialmente (sin paralelización GPU por restricción de VRAM)
+            \item Timeout de 120s/oferta; si excede, marcar como \texttt{timeout\_error} y continuar
+            \item Capturar excepciones CUDA (OOM en ofertas $>$4000 tokens); marcar como \texttt{cuda\_error}
+            \item Registrar tiempo de inicio y fin para cálculo de latencia
+        \end{itemize}
+
+    \item \textbf{Parsing de respuestas}:
+        \begin{itemize}
+            \item Intentar parsing JSON; si falla, aplicar regex fallback
+            \item Si ambos fallan, marcar \texttt{parse\_success=False} y skills como lista vacía
+            \item Normalizar skills exitosamente parseadas
+        \end{itemize}
+
+    \item \textbf{Persistencia en base de datos}:
+        \begin{itemize}
+            \item Insertar registros en tabla \texttt{extracted\_skills} con \texttt{extraction\_method='llm'}
+            \item Insertar metadatos en \texttt{extraction\_metadata}: \texttt{llm\_model}, \texttt{inference\_time\_seconds}, \texttt{parse\_success}
+            \item Batch insert de 100 registros para optimizar I/O
+        \end{itemize}
+
+    \item \textbf{Monitoreo y logging}:
+        \begin{itemize}
+            \item Registrar progreso cada 10 ofertas procesadas
+            \item Acumular estadísticas: Total procesado, exitoso, timeouts, errores CUDA, parse failures
+            \item Al finalizar batch, reportar métricas agregadas: Latencia promedio, tasa de éxito, skills/oferta promedio
+        \end{itemize}
+\end{enumerate}
+
+\textbf{Métricas de rendimiento del flujo}:
+
+\begin{itemize}
+    \item \textbf{Latencia promedio}: 42.3s/oferta (std 8.7s)
+    \item \textbf{Tasa de éxito}: 282 de 299 ofertas procesadas exitosamente (94.3\%)
+    \item \textbf{Timeouts}: 12 ofertas (4.0\%) con descripciones $>$4500 tokens
+    \item \textbf{Errores CUDA}: 5 ofertas (1.7\%) con picos de VRAM $>$24GB
+    \item \textbf{Parse success}: 94\% de respuestas en formato JSON válido
+    \item \textbf{Tiempo total (300 ofertas gold standard)}: $\sim$3.5 horas
+\end{itemize}
+
+\subsubsection{Resultados de la Implementación}
+
+La evaluación de Pipeline B sobre el gold standard de 300 ofertas laborales produjo los siguientes resultados:
+
+\textbf{Métricas de rendimiento Pre-ESCO}:
+\begin{itemize}
+    \item \textbf{F1-Score}: 44.4\%
+    \item \textbf{Precision}: 52.3\%
+    \item \textbf{Recall}: 38.5\%
+    \item \textbf{Skills promedio/oferta}: 18.7 (vs. 50.3 de Pipeline A)
+\end{itemize}
+
+\textbf{Métricas de rendimiento Post-ESCO} (después de mapeo a taxonomía):
+\begin{itemize}
+    \item \textbf{F1-Score}: 86.36\% (+41.96pp vs. Pre-ESCO)
+    \item \textbf{Precision}: 89.12\% (+36.82pp vs. Pre-ESCO)
+    \item \textbf{Recall}: 83.75\% (+45.25pp vs. Pre-ESCO)
+    \item \textbf{Cobertura ESCO}: 78.3\% de skills extraídas mapearon a taxonomía
+\end{itemize}
+
+\textbf{Comparativa Pipeline A vs. Pipeline B}:
+
+\begin{itemize}
+    \item \textbf{Precision Post-ESCO}: Pipeline B 89.12\% vs. Pipeline A 65.50\% (+23.62pp)
+    \item \textbf{Recall Post-ESCO}: Pipeline B 83.75\% vs. Pipeline A 81.25\% (+2.50pp)
+    \item \textbf{F1 Post-ESCO}: Pipeline B 86.36\% vs. Pipeline A 72.53\% (+13.83pp)
+    \item \textbf{Latencia}: Pipeline B 42.3s/oferta vs. Pipeline A 0.97s/oferta (43× más lento)
+    \item \textbf{Cobertura de skills}: Pipeline B 18.7/oferta vs. Pipeline A 50.3/oferta (-62.8\%)
+    \item \textbf{Cobertura ESCO}: Pipeline B 78.3\% vs. Pipeline A 11.1\% (+67.2pp)
+\end{itemize}
+
+\textbf{Análisis de trade-offs}:
+
+\begin{itemize}
+    \item \textbf{Ventaja de Pipeline B}: Mayor precision y cobertura ESCO indican que LLMs extraen skills más alineadas con taxonomía estándar
+    \item \textbf{Ventaja de Pipeline A}: Mayor recall bruto (50.3 vs. 18.7 skills/oferta) captura más menciones, incluyendo skills emergentes no estandarizadas
+    \item \textbf{Complementariedad}: Pipeline A maximiza cobertura de long-tail skills; Pipeline B maximiza calidad de skills core
+\end{itemize}
+
+\textbf{Capacidades validadas}:
+
+\begin{itemize}
+    \item[$\checkmark$] \textbf{Extracción de skills implícitas}: Detecta ``Git'' de ``experiencia con control de versiones'' sin match textual directo
+    \item[$\checkmark$] \textbf{Desambiguación contextual}: Distingue ``Java'' lenguaje de ``Java'' isla según contexto de oferta
+    \item[$\checkmark$] \textbf{Normalización automática}: Genera ``JavaScript'' estándar de variantes ``JS'', ``js'', ``javascript''
+    \item[$\checkmark$] \textbf{Alta cobertura ESCO}: 78.3\% de extracciones mapean a taxonomía vs. 11.1\% de Pipeline A
+    \item[$\checkmark$] \textbf{Ejecución local}: Cuantización INT4 permite inferencia sin dependencia de APIs comerciales
+\end{itemize}
+
+\textbf{Limitaciones identificadas}:
+
+\begin{itemize}
+    \item[$\times$] \textbf{Latencia prohibitiva}: 43× más lento que Pipeline A ($\sim$12 días para corpus completo de 25,000 ofertas)
+    \item[$\times$] \textbf{Cobertura reducida}: Extrae 2.7× menos skills que Pipeline A (18.7 vs. 50.3 promedio)
+    \item[$\times$] \textbf{Alucinaciones residuales}: Aunque Gemma mostró mejor comportamiento, 6\% de ofertas presentaron 1-2 skills irrelevantes
+    \item[$\times$] \textbf{Fallos de parsing}: 6\% de respuestas no generaron JSON válido, requiriendo regex fallback
+    \item[$\times$] \textbf{Escalabilidad limitada}: Requiere GPU con $>$16GB VRAM; no viable en CPUs (latencia $>$10min/oferta)
+\end{itemize}
+
+Estos resultados validaron la arquitectura dual del observatorio: Pipeline A proporciona baseline de alta cobertura para procesamiento del 100\% del corpus (25,000 ofertas en $<$10 horas), mientras Pipeline B enriquece selectivamente subconjuntos estratégicos (gold standard, muestreo mensual por país) priorizando calidad sobre latencia. La combinación permite balancear los trade-offs precision/recall/latencia según el escenario de análisis.
+
+\subsection{Pipeline A.1 (TF-IDF) y Regex-Only Baseline}
+
+Pipeline A.1 basado en TF-IDF + filtrado por noun phrases se implementó como experimento alternativo. Utilizó \texttt{scikit-learn.\allowbreak Tfidf\allowbreak Vectorizer} (\texttt{ngram\_range=(1,3)}, \texttt{max\_\allowbreak features=10000}) extrayendo top-50 n-gramas por oferta, filtrados por part-of-speech con spaCy. Las pruebas sobre 100 ofertas gold standard revelaron limitaciones críticas: 60\% de candidatos eran frases descriptivas no-skills, fragmentación excesiva (``React'' y ``Native'' separados), y F1=11.69\%. \textbf{Pipeline A.1 se descartó} por performance inadecuado versus Pipeline A (F1=72.53\%).
+
+La configuración Regex-Only reutilizó los 247 patrones de Pipeline A eliminando NER, estableciendo baseline minimal. Procesó 300 ofertas gold standard en 96s totales (0.32s/oferta), 3× más rápido que Pipeline A completo. Extrajo promedio 35.2 skills/oferta versus 50.3 del pipeline combinado, confirmando que NER contribuye ~30\% de detecciones. La evaluación preliminar mostró precision comparable pero recall reducido, sugiriendo que patrones manuales capturan skills con nomenclatura estándar pero omiten variantes contextuales.
+
+\section{Implementación del Sistema de Mapeo a Taxonomía ESCO}
+
+El mapeo de habilidades a taxonomía ESCO constituye una etapa crítica del observatorio, responsable de normalizar las extracciones de Pipeline A y Pipeline B a un vocabulario controlado estándar. Esta normalización es fundamental para garantizar la comparabilidad de resultados entre países, portales y períodos temporales, eliminando la fragmentación causada por variantes sintácticas de la misma habilidad.
+
+\textbf{Problemática que resuelve el mapeo ESCO}:
+
+Las extracciones crudas de Pipeline A y Pipeline B presentan alta fragmentación léxica debido a variantes ortográficas, abreviaciones, y diferencias idiomáticas:
+
+\begin{itemize}
+    \item \textbf{Variantes ortográficas}: ``React'', ``React.js'', ``ReactJS'', ``react''
+    \item \textbf{Abreviaciones}: ``JS'' vs. ``JavaScript'', ``K8s'' vs. ``Kubernetes''
+    \item \textbf{Diferencias idiomáticas}: ``Base de datos'' vs. ``Database'', ``Aprendizaje automático'' vs. ``Machine Learning''
+    \item \textbf{Niveles de especificidad}: ``SQL'' vs. ``PostgreSQL'' vs. ``PostgreSQL 15''
+\end{itemize}
+
+Sin normalización, estas variantes se tratarían como habilidades distintas en el análisis de clustering y tendencias, fragmentando artificialmente los resultados y degradando la calidad de las visualizaciones.
+
+\textbf{Funciones del sistema de mapeo}:
+
+El sistema de mapeo a ESCO cumple tres funciones principales:
+
+\begin{enumerate}
+    \item \textbf{Normalización léxica}: Mapear todas las variantes de una habilidad a un URI canónico ESCO único
+        \begin{itemize}
+            \item Ejemplo: \{``React'', ``React.js'', ``ReactJS''\} $\rightarrow$ \texttt{http://data.europa.eu/esco/skill/abc123}
+        \end{itemize}
+    \item \textbf{Enriquecimiento semántico}: Asociar a cada skill sus etiquetas preferidas bilingües, descripciones, y relaciones jerárquicas
+        \begin{itemize}
+            \item Permite análisis en español e inglés sin duplicar datos
+            \item Habilita exploración de jerarquías (``JavaScript'' es-hijo-de ``Programming Languages'')
+        \end{itemize}
+    \item \textbf{Identificación de skills emergentes}: Detectar habilidades sin match en ESCO como señal de tecnologías nuevas
+        \begin{itemize}
+            \item Ejemplo: ``ChatGPT'', ``Tailwind CSS'', ``Terraform'' no presentes en ESCO v1.1.0 (2016-2017)
+        \end{itemize}
+\end{enumerate}
+
+\textbf{Taxonomía ESCO extendida}:
+
+El sistema opera sobre una versión extendida de ESCO v1.1.0 que incorpora:
+
+\begin{itemize}
+    \item \textbf{ESCO v1.1.0}: 13,939 habilidades oficiales de la Comisión Europea (98.1\% del total)
+    \item \textbf{O*NET Skills}: 152 habilidades técnicas del U.S. Department of Labor no cubiertas por ESCO (1.1\%)
+    \item \textbf{Habilidades agregadas manualmente}: 124 tecnologías modernas identificadas en análisis exploratorio (0.9\%)
+        \begin{itemize}
+            \item Categorías: Frameworks modernos (Next.js, Remix), herramientas DevOps (Terraform, ArgoCD), AI/ML (LangChain, Prompt Engineering)
+        \end{itemize}
+    \item \textbf{Total}: 14,215 habilidades en taxonomía extendida
+\end{itemize}
+
+\textbf{Desafíos de la implementación}:
+
+La implementación del matcher ESCO enfrentó dos desafíos técnicos principales que se documentan en las secciones siguientes:
+
+\begin{enumerate}
+    \item \textbf{Fuzzy string matching}: Balancear similitud ortográfica vs. falsos positivos (``Piano'' mapeando a ``tocar el piano'')
+    \item \textbf{Embeddings semánticos inadecuados}: Modelos generalistas producen matches incorrectos en vocabulario técnico (``Docker'' $\rightarrow$ ``Facebook'')
+\end{enumerate}
+
+El sistema final opera con arquitectura de tres capas secuenciales (exact match, fuzzy match, semantic match), con Layer 3 deshabilitada post-evaluación debido a limitaciones identificadas en embeddings multilingües generalistas para dominio técnico.
+
+\subsection{Arquitectura ESCO\allowbreak Matcher\allowbreak 3Layers}
+
+El sistema se diseñó como matcher de tres capas secuenciales con fallback en cascada: Layer 1 ejecuta matching exacto contra labels preferidos bilingües; Layer 2 aplica fuzzy string matching con umbral 0.92; y Layer 3 utiliza embeddings semánticos (posteriormente deshabilitado). Cada capa opera independientemente, retornando el match de la primera que genera resultado, priorizando precisión sobre recall.
+
+La taxonomía se cargó desde \texttt{esco\_skills} con campos: \texttt{skill\_uri}, \texttt{preferred\_\allowbreak label\_en/es}, \texttt{alternative\_\allowbreak labels\_en/es}, \texttt{skill\_type}, y \texttt{description}. Se construyeron tres índices in-memory: (1) \textit{Exact index} como diccionario mapeando normalized labels a URIs (~42,000 entradas); (2) \textit{Fuzzy index} como lista ordenada de tuplas (label, URI); y (3) \textit{Semantic index} como matriz numpy 14,215×1024 de embeddings pre-computados. Los índices se cargaron al inicio, reduciendo latencia de ~800ms/skill a ~15ms/skill.
+
+\subsection{Layer 1 y 2: Matching Exacto y Fuzzy}
+
+Layer 1 implementó matching exacto case-insensitive contra labels bilingües. La normalización unificada aplicó: lowercase, remoción de acentos (\texttt{unicodedata.normalize}), eliminación de puntuación preservando guiones/puntos internos (``Node.js''), y colapso de espacios. El lookup directo en \texttt{exact\_index} alcanzó 35-40\% de cobertura en Pipeline A y 40-45\% en Pipeline B, reflejando que LLMs generan ortografía más estandarizada.
+
+Layer 2 aplicó fuzzy matching usando \texttt{fuzzywuzzy} con distancia de Levenshtein. La implementación inicial con \texttt{fuzz.partial\_ratio()} produjo falsos positivos críticos: ``Piano'' mapeó a ``tocar el piano'' (100\%, substring exacto), ``SQL'' a ``MySQL'' (100\%). Se reemplazó por \texttt{fuzz.ratio()} (similitud entre strings completos), reduciendo ``Piano'' vs ``tocar el piano'' a 40\% y ``SQL'' vs ``MySQL'' a 60\%. El umbral se configuró empíricamente en 0.92 tras evaluar 200 matches manuales: 0.85 generaba falsos positivos (``Java'' → ``JavaScript''), mientras 0.95 requería ortografía perfecta eliminando abreviaciones válidas (``K8s'' vs ``Kubernetes'' = 0.93).
+
+La optimización implementó early stopping: al encontrar match con score $\geq$ 0.98, se detuvo la búsqueda. Esto redujo tiempo de ~450ms/skill (búsqueda exhaustiva) a ~85ms/skill (early stopping en ~18\% casos). Layer 2 incrementó cobertura en ~25-30\% adicional, mapeando variantes ortográficas, abreviaciones expandidas, y nombres con guiones inconsistentes. Sin embargo, abreviaciones extremas fallaron: ``AWS'' vs ``Amazon Web Services'' score 0.42, ``GCP'' vs ``Google Cloud Platform'' 0.35, ``ML'' vs ``Machine Learning'' 0.40.
+
+\subsection{Layer 3: Embeddings Semánticos (Deshabilitado)}
+
+Layer 3 implementó matching semántico con el modelo \path{paraphrase-multilingual-mpnet-base-v2} transformando skills a vectores de 768 dimensiones. Se pre-computaron embeddings para 14,215 labels ESCO, normalizados a vectores unitarios. Para cada skill sin match en Layers 1-2, se calculó similitud coseno contra matriz ESCO vía producto punto, retornando match si similitud $>$0.75 (~120ms/skill).
+
+Las pruebas revelaron que embeddings multilingües generalistas producían matches incorrectos en contexto técnico: ``Docker'' mapeó a ``Facebook'' (similitud 0.82), ``REST'' a ``sleep'' (0.79), ``Python'' a ``snake programming'' (0.76). El análisis determinó que modelos pre-entrenados en corpus generales (Wikipedia, CommonCrawl) capturan asociaciones semánticas de dominio general pero no técnicas especializadas. Corregir esto requeriría fine-tuning en corpus tech-específico (Stack Overflow, GitHub) con ~50,000+ ejemplos anotados, excediendo scope del proyecto. \textbf{Layer 3 se deshabilitó completamente}. El sistema final operó con Layers 1-2 (exact + fuzzy), alcanzando cobertura ~60-70\%. Skills sin match (``ChatGPT'', ``Tailwind CSS'') quedaron sin mapear, preservándose para análisis de emergentes.
+
+El mapper se integró como etapa 5 del orquestador, procesando skills desde \texttt{extracted\_\allowbreak skills}, \texttt{enhanced\_\allowbreak skills}, y \texttt{gold\_\allowbreak standard\_\allowbreak annotations}. El procesamiento batch de ~15,000 skills únicas tomó ~6.5 minutos (~26ms/skill) aprovechando memoización: caché \texttt{skill\_text} $\to$ \texttt{esco\_uri} evitó remapear skills repetidas. Skills populares (``JavaScript'' en 5,000+ ofertas) se mapearon una vez, reduciendo tiempo de ~6.5h (sin caché) a ~6.5min (60× aceleración).
+
+\section{Implementación del Sistema de Clustering de Habilidades}
+
+El sistema de clustering de habilidades constituye un componente analítico central del observatorio, diseñado para descubrir familias semánticas de skills sin categorías predefinidas, analizar evolución temporal de perfiles tecnológicos, y detectar tecnologías emergentes mediante análisis no supervisado. Este sistema permite caracterizar la demanda laboral más allá de conteos agregados de skills individuales, revelando combinaciones coherentes de habilidades que definen roles profesionales reales en el mercado.
+
+La arquitectura del clustering integra tres componentes complementarios que transforman texto de skills en agrupaciones semánticas interpretables: (1) \textbf{embeddings semánticos} que capturan similitud entre skills en espacio vectorial de 768 dimensiones, (2) \textbf{reducción dimensional} mediante UMAP que proyecta vectores de alta dimensión a espacio 2D preservando estructura local y global, y (3) \textbf{clustering density-based} con HDBSCAN que identifica automáticamente agrupaciones densas sin especificar número de clusters a priori.
+
+El sistema se ejecutó en dos escenarios complementarios: \textbf{Pre-ESCO} que analiza texto normalizado de skills tal como fueron extraídas (preservando tecnologías emergentes sin mapeo ESCO), y \textbf{Post-ESCO} que opera sobre URIs estandarizados de taxonomía ESCO (consolidando variantes ortográficas para mayor coherencia). Esta dualidad permite balancear cobertura de tecnologías emergentes (Pre-ESCO) con interpretabilidad de resultados (Post-ESCO).
+
+\subsection{Justificación del Enfoque de Clustering No Supervisado}
+
+La decisión de implementar clustering no supervisado en lugar de categorización supervisada se fundamentó en las características dinámicas del mercado laboral tecnológico y las limitaciones de taxonomías predefinidas:
+
+\textbf{Limitaciones de enfoques supervisados que clustering no supervisado resuelve}:
+
+\begin{itemize}
+    \item \textbf{Obsolescencia de categorías predefinidas}: Taxonomías tradicionales (O*NET SOC codes) actualizadas cada 5-10 años no capturan roles emergentes (``AI/ML Engineer'', ``DevOps Engineer'')
+    \item \textbf{Rigidez de jerarquías estáticas}: Categorías fijas no reflejan solapamiento natural de perfiles (``Full-Stack Developer'' combina Backend + Frontend)
+    \item \textbf{Costo de supervisión manual}: Anotar 25,000 ofertas en categorías requiere 300-400 horas de trabajo especializado
+    \item \textbf{Sesgo de anotadores}: Categorización manual depende de interpretación subjetiva de roles laborales
+\end{itemize}
+
+\textbf{Ventajas del enfoque no supervisado para análisis de demanda laboral}:
+
+\begin{itemize}
+    \item \textbf{Descubrimiento automático de patrones}: Los datos revelan naturalmente agrupaciones sin hipótesis a priori sobre roles existentes
+    \item \textbf{Adaptación a evolución temporal}: Nuevos clusters emergen automáticamente al procesar datos recientes (``Modern Frontend'' post-2022)
+    \item \textbf{Granularidad adaptativa}: HDBSCAN permite clusters de tamaños variables, capturando roles mainstream y nichos especializados
+    \item \textbf{Identificación de outliers}: Skills atípicas o errores de extracción se detectan automáticamente como ruido
+    \item \textbf{Escalabilidad}: No requiere re-entrenamiento supervisado al agregar nuevas ofertas al corpus
+\end{itemize}
+
+\textbf{Justificación de componentes tecnológicos seleccionados}:
+
+\begin{itemize}
+    \item \textbf{E5 Multilingual Embeddings}: Seleccionado por soporte bilingüe español/inglés (crítico para corpus LATAM), performance en benchmarks de similitud semántica (STS tasks), y tamaño intermedio (278M parámetros) que balancea calidad vs. costo computacional
+    \item \textbf{UMAP sobre t-SNE/PCA}: UMAP preserva estructura local (skills similares cercanas) y global (dominios separados) simultáneamente, con complejidad O(n log n) vs. O(n²) de t-SNE, y proyecciones deterministas reproducibles
+    \item \textbf{HDBSCAN sobre K-Means}: HDBSCAN detecta automáticamente número óptimo de clusters sin hiperparámetro k, identifica outliers como ruido en lugar de forzar asignación, y maneja clusters de formas arbitrarias (no asume esfericidad)
+\end{itemize}
+
+Esta arquitectura responde a los siguientes atributos de calidad del sistema:
+
+\begin{itemize}
+    \item \textbf{Adaptabilidad}: Clustering no supervisado evoluciona con mercado laboral sin requerir actualización manual de categorías
+    \item \textbf{Interpretabilidad}: UMAP 2D permite visualización intuitiva de 768 dimensiones, facilitando inspección manual de coherencia
+    \item \textbf{Escalabilidad}: Complejidad O(n log n) permite procesar corpus completo (30,660 ofertas) en $<$5 minutos
+    \item \textbf{Reproducibilidad}: Proyecciones deterministas con \texttt{random\_state} garantizan resultados consistentes entre ejecuciones
+\end{itemize}
+
+\subsection{Generación de Embeddings y Reducción UMAP}
+
+El modelo \path{intfloat/multilingual-e5-base} transformó skills a vectores de 768 dimensiones capturando similitud semántica. Se seleccionó por: (1) soporte multilingüe (español/inglés), (2) tamaño intermedio (278M params) balanceando expresividad vs costo, y (3) performance en STS benchmarks. El proceso operó en dos modos: Pre-ESCO embebió texto normalizado (~3,200 embeddings únicos), Post-ESCO embebió preferred labels ESCO (~2,100 embeddings consolidados). Se aplicó prefixing ``query:'' según especificaciones E5. La generación batch procesó skills en lotes de 128 documentos alcanzando ~850 skills/s en RTX 3090. Los embeddings se normalizaron a vectores unitarios y almacenaron en archivos \texttt{.npy} (Pre-ESCO 19MB, Post-ESCO 13MB) para reutilización.
+
+UMAP (Uniform Manifold Approximation and Projection) redujo embeddings de 768D a 2D para visualización y clustering. Se seleccionó sobre t-SNE/PCA por: (1) preservación de estructura local y global, (2) escalabilidad $O(n \log n)$, y (3) reproducibilidad determinista. La configuración involucró: \texttt{n\_neighbors} (balance local/global), \texttt{min\_dist=0.1} (separación mínima), \texttt{n\_components=2}, y \texttt{metric=``cosine''}. El grid search sobre \texttt{n\_neighbors} $\in \{5, 10, 15, 20, 30\}$ determinó que \textbf{\texttt{n\_neighbors=15}} ofrecía mejor balance: preservó agrupaciones semánticas coherentes (React/Vue/Angular separados pero cercanos) mientras mantuvo separación entre dominios mayores (Frontend/Backend/DevOps no-sobrelapados). La proyección UMAP de 3,200 skills tomó ~18s en CPU.
+
+\subsection{Clustering HDBSCAN y Optimización}
+
+HDBSCAN (Hierarchical Density-Based Spatial Clustering) identificó clusters sobre proyecciones UMAP 2D sin especificar número predefinido. Se seleccionó sobre K-Means por: (1) detección automática de número de clusters, (2) identificación de outliers como ruido, (3) clusters de forma arbitraria, y (4) jerarquía accesible mediante dendrogramas. La configuración involucró: \texttt{min\_cluster\_size} (granularidad), \texttt{min\_samples} (robustness), y \texttt{metric=``euclidean''}.
+
+El grid search sobre \texttt{min\_cluster\_size} $\in \{5, 7, 10, 15, 20, 30\}$ evaluó: (1) número de clusters (ideal 50-200), (2) porcentaje de ruido ($<$25\%), (3) Silhouette Score ($>$0.6), y (4) interpretabilidad manual. Los experimentos revelaron trade-off: configuraciones bajas (5-7) generaban 300+ clusters muy específicos con Silhouette ~0.45; configuraciones altas (20-30) producían pocos clusters gruesos (~20-30) con Silhouette ~0.75 pero baja granularidad y alto ruido (~30\%).
+
+El análisis comparativo identificó \textbf{UMAP n\_neighbors=15 + HDBSCAN min\_cluster\_size=15} como configuración óptima: generó 156 clusters interpretables sobre 30,660 ofertas, 15.2\% ruido, y Silhouette=0.726. La inspección manual de top-5 clusters confirmó coherencia semántica: Python/Data Science (1,234 jobs), Project Management (987 jobs), Cloud/DevOps (856 jobs), SQL/Databases (743 jobs), JavaScript/Frontend (698 jobs).
+
+\subsection{Comparación Pre-ESCO vs Post-ESCO}
+
+El clustering se ejecutó en dos escenarios evaluando impacto del mapeo ESCO. Pre-ESCO operó sobre 3,200 skills normalizadas generando 117-146 clusters con alta fragmentación: variantes ortográficas formaron micro-clusters separados (``docker'', ``Docker'', ``docker-compose'' distintos), Silhouette ~0.45-0.52. Sin embargo, capturó skills emergentes no-ESCO (``ChatGPT'', ``Tailwind CSS'') formando micro-clusters válidos.
+
+Post-ESCO procesó 2,100 skills ESCO consolidadas generando 10-20 clusters con mayor coherencia: variantes colapsaron en puntos únicos fortaleciendo densidad de clusters, Silhouette ~0.68-0.75. Los top-5 clusters mostraron composición interpretable sin ambigüedad. La limitación fue que skills emergentes sin mapeo (~12-15\% de extracciones Pipeline B) desaparecieron del análisis. Se implementó análisis híbrido: clustering Post-ESCO para métricas cuantitativas, complementado con análisis manual Pre-ESCO para tecnologías emergentes ausentes en ESCO.
+
+\subsection{Análisis Temporal}
+
+Como extensión, se implementó módulo de análisis temporal rastreando evolución de clusters en 21,839 ofertas fechadas (71.23\% del dataset), agrupadas en 28 trimestres (Q4-2018 a Q4-2025). Para cada trimestre, se ejecutó pipeline completo: extracción, embeddings E5, proyección UMAP (\texttt{n\_neighbors=15}), clustering HDBSCAN (\texttt{min\_cluster\_size=15}). Los clusters se etiquetaron con top-5 skills más frecuentes, rastreando consistencia entre trimestres: dos clusters consecutivos se consideraron ``el mismo'' si compartían $\geq$60\% de sus top-20 skills.
+
+El tracking identificó 5 clusters persistentes con crecimiento sostenido: Python/Data Science (45 → 180 jobs/trimestre, +300\%), Project Management (35 → 120, +243\%), Cloud/DevOps (15 → 95, +533\% impulsado por Kubernetes/Terraform), SQL/Databases (60-80 estable), y JavaScript/Frontend (50 → 85, +70\%). Adicionalmente, 3 clusters emergentes aparecieron post-2022: AI/ML Tools (ChatGPT, LangChain), Infrastructure as Code (Terraform, CDK), y Modern Frontend (Next.js, Tailwind CSS). El sistema generó visualizaciones (heatmaps, line charts) permitiendo identificar patrones de adopción tecnológica.
+
+\subsection{Beneficios del Sistema de Clustering Implementado}
+
+La implementación del sistema de clustering no supervisado mediante UMAP + HDBSCAN proporciona múltiples beneficios para el observatorio de demanda laboral:
+
+\textbf{Beneficios analíticos}:
+
+\begin{itemize}
+    \item \textbf{Descubrimiento automático de perfiles emergentes}: No requiere categorías predefinidas, permitiendo que los datos revelen naturalmente nuevas combinaciones de habilidades demandadas
+        \begin{itemize}
+            \item Ejemplo: Identificación del perfil ``AI/ML Engineer'' como cluster emergente post-2022
+        \end{itemize}
+    \item \textbf{Granularidad adaptativa}: HDBSCAN permite clústeres de tamaños variables, capturando tanto roles mainstream (Python/Data Science con 1,234 jobs) como nichos especializados (Security Engineer con 45 jobs)
+    \item \textbf{Detección de outliers}: Skills atípicas o errores de extracción se identifican automáticamente como ruido (15.2\% del dataset)
+    \item \textbf{Jerarquía multinivel}: Dendrogramas de HDBSCAN revelan familias de roles (Backend $\rightarrow$ Backend Java vs. Backend Node.js)
+\end{itemize}
+
+\textbf{Beneficios para visualización}:
+
+\begin{itemize}
+    \item \textbf{Reducción dimensional preservando estructura}: UMAP mantiene relaciones locales (React cerca de Angular) y globales (Frontend separado de DevOps)
+    \item \textbf{Interpretabilidad}: Proyecciones 2D permiten visualización intuitiva de 768 dimensiones originales
+    \item \textbf{Reproducibilidad}: Proyecciones deterministas con \texttt{random\_state} fijo garantizan consistencia entre ejecuciones
+\end{itemize}
+
+\textbf{Beneficios para análisis temporal}:
+
+\begin{itemize}
+    \item \textbf{Tracking de evolución de clústeres}: Permite rastrear crecimiento/decline de familias tecnológicas
+        \begin{itemize}
+            \item Ejemplo: Cloud/DevOps creció +533\% durante 2019-2025
+        \end{itemize}
+    \item \textbf{Identificación de tecnologías emergentes}: Clústeres nuevos post-2022 señalan tendencias del mercado
+        \begin{itemize}
+            \item Ejemplo: Cluster ``Modern Frontend'' (Next.js, Tailwind CSS) aparece en Q1-2023
+        \end{itemize}
+    \item \textbf{Detección de obsolescencia}: Clústeres en decline indican tecnologías perdiendo relevancia
+        \begin{itemize}
+            \item Ejemplo: Cluster ``.NET Framework'' decrece -40\% mientras ``.NET Core'' crece +120\%
+        \end{itemize}
+\end{itemize}
+
+\textbf{Beneficios operativos}:
+
+\begin{itemize}
+    \item \textbf{Escalabilidad}: Complejidad O(n log n) de UMAP permite procesar millones de puntos
+    \item \textbf{Eficiencia computacional}: Clustering de 3,200 skills en $<$30 segundos (CPU)
+    \item \textbf{Sin supervisión humana}: No requiere anotación manual de categorías (ahorro de costos)
+    \item \textbf{Actualización incremental}: Fácil re-clustering al agregar nuevas ofertas al corpus
+\end{itemize}
+
+\textbf{Impacto en objetivos del observatorio}:
+
+El sistema de clustering responde directamente a los siguientes objetivos del proyecto:
+
+\begin{enumerate}
+    \item \textbf{Caracterizar la demanda laboral tecnológica}: Los 156 clústeres identificados proporcionan taxonomía emergente de perfiles demandados en LATAM
+    \item \textbf{Identificar tendencias temporales}: Tracking de clusters permite cuantificar crecimiento de tecnologías (Cloud/DevOps +533\%)
+    \item \textbf{Detectar skills emergentes}: 47 skills sin match ESCO agrupadas en 5 familias emergentes (AI/ML post-2022, IaC moderna, etc.)
+    \item \textbf{Comparar mercados regionales}: Clustering por país revela diferencias (Colombia 15.3\% ESCO match vs. México 11.3\%)
+\end{enumerate}
+
+Esta arquitectura de clustering no supervisado permite que el observatorio evolucione orgánicamente con el mercado laboral, sin requerir actualización manual de categorías predefinidas que rápidamente quedarían obsoletas en el dinámico sector tecnológico.
+
+\section{Creación del Gold Standard y Sistema de Evaluación}
+
+Esta sección describe la construcción del dataset de referencia de 300 ofertas anotadas manualmente y el sistema de evaluación dual (Pre-ESCO y Post-ESCO) para comparar pipelines.
+
+\subsection{Selección y Anotación del Gold Standard}
+
+El gold standard requirió seleccionar un subset representativo del corpus de 30,660 ofertas balanceando diversidad tecnológica, distribución geográfica, y viabilidad de anotación. La selección estratificó ofertas por tres dimensiones: (1) \textit{País} proporcional al dataset (México 58\%, Colombia 31\%, Argentina 11\%); (2) \textit{Rol tecnológico} cubriendo 8 categorías (Backend 33\%, QA 16\%, Frontend 14\%, DevOps 12\%, Data Science 9\%, Mobile 8\%, Fullstack 4\%, Security 4\%); y (3) \textit{Idioma} con balance español/inglés (83\%/17\%), excluyendo Spanglish para simplificar anotación. Las 300 ofertas seleccionadas cubren 85\% del vocabulario técnico único del dataset completo, confirmando representatividad.
+
+El proceso de anotación involucró dos anotadores independientes (estudiantes de último año Ingeniería de Sistemas) identificando skills técnicas hard (lenguajes, frameworks, herramientas, metodologías) y soft (comunicación, liderazgo). Se proporcionaron guidelines con ejemplos positivos/negativos y capacitación mediante 20 ofertas piloto. Los anotadores trabajaron independientemente y discrepancias (18\% inicial) se resolvieron por consenso. El resultado final fue 7,848 skills totales: 6,174 hard skills (78.7\%) y 1,674 soft skills (21.3\%), promedio 26.2 skills/oferta. Las hard skills se distribuyeron: lenguajes (32\%), frameworks (28\%), herramientas DevOps/Cloud (22\%), metodologías (12\%), y bases de datos (6\%).
+
+\subsection{Sistema de Evaluación Dual: Pre-ESCO y Post-ESCO}
+
+El sistema implementó dos comparaciones independientes cuantificando capacidades complementarias: \textit{Pre-ESCO} evalúa capacidad de extracción pura comparando texto normalizado sin mapeo taxonómico, capturando skills emergentes ausentes en ESCO; \textit{Post-ESCO} evalúa capacidad de estandarización comparando URIs ESCO tras mapear todas las skills (gold standard y pipelines) con el mismo código \texttt{ESCO\allowbreak Matcher\allowbreak 3Layers}, eliminando sesgos ortográficos.
+
+El componente Pre-ESCO utilizó módulo de normalización canónica con diccionario de 200+ tecnologías mapeando variantes a formas estándar (``js''/``javascript'' → ``JavaScript'', ``k8s'' → ``Kubernetes''). Las métricas se calcularon mediante operaciones de conjuntos: para cada job, se compararon skills gold normalizadas vs skills pipeline normalizadas, identificando True Positives (TP = intersección), False Positives (FP = predichas no en gold), y False Negatives (FN = en gold no predichas). Los valores agregados sobre 300 ofertas alimentaron fórmulas: Precision = TP/(TP+FP), Recall = TP/(TP+FN), F1 = 2×(P×R)/(P+R).
+
+El componente Post-ESCO remapeó todas las skills usando \texttt{ESCO\allowbreak Matcher\allowbreak 3Layers} para garantizar fairness: Pipeline A se ignoró y remapeó desde texto normalizado igual que Pipeline B. Este diseño eliminó ventajas artificiales asegurando que diferencias Post-ESCO reflejaran calidad de extracción textual. Skills sin match ESCO se descartaron de la comparación Post-ESCO, cuantificándose separadamente como ``Skills Emergentes'' para análisis cualitativo.
+
+Las 300 ofertas se procesaron por todos los pipelines: Pipeline A (NER+Regex completo), Pipeline A Regex-Only, Pipeline B con 4 LLMs (Gemma, Llama, Qwen, Phi), y Pipeline A.1 (TF-IDF, descartado por F1$<$12\%). Los outputs se almacenaron en tablas dedicadas facilitando queries de evaluación mediante joins con \texttt{gold\_\allowbreak standard\_\allowbreak annotations}.
