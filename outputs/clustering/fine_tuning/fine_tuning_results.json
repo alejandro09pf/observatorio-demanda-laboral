@@ -1,0 +1,155 @@
+[
+  {
+    "name": "mcs6_nn15",
+    "mcs": 6,
+    "nn": 15,
+    "metrics": {
+      "n_clusters": 8,
+      "n_samples": 400,
+      "n_noise": 51,
+      "noise_percentage": 12.75,
+      "silhouette_score": 0.47212013602256775,
+      "davies_bouldin_score": 0.5147599486214396,
+      "largest_cluster_size": 263,
+      "smallest_cluster_size": 8,
+      "mean_cluster_size": 43.625
+    },
+    "duration": 6.247069835662842
+  },
+  {
+    "name": "mcs7_nn15",
+    "mcs": 7,
+    "nn": 15,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 1,
+      "noise_percentage": 0.25,
+      "silhouette_score": 0.6698352694511414,
+      "davies_bouldin_score": 0.4475443953276618,
+      "largest_cluster_size": 264,
+      "smallest_cluster_size": 135,
+      "mean_cluster_size": 199.5
+    },
+    "duration": 1.481086015701294
+  },
+  {
+    "name": "mcs8_nn15",
+    "mcs": 8,
+    "nn": 15,
+    "metrics": {
+      "n_clusters": 3,
+      "n_samples": 400,
+      "n_noise": 7,
+      "noise_percentage": 1.7500000000000002,
+      "silhouette_score": 0.41687512397766113,
+      "davies_bouldin_score": 0.5602689608273375,
+      "largest_cluster_size": 264,
+      "smallest_cluster_size": 8,
+      "mean_cluster_size": 131.0
+    },
+    "duration": 1.4447221755981445
+  },
+  {
+    "name": "mcs9_nn15",
+    "mcs": 9,
+    "nn": 15,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 9,
+      "noise_percentage": 2.25,
+      "silhouette_score": 0.6830688714981079,
+      "davies_bouldin_score": 0.4257858287947876,
+      "largest_cluster_size": 264,
+      "smallest_cluster_size": 127,
+      "mean_cluster_size": 195.5
+    },
+    "duration": 1.5545310974121094
+  },
+  {
+    "name": "mcs7_nn10",
+    "mcs": 7,
+    "nn": 10,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 4,
+      "noise_percentage": 1.0,
+      "silhouette_score": 0.6229045987129211,
+      "davies_bouldin_score": 0.5013415830482366,
+      "largest_cluster_size": 261,
+      "smallest_cluster_size": 135,
+      "mean_cluster_size": 198.0
+    },
+    "duration": 1.5144367218017578
+  },
+  {
+    "name": "mcs7_nn20",
+    "mcs": 7,
+    "nn": 20,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 0,
+      "noise_percentage": 0.0,
+      "silhouette_score": 0.6869605183601379,
+      "davies_bouldin_score": 0.40550245207606744,
+      "largest_cluster_size": 274,
+      "smallest_cluster_size": 126,
+      "mean_cluster_size": 200.0
+    },
+    "duration": 1.621586799621582
+  },
+  {
+    "name": "mcs7_nn25",
+    "mcs": 7,
+    "nn": 25,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 0,
+      "noise_percentage": 0.0,
+      "silhouette_score": 0.6872408986091614,
+      "davies_bouldin_score": 0.3986054498575946,
+      "largest_cluster_size": 274,
+      "smallest_cluster_size": 126,
+      "mean_cluster_size": 200.0
+    },
+    "duration": 1.6212058067321777
+  },
+  {
+    "name": "mcs8_nn10",
+    "mcs": 8,
+    "nn": 10,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 8,
+      "noise_percentage": 2.0,
+      "silhouette_score": 0.621753454208374,
+      "davies_bouldin_score": 0.501611359452402,
+      "largest_cluster_size": 260,
+      "smallest_cluster_size": 132,
+      "mean_cluster_size": 196.0
+    },
+    "duration": 1.324967861175537
+  },
+  {
+    "name": "mcs8_nn20",
+    "mcs": 8,
+    "nn": 20,
+    "metrics": {
+      "n_clusters": 2,
+      "n_samples": 400,
+      "n_noise": 2,
+      "noise_percentage": 0.5,
+      "silhouette_score": 0.6926389932632446,
+      "davies_bouldin_score": 0.40136791236863373,
+      "largest_cluster_size": 272,
+      "smallest_cluster_size": 126,
+      "mean_cluster_size": 199.0
+    },
+    "duration": 1.6514840126037598
+  }
+]

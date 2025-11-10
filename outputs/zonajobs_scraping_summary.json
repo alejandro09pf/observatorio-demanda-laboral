@@ -1,0 +1,29 @@
+{
+  "spider_name": "zonajobs",
+  "country": "AR",
+  "total_jobs_scraped": 20,
+  "scraped_urls": [
+    "https://www.zonajobs.com.ar/empleos/gerente-de-logistica-2161956.html",
+    "https://www.zonajobs.com.ar/empleos/coordinador-de-jefes-de-obra--importante-constructora-2161762.html",
+    "https://www.zonajobs.com.ar/empleos/abogado-a-societarista--derecho-societario-y-comercial-talento-pyme-2161866.html",
+    "https://www.zonajobs.com.ar/empleos/asistente-administrativo-contable-pozo-gowland-abogados-2161796.html",
+    "https://www.zonajobs.com.ar/empleos/ventas-atencion-al-cliente-2161424.html",
+    "https://www.zonajobs.com.ar/empleos/analista-contable-empresa-constructora-rcr-emprendimientos-2161691.html",
+    "https://www.zonajobs.com.ar/empleos/jefe-de-caucion-swiss-medical-2162126.html",
+    "https://www.zonajobs.com.ar/empleos/administrativo-a-de-logistica-2161818.html",
+    "https://www.zonajobs.com.ar/empleos/vendedor-y-repositor-%7C-full-time-%7C-cadena-365-kioscos-365-kioscos-argentinos-2162131.html",
+    "https://www.zonajobs.com.ar/empleos/asesor-comercial-remax-nordelta-remax-bahia-nordelta-tigre-2162123.html",
+    "https://www.zonajobs.com.ar/empleos/semi-senior-contable-e-impositivo-estudio-vitali-amp-asociados-2161815.html",
+    "https://www.zonajobs.com.ar/empleos/analista-de-ventas-2157819.html",
+    "https://www.zonajobs.com.ar/empleos/analista-de-proyectos-estrategicos-coca-cola-femsa-de-argentina-2161977.html",
+    "https://www.zonajobs.com.ar/empleos/recepcionista-para-centro-medico-selecta-2161726.html",
+    "https://www.zonajobs.com.ar/empleos/product-architect-sisorg-srl-2161532.html",
+    "https://www.zonajobs.com.ar/empleos/administrativo-a--carga-y-procesamiento-de-datos-caba-presencial-contacto-informatica-sa-2161465.html",
+    "https://www.zonajobs.com.ar/empleos/analista-de-procesos-estudiantes-graduados-de-ingenieria-2162130.html",
+    "https://www.zonajobs.com.ar/empleos/asesor-a-comercial-consultivo-externo-adecco-argentina-2162140.html",
+    "https://www.zonajobs.com.ar/empleos/abogado-a-procesalista--derecho-civil-y-comercial-talento-pyme-2161864.html",
+    "https://www.zonajobs.com.ar/empleos/vendedor-comercial-pilar-olivos-caballito-2162089.html"
+  ],
+  "timestamp": "2025-09-01T11:14:25.984311",
+  "status": "completed"
+}

@@ -1,0 +1,66 @@
+11:01:54 - INFO - ================================================================================
+11:01:54 - INFO - CLUSTERING: PIPELINE_A_300_POST_EXP1
+11:01:54 - INFO - ================================================================================
+11:01:54 - INFO - 
+================================================================================
+11:01:54 - INFO - EXTRACTING SKILLS
+11:01:54 - INFO - ================================================================================
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:64: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+11:01:55 - INFO -    ✅ Extracted 289 unique skills
+11:01:55 - INFO -    Frequency range: 1 - 94
+11:01:55 - INFO -    Total mentions: 2,548
+11:01:55 - INFO - 
+================================================================================
+11:01:55 - INFO - FETCHING EMBEDDINGS
+11:01:55 - INFO - ================================================================================
+11:01:55 - INFO - Requesting embeddings for 289 skills...
+11:01:55 - INFO -    ✅ Found embeddings: 289/289
+11:01:55 - INFO -    Coverage: 100.0%
+11:01:55 - INFO - 
+================================================================================
+11:01:55 - INFO - RUNNING UMAP (src/analyzer/dimension_reducer.py)
+11:01:55 - INFO - ================================================================================
+11:01:55 - INFO - DimensionReducer initialized: n_components=2, n_neighbors=15, min_dist=0.1, metric=cosine
+11:01:55 - INFO - Fitting UMAP on 289 samples with 768 features
+11:01:55 - INFO - Parameters: n_neighbors=15, min_dist=0.1, metric=cosine
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+UMAP(angular_rp_forest=True, metric='cosine', random_state=42, verbose=True)
+Fri Nov  7 11:01:55 2025 Construct fuzzy simplicial set
+Fri Nov  7 11:01:55 2025 Finding Nearest Neighbors
+Fri Nov  7 11:01:56 2025 Finished Nearest Neighbor Search
+Fri Nov  7 11:01:57 2025 Construct embedding
+Epochs completed:   0%|            0/500 [00:00]Epochs completed:   0%|            1/500 [00:00]Epochs completed:  53%| █████▎     265/500 [00:00]Epochs completed: 100%| ██████████ 500/500 [00:00]
+11:01:57 - INFO - UMAP transformation complete
+11:01:57 - INFO - Output shape: (289, 2)
+11:01:57 - INFO - Coordinate ranges: X=[3.42, 9.23], Y=[8.89, 15.45]
+11:01:57 - INFO - 
+================================================================================
+11:01:57 - INFO - RUNNING HDBSCAN (src/analyzer/clustering.py)
+11:01:57 - INFO - ================================================================================
+11:01:57 - INFO - SkillClusterer initialized: min_cluster_size=15, min_samples=5, metric=euclidean
+11:01:57 - INFO - Clustering 289 samples in 2D space
+11:01:57 - INFO - Parameters: min_cluster_size=15, min_samples=5
+11:01:57 - INFO - Clustering complete
+11:01:57 - INFO - Clusters detected: 3
+11:01:57 - INFO - Noise points: 22 (7.6%)
+11:01:57 - INFO - Cluster sizes: {2: 152, 0: 94, 1: 21}
+	completed  0  /  500 epochs
+	completed  50  /  500 epochs
+	completed  100  /  500 epochs
+	completed  150  /  500 epochs
+	completed  200  /  500 epochs
+	completed  250  /  500 epochs
+	completed  300  /  500 epochs
+	completed  350  /  500 epochs
+	completed  400  /  500 epochs
+	completed  450  /  500 epochs
+Fri Nov  7 11:01:57 2025 Finished embedding
+Traceback (most recent call last):
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py", line 362, in <module>
+    main()
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py", line 318, in main
+    metrics = clusterer.get_metrics()
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SkillClusterer' object has no attribute 'get_metrics'

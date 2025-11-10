@@ -1,0 +1,889 @@
+{
+  "stats": {
+    "total_skills": 2410,
+    "old_with_esco": 289,
+    "new_with_esco": 237,
+    "same_mapping": 182,
+    "lost_mapping": 90,
+    "gained_mapping": 38,
+    "changed_mapping": 17,
+    "false_positives_removed": 24,
+    "legitimate_lost": 66
+  },
+  "metrics": {
+    "old_coverage": 11.991701244813278,
+    "new_coverage": 9.83402489626556,
+    "old_precision_est": 91.6955017301038,
+    "new_precision_est": 100.0
+  },
+  "skill_groups": {
+    "old": {
+      "Object or component oriented development software": 7,
+      "Web platform development software": 13,
+      "DevOps Tools": 5,
+      "Development Methodologies": 2,
+      "File versioning software": 1,
+      "Application server software": 10,
+      "Cloud Platforms": 5,
+      "General Skills": 100,
+      "Web page creation and editing software": 2,
+      "Data base management system software": 10,
+      "AI/ML Concepts": 4,
+      "Object oriented data base management software": 1,
+      "Data base user interface and query software": 6,
+      "Operating system software": 4,
+      "Development environment software": 7,
+      "Software Architecture": 5,
+      "Frontend Libraries": 2,
+      "API Design": 2,
+      "Data Engineering": 8,
+      "Mobile Development": 6,
+      "Cloud Services": 4,
+      "Web Development": 6,
+      "Backend Frameworks": 8,
+      "Frontend Frameworks": 4,
+      "API Tools": 1,
+      "Cloud Architecture": 1,
+      "Testing": 5,
+      "Data Science": 2,
+      "Message Queues": 2,
+      "Program testing software": 2,
+      "DevOps": 3,
+      "Monitoring": 5,
+      "Development Practices": 2,
+      "Backend Tools": 2,
+      "Authentication": 3,
+      "AI/ML Operations": 1,
+      "Business intelligence and data analysis software": 3,
+      "Frontend Tools": 1,
+      "DevOps Practices": 3,
+      "Security": 3,
+      "AI/ML": 5,
+      "Analytical or scientific software": 1,
+      "Configuration management software": 2,
+      "Cloud Computing": 2,
+      "Graphical user interface development software": 1,
+      "Project management software": 2,
+      "API Development": 2,
+      "Customer relationship management CRM software": 1,
+      "Cloud-based data access and sharing software": 1,
+      "Cloud-based management software": 1,
+      "Video conferencing software": 1,
+      "Graphics or photo imaging software": 2,
+      "Programming Languages": 2,
+      "Data mining software": 1,
+      "Enterprise resource planning ERP software": 1,
+      "Infrastructure": 1,
+      "E-commerce": 1,
+      "Payment Processing": 1
+    },
+    "new": {
+      "Object or component oriented development software": 3,
+      "General Skills": 69,
+      "Web platform development software": 8,
+      "Development Methodologies": 2,
+      "File versioning software": 1,
+      "Application server software": 9,
+      "Development environment software": 5,
+      "Cloud Platforms": 4,
+      "Web page creation and editing software": 1,
+      "AI/ML Concepts": 4,
+      "Data base user interface and query software": 4,
+      "Operating system software": 4,
+      "Data base management system software": 5,
+      "Software Architecture": 7,
+      "Frontend Libraries": 3,
+      "API Design": 2,
+      "DevOps Tools": 5,
+      "Data Engineering": 8,
+      "Mobile Development": 5,
+      "Web Development": 11,
+      "Backend Frameworks": 10,
+      "Frontend Frameworks": 4,
+      "API Tools": 1,
+      "Cloud Architecture": 1,
+      "Testing": 5,
+      "Data Science": 2,
+      "Message Queues": 3,
+      "Cloud Services": 1,
+      "Program testing software": 3,
+      "DevOps": 3,
+      "Monitoring": 5,
+      "Development Practices": 2,
+      "Backend Tools": 4,
+      "Authentication": 2,
+      "AI/ML Operations": 1,
+      "Business intelligence and data analysis software": 2,
+      "Frontend Tools": 1,
+      "DevOps Practices": 2,
+      "Security": 3,
+      "AI/ML": 4,
+      "Analytical or scientific software": 2,
+      "Configuration management software": 2,
+      "Cloud Computing": 2,
+      "Graphical user interface development software": 1,
+      "API Development": 2,
+      "Cloud-based data access and sharing software": 1,
+      "Video conferencing software": 1,
+      "Programming Languages": 2,
+      "Data mining software": 1,
+      "Enterprise resource planning ERP software": 1,
+      "Infrastructure": 1,
+      "E-commerce": 1,
+      "Payment Processing": 1
+    }
+  },
+  "changes": {
+    "false_positives_removed": [
+      {
+        "skill": "Piano",
+        "old_label": "tocar el piano",
+        "jobs": 35
+      },
+      {
+        "skill": "Europa",
+        "old_label": "neuropatología",
+        "jobs": 20
+      },
+      {
+        "skill": "Oferta",
+        "old_label": "ofertas de empleo",
+        "jobs": 20
+      },
+      {
+        "skill": "Acceso",
+        "old_label": "accesorios de un cable eléctrico",
+        "jobs": 18
+      },
+      {
+        "skill": "Cursos",
+        "old_label": "gestionar licencias para el aprovechamiento de recursos terrestres",
+        "jobs": 9
+      },
+      {
+        "skill": "ASTECI",
+        "old_label": "garantizar un abastecimiento responsable en las cadenas de suministro alimentario",
+        "jobs": 8
+      },
+      {
+        "skill": "Excel",
+        "old_label": "aspirar a la excelencia en la fabricación de productos alimenticios",
+        "jobs": 8
+      },
+      {
+        "skill": "Apoyo",
+        "old_label": "proporcionar apoyo psicológico a los pacientes",
+        "jobs": 7
+      },
+      {
+        "skill": "Perfil",
+        "old_label": "elaborar perfiles",
+        "jobs": 6
+      },
+      {
+        "skill": "Vales",
+        "old_label": "organizar exposiciones festivales y actos culturales",
+        "jobs": 6
+      },
+      {
+        "skill": "CORTES",
+        "old_label": "tipos de cortes de carne",
+        "jobs": 3
+      },
+      {
+        "skill": "Seguro",
+        "old_label": "asumir la responsabilidad por el mantenimiento de un entorno seguro a bordo del buque",
+        "jobs": 3
+      },
+      {
+        "skill": "Video",
+        "old_label": "supervisar el equipo de edición de imágenes de video y películas",
+        "jobs": 3
+      },
+      {
+        "skill": "Bordo",
+        "old_label": "ofrecer formación sobre seguridad a bordo",
+        "jobs": 2
+      },
+      {
+        "skill": "Clara",
+        "old_label": "inspeccionar las declaraciones fiscales",
+        "jobs": 2
+      },
+      {
+        "skill": "Crane",
+        "old_label": "realizar una estimulación magnética transcraneana",
+        "jobs": 2
+      },
+      {
+        "skill": "Empleo",
+        "old_label": "empleo de polvo para la forja",
+        "jobs": 2
+      },
+      {
+        "skill": "Estar",
+        "old_label": "estar al día de los productos",
+        "jobs": 2
+      },
+      {
+        "skill": "Fondo",
+        "old_label": "gestionar fondos de pensiones",
+        "jobs": 2
+      },
+      {
+        "skill": "GRUPO",
+        "old_label": "ponerse en el lugar de grupos externos",
+        "jobs": 2
+      },
+      {
+        "skill": "Banca",
+        "old_label": "banca de inversión",
+        "jobs": 1
+      },
+      {
+        "skill": "Bonos",
+        "old_label": "bonos verdes",
+        "jobs": 1
+      },
+      {
+        "skill": "Centro",
+        "old_label": "determinar el centro de gravedad de la carga",
+        "jobs": 1
+      },
+      {
+        "skill": "Puntos",
+        "old_label": "seleccionar puntos de acupuntura",
+        "jobs": 1
+      }
+    ],
+    "legitimate_lost": [
+      {
+        "skill": "CI/CD",
+        "old_label": "GitLab CI/CD",
+        "jobs": 85
+      },
+      {
+        "skill": "Azure",
+        "old_label": "Microsoft Azure",
+        "jobs": 41
+      },
+      {
+        "skill": "oracle",
+        "old_label": "Oracle Database",
+        "jobs": 29
+      },
+      {
+        "skill": "Spring",
+        "old_label": "Spring Boot",
+        "jobs": 25
+      },
+      {
+        "skill": "kafka",
+        "old_label": "Apache Kafka",
+        "jobs": 24
+      },
+      {
+        "skill": "Cloud",
+        "old_label": "Cloudflare",
+        "jobs": 14
+      },
+      {
+        "skill": "SOLID",
+        "old_label": "Solidity",
+        "jobs": 12
+      },
+      {
+        "skill": "Maven",
+        "old_label": "Apache Maven",
+        "jobs": 10
+      },
+      {
+        "skill": "Lambda",
+        "old_label": "AWS Lambda",
+        "jobs": 8
+      },
+      {
+        "skill": "oauth",
+        "old_label": "OAuth 2.0",
+        "jobs": 5
+      },
+      {
+        "skill": "Stack",
+        "old_label": "Full-Stack Development",
+        "jobs": 4
+      },
+      {
+        "skill": "Unity",
+        "old_label": "Unity (sistemas de creación de juegos digitales)",
+        "jobs": 4
+      },
+      {
+        "skill": "Fique",
+        "old_label": "identifique los cambios climáticos históricos",
+        "jobs": 3
+      },
+      {
+        "skill": "Metas",
+        "old_label": "Metasploit",
+        "jobs": 3
+      },
+      {
+        "skill": "Access",
+        "old_label": "Microsoft Access",
+        "jobs": 2
+      },
+      {
+        "skill": "Build",
+        "old_label": "Oracle Warehouse Builder",
+        "jobs": 2
+      },
+      {
+        "skill": "Deploy",
+        "old_label": "Continuous Deployment",
+        "jobs": 2
+      },
+      {
+        "skill": "Mongo",
+        "old_label": "MongoDB",
+        "jobs": 2
+      },
+      {
+        "skill": "Sales",
+        "old_label": "Salesforce software",
+        "jobs": 2
+      },
+      {
+        "skill": "Shell",
+        "old_label": "Shell script",
+        "jobs": 2
+      },
+      {
+        "skill": "splunk",
+        "old_label": "Splunk Enterprise",
+        "jobs": 2
+      },
+      {
+        "skill": "Admin",
+        "old_label": "administrar sistema TIC",
+        "jobs": 1
+      },
+      {
+        "skill": "Apache",
+        "old_label": "Apache Cassandra",
+        "jobs": 1
+      },
+      {
+        "skill": "Basic",
+        "old_label": "Microsoft Visual Basic",
+        "jobs": 1
+      },
+      {
+        "skill": "Ciudad",
+        "old_label": "ofrecer asistencia a los ciudadanos nacionales",
+        "jobs": 1
+      },
+      {
+        "skill": "Clases",
+        "old_label": "impartir clases de estudios religiosos",
+        "jobs": 1
+      },
+      {
+        "skill": "Color",
+        "old_label": "coloración del cabello",
+        "jobs": 1
+      },
+      {
+        "skill": "crear",
+        "old_label": "crear bases de datos de terminología",
+        "jobs": 1
+      },
+      {
+        "skill": "Dental",
+        "old_label": "hacer un diagnóstico de salud bucodental",
+        "jobs": 1
+      },
+      {
+        "skill": "Depend",
+        "old_label": "trabajar con independencia de los servicios forestales",
+        "jobs": 1
+      },
+      {
+        "skill": "ELIGE",
+        "old_label": "principios de la inteligencia artificial",
+        "jobs": 1
+      },
+      {
+        "skill": "event",
+        "old_label": "Event-Driven Architecture",
+        "jobs": 1
+      },
+      {
+        "skill": "Firma",
+        "old_label": "firmar las declaraciones de impuestos",
+        "jobs": 1
+      },
+      {
+        "skill": "Gonet",
+        "old_label": "operar una vagoneta lanzadera",
+        "jobs": 1
+      },
+      {
+        "skill": "Guiar",
+        "old_label": "guiar a los buques al puerto",
+        "jobs": 1
+      },
+      {
+        "skill": "Hacer",
+        "old_label": "hacer un diagnóstico de salud bucodental",
+        "jobs": 1
+      },
+      {
+        "skill": "Idear",
+        "old_label": "idear una coreografía",
+        "jobs": 1
+      },
+      {
+        "skill": "Intern",
+        "old_label": "Internet de las Cosas",
+        "jobs": 1
+      },
+      {
+        "skill": "lambda",
+        "old_label": "AWS Lambda",
+        "jobs": 1
+      },
+      {
+        "skill": "Learn",
+        "old_label": "Scikit-learn",
+        "jobs": 1
+      },
+      {
+        "skill": "LIMPIO",
+        "old_label": "mantener limpio el guardarropa",
+        "jobs": 1
+      },
+      {
+        "skill": "Manual",
+        "old_label": "manuales de maquinaria de minería eléctrica",
+        "jobs": 1
+      },
+      {
+        "skill": "Marco",
+        "old_label": "marcos de software",
+        "jobs": 1
+      },
+      {
+        "skill": "Mentor",
+        "old_label": "ser mentor de otros profesionales de la salud",
+        "jobs": 1
+      },
+      {
+        "skill": "native",
+        "old_label": "React Native",
+        "jobs": 1
+      },
+      {
+        "skill": "Nesta",
+        "old_label": "adoptar vías para fomentar la biodiversidad y el bienestar animal",
+        "jobs": 1
+      },
+      {
+        "skill": "Office",
+        "old_label": "utilizar Microsoft Office",
+        "jobs": 1
+      },
+      {
+        "skill": "Power",
+        "old_label": "Microsoft Power BI",
+        "jobs": 1
+      },
+      {
+        "skill": "Prior",
+        "old_label": "priorizar emergencias",
+        "jobs": 1
+      },
+      {
+        "skill": "Propor",
+        "old_label": "proporcionar información antes del tratamiento",
+        "jobs": 1
+      },
+      {
+        "skill": "redes",
+        "old_label": "redes urbanas de climatización ",
+        "jobs": 1
+      },
+      {
+        "skill": "remoto",
+        "old_label": "utilizar equipos mediante control remoto",
+        "jobs": 1
+      },
+      {
+        "skill": "Remoto",
+        "old_label": "utilizar equipos mediante control remoto",
+        "jobs": 1
+      },
+      {
+        "skill": "Rocha",
+        "old_label": "abrochar los dispositivos de seguridad",
+        "jobs": 1
+      },
+      {
+        "skill": "Salud",
+        "old_label": "salud y seguridad en la industria textil",
+        "jobs": 1
+      },
+      {
+        "skill": "Shift",
+        "old_label": "Amazon Redshift",
+        "jobs": 1
+      },
+      {
+        "skill": "Sitio",
+        "old_label": "desarrollar redes de comunicación con sitios de transporte",
+        "jobs": 1
+      },
+      {
+        "skill": "Solid",
+        "old_label": "Solidity",
+        "jobs": 1
+      },
+      {
+        "skill": "Solve",
+        "old_label": "resolver problemas técnicos",
+        "jobs": 1
+      },
+      {
+        "skill": "Store",
+        "old_label": "tipos de digestores",
+        "jobs": 1
+      },
+      {
+        "skill": "Talent",
+        "old_label": "reconocer los indicadores que identifican al alumnado con talento",
+        "jobs": 1
+      },
+      {
+        "skill": "Teams",
+        "old_label": "Microsoft Teams",
+        "jobs": 1
+      },
+      {
+        "skill": "Tiempo",
+        "old_label": "gestionar el tiempo en actividades de diseño paisajístico",
+        "jobs": 1
+      },
+      {
+        "skill": "Tipos",
+        "old_label": "tipos de cebada",
+        "jobs": 1
+      },
+      {
+        "skill": "Tomcat",
+        "old_label": "Apache Tomcat",
+        "jobs": 1
+      },
+      {
+        "skill": "Visit",
+        "old_label": "visitar a proveedores",
+        "jobs": 1
+      }
+    ],
+    "gained": [
+      {
+        "skill": "c",
+        "new_label": "C",
+        "jobs": 67
+      },
+      {
+        "skill": "programación orientada a objetos",
+        "new_label": "utilizar programación orientada a objetos",
+        "jobs": 14
+      },
+      {
+        "skill": "Microservicios",
+        "new_label": "Microservices",
+        "jobs": 13
+      },
+      {
+        "skill": "Modelado de datos",
+        "new_label": "modelos de datos",
+        "jobs": 11
+      },
+      {
+        "skill": "r",
+        "new_label": "R",
+        "jobs": 11
+      },
+      {
+        "skill": "microservicios",
+        "new_label": "Microservices",
+        "jobs": 9
+      },
+      {
+        "skill": "Postgres",
+        "new_label": "PostgreSQL",
+        "jobs": 9
+      },
+      {
+        "skill": "bases de datos",
+        "new_label": "base de datos",
+        "jobs": 7
+      },
+      {
+        "skill": "Full Stack Developer",
+        "new_label": "Full-Stack Development",
+        "jobs": 7
+      },
+      {
+        "skill": "Fullstack Developer",
+        "new_label": "Full-Stack Development",
+        "jobs": 5
+      },
+      {
+        "skill": "gitlab ci",
+        "new_label": "GitLab CI/CD",
+        "jobs": 5
+      },
+      {
+        "skill": "Informatica",
+        "new_label": "informática",
+        "jobs": 4
+      },
+      {
+        "skill": "Suas",
+        "new_label": "SAS",
+        "jobs": 4
+      },
+      {
+        "skill": ".NET Core",
+        "new_label": "ASP.NET Core",
+        "jobs": 3
+      },
+      {
+        "skill": "Proyectos",
+        "new_label": "proyecto",
+        "jobs": 3
+      },
+      {
+        "skill": "trabajo en equipo",
+        "new_label": "trabajar en equipos",
+        "jobs": 3
+      },
+      {
+        "skill": "LINX",
+        "new_label": "Linux",
+        "jobs": 2
+      },
+      {
+        "skill": "SCSS",
+        "new_label": "CSS",
+        "jobs": 2
+      },
+      {
+        "skill": "SOQL",
+        "new_label": "SQL",
+        "jobs": 2
+      },
+      {
+        "skill": "asp.net core mvc",
+        "new_label": "ASP.NET Core",
+        "jobs": 1
+      },
+      {
+        "skill": "ATS",
+        "new_label": "NATS",
+        "jobs": 1
+      },
+      {
+        "skill": "Backend Developer",
+        "new_label": "Backend Development",
+        "jobs": 1
+      },
+      {
+        "skill": "Electronic",
+        "new_label": "electrónica",
+        "jobs": 1
+      },
+      {
+        "skill": "Electronica",
+        "new_label": "electrónica",
+        "jobs": 1
+      },
+      {
+        "skill": "Entity Framework Core",
+        "new_label": "Entity Framework",
+        "jobs": 1
+      },
+      {
+        "skill": "Espanol",
+        "new_label": "español",
+        "jobs": 1
+      },
+      {
+        "skill": "ESQL",
+        "new_label": "SQL",
+        "jobs": 1
+      },
+      {
+        "skill": "Frontend Developer",
+        "new_label": "Frontend Development",
+        "jobs": 1
+      },
+      {
+        "skill": "Full stack developer",
+        "new_label": "Full-Stack Development",
+        "jobs": 1
+      },
+      {
+        "skill": "INFORMATICA",
+        "new_label": "informática",
+        "jobs": 1
+      },
+      {
+        "skill": "material ui",
+        "new_label": "Material-UI",
+        "jobs": 1
+      },
+      {
+        "skill": "MICROSERVICIOS",
+        "new_label": "Microservices",
+        "jobs": 1
+      },
+      {
+        "skill": "Productos",
+        "new_label": "subproductos",
+        "jobs": 1
+      },
+      {
+        "skill": "Quimica",
+        "new_label": "química",
+        "jobs": 1
+      },
+      {
+        "skill": "Stack Development",
+        "new_label": "Full-Stack Development",
+        "jobs": 1
+      },
+      {
+        "skill": "Ucrania",
+        "new_label": "ucraniano",
+        "jobs": 1
+      },
+      {
+        "skill": "Unit",
+        "new_label": "JUnit",
+        "jobs": 1
+      },
+      {
+        "skill": "Vuejs",
+        "new_label": "Vue.js",
+        "jobs": 1
+      }
+    ],
+    "changed_better": [
+      {
+        "skill": "JavaScript",
+        "old": "JavaScript",
+        "new": "JavaScript",
+        "jobs": 92
+      },
+      {
+        "skill": "TypeScript",
+        "old": "TypeScript",
+        "new": "TypeScript",
+        "jobs": 39
+      },
+      {
+        "skill": "MySQL",
+        "old": "MySQL",
+        "new": "MySQL",
+        "jobs": 37
+      },
+      {
+        "skill": "nosql",
+        "old": "NoSQL",
+        "new": "NoSQL",
+        "jobs": 36
+      },
+      {
+        "skill": "PostgreSQL",
+        "old": "PostgreSQL",
+        "new": "PostgreSQL",
+        "jobs": 28
+      },
+      {
+        "skill": "PHP",
+        "old": "PHP",
+        "new": "PHP",
+        "jobs": 14
+      },
+      {
+        "skill": "scala",
+        "old": "Scala",
+        "new": "Scala",
+        "jobs": 8
+      },
+      {
+        "skill": "wordpress",
+        "old": "WordPress",
+        "new": "WordPress",
+        "jobs": 6
+      },
+      {
+        "skill": "perl",
+        "old": "Perl",
+        "new": "Perl",
+        "jobs": 3
+      },
+      {
+        "skill": "ajax",
+        "old": "AJAX",
+        "new": "AJAX",
+        "jobs": 2
+      },
+      {
+        "skill": "Prima",
+        "old": "Oracle Primavera Enterprise Project Portfolio Management",
+        "new": "Prisma",
+        "jobs": 2
+      },
+      {
+        "skill": "adobe illustrator",
+        "old": "Adobe Illustrator",
+        "new": "Adobe Illustrator",
+        "jobs": 1
+      },
+      {
+        "skill": "adobe photoshop",
+        "old": "Adobe Photoshop",
+        "new": "Adobe Photoshop",
+        "jobs": 1
+      },
+      {
+        "skill": "c++",
+        "old": "C++",
+        "new": "C++",
+        "jobs": 1
+      },
+      {
+        "skill": "Consul",
+        "old": "consultar fuentes iconográficas",
+        "new": "consulta",
+        "jobs": 1
+      },
+      {
+        "skill": "drupal",
+        "old": "Drupal",
+        "new": "Drupal",
+        "jobs": 1
+      },
+      {
+        "skill": "Javascrip",
+        "old": "JavaScript",
+        "new": "JavaScript",
+        "jobs": 1
+      }
+    ],
+    "changed_worse": []
+  }
+}

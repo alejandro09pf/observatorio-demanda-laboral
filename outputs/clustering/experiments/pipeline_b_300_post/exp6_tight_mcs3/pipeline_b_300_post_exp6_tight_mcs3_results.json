@@ -1,0 +1,3722 @@
+{
+  "metadata": {
+    "dataset_name": "pipeline_b_300_post_exp6_tight_mcs3",
+    "created_at": "2025-11-08T11:01:38.330485",
+    "n_skills": 1937,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 10,
+        "min_dist": 0.05,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 3,
+        "min_samples": 2,
+        "metric": "euclidean",
+        "cluster_selection_method": "leaf",
+        "allow_single_cluster": false
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 278,
+    "n_samples": 1937,
+    "n_noise": 418,
+    "noise_percentage": 21.579762519359836,
+    "silhouette_score": 0.5763370990753174,
+    "davies_bouldin_score": 0.4845973660327088,
+    "largest_cluster_size": 16,
+    "smallest_cluster_size": 3,
+    "mean_cluster_size": 5.4640287769784175
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 8,
+      "label": "Patrones de Dise\u00f1o, Dise\u00f1o de patrones, Patrones de dise\u00f1o...",
+      "top_skills": [
+        "Patrones de Dise\u00f1o",
+        "Dise\u00f1o de patrones",
+        "Patrones de dise\u00f1o",
+        "Dise\u00f1o de Patrones",
+        "Patrones de Arquitectura"
+      ],
+      "total_frequency": 18,
+      "mean_frequency": 2.25
+    },
+    {
+      "cluster_id": 1,
+      "size": 8,
+      "label": "Arquitectura Cloud Native, Cloud Native Application Development, Cloud-Native Deployments...",
+      "top_skills": [
+        "Arquitectura Cloud Native",
+        "Cloud Native Application Development",
+        "Cloud-Native Deployments",
+        "Cloud-Native Development",
+        "Cloud-native solutions"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 2,
+      "size": 4,
+      "label": "Power BI, Power BI Desktop, Power BI Report Server...",
+      "top_skills": [
+        "Power BI",
+        "Power BI Desktop",
+        "Power BI Report Server",
+        "Power BI Service"
+      ],
+      "total_frequency": 15,
+      "mean_frequency": 3.75
+    },
+    {
+      "cluster_id": 3,
+      "size": 7,
+      "label": "Power Automate, PowerPivot, Power Platform...",
+      "top_skills": [
+        "Power Automate",
+        "PowerPivot",
+        "Power Platform",
+        "Microsoft Power Automate",
+        "PowerFX"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 1.7142857142857142
+    },
+    {
+      "cluster_id": 4,
+      "size": 7,
+      "label": "Metodolog\u00edas \u00c1giles, Metodolog\u00edas \u00e1giles, Metodolog\u00eda \u00e1gil...",
+      "top_skills": [
+        "Metodolog\u00edas \u00c1giles",
+        "Metodolog\u00edas \u00e1giles",
+        "Metodolog\u00eda \u00e1gil",
+        "Metodolog\u00eda Agile",
+        "metodolog\u00edas agiles"
+      ],
+      "total_frequency": 37,
+      "mean_frequency": 5.285714285714286
+    },
+    {
+      "cluster_id": 5,
+      "size": 11,
+      "label": "Resoluci\u00f3n de Problemas, Resoluci\u00f3n de problemas, Resoluci\u00f3n de incidentes...",
+      "top_skills": [
+        "Resoluci\u00f3n de Problemas",
+        "Resoluci\u00f3n de problemas",
+        "Resoluci\u00f3n de incidentes",
+        "resoluci\u00f3n de problemas",
+        "resoluci\u00f3n de problemas complejos"
+      ],
+      "total_frequency": 133,
+      "mean_frequency": 12.090909090909092
+    },
+    {
+      "cluster_id": 6,
+      "size": 6,
+      "label": "Agile, Agile/Scrum, Agile (Scrum)...",
+      "top_skills": [
+        "Agile",
+        "Agile/Scrum",
+        "Agile (Scrum)",
+        "Agile (Scrum/Kanban)",
+        "Agile/Scrum methodologies"
+      ],
+      "total_frequency": 62,
+      "mean_frequency": 10.333333333333334
+    },
+    {
+      "cluster_id": 7,
+      "size": 6,
+      "label": "Agile Methodologies, Agile methodologies, 12-factor app methodology...",
+      "top_skills": [
+        "Agile Methodologies",
+        "Agile methodologies",
+        "12-factor app methodology",
+        "Agile environments",
+        "Agile Environments"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 8,
+      "size": 3,
+      "label": "ASP Core, Entity Framework Core, .Net Core...",
+      "top_skills": [
+        "ASP Core",
+        "Entity Framework Core",
+        ".Net Core"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 9,
+      "size": 4,
+      "label": ".NET Core, ASP.NET Core, ASP.NET Core MVC/Web API...",
+      "top_skills": [
+        ".NET Core",
+        "ASP.NET Core",
+        "ASP.NET Core MVC/Web API",
+        ".net core"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 3.5
+    },
+    {
+      "cluster_id": 10,
+      "size": 3,
+      "label": "Gesti\u00f3n de equipos, Gesti\u00f3n de contratos, Gesti\u00f3n de Equipos...",
+      "top_skills": [
+        "Gesti\u00f3n de equipos",
+        "Gesti\u00f3n de contratos",
+        "Gesti\u00f3n de Equipos"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 11,
+      "size": 3,
+      "label": "Gesti\u00f3n del Tiempo, Gesti\u00f3n del tiempo, Gesti\u00f3n de Memoria...",
+      "top_skills": [
+        "Gesti\u00f3n del Tiempo",
+        "Gesti\u00f3n del tiempo",
+        "Gesti\u00f3n de Memoria"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 12,
+      "size": 6,
+      "label": "An\u00e1lisis, an\u00e1lisis, An\u00e1lisis de Casos de Uso...",
+      "top_skills": [
+        "An\u00e1lisis",
+        "an\u00e1lisis",
+        "An\u00e1lisis de Casos de Uso",
+        "An\u00e1lisis de rendimiento",
+        "An\u00e1lisis de Requisitos"
+      ],
+      "total_frequency": 22,
+      "mean_frequency": 3.6666666666666665
+    },
+    {
+      "cluster_id": 13,
+      "size": 3,
+      "label": "Capacidad Anal\u00edtica, Capacidad de an\u00e1lisis, Capacidad de An\u00e1lisis...",
+      "top_skills": [
+        "Capacidad Anal\u00edtica",
+        "Capacidad de an\u00e1lisis",
+        "Capacidad de An\u00e1lisis"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 14,
+      "size": 7,
+      "label": "Pensamiento Anal\u00edtico, Pensamiento Cr\u00edtico, Pensamiento cr\u00edtico...",
+      "top_skills": [
+        "Pensamiento Anal\u00edtico",
+        "Pensamiento Cr\u00edtico",
+        "Pensamiento cr\u00edtico",
+        "Anal\u00edtica",
+        "Pensamiento anal\u00edtico"
+      ],
+      "total_frequency": 37,
+      "mean_frequency": 5.285714285714286
+    },
+    {
+      "cluster_id": 15,
+      "size": 4,
+      "label": "React, Angular, Empat\u00eda...",
+      "top_skills": [
+        "React",
+        "Angular",
+        "Empat\u00eda",
+        "Pasi\u00f3n"
+      ],
+      "total_frequency": 144,
+      "mean_frequency": 36.0
+    },
+    {
+      "cluster_id": 16,
+      "size": 6,
+      "label": "Ingl\u00e9s Avanzado, ingl\u00e9s, Ingl\u00e9s avanzado...",
+      "top_skills": [
+        "Ingl\u00e9s Avanzado",
+        "ingl\u00e9s",
+        "Ingl\u00e9s avanzado",
+        "Ingl\u00e9s Intermedio-Avanzado",
+        "Ingl\u00e9s T\u00e9cnico"
+      ],
+      "total_frequency": 13,
+      "mean_frequency": 2.1666666666666665
+    },
+    {
+      "cluster_id": 17,
+      "size": 3,
+      "label": "English, English proficiency, English Proficiency...",
+      "top_skills": [
+        "English",
+        "English proficiency",
+        "English Proficiency"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.6666666666666665
+    },
+    {
+      "cluster_id": 18,
+      "size": 5,
+      "label": "Bases de Datos NoSQL, Bases de Datos Relacionales, Bases de Datos No Relacionales...",
+      "top_skills": [
+        "Bases de Datos NoSQL",
+        "Bases de Datos Relacionales",
+        "Bases de Datos No Relacionales",
+        "Bases de datos relacionales",
+        "Bases de datos no relacionales"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 2.8
+    },
+    {
+      "cluster_id": 19,
+      "size": 8,
+      "label": "Bases de Datos, Bases de Datos SQL, Bases de datos...",
+      "top_skills": [
+        "Bases de Datos",
+        "Bases de Datos SQL",
+        "Bases de datos",
+        "Estructuras de Datos",
+        "base de datos"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 2.125
+    },
+    {
+      "cluster_id": 20,
+      "size": 8,
+      "label": "Clean Code, Clean Architecture, CLEAN Code...",
+      "top_skills": [
+        "Clean Code",
+        "Clean Architecture",
+        "CLEAN Code",
+        "Code Reviews",
+        "Code repository"
+      ],
+      "total_frequency": 20,
+      "mean_frequency": 2.5
+    },
+    {
+      "cluster_id": 21,
+      "size": 3,
+      "label": "Despliegue de Modelos, Monitoreo de modelos, Validaci\u00f3n de modelos...",
+      "top_skills": [
+        "Despliegue de Modelos",
+        "Monitoreo de modelos",
+        "Validaci\u00f3n de modelos"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 22,
+      "size": 3,
+      "label": "Modelado de datos, Modelamiento Estad\u00edstico, Visualizaci\u00f3n de datos...",
+      "top_skills": [
+        "Modelado de datos",
+        "Modelamiento Estad\u00edstico",
+        "Visualizaci\u00f3n de datos"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 23,
+      "size": 9,
+      "label": "Ingesta de Datos, Integraci\u00f3n de Datos, Transformaci\u00f3n de datos...",
+      "top_skills": [
+        "Ingesta de Datos",
+        "Integraci\u00f3n de Datos",
+        "Transformaci\u00f3n de datos",
+        "calidad de datos",
+        "Integraci\u00f3n de datos"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 24,
+      "size": 3,
+      "label": "Trabajo en Equipo, Trabajo Colaborativo, Trabajo colaborativo...",
+      "top_skills": [
+        "Trabajo en Equipo",
+        "Trabajo Colaborativo",
+        "Trabajo colaborativo"
+      ],
+      "total_frequency": 69,
+      "mean_frequency": 23.0
+    },
+    {
+      "cluster_id": 25,
+      "size": 3,
+      "label": "Trabajo bajo presi\u00f3n, Trabajo Bajo Presi\u00f3n, Trabajo remoto...",
+      "top_skills": [
+        "Trabajo bajo presi\u00f3n",
+        "Trabajo Bajo Presi\u00f3n",
+        "Trabajo remoto"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 26,
+      "size": 6,
+      "label": "Seguridad, seguridad, Seguridad del Sistema...",
+      "top_skills": [
+        "Seguridad",
+        "seguridad",
+        "Seguridad del Sistema",
+        "Seguridad en Desarrollo",
+        "Seguridad en la Nube"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 2.3333333333333335
+    },
+    {
+      "cluster_id": 27,
+      "size": 7,
+      "label": "Administraci\u00f3n de sistemas, almacenamiento de datos, ciberseguridad...",
+      "top_skills": [
+        "Administraci\u00f3n de sistemas",
+        "almacenamiento de datos",
+        "ciberseguridad",
+        "protecci\u00f3n de datos",
+        "Seguridad de datos"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 28,
+      "size": 3,
+      "label": "Riesgo de Cr\u00e9dito, Riesgo de Mercado, Riesgo Estructural...",
+      "top_skills": [
+        "Riesgo de Cr\u00e9dito",
+        "Riesgo de Mercado",
+        "Riesgo Estructural"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 29,
+      "size": 8,
+      "label": "Modelos de Caja, Modelos de Classifica\u00e7\u00e3o, Modelos de Cr\u00e9dito...",
+      "top_skills": [
+        "Modelos de Caja",
+        "Modelos de Classifica\u00e7\u00e3o",
+        "Modelos de Cr\u00e9dito",
+        "Modelos de Cr\u00e9dito Consignado",
+        "Modelos de Lenguaje"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 30,
+      "size": 6,
+      "label": "SQL avanzado, Consultas SQL, Java Avanzado...",
+      "top_skills": [
+        "SQL avanzado",
+        "Consultas SQL",
+        "Java Avanzado",
+        "SQL Avanzado",
+        "SQL avanzado (T-SQL)"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 31,
+      "size": 3,
+      "label": "Soluciones Escalables, Arquitectura Limpia, Soluciones escalables...",
+      "top_skills": [
+        "Soluciones Escalables",
+        "Arquitectura Limpia",
+        "Soluciones escalables"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 2.3333333333333335
+    },
+    {
+      "cluster_id": 32,
+      "size": 7,
+      "label": "Arquitectura de Software, Arquitectura Hexagonal, Arquitectura CSS...",
+      "top_skills": [
+        "Arquitectura de Software",
+        "Arquitectura Hexagonal",
+        "Arquitectura CSS",
+        "Arquitectura escalable",
+        "Arquitectura Escalable"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.2857142857142858
+    },
+    {
+      "cluster_id": 33,
+      "size": 6,
+      "label": "Proactividad, Curiosidad, Resiliencia...",
+      "top_skills": [
+        "Proactividad",
+        "Curiosidad",
+        "Resiliencia",
+        "asertividad",
+        "Diversidad"
+      ],
+      "total_frequency": 47,
+      "mean_frequency": 7.833333333333333
+    },
+    {
+      "cluster_id": 34,
+      "size": 8,
+      "label": "React Native, React Query, React Testing Library...",
+      "top_skills": [
+        "React Native",
+        "React Query",
+        "React Testing Library",
+        "PrimeReact",
+        "React-native"
+      ],
+      "total_frequency": 25,
+      "mean_frequency": 3.125
+    },
+    {
+      "cluster_id": 35,
+      "size": 4,
+      "label": "Responsabilidad, Humildad, Mantenibilidad...",
+      "top_skills": [
+        "Responsabilidad",
+        "Humildad",
+        "Mantenibilidad",
+        "responsabilidad"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.75
+    },
+    {
+      "cluster_id": 36,
+      "size": 9,
+      "label": "Escalabilidad, Flexibilidad, Agilidad...",
+      "top_skills": [
+        "Escalabilidad",
+        "Flexibilidad",
+        "Agilidad",
+        "Usabilidad",
+        "Accesibilidad"
+      ],
+      "total_frequency": 26,
+      "mean_frequency": 2.888888888888889
+    },
+    {
+      "cluster_id": 37,
+      "size": 5,
+      "label": "desarrollo profesional, Desarrollo profesional, Desarrollo de talento...",
+      "top_skills": [
+        "desarrollo profesional",
+        "Desarrollo profesional",
+        "Desarrollo de talento",
+        "Desarrollo Profesional",
+        "Profesionalismo"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.4
+    },
+    {
+      "cluster_id": 38,
+      "size": 4,
+      "label": "\u00e9tica, \u00c9tica de Trabajo, \u00c9tica profesional...",
+      "top_skills": [
+        "\u00e9tica",
+        "\u00c9tica de Trabajo",
+        "\u00c9tica profesional",
+        "Hacking \u00c9tico"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 39,
+      "size": 3,
+      "label": "Fullstack Development, Full-Stack Development, Fullstack.NET...",
+      "top_skills": [
+        "Fullstack Development",
+        "Full-Stack Development",
+        "Fullstack.NET"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 40,
+      "size": 4,
+      "label": "Stored Procedures, Procedimientos Almacenados, Funciones y procedimientos almacenados...",
+      "top_skills": [
+        "Stored Procedures",
+        "Procedimientos Almacenados",
+        "Funciones y procedimientos almacenados",
+        "Procedimientos almacenados"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.75
+    },
+    {
+      "cluster_id": 41,
+      "size": 6,
+      "label": "Control de Versiones, Control de versiones, Control de accesos...",
+      "top_skills": [
+        "Control de Versiones",
+        "Control de versiones",
+        "Control de accesos",
+        "control de fuente",
+        "Control de versiones (SCM)"
+      ],
+      "total_frequency": 22,
+      "mean_frequency": 3.6666666666666665
+    },
+    {
+      "cluster_id": 42,
+      "size": 9,
+      "label": "Calidad del C\u00f3digo, Cobertura de c\u00f3digo, Cobertura de C\u00f3digo...",
+      "top_skills": [
+        "Calidad del C\u00f3digo",
+        "Cobertura de c\u00f3digo",
+        "Cobertura de C\u00f3digo",
+        "Control de errores",
+        "Documentaci\u00f3n de c\u00f3digo"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.1111111111111112
+    },
+    {
+      "cluster_id": 43,
+      "size": 9,
+      "label": "Optimizaci\u00f3n de bases de datos, Optimizaci\u00f3n de C\u00f3digo, Optimizaci\u00f3n de consultas...",
+      "top_skills": [
+        "Optimizaci\u00f3n de bases de datos",
+        "Optimizaci\u00f3n de C\u00f3digo",
+        "Optimizaci\u00f3n de consultas",
+        "Optimizaci\u00f3n de rendimiento",
+        "Optimizaci\u00f3n de Consultas"
+      ],
+      "total_frequency": 13,
+      "mean_frequency": 1.4444444444444444
+    },
+    {
+      "cluster_id": 44,
+      "size": 3,
+      "label": "Funciones, Funciones b\u00e1sicas, Funciones generales...",
+      "top_skills": [
+        "Funciones",
+        "Funciones b\u00e1sicas",
+        "Funciones generales"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 45,
+      "size": 14,
+      "label": "Containerization, Stateful and Stateless System Orchestration, Agentic Orchestration...",
+      "top_skills": [
+        "Containerization",
+        "Stateful and Stateless System Orchestration",
+        "Agentic Orchestration",
+        "Container-Based Workflows",
+        "Containerized services"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 1.2142857142857142
+    },
+    {
+      "cluster_id": 46,
+      "size": 6,
+      "label": "TI/Tecnolog\u00eda de la informaci\u00f3n, TI/Tecnolog\u00eda de la Informaci\u00f3n, CI/CD para BI/Fabric...",
+      "top_skills": [
+        "TI/Tecnolog\u00eda de la informaci\u00f3n",
+        "TI/Tecnolog\u00eda de la Informaci\u00f3n",
+        "CI/CD para BI/Fabric",
+        "Implementaci\u00f3n CI/CD",
+        "Redes LAN/WAN"
+      ],
+      "total_frequency": 34,
+      "mean_frequency": 5.666666666666667
+    },
+    {
+      "cluster_id": 47,
+      "size": 3,
+      "label": "DB2 para AS400, Licencias por mater/paternidad, Modelado AS-IS/TO-BE...",
+      "top_skills": [
+        "DB2 para AS400",
+        "Licencias por mater/paternidad",
+        "Modelado AS-IS/TO-BE"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 48,
+      "size": 6,
+      "label": "Document DBs, Mongo DB, Oracle Analytics Server...",
+      "top_skills": [
+        "Document DBs",
+        "Mongo DB",
+        "Oracle Analytics Server",
+        "Oracle Autonomous DB",
+        "Oracle Cloud Infrastructure (OCI)"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 49,
+      "size": 3,
+      "label": "Documentaci\u00f3n, Documentaci\u00f3n T\u00e9cnica, documentaci\u00f3n t\u00e9cnica...",
+      "top_skills": [
+        "Documentaci\u00f3n",
+        "Documentaci\u00f3n T\u00e9cnica",
+        "documentaci\u00f3n t\u00e9cnica"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 3.3333333333333335
+    },
+    {
+      "cluster_id": 50,
+      "size": 3,
+      "label": "Soporte t\u00e9cnico, Rigor t\u00e9cnico, Soporte T\u00e9cnico...",
+      "top_skills": [
+        "Soporte t\u00e9cnico",
+        "Rigor t\u00e9cnico",
+        "Soporte T\u00e9cnico"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 51,
+      "size": 7,
+      "label": "Distributed Systems, Arquitectura de Sistemas Distribuidos, Distributed systems...",
+      "top_skills": [
+        "Distributed Systems",
+        "Arquitectura de Sistemas Distribuidos",
+        "Distributed systems",
+        "Estructuras distribuidas",
+        "Librer\u00edas compartidas"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.4285714285714286
+    },
+    {
+      "cluster_id": 52,
+      "size": 12,
+      "label": "SQL Queries, SQL Server 2012+, Advanced SQL...",
+      "top_skills": [
+        "SQL Queries",
+        "SQL Server 2012+",
+        "Advanced SQL",
+        "Big Query",
+        "Complex SQL Queries"
+      ],
+      "total_frequency": 15,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 53,
+      "size": 3,
+      "label": "estad\u00edstica, \u00cdndices, matem\u00e1ticas...",
+      "top_skills": [
+        "estad\u00edstica",
+        "\u00cdndices",
+        "matem\u00e1ticas"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 54,
+      "size": 3,
+      "label": "Aprendizaje Continuo, Aprendizaje continuo, Aprendizaje...",
+      "top_skills": [
+        "Aprendizaje Continuo",
+        "Aprendizaje continuo",
+        "Aprendizaje"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 4.666666666666667
+    },
+    {
+      "cluster_id": 55,
+      "size": 3,
+      "label": "Aprendizaje R\u00e1pido, Ganas de aprender, Ganas de Aprender...",
+      "top_skills": [
+        "Aprendizaje R\u00e1pido",
+        "Ganas de aprender",
+        "Ganas de Aprender"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 56,
+      "size": 3,
+      "label": "Mentor\u00eda, Emotion, Inteligencia Emocional...",
+      "top_skills": [
+        "Mentor\u00eda",
+        "Emotion",
+        "Inteligencia Emocional"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 57,
+      "size": 3,
+      "label": "Embedded Systems, Install Referrers, Remote Integrations...",
+      "top_skills": [
+        "Embedded Systems",
+        "Install Referrers",
+        "Remote Integrations"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 58,
+      "size": 7,
+      "label": "AI tooling, Automatic Workload Repository (AWR), Automations...",
+      "top_skills": [
+        "AI tooling",
+        "Automatic Workload Repository (AWR)",
+        "Automations",
+        "Automation tools",
+        "Automation Tools"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 59,
+      "size": 4,
+      "label": "algoritmos, Continuous Integration, Continuous Deployment...",
+      "top_skills": [
+        "algoritmos",
+        "Continuous Integration",
+        "Continuous Deployment",
+        "Incremental Refresh"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 4.0
+    },
+    {
+      "cluster_id": 60,
+      "size": 5,
+      "label": "Mejora Continua, Mejora continua, Despliegue continuo...",
+      "top_skills": [
+        "Mejora Continua",
+        "Mejora continua",
+        "Despliegue continuo",
+        "Integraci\u00f3n continua",
+        "mejora continua"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.8
+    },
+    {
+      "cluster_id": 61,
+      "size": 6,
+      "label": "API Integration, API Integrations, API Integration Testing...",
+      "top_skills": [
+        "API Integration",
+        "API Integrations",
+        "API Integration Testing",
+        "API Development",
+        "API integration"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 62,
+      "size": 5,
+      "label": "API Usage, API Building, Bulk API...",
+      "top_skills": [
+        "API Usage",
+        "API Building",
+        "Bulk API",
+        "CLI usage",
+        "CLI Usage"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.2
+    },
+    {
+      "cluster_id": 63,
+      "size": 3,
+      "label": "Game Development, Pega Systems, Usability in games...",
+      "top_skills": [
+        "Game Development",
+        "Pega Systems",
+        "Usability in games"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 64,
+      "size": 3,
+      "label": "Hybrid Work, Independent worker, Jobs...",
+      "top_skills": [
+        "Hybrid Work",
+        "Independent worker",
+        "Jobs"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 65,
+      "size": 6,
+      "label": "Always On, Drivers development, ML Deployment/Monitoring...",
+      "top_skills": [
+        "Always On",
+        "Drivers development",
+        "ML Deployment/Monitoring",
+        "Monitoring/Observability",
+        "Monitoring Tools"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 66,
+      "size": 5,
+      "label": "Lightning components, Styled Components, Componentes Lightning...",
+      "top_skills": [
+        "Lightning components",
+        "Styled Components",
+        "Componentes Lightning",
+        "Lightning Components",
+        "Lightning Web Components"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.6
+    },
+    {
+      "cluster_id": 67,
+      "size": 3,
+      "label": "Custom Middlewares, Method Decorators, Web Components...",
+      "top_skills": [
+        "Custom Middlewares",
+        "Method Decorators",
+        "Web Components"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 68,
+      "size": 5,
+      "label": "Backend Engineering, Backend Solutions, Frameworks de Frontend...",
+      "top_skills": [
+        "Backend Engineering",
+        "Backend Solutions",
+        "Frameworks de Frontend",
+        "Frontend Performance Optimization",
+        "Soluciones de Backend"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 69,
+      "size": 11,
+      "label": "Backend, Frontend Development, Backend Development...",
+      "top_skills": [
+        "Backend",
+        "Frontend Development",
+        "Backend Development",
+        "Frontend",
+        "Backend testing"
+      ],
+      "total_frequency": 20,
+      "mean_frequency": 1.8181818181818181
+    },
+    {
+      "cluster_id": 70,
+      "size": 10,
+      "label": "Browser-based Debugging, Debugging Website Issues, Integration Testing...",
+      "top_skills": [
+        "Browser-based Debugging",
+        "Debugging Website Issues",
+        "Integration Testing",
+        "Landing Page",
+        "Landing Page Operations"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 71,
+      "size": 4,
+      "label": "Orientaci\u00f3n a resultados, Orientaci\u00f3n a Resultados, Orientaci\u00f3n a Prop\u00f3sito...",
+      "top_skills": [
+        "Orientaci\u00f3n a resultados",
+        "Orientaci\u00f3n a Resultados",
+        "Orientaci\u00f3n a Prop\u00f3sito",
+        "Orientaci\u00f3n a prop\u00f3sito"
+      ],
+      "total_frequency": 22,
+      "mean_frequency": 5.5
+    },
+    {
+      "cluster_id": 72,
+      "size": 12,
+      "label": "GitLab CI/CD, CI/CD, CI/CD Pipelines...",
+      "top_skills": [
+        "GitLab CI/CD",
+        "CI/CD",
+        "CI/CD Pipelines",
+        "CICD",
+        "CI/CD pipelines"
+      ],
+      "total_frequency": 175,
+      "mean_frequency": 14.583333333333334
+    },
+    {
+      "cluster_id": 73,
+      "size": 6,
+      "label": "ETL Pipelines, ETL/ELT Pipelines, ETL Processes...",
+      "top_skills": [
+        "ETL Pipelines",
+        "ETL/ELT Pipelines",
+        "ETL Processes",
+        "ETL Tools",
+        "MLOps Pipeline Setup"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.1666666666666667
+    },
+    {
+      "cluster_id": 74,
+      "size": 5,
+      "label": "Autenticaci\u00f3n, Autorizaci\u00f3n, Criptograf\u00eda...",
+      "top_skills": [
+        "Autenticaci\u00f3n",
+        "Autorizaci\u00f3n",
+        "Criptograf\u00eda",
+        "Dedicaci\u00f3n",
+        "Depuraci\u00f3n"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.6
+    },
+    {
+      "cluster_id": 75,
+      "size": 4,
+      "label": "Nube, Arquitectura en la nube, ERP en la nube...",
+      "top_skills": [
+        "Nube",
+        "Arquitectura en la nube",
+        "ERP en la nube",
+        "Hosting en la nube"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.75
+    },
+    {
+      "cluster_id": 76,
+      "size": 4,
+      "label": "Orientaci\u00f3n a la calidad, Compromiso con la Calidad, Enfoque en calidad...",
+      "top_skills": [
+        "Orientaci\u00f3n a la calidad",
+        "Compromiso con la Calidad",
+        "Enfoque en calidad",
+        "Enfoque en la calidad"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 77,
+      "size": 5,
+      "label": "Atenci\u00f3n al Detalle, Atenci\u00f3n al detalle, Atenci\u00f3n al cliente...",
+      "top_skills": [
+        "Atenci\u00f3n al Detalle",
+        "Atenci\u00f3n al detalle",
+        "Atenci\u00f3n al cliente",
+        "atenci\u00f3n al detalle",
+        "Atenci\u00f3n a Usuarios"
+      ],
+      "total_frequency": 35,
+      "mean_frequency": 7.0
+    },
+    {
+      "cluster_id": 78,
+      "size": 4,
+      "label": "Bases de datos locales, Creaci\u00f3n de bases de datos, Migraci\u00f3n de bases de datos...",
+      "top_skills": [
+        "Bases de datos locales",
+        "Creaci\u00f3n de bases de datos",
+        "Migraci\u00f3n de bases de datos",
+        "Motores de bases de datos"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 79,
+      "size": 4,
+      "label": "Bases de datos (relacionales o no), bases fuertes de POO, bases s\u00f3lidas de Bases de Datos relacionales (Oracle principalmente) y no relacionales (REDIS)...",
+      "top_skills": [
+        "Bases de datos (relacionales o no)",
+        "bases fuertes de POO",
+        "bases s\u00f3lidas de Bases de Datos relacionales (Oracle principalmente) y no relacionales (REDIS)",
+        "Operaciones b\u00e1sicas de manejo de datos"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 80,
+      "size": 4,
+      "label": "Desarrollo de Aplicaciones, Modularizaci\u00f3n, Module Federation...",
+      "top_skills": [
+        "Desarrollo de Aplicaciones",
+        "Modularizaci\u00f3n",
+        "Module Federation",
+        "Dise\u00f1o Modular"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 81,
+      "size": 9,
+      "label": "Desarrollo de APIs, Integraci\u00f3n de APIs, Testing de APIs...",
+      "top_skills": [
+        "Desarrollo de APIs",
+        "Integraci\u00f3n de APIs",
+        "Testing de APIs",
+        "Desarrollo de Aplicaciones M\u00f3viles",
+        "Dise\u00f1o de APIs"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 1.7777777777777777
+    },
+    {
+      "cluster_id": 82,
+      "size": 10,
+      "label": "Automatizaci\u00f3n, Automatizaci\u00f3n de procesos, Planificaci\u00f3n...",
+      "top_skills": [
+        "Automatizaci\u00f3n",
+        "Automatizaci\u00f3n de procesos",
+        "Planificaci\u00f3n",
+        "Virtualizaci\u00f3n",
+        "Automatizaci\u00f3n de Procesos"
+      ],
+      "total_frequency": 19,
+      "mean_frequency": 1.9
+    },
+    {
+      "cluster_id": 83,
+      "size": 10,
+      "label": "Pruebas Unitarias, Pruebas unitarias, Pruebas de integraci\u00f3n...",
+      "top_skills": [
+        "Pruebas Unitarias",
+        "Pruebas unitarias",
+        "Pruebas de integraci\u00f3n",
+        "Testing de Integraci\u00f3n",
+        "pruebas"
+      ],
+      "total_frequency": 22,
+      "mean_frequency": 2.2
+    },
+    {
+      "cluster_id": 84,
+      "size": 3,
+      "label": "Testing Unitario, Unitarias, Test Unitarios...",
+      "top_skills": [
+        "Testing Unitario",
+        "Unitarias",
+        "Test Unitarios"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 85,
+      "size": 6,
+      "label": "BPMN notation, Cluster State Management, Database Management...",
+      "top_skills": [
+        "BPMN notation",
+        "Cluster State Management",
+        "Database Management",
+        "Database Tuning",
+        "ML Lifecycle"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 86,
+      "size": 9,
+      "label": "Serverless, Serverless Tools, Autoscale...",
+      "top_skills": [
+        "Serverless",
+        "Serverless Tools",
+        "Autoscale",
+        "Desarrollo Serverless",
+        "Headless Browsers"
+      ],
+      "total_frequency": 13,
+      "mean_frequency": 1.4444444444444444
+    },
+    {
+      "cluster_id": 87,
+      "size": 4,
+      "label": "Integraci\u00f3n, Inclusi\u00f3n, integraci\u00f3n...",
+      "top_skills": [
+        "Integraci\u00f3n",
+        "Inclusi\u00f3n",
+        "integraci\u00f3n",
+        "Integraciones"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 88,
+      "size": 14,
+      "label": "Microservicios, Microservices, microservicios...",
+      "top_skills": [
+        "Microservicios",
+        "Microservices",
+        "microservicios",
+        "Arquitectura de Microservicios",
+        "arquitectura de microservicios"
+      ],
+      "total_frequency": 209,
+      "mean_frequency": 14.928571428571429
+    },
+    {
+      "cluster_id": 89,
+      "size": 4,
+      "label": "Test-driven development (TDD), Domain Driven Design, Test driven development...",
+      "top_skills": [
+        "Test-driven development (TDD)",
+        "Domain Driven Design",
+        "Test driven development",
+        "Test Driven Development"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 3.0
+    },
+    {
+      "cluster_id": 90,
+      "size": 4,
+      "label": "Responsive Design, Automated Testing, Automated Tests...",
+      "top_skills": [
+        "Responsive Design",
+        "Automated Testing",
+        "Automated Tests",
+        "Performance Testing Software"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.75
+    },
+    {
+      "cluster_id": 91,
+      "size": 7,
+      "label": "Adaptive Design, Design, Design Patterns...",
+      "top_skills": [
+        "Adaptive Design",
+        "Design",
+        "Design Patterns",
+        "Design Systems",
+        "System design"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 92,
+      "size": 9,
+      "label": "Functions, Reporting, Attribution...",
+      "top_skills": [
+        "Functions",
+        "Reporting",
+        "Attribution",
+        "Messaging",
+        "Payments"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.2222222222222223
+    },
+    {
+      "cluster_id": 93,
+      "size": 5,
+      "label": "Airbyte, Dataflows, Gearset...",
+      "top_skills": [
+        "Airbyte",
+        "Dataflows",
+        "Gearset",
+        "Jitterbit",
+        "Webflow"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 94,
+      "size": 4,
+      "label": "Crystal Reports, Data Reporting, IFRS 9...",
+      "top_skills": [
+        "Crystal Reports",
+        "Data Reporting",
+        "IFRS 9",
+        "Management Information Reports"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 95,
+      "size": 3,
+      "label": "Desarrollo de soluciones, Desarrollo de Soluciones, Dise\u00f1o de Soluciones...",
+      "top_skills": [
+        "Desarrollo de soluciones",
+        "Desarrollo de Soluciones",
+        "Dise\u00f1o de Soluciones"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 96,
+      "size": 8,
+      "label": "Servicios de Contenedores, Contenedores, IA en atenci\u00f3n al cliente...",
+      "top_skills": [
+        "Servicios de Contenedores",
+        "Contenedores",
+        "IA en atenci\u00f3n al cliente",
+        "IA en UX",
+        "proveedores"
+      ],
+      "total_frequency": 18,
+      "mean_frequency": 2.25
+    },
+    {
+      "cluster_id": 97,
+      "size": 3,
+      "label": "Infraestructura Windows Server, Infraestructura y Redes, Nuevas tecnolog\u00edas...",
+      "top_skills": [
+        "Infraestructura Windows Server",
+        "Infraestructura y Redes",
+        "Nuevas tecnolog\u00edas"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 98,
+      "size": 9,
+      "label": "Testeo, Mockito, Unit Tests...",
+      "top_skills": [
+        "Testeo",
+        "Mockito",
+        "Unit Tests",
+        "Flutter Test",
+        "Ruteo"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 1.8888888888888888
+    },
+    {
+      "cluster_id": 99,
+      "size": 3,
+      "label": "E2E Tests, Testing End-to-End, Testing with TDD...",
+      "top_skills": [
+        "E2E Tests",
+        "Testing End-to-End",
+        "Testing with TDD"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 100,
+      "size": 5,
+      "label": "Relational Databases, Non-Relational Databases, Non-relational databases...",
+      "top_skills": [
+        "Relational Databases",
+        "Non-Relational Databases",
+        "Non-relational databases",
+        "Relational databases",
+        "Relational/non-relational databases"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.6
+    },
+    {
+      "cluster_id": 101,
+      "size": 4,
+      "label": "Database, Database Design, Database schema migration tools...",
+      "top_skills": [
+        "Database",
+        "Database Design",
+        "Database schema migration tools",
+        "Database schemas"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 102,
+      "size": 5,
+      "label": "Azure Fabric, Azure Fabric Activator, Azure Fabric Hub...",
+      "top_skills": [
+        "Azure Fabric",
+        "Azure Fabric Activator",
+        "Azure Fabric Hub",
+        "Fabric",
+        "Microsoft Fabric Lakehouse"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 103,
+      "size": 4,
+      "label": "Mentalidad innovadora, Mentalidad emprendedora, Mentalidad Innovadora...",
+      "top_skills": [
+        "Mentalidad innovadora",
+        "Mentalidad emprendedora",
+        "Mentalidad Innovadora",
+        "Pasi\u00f3n por la tecnolog\u00eda"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 104,
+      "size": 5,
+      "label": "Transparencia, Adaptaci\u00f3n, Asincronismo...",
+      "top_skills": [
+        "Transparencia",
+        "Adaptaci\u00f3n",
+        "Asincronismo",
+        "dinamismo",
+        "Escucha Activa"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.2
+    },
+    {
+      "cluster_id": 105,
+      "size": 6,
+      "label": "Liderazgo, Toma de Decisiones, Auditor\u00eda...",
+      "top_skills": [
+        "Liderazgo",
+        "Toma de Decisiones",
+        "Auditor\u00eda",
+        "liderazgo",
+        "toma de decisiones"
+      ],
+      "total_frequency": 116,
+      "mean_frequency": 19.333333333333332
+    },
+    {
+      "cluster_id": 106,
+      "size": 9,
+      "label": "gesti\u00f3n de proyectos, Dise\u00f1o, Desarrollo de Proyectos...",
+      "top_skills": [
+        "gesti\u00f3n de proyectos",
+        "Dise\u00f1o",
+        "Desarrollo de Proyectos",
+        "Implementaci\u00f3n de proyectos",
+        "Implementaci\u00f3n de proyectos en Realidad Virtual"
+      ],
+      "total_frequency": 25,
+      "mean_frequency": 2.7777777777777777
+    },
+    {
+      "cluster_id": 107,
+      "size": 6,
+      "label": "Programaci\u00f3n Orientada a Objetos, Arquitecturas Orientadas a Eventos, Ciclo de Vida de Desarrollo de Software (SDLC)...",
+      "top_skills": [
+        "Programaci\u00f3n Orientada a Objetos",
+        "Arquitecturas Orientadas a Eventos",
+        "Ciclo de Vida de Desarrollo de Software (SDLC)",
+        "Desarrollo de software",
+        "Desarrollo de software .NET"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 108,
+      "size": 7,
+      "label": "Node, JS, SuiteScript 1.0...",
+      "top_skills": [
+        "Node",
+        "JS",
+        "SuiteScript 1.0",
+        "SuiteScript 2.x",
+        "AL (Application Language)"
+      ],
+      "total_frequency": 15,
+      "mean_frequency": 2.142857142857143
+    },
+    {
+      "cluster_id": 109,
+      "size": 3,
+      "label": "Java 8+, JAVA 17+, PHP 7+...",
+      "top_skills": [
+        "Java 8+",
+        "JAVA 17+",
+        "PHP 7+"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 110,
+      "size": 4,
+      "label": "ES2015 (ES6 / ES7), ES6+, JavaScript (ES6)...",
+      "top_skills": [
+        "ES2015 (ES6 / ES7)",
+        "ES6+",
+        "JavaScript (ES6)",
+        "JavaScript (ES6+)"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 111,
+      "size": 5,
+      "label": "Data Observability, Execution Plans, Permission Sets...",
+      "top_skills": [
+        "Data Observability",
+        "Execution Plans",
+        "Permission Sets",
+        "Scheduling Decisions",
+        "Spring Scheduling"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 112,
+      "size": 4,
+      "label": "AI coding assistant (Cursor, Copilot, etc.), Kubernetes (OKE), Kubernetes Operators...",
+      "top_skills": [
+        "AI coding assistant (Cursor, Copilot, etc.)",
+        "Kubernetes (OKE)",
+        "Kubernetes Operators",
+        "OCP/Kubernetes"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 113,
+      "size": 4,
+      "label": "Comunicaci\u00f3n efectiva, Buenas Pr\u00e1cticas, Comunicaci\u00f3n Efectiva...",
+      "top_skills": [
+        "Comunicaci\u00f3n efectiva",
+        "Buenas Pr\u00e1cticas",
+        "Comunicaci\u00f3n Efectiva",
+        "emprendimiento"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 3.5
+    },
+    {
+      "cluster_id": 114,
+      "size": 4,
+      "label": "Python web frameworks, Django Rest Framework, Python Web Frameworks...",
+      "top_skills": [
+        "Python web frameworks",
+        "Django Rest Framework",
+        "Python Web Frameworks",
+        "React Context"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 115,
+      "size": 7,
+      "label": "Scripting, NPM Scripts, Python Scripts...",
+      "top_skills": [
+        "Scripting",
+        "NPM Scripts",
+        "Python Scripts",
+        "Scripting en Python",
+        "Scripting Skills"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.5714285714285714
+    },
+    {
+      "cluster_id": 116,
+      "size": 4,
+      "label": "Autonom\u00eda, Autogesti\u00f3n, Compromiso...",
+      "top_skills": [
+        "Autonom\u00eda",
+        "Autogesti\u00f3n",
+        "Compromiso",
+        "Regresi\u00f3n"
+      ],
+      "total_frequency": 23,
+      "mean_frequency": 5.75
+    },
+    {
+      "cluster_id": 117,
+      "size": 7,
+      "label": "servicios web, Servidores, Servicios externos...",
+      "top_skills": [
+        "servicios web",
+        "Servidores",
+        "Servicios externos",
+        "cliente-servidor",
+        "Formularios"
+      ],
+      "total_frequency": 15,
+      "mean_frequency": 2.142857142857143
+    },
+    {
+      "cluster_id": 118,
+      "size": 3,
+      "label": "Client-Facing, Orientaci\u00f3n al cliente externo, Orientaci\u00f3n al cliente interno...",
+      "top_skills": [
+        "Client-Facing",
+        "Orientaci\u00f3n al cliente externo",
+        "Orientaci\u00f3n al cliente interno"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 119,
+      "size": 3,
+      "label": "Websphere App Server 8.5, Websphere MQ 8.0, Web3 Dapp...",
+      "top_skills": [
+        "Websphere App Server 8.5",
+        "Websphere MQ 8.0",
+        "Web3 Dapp"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 2.3333333333333335
+    },
+    {
+      "cluster_id": 120,
+      "size": 8,
+      "label": "Azure Container Apps, Azure Static Web Apps, Azure WebApps...",
+      "top_skills": [
+        "Azure Container Apps",
+        "Azure Static Web Apps",
+        "Azure WebApps",
+        "Progressive Web Apps",
+        "SaaS application"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 121,
+      "size": 5,
+      "label": "Algorithms, Encryption, Schema-on-read...",
+      "top_skills": [
+        "Algorithms",
+        "Encryption",
+        "Schema-on-read",
+        "Speech-to-Text",
+        "Text-to-Speech"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 122,
+      "size": 6,
+      "label": "ReactJS, React.js, React js...",
+      "top_skills": [
+        "ReactJS",
+        "React.js",
+        "React js",
+        "Reactjs",
+        "ReactJs"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 2.8333333333333335
+    },
+    {
+      "cluster_id": 123,
+      "size": 3,
+      "label": "NgComponentStore, NgEffects, NgStore...",
+      "top_skills": [
+        "NgComponentStore",
+        "NgEffects",
+        "NgStore"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 124,
+      "size": 6,
+      "label": "Organizaci\u00f3n, Iniciativa, Capacitaci\u00f3n...",
+      "top_skills": [
+        "Organizaci\u00f3n",
+        "Iniciativa",
+        "Capacitaci\u00f3n",
+        "Zustand",
+        "organizaci\u00f3n"
+      ],
+      "total_frequency": 21,
+      "mean_frequency": 3.5
+    },
+    {
+      "cluster_id": 125,
+      "size": 5,
+      "label": "Cloud SQL, CloudSQL, Mongo...",
+      "top_skills": [
+        "Cloud SQL",
+        "CloudSQL",
+        "Mongo",
+        "Monte Carlo",
+        "MuleSoft"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.2
+    },
+    {
+      "cluster_id": 126,
+      "size": 4,
+      "label": "Problem Solving, Problem-solving, Problem-Solving...",
+      "top_skills": [
+        "Problem Solving",
+        "Problem-solving",
+        "Problem-Solving",
+        "Problem solving"
+      ],
+      "total_frequency": 63,
+      "mean_frequency": 15.75
+    },
+    {
+      "cluster_id": 127,
+      "size": 4,
+      "label": "Configuration, Detox, Recovery...",
+      "top_skills": [
+        "Configuration",
+        "Detox",
+        "Recovery",
+        "Remedy"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 128,
+      "size": 9,
+      "label": "SOAP, SwiftUI, ABAP...",
+      "top_skills": [
+        "SOAP",
+        "SwiftUI",
+        "ABAP",
+        "DSO.ai",
+        "H2OAI"
+      ],
+      "total_frequency": 19,
+      "mean_frequency": 2.111111111111111
+    },
+    {
+      "cluster_id": 129,
+      "size": 3,
+      "label": "comunicaci\u00f3n, Ambici\u00f3n, coordinaci\u00f3n...",
+      "top_skills": [
+        "comunicaci\u00f3n",
+        "Ambici\u00f3n",
+        "coordinaci\u00f3n"
+      ],
+      "total_frequency": 122,
+      "mean_frequency": 40.666666666666664
+    },
+    {
+      "cluster_id": 130,
+      "size": 6,
+      "label": "Infraestructura IT, Infraestructura de TI, Infraestructura...",
+      "top_skills": [
+        "Infraestructura IT",
+        "Infraestructura de TI",
+        "Infraestructura",
+        "Infraestructura Cloud",
+        "Automa\u00e7\u00e3o de infraestrutura"
+      ],
+      "total_frequency": 13,
+      "mean_frequency": 2.1666666666666665
+    },
+    {
+      "cluster_id": 131,
+      "size": 3,
+      "label": "Despliegue de aplicaciones, Despliegue de Aplicaciones, Personalizaciones de aplicaciones...",
+      "top_skills": [
+        "Despliegue de aplicaciones",
+        "Despliegue de Aplicaciones",
+        "Personalizaciones de aplicaciones"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 132,
+      "size": 13,
+      "label": "Implementaci\u00f3n de APIs, APIs Externas, APIs Internas...",
+      "top_skills": [
+        "Implementaci\u00f3n de APIs",
+        "APIs Externas",
+        "APIs Internas",
+        "Conectores personalizados",
+        "Consumo de API"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 1.0769230769230769
+    },
+    {
+      "cluster_id": 133,
+      "size": 7,
+      "label": "Matplotlib, Data and Model Design, Data and Model Execution...",
+      "top_skills": [
+        "Matplotlib",
+        "Data and Model Design",
+        "Data and Model Execution",
+        "Data Engineer",
+        "Dimensional Data Modeling"
+      ],
+      "total_frequency": 24,
+      "mean_frequency": 3.4285714285714284
+    },
+    {
+      "cluster_id": 134,
+      "size": 4,
+      "label": "API Gateways, API platforms, Streaming API...",
+      "top_skills": [
+        "API Gateways",
+        "API platforms",
+        "Streaming API",
+        "TikTok Ads APIs"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 135,
+      "size": 9,
+      "label": "Swagger/OpenAPI, Async events, iOS/Android APIs...",
+      "top_skills": [
+        "Swagger/OpenAPI",
+        "Async events",
+        "iOS/Android APIs",
+        "OpenTelemetry",
+        "Platform Events"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.1111111111111112
+    },
+    {
+      "cluster_id": 136,
+      "size": 7,
+      "label": ".NET, ASP.NET, Bandit...",
+      "top_skills": [
+        ".NET",
+        "ASP.NET",
+        "Bandit",
+        "NET",
+        "Boomi"
+      ],
+      "total_frequency": 39,
+      "mean_frequency": 5.571428571428571
+    },
+    {
+      "cluster_id": 137,
+      "size": 3,
+      "label": "MVC.NET, MVC 3.5+, ASP.NET MVC...",
+      "top_skills": [
+        "MVC.NET",
+        "MVC 3.5+",
+        "ASP.NET MVC"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.6666666666666665
+    },
+    {
+      "cluster_id": 138,
+      "size": 4,
+      "label": "Negociaci\u00f3n, Transacciones, Concurrencia...",
+      "top_skills": [
+        "Negociaci\u00f3n",
+        "Transacciones",
+        "Concurrencia",
+        "Excelencia"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 139,
+      "size": 3,
+      "label": "Rendimiento, Autodidacta, Independencia...",
+      "top_skills": [
+        "Rendimiento",
+        "Autodidacta",
+        "Independencia"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 140,
+      "size": 3,
+      "label": "Pruebas Automatizadas, Testing Automatizado, Pruebas automatizadas...",
+      "top_skills": [
+        "Pruebas Automatizadas",
+        "Testing Automatizado",
+        "Pruebas automatizadas"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 5.333333333333333
+    },
+    {
+      "cluster_id": 141,
+      "size": 5,
+      "label": "Deployment Automatizado, Despliegues Autom\u00e1ticos, Frameworks de Automatizaci\u00f3n de Pruebas...",
+      "top_skills": [
+        "Deployment Automatizado",
+        "Despliegues Autom\u00e1ticos",
+        "Frameworks de Automatizaci\u00f3n de Pruebas",
+        "Test automatizadas",
+        "Tests Automatizados"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 142,
+      "size": 4,
+      "label": "Algebra, Computational Design, Scalable...",
+      "top_skills": [
+        "Algebra",
+        "Computational Design",
+        "Scalable",
+        "Scalable Software Design"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 143,
+      "size": 8,
+      "label": "Unity 3D, Agentes con Inteligencia Artificial, Agentes de Inteligencia Artificial...",
+      "top_skills": [
+        "Unity 3D",
+        "Agentes con Inteligencia Artificial",
+        "Agentes de Inteligencia Artificial",
+        "Aprovisionamiento de Ambientes",
+        "Flujos de trabajo"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 144,
+      "size": 7,
+      "label": "Ambiente laboral innovador, Despliegue en ambiente productivo, Despliegue en entornos...",
+      "top_skills": [
+        "Ambiente laboral innovador",
+        "Despliegue en ambiente productivo",
+        "Despliegue en entornos",
+        "Entornos \u00e1giles",
+        "Entornos Contenedorizados"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 145,
+      "size": 5,
+      "label": "cumplimiento, Cumplimiento normativo, Dise\u00f1o de data warehouses...",
+      "top_skills": [
+        "cumplimiento",
+        "Cumplimiento normativo",
+        "Dise\u00f1o de data warehouses",
+        "Implementaci\u00f3n de modelos de datos",
+        "Migraci\u00f3n de sitios"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 146,
+      "size": 3,
+      "label": "Salesforce DX (SFDX), Salesforce Financial Services Cloud, SDKs...",
+      "top_skills": [
+        "Salesforce DX (SFDX)",
+        "Salesforce Financial Services Cloud",
+        "SDKs"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 147,
+      "size": 12,
+      "label": "Google Cloud Platform (GCP), AWS (API Gateway, ECS, Lambda, SQS/SNS, DynamoDB), AWS CloudFront...",
+      "top_skills": [
+        "Google Cloud Platform (GCP)",
+        "AWS (API Gateway, ECS, Lambda, SQS/SNS, DynamoDB)",
+        "AWS CloudFront",
+        "AWS (ECR, EKS, S3, RDS)",
+        "AWS (S3, Glue, Redshift, RDS)"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 1.1666666666666667
+    },
+    {
+      "cluster_id": 148,
+      "size": 4,
+      "label": "Cloud Design, Column-Level Security, Mobile App Security...",
+      "top_skills": [
+        "Cloud Design",
+        "Column-Level Security",
+        "Mobile App Security",
+        "Row-Level Security"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 149,
+      "size": 4,
+      "label": "Copado, Federos, Kioskos...",
+      "top_skills": [
+        "Copado",
+        "Federos",
+        "Kioskos",
+        "Tableros"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 150,
+      "size": 5,
+      "label": "Agentes, Cadenas, Fechas...",
+      "top_skills": [
+        "Agentes",
+        "Cadenas",
+        "Fechas",
+        "Fuentes",
+        "Informes"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 151,
+      "size": 3,
+      "label": "Artefactos, Documentar, Objetos...",
+      "top_skills": [
+        "Artefactos",
+        "Documentar",
+        "Objetos"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 152,
+      "size": 8,
+      "label": "Cloud Platforms, Data Flow, Floss...",
+      "top_skills": [
+        "Cloud Platforms",
+        "Data Flow",
+        "Floss",
+        "Argo Flows",
+        "Aura"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.375
+    },
+    {
+      "cluster_id": 153,
+      "size": 4,
+      "label": "Optimizaci\u00f3n de hosting, Optimizaci\u00f3n de Performance Web, Optimizaci\u00f3n de Sistemas...",
+      "top_skills": [
+        "Optimizaci\u00f3n de hosting",
+        "Optimizaci\u00f3n de Performance Web",
+        "Optimizaci\u00f3n de Sistemas",
+        "Optimizaci\u00f3n SEO"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 154,
+      "size": 9,
+      "label": "AI/Document Intelligence, Cloud Implementation, Cloud managed services...",
+      "top_skills": [
+        "AI/Document Intelligence",
+        "Cloud Implementation",
+        "Cloud managed services",
+        "Cloud Services",
+        "Cloud Storage"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 155,
+      "size": 3,
+      "label": "DAGs, Document AI de Google Cloud, PDFs...",
+      "top_skills": [
+        "DAGs",
+        "Document AI de Google Cloud",
+        "PDFs"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 156,
+      "size": 13,
+      "label": "TypeScript, Node.js, NodeJS...",
+      "top_skills": [
+        "TypeScript",
+        "Node.js",
+        "NodeJS",
+        "n8n",
+        "Angular Js"
+      ],
+      "total_frequency": 274,
+      "mean_frequency": 21.076923076923077
+    },
+    {
+      "cluster_id": 157,
+      "size": 3,
+      "label": "Data Extraction, Data Interpretation, Data Synthesis...",
+      "top_skills": [
+        "Data Extraction",
+        "Data Interpretation",
+        "Data Synthesis"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 158,
+      "size": 5,
+      "label": "Data Analysis, Data analysis, Data Analysis Tools...",
+      "top_skills": [
+        "Data Analysis",
+        "Data analysis",
+        "Data Analysis Tools",
+        "Real-time Data Sources",
+        "Real-time Inference"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 2.8
+    },
+    {
+      "cluster_id": 159,
+      "size": 4,
+      "label": "Cotizaciones, Dependencias, P\u00f3lizas...",
+      "top_skills": [
+        "Cotizaciones",
+        "Dependencias",
+        "P\u00f3lizas",
+        "Precios"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 160,
+      "size": 3,
+      "label": "Colecciones, Promociones, Restricciones...",
+      "top_skills": [
+        "Colecciones",
+        "Promociones",
+        "Restricciones"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 161,
+      "size": 4,
+      "label": "Next.js, Nest.js, Express.js...",
+      "top_skills": [
+        "Next.js",
+        "Nest.js",
+        "Express.js",
+        "Stencil.JS"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 4.25
+    },
+    {
+      "cluster_id": 162,
+      "size": 5,
+      "label": "NestJS, AlpineJS, GulpJS...",
+      "top_skills": [
+        "NestJS",
+        "AlpineJS",
+        "GulpJS",
+        "NextJS",
+        "RxJS"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.8
+    },
+    {
+      "cluster_id": 163,
+      "size": 7,
+      "label": "JPA, JPA-JSP, JSF...",
+      "top_skills": [
+        "JPA",
+        "JPA-JSP",
+        "JSF",
+        "ACF",
+        "CSRF"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.4285714285714286
+    },
+    {
+      "cluster_id": 164,
+      "size": 6,
+      "label": "Comandos b\u00e1sicos en DML, Complementos de control, Deduplicaci\u00f3n...",
+      "top_skills": [
+        "Comandos b\u00e1sicos en DML",
+        "Complementos de control",
+        "Deduplicaci\u00f3n",
+        "entrenamiento",
+        "operaciones"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 165,
+      "size": 7,
+      "label": "Data Structures, Data Transformation, Change Data Capture...",
+      "top_skills": [
+        "Data Structures",
+        "Data Transformation",
+        "Change Data Capture",
+        "Data Augmentation",
+        "Data Cleaning"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.5714285714285714
+    },
+    {
+      "cluster_id": 166,
+      "size": 4,
+      "label": "Data-driven manufacturing improvements, QA process improvement, Data Architecture...",
+      "top_skills": [
+        "Data-driven manufacturing improvements",
+        "QA process improvement",
+        "Data Architecture",
+        "Data Strategy"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 4.25
+    },
+    {
+      "cluster_id": 167,
+      "size": 11,
+      "label": "Temporal, Desktop, Hardware...",
+      "top_skills": [
+        "Temporal",
+        "Desktop",
+        "Hardware",
+        "Identity Management Technologies",
+        "Information Technology"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 1.0909090909090908
+    },
+    {
+      "cluster_id": 168,
+      "size": 3,
+      "label": "mentor\u00edas, Mentor\u00edas, Mensajer\u00eda...",
+      "top_skills": [
+        "mentor\u00edas",
+        "Mentor\u00edas",
+        "Mensajer\u00eda"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 169,
+      "size": 9,
+      "label": "IT/Information Technology, C/C++, JavaScript/JQuery...",
+      "top_skills": [
+        "IT/Information Technology",
+        "C/C++",
+        "JavaScript/JQuery",
+        "Bash/Sh",
+        "E-commerce"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 1.8888888888888888
+    },
+    {
+      "cluster_id": 170,
+      "size": 3,
+      "label": "DNS, OOP, BGP...",
+      "top_skills": [
+        "DNS",
+        "OOP",
+        "BGP"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 171,
+      "size": 4,
+      "label": "FL, Lighthouse, Lightning...",
+      "top_skills": [
+        "FL",
+        "Lighthouse",
+        "Lightning",
+        "Microsoft CRM"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 172,
+      "size": 3,
+      "label": "Object-Oriented Programming, Virtual Machines, Celery...",
+      "top_skills": [
+        "Object-Oriented Programming",
+        "Virtual Machines",
+        "Celery"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 173,
+      "size": 4,
+      "label": "Dinamicas de acciones, Administraci\u00f3n de firewalls, Antivirus empresariales...",
+      "top_skills": [
+        "Dinamicas de acciones",
+        "Administraci\u00f3n de firewalls",
+        "Antivirus empresariales",
+        "Equipos de desarrollo"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 174,
+      "size": 4,
+      "label": "Colas de mensajes, Comandos b\u00e1sicos en DLL, Mensajer\u00eda en Cola...",
+      "top_skills": [
+        "Colas de mensajes",
+        "Comandos b\u00e1sicos en DLL",
+        "Mensajer\u00eda en Cola",
+        "Procesos de negocio"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 175,
+      "size": 6,
+      "label": "Automation, Test automation, Autoscaling...",
+      "top_skills": [
+        "Automation",
+        "Test automation",
+        "Autoscaling",
+        "QA Automation",
+        "Test Automation"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 176,
+      "size": 5,
+      "label": "S3, Iptables, JFrog...",
+      "top_skills": [
+        "S3",
+        "Iptables",
+        "JFrog",
+        "json",
+        "Telefon\u00eda IP"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 177,
+      "size": 12,
+      "label": "Jira, VPN, JWT...",
+      "top_skills": [
+        "Jira",
+        "VPN",
+        "JWT",
+        "GPIO",
+        "OWASP"
+      ],
+      "total_frequency": 26,
+      "mean_frequency": 2.1666666666666665
+    },
+    {
+      "cluster_id": 178,
+      "size": 5,
+      "label": "Delta, Excel VBA, Firebase Auth...",
+      "top_skills": [
+        "Delta",
+        "Excel VBA",
+        "Firebase Auth",
+        "Okta",
+        "Oracle APEX"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.2
+    },
+    {
+      "cluster_id": 179,
+      "size": 9,
+      "label": "Personalizaci\u00f3n de temas, Inicio de sesi\u00f3n \u00fanico, Integraci\u00f3n de anal\u00edtica...",
+      "top_skills": [
+        "Personalizaci\u00f3n de temas",
+        "Inicio de sesi\u00f3n \u00fanico",
+        "Integraci\u00f3n de anal\u00edtica",
+        "Integraci\u00f3n de modelos",
+        "Integraci\u00f3n de Sistemas Complejos"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.1111111111111112
+    },
+    {
+      "cluster_id": 180,
+      "size": 4,
+      "label": "NoSQL, Scala, Spark SQL...",
+      "top_skills": [
+        "NoSQL",
+        "Scala",
+        "Spark SQL",
+        "SQLite"
+      ],
+      "total_frequency": 90,
+      "mean_frequency": 22.5
+    },
+    {
+      "cluster_id": 181,
+      "size": 7,
+      "label": "AWS, IaC, IAM...",
+      "top_skills": [
+        "AWS",
+        "IaC",
+        "IAM",
+        "AWS QuickSight",
+        "AWS RDS"
+      ],
+      "total_frequency": 140,
+      "mean_frequency": 20.0
+    },
+    {
+      "cluster_id": 182,
+      "size": 5,
+      "label": "DB2, EC2, I2C...",
+      "top_skills": [
+        "DB2",
+        "EC2",
+        "I2C",
+        "PM2",
+        "ISO 20022"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.8
+    },
+    {
+      "cluster_id": 183,
+      "size": 11,
+      "label": "Publicaci\u00f3n multiplataforma, Arquitectura Moderna de Datos, Cargas de Datos...",
+      "top_skills": [
+        "Publicaci\u00f3n multiplataforma",
+        "Arquitectura Moderna de Datos",
+        "Cargas de Datos",
+        "Compensaci\u00f3n en USD",
+        "Cumplimiento de la LGPD"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 1.0909090909090908
+    },
+    {
+      "cluster_id": 184,
+      "size": 9,
+      "label": "administraci\u00f3n de etiquetas, Atenci\u00f3n de incidentes, Diagn\u00f3stico y Resoluci\u00f3n de Problemas...",
+      "top_skills": [
+        "administraci\u00f3n de etiquetas",
+        "Atenci\u00f3n de incidentes",
+        "Diagn\u00f3stico y Resoluci\u00f3n de Problemas",
+        "Ingesta de Eventos",
+        "Modos de Visualizaci\u00f3n"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 185,
+      "size": 3,
+      "label": "Postman, PostHog, Tabular Editor...",
+      "top_skills": [
+        "Postman",
+        "PostHog",
+        "Tabular Editor"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 3.3333333333333335
+    },
+    {
+      "cluster_id": 186,
+      "size": 5,
+      "label": "PostgreSQL, PL/SQL, Oracle Data Integrator...",
+      "top_skills": [
+        "PostgreSQL",
+        "PL/SQL",
+        "Oracle Data Integrator",
+        "Oracle PL/SQL",
+        "Pl/SQL"
+      ],
+      "total_frequency": 217,
+      "mean_frequency": 43.4
+    },
+    {
+      "cluster_id": 187,
+      "size": 4,
+      "label": "SQL Server, MS SQL, T-SQL...",
+      "top_skills": [
+        "SQL Server",
+        "MS SQL",
+        "T-SQL",
+        "Oracle Database"
+      ],
+      "total_frequency": 58,
+      "mean_frequency": 14.5
+    },
+    {
+      "cluster_id": 188,
+      "size": 5,
+      "label": "MySQL, SQL, Firebase...",
+      "top_skills": [
+        "MySQL",
+        "SQL",
+        "Firebase",
+        "Firebase Hosting",
+        "Sybase"
+      ],
+      "total_frequency": 406,
+      "mean_frequency": 81.2
+    },
+    {
+      "cluster_id": 189,
+      "size": 5,
+      "label": "Web Services, App Services, Background Services...",
+      "top_skills": [
+        "Web Services",
+        "App Services",
+        "Background Services",
+        "Cognitive Services",
+        "WebServices"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.6
+    },
+    {
+      "cluster_id": 190,
+      "size": 11,
+      "label": "Webpack, Embedded Linux, WebSockets...",
+      "top_skills": [
+        "Webpack",
+        "Embedded Linux",
+        "WebSockets",
+        "Webhooks",
+        "WebRTC"
+      ],
+      "total_frequency": 22,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 191,
+      "size": 6,
+      "label": "Azure Functions, Azure EventHubs, Bitbucket...",
+      "top_skills": [
+        "Azure Functions",
+        "Azure EventHubs",
+        "Bitbucket",
+        "BitBucket",
+        "Bitbucket Pipelines"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 192,
+      "size": 4,
+      "label": "Azure DevOps, Azure Monitor, Azure Pipelines...",
+      "top_skills": [
+        "Azure DevOps",
+        "Azure Monitor",
+        "Azure Pipelines",
+        "Azure Active Directory"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 2.25
+    },
+    {
+      "cluster_id": 193,
+      "size": 5,
+      "label": "DynamoDB, Salesforce, Visualforce...",
+      "top_skills": [
+        "DynamoDB",
+        "Salesforce",
+        "Visualforce",
+        "Dynatrace",
+        "Dataproc"
+      ],
+      "total_frequency": 21,
+      "mean_frequency": 4.2
+    },
+    {
+      "cluster_id": 194,
+      "size": 7,
+      "label": "Performance Optimization, Feedback, Performance...",
+      "top_skills": [
+        "Performance Optimization",
+        "Feedback",
+        "Performance",
+        "Monitoring",
+        "Performance Hooks"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.5714285714285714
+    },
+    {
+      "cluster_id": 195,
+      "size": 5,
+      "label": "Video, firmware, Google...",
+      "top_skills": [
+        "Video",
+        "firmware",
+        "Google",
+        "NGFW",
+        "Yum"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.2
+    },
+    {
+      "cluster_id": 196,
+      "size": 16,
+      "label": "MongoDB, Machine Learning, BigQuery...",
+      "top_skills": [
+        "MongoDB",
+        "Machine Learning",
+        "BigQuery",
+        "Datadog",
+        "Big Data"
+      ],
+      "total_frequency": 220,
+      "mean_frequency": 13.75
+    },
+    {
+      "cluster_id": 197,
+      "size": 3,
+      "label": "A/B testing, API testing, API Testing...",
+      "top_skills": [
+        "A/B testing",
+        "API testing",
+        "API Testing"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 198,
+      "size": 4,
+      "label": "Hadoop, Prometheus, Recharts...",
+      "top_skills": [
+        "Hadoop",
+        "Prometheus",
+        "Recharts",
+        "Chatbots"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.75
+    },
+    {
+      "cluster_id": 199,
+      "size": 9,
+      "label": "Generative AI, Weaviate, AI...",
+      "top_skills": [
+        "Generative AI",
+        "Weaviate",
+        "AI",
+        "AI agents",
+        "AI Agents"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.2222222222222223
+    },
+    {
+      "cluster_id": 200,
+      "size": 3,
+      "label": "Dynamics 365 Business Central, Microsoft Dynamics CRM, Salesforce Marketing Cloud...",
+      "top_skills": [
+        "Dynamics 365 Business Central",
+        "Microsoft Dynamics CRM",
+        "Salesforce Marketing Cloud"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 201,
+      "size": 6,
+      "label": "Data Pipelines, Databricks, Artifactory...",
+      "top_skills": [
+        "Data Pipelines",
+        "Databricks",
+        "Artifactory",
+        "Azure CosmosDB",
+        "Azure Databricks"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 2.6666666666666665
+    },
+    {
+      "cluster_id": 202,
+      "size": 5,
+      "label": "API Management, Docling, Logging...",
+      "top_skills": [
+        "API Management",
+        "Docling",
+        "Logging",
+        "Peering",
+        "Pruning"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 203,
+      "size": 3,
+      "label": "Dynamics NAV, Microsoft 365, Zoho...",
+      "top_skills": [
+        "Dynamics NAV",
+        "Microsoft 365",
+        "Zoho"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 204,
+      "size": 3,
+      "label": "Process Builder, AWS CloudFormation, Cloud Build...",
+      "top_skills": [
+        "Process Builder",
+        "AWS CloudFormation",
+        "Cloud Build"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 205,
+      "size": 8,
+      "label": "Azure, CloudFormation, Cloudformation...",
+      "top_skills": [
+        "Azure",
+        "CloudFormation",
+        "Cloudformation",
+        "Cloud Run",
+        "Azure Cloud"
+      ],
+      "total_frequency": 97,
+      "mean_frequency": 12.125
+    },
+    {
+      "cluster_id": 206,
+      "size": 3,
+      "label": "Data Ingestion, Data ingestion, Knowledge Distillation...",
+      "top_skills": [
+        "Data Ingestion",
+        "Data ingestion",
+        "Knowledge Distillation"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 207,
+      "size": 3,
+      "label": "TensorFlow, MLflow, Dataflow...",
+      "top_skills": [
+        "TensorFlow",
+        "MLflow",
+        "Dataflow"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.6666666666666665
+    },
+    {
+      "cluster_id": 208,
+      "size": 3,
+      "label": "Jetpack Compose, Gitflow, GitFlow...",
+      "top_skills": [
+        "Jetpack Compose",
+        "Gitflow",
+        "GitFlow"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 2.3333333333333335
+    },
+    {
+      "cluster_id": 209,
+      "size": 3,
+      "label": "Lambda, RAG, Impala...",
+      "top_skills": [
+        "Lambda",
+        "RAG",
+        "Impala"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 4.0
+    },
+    {
+      "cluster_id": 210,
+      "size": 6,
+      "label": "Elasticsearch, LangChain, LangGraph...",
+      "top_skills": [
+        "Elasticsearch",
+        "LangChain",
+        "LangGraph",
+        "CircleCI",
+        "LinkedList"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.8333333333333333
+    },
+    {
+      "cluster_id": 211,
+      "size": 5,
+      "label": "Helm Charts, ArrayList, HashMap...",
+      "top_skills": [
+        "Helm Charts",
+        "ArrayList",
+        "HashMap",
+        "Helm",
+        "Helmfile"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.2
+    },
+    {
+      "cluster_id": 212,
+      "size": 4,
+      "label": "SolarWinds, Tailwind, Leap Motion...",
+      "top_skills": [
+        "SolarWinds",
+        "Tailwind",
+        "Leap Motion",
+        "Solarwinds"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 213,
+      "size": 4,
+      "label": "Data Science, Data Modeling, data science...",
+      "top_skills": [
+        "Data Science",
+        "Data Modeling",
+        "data science",
+        "Informatica"
+      ],
+      "total_frequency": 91,
+      "mean_frequency": 22.75
+    },
+    {
+      "cluster_id": 214,
+      "size": 4,
+      "label": "Data Visualization, 3D Rendering, Computer Graphics...",
+      "top_skills": [
+        "Data Visualization",
+        "3D Rendering",
+        "Computer Graphics",
+        "Data visualization"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 215,
+      "size": 10,
+      "label": "Spring Boot, Spring, Matlab Simulink...",
+      "top_skills": [
+        "Spring Boot",
+        "Spring",
+        "Matlab Simulink",
+        "Spring Data",
+        "Springboot 2"
+      ],
+      "total_frequency": 52,
+      "mean_frequency": 5.2
+    },
+    {
+      "cluster_id": 216,
+      "size": 4,
+      "label": "Triggers, Security Fundamentals, SharedPreferences...",
+      "top_skills": [
+        "Triggers",
+        "Security Fundamentals",
+        "SharedPreferences",
+        "Single Sign On"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 217,
+      "size": 12,
+      "label": "Backbone, Backup, Looker...",
+      "top_skills": [
+        "Backbone",
+        "Backup",
+        "Looker",
+        "Sequelize",
+        "Episerver"
+      ],
+      "total_frequency": 24,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 218,
+      "size": 6,
+      "label": "SPI, KPIs, PMI...",
+      "top_skills": [
+        "SPI",
+        "KPIs",
+        "PMI",
+        "SAP B1",
+        "SAP-CPI"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.1666666666666667
+    },
+    {
+      "cluster_id": 219,
+      "size": 7,
+      "label": "REST API, REST APIs, RESTful APIs...",
+      "top_skills": [
+        "REST API",
+        "REST APIs",
+        "RESTful APIs",
+        "APIs REST",
+        "API RESTful"
+      ],
+      "total_frequency": 80,
+      "mean_frequency": 11.428571428571429
+    },
+    {
+      "cluster_id": 220,
+      "size": 4,
+      "label": "Grafana, Chroma, ESLint...",
+      "top_skills": [
+        "Grafana",
+        "Chroma",
+        "ESLint",
+        "RPG IV"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 221,
+      "size": 9,
+      "label": "GraphQL, RabbitMQ, SonarQube...",
+      "top_skills": [
+        "GraphQL",
+        "RabbitMQ",
+        "SonarQube",
+        "Knex",
+        "LINQ"
+      ],
+      "total_frequency": 135,
+      "mean_frequency": 15.0
+    },
+    {
+      "cluster_id": 222,
+      "size": 3,
+      "label": "Hibernate, Hashset, Treeset...",
+      "top_skills": [
+        "Hibernate",
+        "Hashset",
+        "Treeset"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 3.0
+    },
+    {
+      "cluster_id": 223,
+      "size": 3,
+      "label": "Locust, LogRocket, Terragrunt...",
+      "top_skills": [
+        "Locust",
+        "LogRocket",
+        "Terragrunt"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 224,
+      "size": 5,
+      "label": "Data Warehouses, Data Lakehouse, Feature Stores...",
+      "top_skills": [
+        "Data Warehouses",
+        "Data Lakehouse",
+        "Feature Stores",
+        "Data Lakehouses",
+        "Data Warehouse"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.8
+    },
+    {
+      "cluster_id": 225,
+      "size": 7,
+      "label": "Data Lakes, OneLake, Data Factory...",
+      "top_skills": [
+        "Data Lakes",
+        "OneLake",
+        "Data Factory",
+        "Data Lake",
+        "Data Mart"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 1.4285714285714286
+    },
+    {
+      "cluster_id": 226,
+      "size": 3,
+      "label": "API Gateway, Transit Gateway, AWS API Gateway...",
+      "top_skills": [
+        "API Gateway",
+        "Transit Gateway",
+        "AWS API Gateway"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 3.6666666666666665
+    },
+    {
+      "cluster_id": 227,
+      "size": 4,
+      "label": "Swagger, Pub/Sub, Adobe Launch...",
+      "top_skills": [
+        "Swagger",
+        "Pub/Sub",
+        "Adobe Launch",
+        "Alation"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 2.75
+    },
+    {
+      "cluster_id": 228,
+      "size": 3,
+      "label": "Ecommerce, Shopify, WooCommerce...",
+      "top_skills": [
+        "Ecommerce",
+        "Shopify",
+        "WooCommerce"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 229,
+      "size": 9,
+      "label": "Kubernetes, Cloud, Aurora...",
+      "top_skills": [
+        "Kubernetes",
+        "Cloud",
+        "Aurora",
+        "Cassandra",
+        "Cloud Computing"
+      ],
+      "total_frequency": 206,
+      "mean_frequency": 22.88888888888889
+    },
+    {
+      "cluster_id": 230,
+      "size": 5,
+      "label": "Docker, DevOps, Dashboards...",
+      "top_skills": [
+        "Docker",
+        "DevOps",
+        "Dashboards",
+        "Storybook",
+        "dashboards"
+      ],
+      "total_frequency": 226,
+      "mean_frequency": 45.2
+    },
+    {
+      "cluster_id": 231,
+      "size": 8,
+      "label": "NumPy, SOLID, Ionic...",
+      "top_skills": [
+        "NumPy",
+        "SOLID",
+        "Ionic",
+        "Principios SOLID",
+        "Ionic Framework"
+      ],
+      "total_frequency": 32,
+      "mean_frequency": 4.0
+    },
+    {
+      "cluster_id": 232,
+      "size": 3,
+      "label": "Jenkins, WordPress, MEAN...",
+      "top_skills": [
+        "Jenkins",
+        "WordPress",
+        "MEAN"
+      ],
+      "total_frequency": 118,
+      "mean_frequency": 39.333333333333336
+    },
+    {
+      "cluster_id": 233,
+      "size": 3,
+      "label": "APIs, GraphQL APIs, ChatGPT API...",
+      "top_skills": [
+        "APIs",
+        "GraphQL APIs",
+        "ChatGPT API"
+      ],
+      "total_frequency": 28,
+      "mean_frequency": 9.333333333333334
+    },
+    {
+      "cluster_id": 234,
+      "size": 6,
+      "label": "API, FastAPI, API Keys...",
+      "top_skills": [
+        "API",
+        "FastAPI",
+        "API Keys",
+        "Blender Python API",
+        "Web API"
+      ],
+      "total_frequency": 133,
+      "mean_frequency": 22.166666666666668
+    },
+    {
+      "cluster_id": 235,
+      "size": 3,
+      "label": "Customer Engagement, Customer Success, Accessibility...",
+      "top_skills": [
+        "Customer Engagement",
+        "Customer Success",
+        "Accessibility"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 236,
+      "size": 3,
+      "label": "CSS, HTML, Toad...",
+      "top_skills": [
+        "CSS",
+        "HTML",
+        "Toad"
+      ],
+      "total_frequency": 50,
+      "mean_frequency": 16.666666666666668
+    },
+    {
+      "cluster_id": 237,
+      "size": 4,
+      "label": "Adobe Experience Manager, Foundry, HTTP requests...",
+      "top_skills": [
+        "Adobe Experience Manager",
+        "Foundry",
+        "HTTP requests",
+        "Push Notifications"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 238,
+      "size": 4,
+      "label": "Debugging, Software Development, Web Development...",
+      "top_skills": [
+        "Debugging",
+        "Software Development",
+        "Web Development",
+        "Web Scraping"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 2.5
+    },
+    {
+      "cluster_id": 239,
+      "size": 3,
+      "label": "Fintech, Web technologies, Web Technologies...",
+      "top_skills": [
+        "Fintech",
+        "Web technologies",
+        "Web Technologies"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 240,
+      "size": 5,
+      "label": "Apache, Apache Kafka, Apache Spark...",
+      "top_skills": [
+        "Apache",
+        "Apache Kafka",
+        "Apache Spark",
+        "Appian",
+        "OneDrive"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 241,
+      "size": 9,
+      "label": "Kafka, Apex, Appium...",
+      "top_skills": [
+        "Kafka",
+        "Apex",
+        "Appium",
+        "Apigee",
+        "APIGEE"
+      ],
+      "total_frequency": 32,
+      "mean_frequency": 3.5555555555555554
+    },
+    {
+      "cluster_id": 242,
+      "size": 5,
+      "label": "CL, CLR, IIS...",
+      "top_skills": [
+        "CL",
+        "CLR",
+        "IIS",
+        "KS",
+        "XSS"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 243,
+      "size": 3,
+      "label": "Lazy Loading, Troubleshooting, Load balancing...",
+      "top_skills": [
+        "Lazy Loading",
+        "Troubleshooting",
+        "Load balancing"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 2.3333333333333335
+    },
+    {
+      "cluster_id": 244,
+      "size": 3,
+      "label": "Struts, Batch, Parquet...",
+      "top_skills": [
+        "Struts",
+        "Batch",
+        "Parquet"
+      ],
+      "total_frequency": 4,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 245,
+      "size": 11,
+      "label": "Ownership, Authentication, Networking...",
+      "top_skills": [
+        "Ownership",
+        "Authentication",
+        "Networking",
+        "Security",
+        "Authorization"
+      ],
+      "total_frequency": 19,
+      "mean_frequency": 1.7272727272727273
+    },
+    {
+      "cluster_id": 246,
+      "size": 5,
+      "label": "Python, Lean, Linux...",
+      "top_skills": [
+        "Python",
+        "Lean",
+        "Linux",
+        "Hyper-V",
+        "SystemVerilog"
+      ],
+      "total_frequency": 222,
+      "mean_frequency": 44.4
+    },
+    {
+      "cluster_id": 247,
+      "size": 3,
+      "label": "Shell, Sitecore, Windows...",
+      "top_skills": [
+        "Shell",
+        "Sitecore",
+        "Windows"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 248,
+      "size": 5,
+      "label": "State Management, Despliegue, Project Management...",
+      "top_skills": [
+        "State Management",
+        "Despliegue",
+        "Project Management",
+        "Deployment",
+        "Refactoring"
+      ],
+      "total_frequency": 13,
+      "mean_frequency": 2.6
+    },
+    {
+      "cluster_id": 249,
+      "size": 3,
+      "label": "Accuracy, Amplitude, Configuration Management...",
+      "top_skills": [
+        "Accuracy",
+        "Amplitude",
+        "Configuration Management"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 250,
+      "size": 5,
+      "label": "Redux, Redis Cache, Redux Persist...",
+      "top_skills": [
+        "Redux",
+        "Redis Cache",
+        "Redux Persist",
+        "Redux (Thunks/Sagas)",
+        "Redux Toolkit"
+      ],
+      "total_frequency": 25,
+      "mean_frequency": 5.0
+    },
+    {
+      "cluster_id": 251,
+      "size": 3,
+      "label": "CAN, Keras, WAS...",
+      "top_skills": [
+        "CAN",
+        "Keras",
+        "WAS"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 252,
+      "size": 3,
+      "label": "Bash, UX, Dax...",
+      "top_skills": [
+        "Bash",
+        "UX",
+        "Dax"
+      ],
+      "total_frequency": 14,
+      "mean_frequency": 4.666666666666667
+    },
+    {
+      "cluster_id": 253,
+      "size": 3,
+      "label": "Kong, Luigi, PIX...",
+      "top_skills": [
+        "Kong",
+        "Luigi",
+        "PIX"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 254,
+      "size": 3,
+      "label": "Scikit-learn, Plotly, Zapier...",
+      "top_skills": [
+        "Scikit-learn",
+        "Plotly",
+        "Zapier"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 255,
+      "size": 6,
+      "label": "Flux, Confluence, Subversion...",
+      "top_skills": [
+        "Flux",
+        "Confluence",
+        "Subversion",
+        "Consul",
+        "Netlify"
+      ],
+      "total_frequency": 18,
+      "mean_frequency": 3.0
+    },
+    {
+      "cluster_id": 256,
+      "size": 4,
+      "label": "Sass, CLI, NATS...",
+      "top_skills": [
+        "Sass",
+        "CLI",
+        "NATS",
+        "SaaS"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 2.25
+    },
+    {
+      "cluster_id": 257,
+      "size": 4,
+      "label": "SAN/NAS, AKS, FAISS...",
+      "top_skills": [
+        "SAN/NAS",
+        "AKS",
+        "FAISS",
+        "QoS"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 258,
+      "size": 5,
+      "label": "PHP, Kotlin, Android...",
+      "top_skills": [
+        "PHP",
+        "Kotlin",
+        "Android",
+        "Joomla",
+        "Symfony"
+      ],
+      "total_frequency": 50,
+      "mean_frequency": 10.0
+    },
+    {
+      "cluster_id": 259,
+      "size": 4,
+      "label": "Relay, Dapper, Sklearn...",
+      "top_skills": [
+        "Relay",
+        "Dapper",
+        "Sklearn",
+        "Splunk"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 4.0
+    },
+    {
+      "cluster_id": 260,
+      "size": 6,
+      "label": "Java, C++, iOS...",
+      "top_skills": [
+        "Java",
+        "C++",
+        "iOS",
+        "Objective-C",
+        "Xamarin"
+      ],
+      "total_frequency": 102,
+      "mean_frequency": 17.0
+    },
+    {
+      "cluster_id": 261,
+      "size": 8,
+      "label": "JavaScript, Perl, Bootstrap...",
+      "top_skills": [
+        "JavaScript",
+        "Perl",
+        "Bootstrap",
+        "jQuery",
+        "Drupal"
+      ],
+      "total_frequency": 314,
+      "mean_frequency": 39.25
+    },
+    {
+      "cluster_id": 262,
+      "size": 6,
+      "label": "SSR, BTP, SFTP...",
+      "top_skills": [
+        "SSR",
+        "BTP",
+        "SFTP",
+        "SNMP",
+        "SSG"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.1666666666666667
+    },
+    {
+      "cluster_id": 263,
+      "size": 3,
+      "label": "Selenium, spaCy, Gradle...",
+      "top_skills": [
+        "Selenium",
+        "spaCy",
+        "Gradle"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.6666666666666667
+    },
+    {
+      "cluster_id": 264,
+      "size": 4,
+      "label": "LLM, Fine-tuning of LLMs, LLM Models...",
+      "top_skills": [
+        "LLM",
+        "Fine-tuning of LLMs",
+        "LLM Models",
+        "LLMs"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 265,
+      "size": 5,
+      "label": "GCP, ES2015, MCP Servers...",
+      "top_skills": [
+        "GCP",
+        "ES2015",
+        "MCP Servers",
+        "Vercel",
+        "VPC"
+      ],
+      "total_frequency": 84,
+      "mean_frequency": 16.8
+    },
+    {
+      "cluster_id": 266,
+      "size": 4,
+      "label": "Visual Studio, Android Studio, Microsoft Copilot Studio...",
+      "top_skills": [
+        "Visual Studio",
+        "Android Studio",
+        "Microsoft Copilot Studio",
+        "Visual Studio Code"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.75
+    },
+    {
+      "cluster_id": 267,
+      "size": 3,
+      "label": "Android SDK, Data Studio, ML Studio...",
+      "top_skills": [
+        "Android SDK",
+        "Data Studio",
+        "ML Studio"
+      ],
+      "total_frequency": 3,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 268,
+      "size": 8,
+      "label": "Maven, Pinecone, Antivirus...",
+      "top_skills": [
+        "Maven",
+        "Pinecone",
+        "Antivirus",
+        "Bloc",
+        "Dart"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 269,
+      "size": 4,
+      "label": "Flask, PyTorch, PySpark...",
+      "top_skills": [
+        "Flask",
+        "PyTorch",
+        "PySpark",
+        "Hive"
+      ],
+      "total_frequency": 24,
+      "mean_frequency": 6.0
+    },
+    {
+      "cluster_id": 270,
+      "size": 12,
+      "label": "HLS, PWA, EDR/XDR...",
+      "top_skills": [
+        "HLS",
+        "PWA",
+        "EDR/XDR",
+        "FTPs",
+        "LWC"
+      ],
+      "total_frequency": 15,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 271,
+      "size": 9,
+      "label": "RDS, DDL, DML...",
+      "top_skills": [
+        "RDS",
+        "DDL",
+        "DML",
+        "MLOps",
+        "CDK"
+      ],
+      "total_frequency": 24,
+      "mean_frequency": 2.6666666666666665
+    },
+    {
+      "cluster_id": 272,
+      "size": 6,
+      "label": "NLTK, SAML, SIP...",
+      "top_skills": [
+        "NLTK",
+        "SAML",
+        "SIP",
+        "LDAP",
+        "UAT"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 273,
+      "size": 4,
+      "label": "UART, STT, TTS...",
+      "top_skills": [
+        "UART",
+        "STT",
+        "TTS",
+        "UDP"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 274,
+      "size": 4,
+      "label": "Yaml, LookML, SOSL...",
+      "top_skills": [
+        "Yaml",
+        "LookML",
+        "SOSL",
+        "YAML"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.25
+    },
+    {
+      "cluster_id": 275,
+      "size": 4,
+      "label": "Gensim, SAM, SEM...",
+      "top_skills": [
+        "Gensim",
+        "SAM",
+        "SEM",
+        "SIEM"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 276,
+      "size": 3,
+      "label": "NLP, Expo EAS, VAEs...",
+      "top_skills": [
+        "NLP",
+        "Expo EAS",
+        "VAEs"
+      ],
+      "total_frequency": 6,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 277,
+      "size": 6,
+      "label": "SSIS, RPA, ELT...",
+      "top_skills": [
+        "SSIS",
+        "RPA",
+        "ELT",
+        "ERP",
+        "ESB"
+      ],
+      "total_frequency": 11,
+      "mean_frequency": 1.8333333333333333
+    }
+  ]
+}

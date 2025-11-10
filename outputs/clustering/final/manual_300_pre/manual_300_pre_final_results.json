@@ -1,0 +1,10530 @@
+{
+  "metadata": {
+    "dataset_name": "manual_300_pre_final",
+    "created_at": "2025-11-09T13:22:07.895754",
+    "n_skills": 1914,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 12,
+        "min_samples": 3,
+        "metric": "euclidean",
+        "cluster_selection_method": "eom"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 61,
+    "n_samples": 1914,
+    "n_noise": 455,
+    "noise_percentage": 23.772204806687565,
+    "silhouette_score": 0.45631852746009827,
+    "davies_bouldin_score": 0.6360413134542636,
+    "largest_cluster_size": 82,
+    "smallest_cluster_size": 12,
+    "mean_cluster_size": 23.918032786885245,
+    "n_meta_clusters": 2,
+    "n_fine_clusters": 61,
+    "n_unclustered_fine": 15,
+    "meta_silhouette": 0.23575347351376663,
+    "meta_davies_bouldin": 1.5723626129436146
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 14,
+      "label": "React Native, ReactJS, API testing...",
+      "top_skills": [
+        "React Native",
+        "ReactJS",
+        "API testing",
+        "React Testing Library",
+        "React Hooks"
+      ],
+      "total_frequency": 42,
+      "mean_frequency": 3.0,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 1,
+      "size": 14,
+      "label": "Power BI, Power Automate, Power Apps...",
+      "top_skills": [
+        "Power BI",
+        "Power Automate",
+        "Power Apps",
+        "Power Platform",
+        "Microsoft Power Automate"
+      ],
+      "total_frequency": 24,
+      "mean_frequency": 1.7142857142857142,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 2,
+      "size": 14,
+      "label": "Principios SOLID, Despliegue, Mockito...",
+      "top_skills": [
+        "Principios SOLID",
+        "Despliegue",
+        "Mockito",
+        "Empaquetado",
+        "Empaquetado y despliegue"
+      ],
+      "total_frequency": 29,
+      "mean_frequency": 2.0714285714285716,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 3,
+      "size": 24,
+      "label": "REST API, API, API REST...",
+      "top_skills": [
+        "REST API",
+        "API",
+        "API REST",
+        "REST",
+        "APIs"
+      ],
+      "total_frequency": 183,
+      "mean_frequency": 7.625,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 4,
+      "size": 13,
+      "label": "State management, API Management, Identity and Access Management...",
+      "top_skills": [
+        "State management",
+        "API Management",
+        "Identity and Access Management",
+        "Model Context Protocol",
+        "Configuration management"
+      ],
+      "total_frequency": 20,
+      "mean_frequency": 1.5384615384615385,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 5,
+      "size": 12,
+      "label": "Code review, Clean Code, Low-code...",
+      "top_skills": [
+        "Code review",
+        "Clean Code",
+        "Low-code",
+        "Clean Architecture",
+        "Code reviews"
+      ],
+      "total_frequency": 68,
+      "mean_frequency": 5.666666666666667,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 6,
+      "size": 15,
+      "label": "JBoss, JFrog, Jfrog Artifactory...",
+      "top_skills": [
+        "JBoss",
+        "JFrog",
+        "Jfrog Artifactory",
+        "Knex",
+        "Mongosse"
+      ],
+      "total_frequency": 15,
+      "mean_frequency": 1.0,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 7,
+      "size": 23,
+      "label": "An\u00e1lisis de requisitos, An\u00e1lisis de defectos, An\u00e1lisis de requerimientos...",
+      "top_skills": [
+        "An\u00e1lisis de requisitos",
+        "An\u00e1lisis de defectos",
+        "An\u00e1lisis de requerimientos",
+        "Anal\u00edtica predictiva",
+        "IA predictiva"
+      ],
+      "total_frequency": 32,
+      "mean_frequency": 1.391304347826087,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 8,
+      "size": 33,
+      "label": "Pruebas unitarias, Pruebas de integraci\u00f3n, Testing unitario...",
+      "top_skills": [
+        "Pruebas unitarias",
+        "Pruebas de integraci\u00f3n",
+        "Testing unitario",
+        "Testing de integraci\u00f3n",
+        "Casos de prueba"
+      ],
+      "total_frequency": 120,
+      "mean_frequency": 3.6363636363636362,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 9,
+      "size": 14,
+      "label": "Arquitectura orientada a eventos, Desarrollo backend, Eventos...",
+      "top_skills": [
+        "Arquitectura orientada a eventos",
+        "Desarrollo backend",
+        "Eventos",
+        "Event Sourcing",
+        "Flujos de eventos"
+      ],
+      "total_frequency": 16,
+      "mean_frequency": 1.1428571428571428,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 10,
+      "size": 13,
+      "label": "AI, Chatbots, AI Agents...",
+      "top_skills": [
+        "AI",
+        "Chatbots",
+        "AI Agents",
+        "Generative AI",
+        "AI training"
+      ],
+      "total_frequency": 21,
+      "mean_frequency": 1.6153846153846154,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 11,
+      "size": 19,
+      "label": "Responsive design, Domain Driven Design, Design patterns...",
+      "top_skills": [
+        "Responsive design",
+        "Domain Driven Design",
+        "Design patterns",
+        "Event-Driven Architecture",
+        "Event-driven development"
+      ],
+      "total_frequency": 32,
+      "mean_frequency": 1.6842105263157894,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 12,
+      "size": 14,
+      "label": "Control de versiones, Versionado de c\u00f3digo, Cobertura de c\u00f3digo...",
+      "top_skills": [
+        "Control de versiones",
+        "Versionado de c\u00f3digo",
+        "Cobertura de c\u00f3digo",
+        "Versionado",
+        "Trackeo de c\u00f3digo"
+      ],
+      "total_frequency": 47,
+      "mean_frequency": 3.357142857142857,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 13,
+      "size": 16,
+      "label": "Modelos predictivos, Levantamiento de requerimientos, Modelado estad\u00edstico...",
+      "top_skills": [
+        "Modelos predictivos",
+        "Levantamiento de requerimientos",
+        "Modelado estad\u00edstico",
+        "Modelagem causal",
+        "Modelos de caja"
+      ],
+      "total_frequency": 17,
+      "mean_frequency": 1.0625,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 14,
+      "size": 22,
+      "label": "Optimizaci\u00f3n de rendimiento, Optimizaci\u00f3n de consultas, Optimizaci\u00f3n...",
+      "top_skills": [
+        "Optimizaci\u00f3n de rendimiento",
+        "Optimizaci\u00f3n de consultas",
+        "Optimizaci\u00f3n",
+        "Optimizaci\u00f3n de performance",
+        "Optimizaci\u00f3n de bases de datos"
+      ],
+      "total_frequency": 55,
+      "mean_frequency": 2.5,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 15,
+      "size": 12,
+      "label": "Salesforce, Visualforce, Salesforce Administrator...",
+      "top_skills": [
+        "Salesforce",
+        "Visualforce",
+        "Salesforce Administrator",
+        "Salesforce Application Architect",
+        "Salesforce Architecture and Management Designer"
+      ],
+      "total_frequency": 19,
+      "mean_frequency": 1.5833333333333333,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 16,
+      "size": 15,
+      "label": "Cloud, Google Cloud, CloudFormation...",
+      "top_skills": [
+        "Cloud",
+        "Google Cloud",
+        "CloudFormation",
+        "Cloud-native",
+        "Cloud computing"
+      ],
+      "total_frequency": 61,
+      "mean_frequency": 4.066666666666666,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 17,
+      "size": 19,
+      "label": "Azure DevOps, Microsoft Azure, Azure Functions...",
+      "top_skills": [
+        "Azure DevOps",
+        "Microsoft Azure",
+        "Azure Functions",
+        "Microsoft Fabric",
+        "Azure Storage"
+      ],
+      "total_frequency": 33,
+      "mean_frequency": 1.736842105263158,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 18,
+      "size": 16,
+      "label": ".NET, .NET Core, MVC...",
+      "top_skills": [
+        ".NET",
+        ".NET Core",
+        "MVC",
+        "ASP.NET",
+        ".NET Framework"
+      ],
+      "total_frequency": 72,
+      "mean_frequency": 4.5,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 19,
+      "size": 20,
+      "label": "Resoluci\u00f3n de incidentes, Gesti\u00f3n de casos, Gesti\u00f3n de estado...",
+      "top_skills": [
+        "Resoluci\u00f3n de incidentes",
+        "Gesti\u00f3n de casos",
+        "Gesti\u00f3n de estado",
+        "Gesti\u00f3n de memoria",
+        "Gesti\u00f3n de contratos"
+      ],
+      "total_frequency": 25,
+      "mean_frequency": 1.25,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 20,
+      "size": 14,
+      "label": "Microservicios, Servicios web, Servicios Web...",
+      "top_skills": [
+        "Microservicios",
+        "Servicios web",
+        "Servicios Web",
+        "Servidores",
+        "Cliente-Servidor"
+      ],
+      "total_frequency": 76,
+      "mean_frequency": 5.428571428571429,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 21,
+      "size": 40,
+      "label": "Automatizaci\u00f3n, Monitoreo, Autenticaci\u00f3n...",
+      "top_skills": [
+        "Automatizaci\u00f3n",
+        "Monitoreo",
+        "Autenticaci\u00f3n",
+        "Depuraci\u00f3n",
+        "Orquestaci\u00f3n"
+      ],
+      "total_frequency": 97,
+      "mean_frequency": 2.425,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 22,
+      "size": 22,
+      "label": "Documentaci\u00f3n, Documentaci\u00f3n de c\u00f3digo, Validaci\u00f3n de modelos...",
+      "top_skills": [
+        "Documentaci\u00f3n",
+        "Documentaci\u00f3n de c\u00f3digo",
+        "Validaci\u00f3n de modelos",
+        "Reglas de negocio",
+        "Calibraci\u00f3n de par\u00e1metros"
+      ],
+      "total_frequency": 42,
+      "mean_frequency": 1.9090909090909092,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 23,
+      "size": 16,
+      "label": "Gesti\u00f3n de proyectos, Inteligencia Artificial Generativa, Seguimiento de errores...",
+      "top_skills": [
+        "Gesti\u00f3n de proyectos",
+        "Inteligencia Artificial Generativa",
+        "Seguimiento de errores",
+        "Agentes de IA",
+        "Gesti\u00f3n de proyectos t\u00e9cnicos"
+      ],
+      "total_frequency": 28,
+      "mean_frequency": 1.75,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 24,
+      "size": 38,
+      "label": "An\u00e1lisis de datos, Modelado de datos, Ingl\u00e9s t\u00e9cnico...",
+      "top_skills": [
+        "An\u00e1lisis de datos",
+        "Modelado de datos",
+        "Ingl\u00e9s t\u00e9cnico",
+        "Integraci\u00f3n de datos",
+        "Transformaci\u00f3n de datos"
+      ],
+      "total_frequency": 95,
+      "mean_frequency": 2.5,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 25,
+      "size": 59,
+      "label": "Metodolog\u00edas \u00e1giles, Escalabilidad, Programaci\u00f3n...",
+      "top_skills": [
+        "Metodolog\u00edas \u00e1giles",
+        "Escalabilidad",
+        "Programaci\u00f3n",
+        "Observabilidad",
+        "Integraci\u00f3n de servicios"
+      ],
+      "total_frequency": 176,
+      "mean_frequency": 2.983050847457627,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 26,
+      "size": 19,
+      "label": "Testing, Testing web, Unit testing...",
+      "top_skills": [
+        "Testing",
+        "Testing web",
+        "Unit testing",
+        "E2E testing",
+        "Testing manual"
+      ],
+      "total_frequency": 71,
+      "mean_frequency": 3.736842105263158,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 27,
+      "size": 28,
+      "label": "Programaci\u00f3n orientada a objetos, Procesamiento de datos, Samsung Gear VR...",
+      "top_skills": [
+        "Programaci\u00f3n orientada a objetos",
+        "Procesamiento de datos",
+        "Samsung Gear VR",
+        "Realidad Virtual",
+        "Unity 3D"
+      ],
+      "total_frequency": 64,
+      "mean_frequency": 2.2857142857142856,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 28,
+      "size": 12,
+      "label": "UX, SOAP, Vue...",
+      "top_skills": [
+        "UX",
+        "SOAP",
+        "Vue",
+        "UI",
+        "Pub/Sub"
+      ],
+      "total_frequency": 53,
+      "mean_frequency": 4.416666666666667,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 29,
+      "size": 21,
+      "label": "Soluciones escalables, Sistemas escalables, Aplicaciones escalables...",
+      "top_skills": [
+        "Soluciones escalables",
+        "Sistemas escalables",
+        "Aplicaciones escalables",
+        "Arquitectura escalable",
+        "Arquitectura hexagonal"
+      ],
+      "total_frequency": 37,
+      "mean_frequency": 1.7619047619047619,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 30,
+      "size": 45,
+      "label": "Bases de datos relacionales, Bases de datos, Estructuras de datos...",
+      "top_skills": [
+        "Bases de datos relacionales",
+        "Bases de datos",
+        "Estructuras de datos",
+        "Bases de datos no relacionales",
+        "Sistemas distribuidos"
+      ],
+      "total_frequency": 160,
+      "mean_frequency": 3.5555555555555554,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 31,
+      "size": 12,
+      "label": "Next.js, Vue.js, NestJS...",
+      "top_skills": [
+        "Next.js",
+        "Vue.js",
+        "NestJS",
+        "Express.js",
+        "Nest.js"
+      ],
+      "total_frequency": 35,
+      "mean_frequency": 2.9166666666666665,
+      "meta_cluster": -1
+    },
+    {
+      "cluster_id": 32,
+      "size": 14,
+      "label": "Desarrollo m\u00f3vil, Desarrollo fullstack, Desarrollo m\u00f3vil multiplataforma...",
+      "top_skills": [
+        "Desarrollo m\u00f3vil",
+        "Desarrollo fullstack",
+        "Desarrollo m\u00f3vil multiplataforma",
+        "Desarrollo desde cero",
+        "Desarrollo m\u00f3vil nativo"
+      ],
+      "total_frequency": 54,
+      "mean_frequency": 3.857142857142857,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 33,
+      "size": 14,
+      "label": "Dise\u00f1o responsivo, Module Federation, Conectores personalizados...",
+      "top_skills": [
+        "Dise\u00f1o responsivo",
+        "Module Federation",
+        "Conectores personalizados",
+        "Conectores",
+        "Interfaces responsivas"
+      ],
+      "total_frequency": 19,
+      "mean_frequency": 1.3571428571428572,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 34,
+      "size": 18,
+      "label": "Seguridad, Integraci\u00f3n de sistemas, Ciberseguridad...",
+      "top_skills": [
+        "Seguridad",
+        "Integraci\u00f3n de sistemas",
+        "Ciberseguridad",
+        "Seguridad de datos",
+        "Ingenier\u00eda de sistemas"
+      ],
+      "total_frequency": 61,
+      "mean_frequency": 3.388888888888889,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 35,
+      "size": 53,
+      "label": "Algoritmos, Desarrollo web, Desarrollo de software...",
+      "top_skills": [
+        "Algoritmos",
+        "Desarrollo web",
+        "Desarrollo de software",
+        "Aplicaciones web",
+        "Aplicaciones m\u00f3viles"
+      ],
+      "total_frequency": 131,
+      "mean_frequency": 2.4716981132075473,
+      "meta_cluster": 1
+    },
+    {
+      "cluster_id": 36,
+      "size": 23,
+      "label": "Jenkins, Lambda, n8n...",
+      "top_skills": [
+        "Jenkins",
+        "Lambda",
+        "n8n",
+        "Maya",
+        "Trello"
+      ],
+      "total_frequency": 58,
+      "mean_frequency": 2.5217391304347827,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 37,
+      "size": 19,
+      "label": "Docker, App Store, Docker Swarm...",
+      "top_skills": [
+        "Docker",
+        "App Store",
+        "Docker Swarm",
+        "Firestore",
+        "Compute Engine"
+      ],
+      "total_frequency": 86,
+      "mean_frequency": 4.526315789473684,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 38,
+      "size": 34,
+      "label": "SQL, SQL Server, PostgreSQL...",
+      "top_skills": [
+        "SQL",
+        "SQL Server",
+        "PostgreSQL",
+        "MySQL",
+        "NoSQL"
+      ],
+      "total_frequency": 279,
+      "mean_frequency": 8.205882352941176,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 39,
+      "size": 15,
+      "label": "Triggers, Automation, Emotion...",
+      "top_skills": [
+        "Triggers",
+        "Automation",
+        "Emotion",
+        "Communities",
+        "Joins"
+      ],
+      "total_frequency": 18,
+      "mean_frequency": 1.2,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 40,
+      "size": 24,
+      "label": "Performance, Performance optimization, Zustand...",
+      "top_skills": [
+        "Performance",
+        "Performance optimization",
+        "Zustand",
+        "Monitoring",
+        "New Relic"
+      ],
+      "total_frequency": 37,
+      "mean_frequency": 1.5416666666666667,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 41,
+      "size": 23,
+      "label": "Clustering, Information Retrieval, Search engines...",
+      "top_skills": [
+        "Clustering",
+        "Information Retrieval",
+        "Search engines",
+        "Web technologies",
+        "Embedded Linux"
+      ],
+      "total_frequency": 27,
+      "mean_frequency": 1.173913043478261,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 42,
+      "size": 33,
+      "label": "Big Data, Pipelines, Data Science...",
+      "top_skills": [
+        "Big Data",
+        "Pipelines",
+        "Data Science",
+        "Data engineering",
+        "Business Intelligence"
+      ],
+      "total_frequency": 76,
+      "mean_frequency": 2.303030303030303,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 43,
+      "size": 15,
+      "label": "Webpack, Datadog, WebSockets...",
+      "top_skills": [
+        "Webpack",
+        "Datadog",
+        "WebSockets",
+        "Webhooks",
+        "Websphere Application Server"
+      ],
+      "total_frequency": 25,
+      "mean_frequency": 1.6666666666666667,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 44,
+      "size": 23,
+      "label": "GCP, CSRF, gRPC...",
+      "top_skills": [
+        "GCP",
+        "CSRF",
+        "gRPC",
+        "MCP",
+        "PLN"
+      ],
+      "total_frequency": 63,
+      "mean_frequency": 2.739130434782609,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 45,
+      "size": 22,
+      "label": "DevOps, GitHub, GitHub Actions...",
+      "top_skills": [
+        "DevOps",
+        "GitHub",
+        "GitHub Actions",
+        "GitLab",
+        "Hibernate"
+      ],
+      "total_frequency": 132,
+      "mean_frequency": 6.0,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 46,
+      "size": 22,
+      "label": "Swagger, Relay, Chef...",
+      "top_skills": [
+        "Swagger",
+        "Relay",
+        "Chef",
+        "Golang",
+        "Prompts"
+      ],
+      "total_frequency": 40,
+      "mean_frequency": 1.8181818181818181,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 47,
+      "size": 25,
+      "label": "Express, S3, Axios...",
+      "top_skills": [
+        "Express",
+        "S3",
+        "Axios",
+        "Expo",
+        "Nagios"
+      ],
+      "total_frequency": 42,
+      "mean_frequency": 1.68,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 48,
+      "size": 20,
+      "label": "Dashboards, Storybook, Firewalls...",
+      "top_skills": [
+        "Dashboards",
+        "Storybook",
+        "Firewalls",
+        "Agentic workflows",
+        "Playwright"
+      ],
+      "total_frequency": 32,
+      "mean_frequency": 1.6,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 49,
+      "size": 30,
+      "label": "Debugging, Scripting, Serverless...",
+      "top_skills": [
+        "Debugging",
+        "Scripting",
+        "Serverless",
+        "Logging",
+        "Caching"
+      ],
+      "total_frequency": 61,
+      "mean_frequency": 2.033333333333333,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 50,
+      "size": 47,
+      "label": "Fullstack, Terraform, Postman...",
+      "top_skills": [
+        "Fullstack",
+        "Terraform",
+        "Postman",
+        "Full-stack",
+        "TensorFlow"
+      ],
+      "total_frequency": 114,
+      "mean_frequency": 2.425531914893617,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 51,
+      "size": 17,
+      "label": "Android Studio, SharePoint, Visual Studio Code...",
+      "top_skills": [
+        "Android Studio",
+        "SharePoint",
+        "Visual Studio Code",
+        "Excel",
+        "Visual Studio"
+      ],
+      "total_frequency": 26,
+      "mean_frequency": 1.5294117647058822,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 52,
+      "size": 44,
+      "label": "TypeScript, C#, Linux...",
+      "top_skills": [
+        "TypeScript",
+        "C#",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
+      "total_frequency": 231,
+      "mean_frequency": 5.25,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 53,
+      "size": 82,
+      "label": "Python, Agile, Scrum...",
+      "top_skills": [
+        "Python",
+        "Agile",
+        "Scrum",
+        "Lean",
+        "Django"
+      ],
+      "total_frequency": 421,
+      "mean_frequency": 5.134146341463414,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 54,
+      "size": 19,
+      "label": "JavaScript, Node.js, HTML...",
+      "top_skills": [
+        "JavaScript",
+        "Node.js",
+        "HTML",
+        "HTML5",
+        "Kafka"
+      ],
+      "total_frequency": 268,
+      "mean_frequency": 14.105263157894736,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 55,
+      "size": 33,
+      "label": "CSS, ES6, Jira...",
+      "top_skills": [
+        "CSS",
+        "ES6",
+        "Jira",
+        "ES2015",
+        "ES7"
+      ],
+      "total_frequency": 123,
+      "mean_frequency": 3.727272727272727,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 56,
+      "size": 16,
+      "label": "CI/CD, IaC, OCI...",
+      "top_skills": [
+        "CI/CD",
+        "IaC",
+        "OCI",
+        "BI",
+        "IA"
+      ],
+      "total_frequency": 114,
+      "mean_frequency": 7.125,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 57,
+      "size": 17,
+      "label": "C, SaaS, DB2...",
+      "top_skills": [
+        "C",
+        "SaaS",
+        "DB2",
+        "Sass",
+        "PM2"
+      ],
+      "total_frequency": 35,
+      "mean_frequency": 2.0588235294117645,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 58,
+      "size": 48,
+      "label": "ETL, TDD, RDS...",
+      "top_skills": [
+        "ETL",
+        "TDD",
+        "RDS",
+        "LLM",
+        "SDLC"
+      ],
+      "total_frequency": 106,
+      "mean_frequency": 2.2083333333333335,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 59,
+      "size": 26,
+      "label": "CRM, CMS, SSIS...",
+      "top_skills": [
+        "CRM",
+        "CMS",
+        "SSIS",
+        "CSR",
+        "Ember"
+      ],
+      "total_frequency": 39,
+      "mean_frequency": 1.5,
+      "meta_cluster": 0
+    },
+    {
+      "cluster_id": 60,
+      "size": 15,
+      "label": "RPA, EKS, Delta...",
+      "top_skills": [
+        "RPA",
+        "EKS",
+        "Delta",
+        "R",
+        "SAM"
+      ],
+      "total_frequency": 23,
+      "mean_frequency": 1.5333333333333334,
+      "meta_cluster": 0
+    }
+  ],
+  "skills": [
+    "JavaScript",
+    "Python",
+    "CI/CD",
+    "AWS",
+    "Backend",
+    "Git",
+    "Java",
+    "Docker",
+    "React",
+    "Agile",
+    "SQL",
+    "Microservicios",
+    "Frontend",
+    "Scrum",
+    "REST API",
+    "Angular",
+    "Kubernetes",
+    "Node.js",
+    "API",
+    "Azure",
+    "Testing",
+    "Arquitectura de software",
+    "TypeScript",
+    "DevOps",
+    "Code review",
+    "GCP",
+    "SQL Server",
+    "Metodolog\u00edas \u00e1giles",
+    "Lean",
+    "Patrones de dise\u00f1o",
+    "PostgreSQL",
+    "HTML",
+    "Machine Learning",
+    "Documentaci\u00f3n t\u00e9cnica",
+    "MySQL",
+    "Control de versiones",
+    "Cloud",
+    "Seguridad",
+    "CSS",
+    "Pruebas unitarias",
+    "NoSQL",
+    "GraphQL",
+    "Escalabilidad",
+    "C#",
+    "Bases de datos relacionales",
+    "Automatizaci\u00f3n",
+    "MongoDB",
+    "Fullstack",
+    "Algoritmos",
+    "GitHub",
+    "Linux",
+    "HTML5",
+    "Testing automatizado",
+    "Oracle",
+    "API REST",
+    "Inteligencia Artificial",
+    "Spring Boot",
+    "Bases de datos",
+    "CSS3",
+    "Jenkins",
+    "Kafka",
+    ".NET",
+    "Desarrollo web",
+    "Estructuras de datos",
+    "An\u00e1lisis de datos",
+    "Programaci\u00f3n orientada a objetos",
+    "Kanban",
+    "REST",
+    "Redux",
+    "Terraform",
+    "Clean Code",
+    "Pruebas de integraci\u00f3n",
+    "React Native",
+    "Testing unitario",
+    ".NET Core",
+    "QA",
+    "Bases de datos no relacionales",
+    "Android",
+    "Optimizaci\u00f3n de rendimiento",
+    "ETL",
+    "Sistemas distribuidos",
+    "Programaci\u00f3n",
+    "iOS",
+    "Documentaci\u00f3n",
+    "Django",
+    "PHP",
+    "GitHub Actions",
+    "Data pipelines",
+    "Desarrollo m\u00f3vil",
+    "Debugging",
+    "UX",
+    "Redis",
+    "Go",
+    "Testing de integraci\u00f3n",
+    "SOAP",
+    "Unix",
+    "Principios SOLID",
+    "Monitoreo",
+    "MVC",
+    "Desarrollo de software",
+    "Big Data",
+    "ES6",
+    "Jira",
+    "Desarrollo fullstack",
+    "APIs",
+    "GitLab",
+    "Maven",
+    "Infraestructura IT",
+    "Postman",
+    "SOLID",
+    "Swift",
+    "Ruby on Rails",
+    "JSON",
+    "Next.js",
+    "Bash",
+    "Lambda",
+    "Kotlin",
+    "API Gateway",
+    "Aplicaciones web",
+    "Flux",
+    "TDD",
+    "RDS",
+    "SonarQube",
+    "Vue.js",
+    "Modelado de datos",
+    "Azure DevOps",
+    "Scripting",
+    "Web Services",
+    "Backbone",
+    "Swagger",
+    "Integraci\u00f3n",
+    "Spark",
+    "C\u00f3digo limpio",
+    "FastAPI",
+    "Scala",
+    "Ingl\u00e9s t\u00e9cnico",
+    "Optimizaci\u00f3n de consultas",
+    "Jest",
+    "Responsive design",
+    "C",
+    "RabbitMQ",
+    "Performance",
+    "jQuery",
+    "Pipelines",
+    "ES2015",
+    "Airflow",
+    "Pandas",
+    "ES7",
+    "Procedimientos almacenados",
+    "LLM",
+    "Relay",
+    "SDLC",
+    "Express",
+    "Vue",
+    "Integraci\u00f3n de sistemas",
+    "Servicios web",
+    "Marionette",
+    "ReactJS",
+    "Procesamiento de datos",
+    "SEO",
+    "Data Science",
+    "Pipelines de datos",
+    "Casos de prueba",
+    "Hibernate",
+    "Google Cloud",
+    "IaC",
+    "Desarrollo m\u00f3vil multiplataforma",
+    "Observabilidad",
+    "DynamoDB",
+    "JIRA",
+    "UI",
+    "Testing web",
+    "CloudFormation",
+    "Gesti\u00f3n de proyectos",
+    "Integraci\u00f3n de servicios",
+    "Full-stack",
+    "Flutter",
+    "Salesforce",
+    "S3",
+    "Administraci\u00f3n de bases de datos",
+    "Ruby",
+    "Serverless",
+    "Accesibilidad",
+    "JPA",
+    "Pruebas automatizadas",
+    "Power BI",
+    "Planes de prueba",
+    "NLP",
+    "BigQuery",
+    "MS SQL",
+    "Bootstrap",
+    "Ansible",
+    "State management",
+    "WordPress",
+    "NestJS",
+    "Cloud-native",
+    "Data engineering",
+    "Desarrollo desde cero",
+    "API testing",
+    "Dashboards",
+    "Optimizaci\u00f3n",
+    "SaaS",
+    "Dise\u00f1o de bases de datos",
+    "Dise\u00f1o responsivo",
+    "Troubleshooting",
+    "Desarrollo m\u00f3vil nativo",
+    "Documentaci\u00f3n de c\u00f3digo",
+    "ASP.NET",
+    "Buenas pr\u00e1cticas",
+    "Integraci\u00f3n continua",
+    "JUnit",
+    "Ciberseguridad",
+    "AI",
+    "Business Intelligence",
+    "Flask",
+    "Networking",
+    "C++",
+    "Webpack",
+    "Unit testing",
+    "T-SQL",
+    "Bitbucket",
+    "Pub/Sub",
+    ".NET Framework",
+    "Spring Data",
+    "Fortify scan",
+    "BitBucket",
+    "APIs REST",
+    "Deep Learning",
+    "Seguridad de datos",
+    "Integraci\u00f3n de datos",
+    "MVC.NET",
+    "IAM",
+    "Infraestructura como c\u00f3digo",
+    "GitLab CI",
+    "Transformaci\u00f3n de datos",
+    "Spring",
+    "Xcode",
+    "Groovy",
+    "Herramientas de testing",
+    "Microsoft Azure",
+    "Despliegue de modelos",
+    "HTTP",
+    "Aplicaciones m\u00f3viles",
+    "Cypress",
+    "Automatizaci\u00f3n de pruebas",
+    "Stored procedures",
+    "Automatizaci\u00f3n de procesos",
+    "UX/UI",
+    "Soluciones escalables",
+    "PL/SQL",
+    "Autenticaci\u00f3n",
+    "PWA",
+    "Pinecone",
+    "Validaci\u00f3n de modelos",
+    "Depuraci\u00f3n",
+    "Tableau",
+    "CRM",
+    "Weaviate",
+    "Orquestaci\u00f3n",
+    "An\u00e1lisis de requisitos",
+    "Windows Server",
+    "SQS",
+    "Optimizaci\u00f3n de performance",
+    "VPN",
+    "JWT",
+    "OpenShift",
+    "Spring Security",
+    "Spring Framework",
+    "OCI",
+    "API RESTful",
+    "Domain Driven Design",
+    "OAuth",
+    "Entity Framework",
+    "ERP",
+    "Inteligencia Artificial Generativa",
+    "Firebase",
+    "Design patterns",
+    "Desarrollo multiplataforma",
+    "Despliegue",
+    "CMS",
+    "Logging",
+    "DML",
+    "Dise\u00f1o de software",
+    "DevSecOps",
+    "Transacciones",
+    "Texturizado 3D",
+    "Deployment",
+    "DDL",
+    "dbt",
+    "DB2",
+    "Data warehouses",
+    "Data visualization",
+    "Data lakes",
+    "Data Engineering",
+    "Datadog",
+    "Databricks",
+    "TensorFlow",
+    "Tecnolog\u00edas web",
+    "Ambientes productivos",
+    "SwiftUI",
+    "Storybook",
+    "An\u00e1lisis de defectos",
+    "SSR",
+    "SSIS",
+    "An\u00e1lisis de requerimientos",
+    "Anal\u00edtica predictiva",
+    "Spring Cloud",
+    "WebSockets",
+    "Android Studio",
+    "Soporte t\u00e9cnico",
+    "Snowflake",
+    "Sistemas escalables",
+    "Shell",
+    "Apex",
+    "SharePoint",
+    "Service Cloud",
+    "Web API",
+    "Aplicaciones de escritorio",
+    "Selenium",
+    "Aplicaciones escalables",
+    "Seguridad en la nube",
+    "Seguimiento de errores",
+    "SCRUM",
+    "Scripts de prueba",
+    "Sass",
+    "Samsung Gear VR",
+    "Visual Studio Code",
+    "Visualizaci\u00f3n de datos",
+    "Arquitectura escalable",
+    "Arquitectura hexagonal",
+    "Arquitectura limpia",
+    "Visualforce",
+    "RPA",
+    "Versionado de c\u00f3digo",
+    "Resoluci\u00f3n de incidentes",
+    "Realidad Virtual",
+    "React Testing Library",
+    "Artifactory",
+    "Asincronismo",
+    "Pruebas de regresi\u00f3n",
+    "Pruebas",
+    "Power Automate",
+    "Power Apps",
+    "Planes de ejecuci\u00f3n",
+    "Axios",
+    "Perl",
+    "Performance optimization",
+    "OWASP",
+    "Azure Functions",
+    "ORM",
+    "Unity 3D",
+    "Optimizaci\u00f3n de bases de datos",
+    "Open source",
+    "Openshift",
+    "Oculus",
+    "OAuth2",
+    "Bases de datos NoSQL",
+    "Bases de datos vectoriales",
+    "NumPy",
+    "Normalizaci\u00f3n",
+    "BI",
+    "Blender",
+    "n8n",
+    "Modularizaci\u00f3n",
+    "Modelado 3D",
+    "Mockito",
+    "Mobile",
+    "MLOps",
+    "Microfrontends",
+    "Mentor\u00eda t\u00e9cnica",
+    "Maya",
+    "3ds Max",
+    "Low-code",
+    "LLMs",
+    "Cardboard",
+    "L\u00ednea de comandos",
+    "Liderazgo t\u00e9cnico",
+    "Laravel",
+    "LangChain",
+    "Chatbots",
+    "Chef",
+    "Juegos 3D",
+    "Chroma",
+    "Juegos 2D",
+    "Ciencia de datos",
+    "Jetpack Compose",
+    "ITIL",
+    "Clean Architecture",
+    "Integraciones",
+    "YAML",
+    "Cloud Computing",
+    "Ingenier\u00eda de software",
+    "Infraestructura de datos",
+    "\u00cdndices",
+    "IA",
+    "Cobertura de c\u00f3digo",
+    "Code reviews",
+    "Golang",
+    "Colas de mensajes",
+    "Gesti\u00f3n de bases de datos",
+    "Triggers",
+    "Firewalls",
+    "FinTech",
+    "Excel",
+    "Trello",
+    "ElasticSearch",
+    "EKS",
+    "Contenedorizaci\u00f3n",
+    "Zustand",
+    "ABAP",
+    "Agentes de IA",
+    "Agentic workflows",
+    "AI Agents",
+    "AJAX",
+    "Alertas",
+    "Alto rendimiento",
+    "Analytics",
+    "AngularJS",
+    "Apache Airflow",
+    "Apigee",
+    "API Management",
+    "Appium",
+    "App Store",
+    "Arquitectura de datos",
+    "Arquitectura desacoplada",
+    "Arquitectura de sistemas",
+    "Arquitectura de soluciones",
+    "Arquitectura modular",
+    "Arquitectura orientada a eventos",
+    "ASP.NET Core",
+    "Auth0",
+    "Automation",
+    "Autorizaci\u00f3n",
+    "Azure Pipelines",
+    "Backup",
+    "Bases de datos SQL",
+    "Caching",
+    "Carga de datos",
+    "Client-side frameworks",
+    "Cloud computing",
+    "Cloud Run",
+    "Clustering",
+    "C\u00f3digo escalable",
+    "Coffeescript",
+    "Concurrencia",
+    "Confluence",
+    "Consultor\u00eda de datos",
+    "Crawlers",
+    "Cross-browser",
+    "CSR",
+    "CSRF",
+    "Cursores",
+    "Dapper",
+    "Dataflow",
+    "Data Lake",
+    "Data modeling",
+    "Data science",
+    "DDD",
+    "Delta",
+    "Desarrollo \u00e1gil",
+    "Desarrollo backend",
+    "Desarrollo de aplicaciones",
+    "Desarrollo de soluciones",
+    "Desarrollo de videojuegos",
+    "Desarrollo seguro",
+    "Desarrollo web responsivo",
+    "Dise\u00f1o de interfaces",
+    "Dise\u00f1o de procesos de negocio",
+    "Dise\u00f1o escalable",
+    "DNS",
+    "Docker Swarm",
+    "Dynatrace",
+    "E2E testing",
+    "Ecommerce",
+    "ECS",
+    "Ember",
+    "Encriptaci\u00f3n",
+    "Entrenamiento de modelos",
+    "Escenas",
+    "Expo",
+    "Express.js",
+    "Feature stores",
+    "Figma",
+    "Funciones",
+    "Generaci\u00f3n de reportes",
+    "Generative AI",
+    "Gensim",
+    "Gesti\u00f3n de casos",
+    "Gesti\u00f3n de estado",
+    "Gesti\u00f3n de memoria",
+    "Gesti\u00f3n de proyectos t\u00e9cnicos",
+    "Gitflow",
+    "Google Cloud Platform",
+    "gRPC",
+    "Hadoop",
+    "Helm charts",
+    "Identity and Access Management",
+    "IIS",
+    "Implementaci\u00f3n de din\u00e1micas de juego",
+    "Implementaci\u00f3n de proyectos",
+    "Information Retrieval",
+    "InfoSec",
+    "Infraestructura",
+    "Infraestructura cloud",
+    "Ingenier\u00eda de sistemas",
+    "Ingesta de datos",
+    "Ingl\u00e9s avanzado",
+    "Integraci\u00f3n de APIs",
+    "Integridad de datos",
+    "Ionic",
+    "Jasmine",
+    "JSF",
+    "JSP",
+    "LangGraph",
+    "Lazy loading",
+    "Lightning Components",
+    "Limpieza de datos",
+    "Make",
+    "Mantenibilidad",
+    "Mantenimiento de bases de datos",
+    "Mantenimiento de sistemas",
+    "Marketing digital basado en datos",
+    "Matem\u00e1ticas",
+    "MCP",
+    "Mejora continua",
+    "Microsoft 365",
+    "Microsoft Fabric",
+    "Microsoft SQL Server",
+    "Migraci\u00f3n de datos",
+    "MLflow",
+    "MobX",
+    "Mocha",
+    "Modelado de bases de datos",
+    "Model Context Protocol",
+    "Modelos predictivos",
+    "Module Federation",
+    "Monitoreo de aplicaciones",
+    "Monitoreo de modelos",
+    "Monitoring",
+    "MVVM",
+    "Nagios",
+    "Nest.js",
+    "NetSuite",
+    "New Relic",
+    "Niveles de juego",
+    "NLTK",
+    "Objective-C",
+    "Odoo",
+    "On-premises",
+    "OOP",
+    "OpenAPI",
+    "Optimizaci\u00f3n de c\u00f3digo",
+    "Optimizaci\u00f3n de procesos",
+    "Optimizaci\u00f3n de queries",
+    "Oracle NetSuite",
+    "PC",
+    "Performance testing",
+    "Playwright",
+    "PLN",
+    "PM2",
+    "Power Platform",
+    "Programaci\u00f3n estructurada",
+    "Programaci\u00f3n funcional",
+    "Prompts",
+    "Pruebas de software",
+    "Pruebas funcionales",
+    "Pull requests",
+    "Puppet",
+    "PySpark",
+    "PyTorch",
+    "QA Automation",
+    "R",
+    "React Hooks",
+    "React.js",
+    "Redes",
+    "Redshift",
+    "Refactoring",
+    "Reglas de negocio",
+    "Regresi\u00f3n",
+    "Rendimiento",
+    "Sales Cloud",
+    "SAM",
+    "SAN/NAS",
+    "SAP",
+    "SASS",
+    "scikit-learn",
+    "Scripts",
+    "SCSS",
+    "SDK",
+    "Search engines",
+    "Sector bancario",
+    "Seguridad de sistemas",
+    "Sentry",
+    "Sequelize",
+    "Servicios Web",
+    "Servidores",
+    "Site Reliability Engineering",
+    "SNS",
+    "SolarWinds",
+    "SOQL",
+    "spaCy",
+    "Spark SQL",
+    "Splunk",
+    "Spring MVC",
+    "SQL Developer",
+    "SSRS",
+    "Struts",
+    "Styled Components",
+    "Subversion",
+    "SuiteScript",
+    "Sybase",
+    "Tailwind",
+    "TCP/IP",
+    "Testing manual",
+    "Toma de decisiones t\u00e9cnicas",
+    "Transformaci\u00f3n digital",
+    "UAT",
+    "UCS",
+    "UML",
+    "Usabilidad",
+    "UX de juego",
+    "Vercel",
+    "Versionado",
+    "Virtualizaci\u00f3n",
+    "Vistas",
+    "Visual Studio",
+    "WEB",
+    "Webhooks",
+    "WebServices",
+    "Websphere Application Server",
+    "Websphere MQ",
+    "Web technologies",
+    "Windows",
+    "XML",
+    "XSS",
+    "Containerization",
+    "Elastic Stack",
+    "ELT",
+    "Email marketing",
+    "Embedded Linux",
+    "Embeddings",
+    "Alta disponibilidad",
+    "Emotion",
+    "Empaquetado",
+    "Empaquetado y despliegue",
+    "AlpineJS",
+    "Containerizaci\u00f3n",
+    "Entity Framework Core",
+    "Entity-relationship",
+    "Entregas continuas",
+    "Terragrunt",
+    "Enzyme",
+    "Episerver",
+    "Equities",
+    "Consultor\u00eda",
+    "Consultas SQL",
+    "Consul",
+    "Configuration management",
+    "ESB",
+    "Configuraci\u00f3n de software",
+    "Escenarios de prueba",
+    "Test automation",
+    "ESLint",
+    "ESQL",
+    "Estad\u00edstica",
+    "Estad\u00edsticas",
+    "Est\u00e1ndares de desarrollo",
+    "Estimaci\u00f3n",
+    "Configuraci\u00f3n de redes",
+    "Estudio de tiempos",
+    "ethers.js",
+    "Configuraci\u00f3n de CRM",
+    "ETL/ELT",
+    "ETL Pipeline",
+    "ETRM",
+    "Event-Driven Architecture",
+    "Event-driven development",
+    "Event-driven UIs",
+    "Event Grid",
+    "Eventos",
+    "Event Sourcing",
+    "Configuraci\u00f3n de bases de datos",
+    "Excelencia operacional",
+    "Excel VBA",
+    "Executor Framework",
+    "Experiencia de usuario",
+    "Experimentaci\u00f3n",
+    "Test coverage",
+    "Expo EAS",
+    "Configuraci\u00f3n avanzada",
+    "Expression Trees",
+    "Test Driven Development",
+    "Extracci\u00f3n de datos",
+    "FaaS",
+    "FAISS",
+    "Fargate",
+    "Confiabilidad",
+    "Fastlane",
+    "Feature engineering",
+    "ALM",
+    "\u00c1lgebra",
+    "Filebeat",
+    "Financial Services Cloud",
+    "Fine-tuning",
+    "Fintech",
+    "Conectores personalizados",
+    "Conectores",
+    "Firebase Auth",
+    "Firebase Hosting",
+    "Firestore",
+    "ConcurrentHashMap",
+    "Firmware",
+    "Fivetran",
+    "Concurrency",
+    "Flujos de eventos",
+    "Flujos de trabajo",
+    "Computer graphics",
+    "Compute Engine",
+    "Force.com",
+    "Formularios",
+    "Fortify",
+    "CompTIA Security+",
+    "Fortinet",
+    "Foundry",
+    "Framework de automatizaci\u00f3n",
+    "Framework de pruebas",
+    "Framework de testing",
+    "Frameworks",
+    "Frameworks de testing",
+    "Frameworks web Python",
+    "Component libraries",
+    "Frontend frameworks",
+    "Frontend m\u00f3vil",
+    "FS",
+    "FTP",
+    "Componentes de base de datos",
+    "Componentes",
+    "Testing basado en navegador",
+    "Funciones de ventana SQL",
+    "Function Apps",
+    "Fusion Compiler",
+    "GAM",
+    "GANs",
+    "Gateways",
+    "Compliance",
+    "GDPR",
+    "GenAI",
+    "Generaci\u00f3n de casos de prueba",
+    "Testing de APIs",
+    "ALDON",
+    "Testing de pagos",
+    "Complejidad computacional",
+    "Gesti\u00f3n de cargas de datos",
+    "Testing de performance",
+    "Gesti\u00f3n de contratos",
+    "Gesti\u00f3n de defectos",
+    "Gesti\u00f3n de errores",
+    "Testing de productos",
+    "Gesti\u00f3n de incidentes",
+    "Gesti\u00f3n de la cadena de suministro",
+    "Testing integral",
+    "Gesti\u00f3n de productos",
+    "Compatibilidad entre navegadores",
+    "A/B testing",
+    "Gesti\u00f3n de Riesgos",
+    "Gesti\u00f3n de sistemas cr\u00edticos",
+    "Gesti\u00f3n de sitios web",
+    "Gesti\u00f3n de usuarios",
+    "GINI",
+    "Communities",
+    "Testing mobile",
+    "GitFlow",
+    "Communication Cloud",
+    "Commerce",
+    "GitHub Copilot",
+    "ComfyUI",
+    "Colecciones",
+    "GitLab CI/CD",
+    "GKE",
+    "Glue",
+    "GMP",
+    "Colaboraci\u00f3n de agentes",
+    "Gobernanza",
+    "Gobernanza de AI",
+    "Gobierno del cambio",
+    "Colaboraci\u00f3n",
+    "GoLang",
+    "Google Analytics",
+    "Cognitive Services",
+    "Testing m\u00f3vil",
+    "Google Composer",
+    "Google Play",
+    "Google Play Console",
+    "Google Play Store",
+    "Google Professional Cloud Architect",
+    "Google Storage",
+    "Google Tag Manager",
+    "Goroutines",
+    "GPIO",
+    "GPS",
+    "Gradle",
+    "Grafana",
+    "Grandes vol\u00famenes de datos",
+    "C\u00f3digo mantenible",
+    "Codex",
+    "Alation",
+    "Gulp",
+    "GulpJS",
+    "Gutenberg Editor",
+    "H2OAI",
+    "Hacking \u00e9tico",
+    "AL",
+    "HashMap",
+    "HashSet",
+    "Helm",
+    "Test plans",
+    "Helmfile",
+    "Code splitting",
+    "Herramientas internas",
+    "Code Repository",
+    "HIPAA",
+    "Hiperautomatizaci\u00f3n",
+    "Hive",
+    "Hosting en la nube",
+    "CodeIgniter",
+    "Code coverage",
+    "HTML sem\u00e1ntico",
+    "COBOL",
+    "HTTP proxies",
+    "HTTP requests",
+    "HTTPS",
+    "HubSpot",
+    "Hugging Face",
+    "Hugging Face Diffusers",
+    "Hyper-V",
+    "I2C",
+    "CNAME",
+    "IA agentica",
+    "IA aplicada a marketing",
+    "CLR",
+    "IA generativa",
+    "IA Generativa",
+    "CloudSQL",
+    "IA predictiva",
+    "IBM ACE",
+    "IBM APM",
+    "IBM App Connect Enterprise",
+    "IBMMQ",
+    "ICII",
+    "I+D",
+    "TestRail",
+    "Identity management",
+    "IFRS9",
+    "AKS",
+    "Impala",
+    "Implementaci\u00f3n",
+    "Implementaci\u00f3n de aplicaciones",
+    "Threading",
+    "Implementaci\u00f3n de objetos 3D",
+    "Throughput improvement",
+    "In-app purchases",
+    "Incidentes de seguridad",
+    "Incident response",
+    "Incremental Refresh",
+    "Cloud SQL",
+    "Industria de tarjetas",
+    "Inferencia en tiempo real",
+    "Informatica",
+    "Inform\u00e1tica",
+    "Thunks",
+    "Informix",
+    "Thymeleaf",
+    "Tiempo real",
+    "Tiendanube",
+    "CloudRun",
+    "Infraestructura de contenedores",
+    "Cloud privada",
+    "Infraestructura de red",
+    "Infraestructura de TI",
+    "Cloud Native",
+    "Infraestructura tecnol\u00f3gica",
+    "Infrastructure as code",
+    "Infrastructure as Code",
+    "Infrastructure troubleshooting",
+    "Ingenier\u00eda de datos",
+    "Ingenier\u00eda de prompts",
+    "TikTok Ads",
+    "Cloud infrastructure",
+    "Toad",
+    "TOAD",
+    "Ingl\u00e9s intermedio-avanzado",
+    "Cloud h\u00edbrido",
+    "Instalaci\u00f3n de bases de datos",
+    "Instalaci\u00f3n de sistemas",
+    "Cloud Functions",
+    "CloudFront",
+    "Tolerancia a falhas",
+    "Cloud Build",
+    "Integraci\u00f3n de herramientas",
+    "Cloud architecture",
+    "Client-side",
+    "Cliente-Servidor",
+    "Integraciones bancarias",
+    "Integraci\u00f3n hardware-software",
+    "Integration testing",
+    "Windsurf",
+    "CLI",
+    "CLEAN Code",
+    "IntelliJ IDEA",
+    "Interfaces de usuario",
+    "Interfaces responsivas",
+    "Investigaci\u00f3n tecnol\u00f3gica",
+    "Investigaci\u00f3n y desarrollo",
+    "Tomcat",
+    "Ionic 2",
+    "Ionic Framework",
+    "Claude Code",
+    "iptables",
+    "iSeries",
+    "ISO 14001",
+    "ISO 20022",
+    "ISO 8583",
+    "ISO 9001",
+    "ISTQB",
+    "Clasificaci\u00f3n",
+    "ITSM",
+    "Tracing distribu\u00eddo",
+    "Clases de prueba",
+    "Java 12+",
+    "Java 17",
+    "Java 17+",
+    "Java 21",
+    "Java 8",
+    "Java Collections",
+    "Java Compute Nodes",
+    "Java FX",
+    "CL",
+    "Java Web",
+    "JBoss",
+    "JDBC",
+    "CKAD",
+    "CKA",
+    "Cisco",
+    "JFrog",
+    "Jfrog Artifactory",
+    "CircleCI",
+    "CI pipelines",
+    "JKS",
+    "Joins",
+    "Joomla",
+    "Ciclo de vida del desarrollo de software",
+    "Ciclo de vida de desarrollo de software",
+    "JQuery",
+    "Trackeo de c\u00f3digo",
+    "CI",
+    "Trading",
+    "Chunking",
+    "Chip design",
+    "Juniper",
+    "Check Point",
+    "Jupyter",
+    "Checkmarx",
+    "ChatGPT API",
+    "Chat",
+    "Keras",
+    "Kibana",
+    "Knex",
+    "KNIME",
+    "Knowledge distillation",
+    "Kong",
+    "Chai",
+    "Kotlin Flow",
+    "Kotlin Multiplatform",
+    "KPIs",
+    "KS",
+    "Certificados SSL",
+    "L2 support",
+    "L3 support",
+    "Lakehouse",
+    "Lakehouses",
+    "CDK",
+    "LAMP Stack",
+    "Landing pages",
+    "CCTV",
+    "Trading systems",
+    "CCNA",
+    "Latencia",
+    "AI training",
+    "Lazy Loading",
+    "LDAP",
+    "CCF",
+    "Leap Motion",
+    "Legacy code",
+    "Lenguajes de programaci\u00f3n",
+    "Lenguajes de scripting",
+    "Less",
+    "Levantamiento de requerimientos",
+    "LGD",
+    "LGPD",
+    "Liberaci\u00f3n de proyectos",
+    "Librer\u00edas",
+    "Librer\u00edas compartidas",
+    "Licencias de software",
+    "Liderazgo de proyectos tecnol\u00f3gicos",
+    "Cassandra",
+    "AI Speech",
+    "Lightning Web Components",
+    "WooCommerce",
+    "Casos de Prueba",
+    "LinkedList",
+    "LINQ",
+    "Canvas",
+    "LlamaIndex",
+    "CAN",
+    "C\u00e1mara",
+    "Load balancing",
+    "Locust",
+    "Logback",
+    "Calidad de software",
+    "L\u00f3gica de programaci\u00f3n",
+    "Logic Apps",
+    "LogRocket",
+    "Looker",
+    "LookML",
+    "Calidad de datos",
+    "Low Code",
+    "Low-latency",
+    "Lucene Search",
+    "Lucid",
+    "Luigi",
+    "Calibraci\u00f3n de par\u00e1metros",
+    "macOS",
+    "Macros",
+    "Maestro",
+    "Transit Gateway",
+    "Manejo de bases de datos",
+    "Manejo de credenciales",
+    "Manejo de errores",
+    "Manejo de estados",
+    "TreeSet",
+    "AI Skills",
+    "AI coding assistants",
+    "Mapbox",
+    "Mapeo de datos",
+    "Maquetado web",
+    "Calibraci\u00f3n de modelos",
+    "Markdown",
+    "Marketing Cloud",
+    "AI Builder",
+    "Trustcall",
+    "Matem\u00e1ticas aplicadas",
+    "Material UI",
+    "Matlab Simulink",
+    "Matriz de Seguimiento",
+    "CAD 911",
+    "Cach\u00e9s",
+    "MB-820",
+    "AI agents",
+    "MCP servers",
+    "MDM",
+    "TTS",
+    "Memorystore",
+    "Mensajer\u00eda financiera",
+    "CaaS",
+    "Mesosphere DC/OS",
+    "Meta Ads",
+    "Meteor.js",
+    "Method decorators",
+    "Metodolog\u00eda de desarrollo",
+    "Metodolog\u00eda de ruta cr\u00edtica",
+    "C++11",
+    "Metodolog\u00edas \u00e1giles de IA",
+    "Metodolog\u00edas de desarrollo",
+    "Metodolog\u00edas de pruebas de software",
+    "Metodolog\u00edas tradicionales",
+    "M\u00e9tricas de calidad",
+    "M\u00e9tricas de evaluaci\u00f3n",
+    "M\u00e9tricas estandarizadas",
+    "Microcontroladores",
+    "Micr\u00f3fono",
+    "Microfrontend",
+    "Micro-frontends",
+    "Build processes",
+    "Builder.io",
+    "Tuning de bases de datos",
+    "Buenas pr\u00e1cticas de programaci\u00f3n",
+    "Microsoft Copilot Studio",
+    "Microsoft Dynamics CRM",
+    "Tuning SQL",
+    "Microsoft Office",
+    "Microsoft Power Automate",
+    "Twilio",
+    "Middleware",
+    "Typeorm",
+    "Migraci\u00f3n de sitios",
+    "Migraciones de bases de datos",
+    "Miner\u00eda de procesos",
+    "ML",
+    "ML Engineering",
+    "TypeORM",
+    "Buenas pr\u00e1cticas de desarrollo",
+    "ML Studio",
+    "Bucles",
+    "Agentic frameworks",
+    "UART",
+    "BTP",
+    "Browser APIs",
+    "Ably",
+    "Brokers",
+    "Modelado de datos relacionales",
+    "Modelado de procesos",
+    "Modelado estad\u00edstico",
+    "Modelagem causal",
+    "Modelagem estat\u00edstica",
+    "Modelamiento de procesos",
+    "Modelamiento Estad\u00edstico",
+    "Workflows",
+    "Modelos de caja",
+    "Modelos de clasificaci\u00f3n",
+    "Modelos de cr\u00e9dito",
+    "Modelos de datos tabulares",
+    "Modelos de elasticidad",
+    "Modelos de ensamble",
+    "Modelos de lenguaje",
+    "Modelos de regresi\u00f3n",
+    "Modelos de riesgo",
+    "Modelos lineales",
+    "Modelos Macroecon\u00f3micos",
+    "Modelos no lineales",
+    "UDFs",
+    "Modernizaci\u00f3n de c\u00f3digo legado",
+    "Modernizaci\u00f3n de monolitos",
+    "Modificaci\u00f3n de plantillas",
+    "Modular",
+    "Braze",
+    "UDP",
+    "BPMN",
+    "Mongosse",
+    "BPM",
+    "Ad Stack",
+    "UiPath",
+    "Monitoreo de performance",
+    "Monitoreo de redes",
+    "Monitoreo de rendimiento",
+    "Monitoreo de sistemas",
+    "UI/UX",
+    "Monitorizaci\u00f3n",
+    "Mono repos",
+    "Monte Carlo",
+    "Motores anal\u00edticos",
+    "Motores predictivos",
+    "MQ Queue",
+    "MSA",
+    "Boost",
+    "Mulesoft",
+    "Multimedia",
+    "Multiprocesamiento paralelo",
+    "Multithreading",
+    "Booking systems",
+    "Bluebird",
+    "UI/UX m\u00f3vil",
+    "Blockchain",
+    "Bloc",
+    "WYSIWYG",
+    "NATS",
+    "Natural Language Processing",
+    "Navegaci\u00f3n m\u00f3vil",
+    "Navegadores",
+    "Navegadores headless",
+    "N-Capas",
+    "ADO.NET",
+    "Blob Storage",
+    "Blender Python API",
+    ".NET 5",
+    ".NET 6+",
+    "Blazor",
+    "Bitbucket Pipelines",
+    "Netlify",
+    ".NET MAUI",
+    "netstat",
+    "Unit Testing",
+    "Bicep",
+    "Adobe Photoshop",
+    "Bibliotecas reutilizables",
+    "NextJS",
+    "Nexus",
+    "NGFW",
+    "Nginx",
+    "NgRx",
+    "NGRX",
+    "NGXS",
+    "NHibernate",
+    "Adobe Launch",
+    "BGP",
+    "URS",
+    "BEM",
+    "Bedrock",
+    "Batch processing",
+    "Notificaciones push",
+    "npm",
+    "NPM Scripts",
+    "Nubes p\u00fablicas",
+    "numpy",
+    "Batch",
+    "OAS 3",
+    "Bases de datos backend",
+    "Bancos de datos distribuidos",
+    "Xamarin",
+    "Object storage",
+    "Bamboo",
+    "Observer",
+    "Background services",
+    "OCP",
+    "OCR",
+    "Backend testing",
+    "ODBC",
+    "Usabilidad en juegos de primera persona",
+    "Office 365",
+    "OIDC",
+    "OKE",
+    "Okta",
+    "OLS",
+    "On-call",
+    "OneDrive",
+    "OneLake",
+    "Adobe Illustrator",
+    "AB-INITIO",
+    "OpenAI",
+    "UX patterns",
+    "OpenCV",
+    "OpenID Connect",
+    "OpenSearch",
+    "Backend development",
+    "B2B SaaS",
+    "Azure System Administrator",
+    "Operators",
+    "Opsgenie",
+    "Azure Storage",
+    "Optimizaci\u00f3n de agentes",
+    "Azure Static Web Apps",
+    "Adobe Flash",
+    "Azure Solutions Architect Expert",
+    "Optimizaci\u00f3n de costos",
+    "Optimizaci\u00f3n de datos",
+    "Optimizaci\u00f3n de desempe\u00f1o",
+    "Optimizaci\u00f3n de modelos",
+    "Azure Service Bus",
+    "VAEs",
+    "Validaci\u00f3n",
+    "Azure Monitor",
+    "Optimizaci\u00f3n de rendimiento frontend",
+    "Optimizaci\u00f3n ETL",
+    "Optimizaci\u00f3n web",
+    "Optimizely",
+    "Azure Logic Apps",
+    "Oracle Analytics Cloud",
+    "Oracle APEX",
+    "Oracle Cloud",
+    "Oracle Cloud Infrastructure",
+    "Oracle Database",
+    "Oracle Data Integrator",
+    "Adobe Experience Manager",
+    "Oracle PL/SQL",
+    "Order Management",
+    "Orientaci\u00f3n a objetos",
+    "Azure Fundamentals",
+    "Azure EventHubs",
+    "Orquestaci\u00f3n de agentes",
+    "Orquestaci\u00f3n de procesos",
+    "Orquestaciones",
+    "OSCP",
+    "OSPF",
+    "Outlook",
+    "Azure Document Intelligence",
+    "PaaS",
+    "PageSpeed",
+    "Palo Alto",
+    "pandas",
+    "Azure Data Lake",
+    "Paquetes",
+    "Parameter Store",
+    "Parcerias t\u00e9cnicas",
+    "Parquet",
+    "Particionado",
+    "Particionamiento",
+    "Particionamiento de tablas",
+    "Patrones de arquitectura",
+    "Azure Databricks",
+    "Patr\u00f3n Singleton",
+    "PBX",
+    "Validaci\u00f3n de procesos",
+    "PD",
+    "PDF",
+    "PDF processing",
+    "PDM",
+    "PDV",
+    "Peering",
+    "Pega PRPC",
+    "Azure CosmosDB",
+    "Performance hooks",
+    "Azure Container Apps",
+    "Validaci\u00f3n de sistemas computarizados",
+    "Performance tuning",
+    "Azure Cloud",
+    "Persistencia de datos",
+    "Personalizaci\u00f3n de aplicaciones",
+    "Personalizaci\u00f3n UX",
+    "PHI",
+    "Phishing",
+    "PhoneGap",
+    "Azure AI Services",
+    "PHPUnit",
+    "PII",
+    "PIL",
+    "Azure AI Search",
+    "Pipeline Builder",
+    "Azure AI Foundry",
+    "Azure Active Directory",
+    "PIX",
+    "PL-400",
+    "PL-500",
+    "Plan de Validaci\u00f3n",
+    "AWS RDS",
+    "AWS QuickSight",
+    "Planificaci\u00f3n t\u00e9cnica",
+    "Plataforma de IA",
+    "Plataforma de ML",
+    "Plataformas de datos",
+    "Plataformas de marketing",
+    "Playback",
+    "Validaciones automatizadas",
+    "Vector databases",
+    "Plotly",
+    "AWS Glue",
+    "Plugins m\u00f3viles",
+    "Vector Tools",
+    "PMI",
+    "POC",
+    "POO",
+    "POS",
+    "Posicionamiento CSS",
+    "AWS CloudWatch",
+    "PostHog",
+    "AWS CloudFormation",
+    "AWS Certified Solutions Architect",
+    "AWS API Gateway",
+    "Power Automate Cloud",
+    "Power Automate Desktop",
+    "AWR",
+    "Power BI Desktop",
+    "Power BI Report Server",
+    "Power BI Service",
+    "PowerFX",
+    "PowerMock",
+    "PowerPivot",
+    "XDR",
+    "Power Portal",
+    "Prefect",
+    "Prettier",
+    "PrimeReact",
+    "Principios de dise\u00f1o de software",
+    "Autoscaling",
+    "Automatizaci\u00f3n de archivos",
+    "Procesamiento batch",
+    "AutoCAD",
+    "Procesamiento de documentos",
+    "Procesamiento de eventos",
+    "Procesamiento de lenguaje natural",
+    "Procesamiento de Lenguaje Natural",
+    "Procesamiento de texto",
+    "Procesamiento en tiempo real",
+    "Procesamiento por lotes",
+    "Procesos automatizados",
+    "Process Builder",
+    "Product development",
+    "Product management",
+    "Product Owners",
+    "Aurora",
+    "Verilog",
+    "XGBoost",
+    "Programaci\u00f3n orientada a eventos",
+    "Aura Components",
+    "Programaci\u00f3n reactiva",
+    "Programaci\u00f3n web",
+    "Programas batch",
+    "Progressive enhancement",
+    "Project management",
+    "Promesas",
+    "Prometheus",
+    "Prompting",
+    "Adobe Edge",
+    "Protecci\u00f3n de datos",
+    "Prototipado r\u00e1pido",
+    "Prototipos",
+    "Provider",
+    "Proxies",
+    "Proyectos de datos",
+    "Auditor\u00edas de bases de datos",
+    "Auditor\u00edas",
+    "Pruebas de aplicaciones",
+    "ATS",
+    "Atribuci\u00f3n",
+    "Pruebas de rendimiento",
+    "Pruebas de seguridad",
+    "Versionado de modelos",
+    "Pruebas de usabilidad",
+    "Pruebas end-to-end",
+    "Versionamiento de APIs",
+    "Pruebas integrales",
+    "Atlassian",
+    "Pruning",
+    "Atenci\u00f3n al cliente",
+    "Versionamiento de c\u00f3digo",
+    "Videojuegos",
+    "Push notifications",
+    "ASP.NET MVC",
+    "Pydantic",
+    "Videollamada",
+    "Pytest",
+    "ASP.NET Core MVC",
+    "XGBOOST",
+    "Q",
+    "ASP Core",
+    "Visio",
+    "QoS",
+    "Qt",
+    "QT Creator",
+    "Quantization",
+    "Quarkus",
+    "Quartz Scheduler",
+    "Query languages",
+    "Query optimization",
+    "Query tuning",
+    "Zoom",
+    "ASP",
+    "RAG",
+    "Ransomware",
+    "Raspberry Pi",
+    "Razor",
+    "RDBMS",
+    "AS-IS / TO-BE",
+    "Asana",
+    "React Context",
+    "Administraci\u00f3n de sistemas operativos",
+    "Administraci\u00f3n de sistemas",
+    "AS/400",
+    "Aruba",
+    "React Native Paper",
+    "React Native Reanimated",
+    "React Native Testing Library",
+    "React Query",
+    "React Router",
+    "ArrayList",
+    "Realidad Aumentada",
+    "Arquitecturas Orientadas a Eventos",
+    "Realm",
+    "Rebalanceo de l\u00edneas",
+    "Recharts",
+    "Reconocimiento de im\u00e1genes",
+    "Recuperaci\u00f3n",
+    "XMLports",
+    "Redes LAN",
+    "Redes neuronales",
+    "Redes WAN",
+    "Red Hat Certified",
+    "Red Hat OpenShift",
+    "Arquitectura SOA",
+    "Redis Cache",
+    "Administraci\u00f3n de contenedores",
+    "Arquitecturas escalables",
+    "Redux Persist",
+    "Redux Toolkit",
+    "VLANs",
+    "Reglas declarativas",
+    "VMware",
+    "Reglas de validaci\u00f3n",
+    "VoIP",
+    "Arquitecturas de seguridad",
+    "Release management",
+    "Rendering engines",
+    "VPC",
+    "Rendimiento del lado del cliente",
+    "Reportes",
+    "Reportes automatizados",
+    "Reportes financieros",
+    "Reports",
+    "Arquitecturas de nube",
+    "Resoluci\u00f3n de problemas",
+    "Respaldo de bases de datos",
+    "Arquitecturas cliente-servidor",
+    "Responsive web design",
+    "Arquitectura por capas",
+    "Arquitectura multi-tenant",
+    "Restauraci\u00f3n de datos",
+    "RESTful",
+    "RESTful API",
+    "Retail",
+    "Retail analytics",
+    "Retool",
+    "Retrospectiva",
+    "Review",
+    "Revisi\u00f3n de c\u00f3digo",
+    "Revisi\u00f3n de est\u00e1ndares",
+    "Revisiones de c\u00f3digo",
+    "RFI",
+    "RFP",
+    "RFQ",
+    "Riesgo de Cr\u00e9dito",
+    "Riesgo de Mercado",
+    "Riesgo Estructural",
+    "RLS",
+    "Rollup",
+    "Root cause analysis",
+    "Route 53",
+    "Arquitectura multiproceso",
+    "RPG ILE",
+    "RPG IV",
+    "RSS",
+    "RTK Query",
+    "RTL verification",
+    "RTOS",
+    "Arquitectura frontend",
+    "Arquitectura de plataformas",
+    "Rust",
+    "RxJS",
+    "Arquitectura de bases de datos relacionales",
+    "S/4HANA",
+    "Arquitectura de bases de datos",
+    "Sagas",
+    "Adaptive design",
+    "Arquitectura de aplicaciones web",
+    "Salesforce Administrator",
+    "Salesforce Application Architect",
+    "Salesforce Architecture and Management Designer",
+    "Salesforce Associate",
+    "Salesforce Data Cloud",
+    "Salesforce Developer I",
+    "Salesforce Developer II",
+    "Salesforce Marketing Cloud",
+    "Salesforce Sharing and Visibility Designer",
+    "Salesforce Sites",
+    "VTEX",
+    "SAML",
+    "Arquitectura CSS",
+    "Actualizaci\u00f3n de sistemas",
+    "Active Directory",
+    "SAP B1",
+    "SAP Cloud",
+    "SAP-CPI",
+    "SAP ECC",
+    "SAP Integration Suite",
+    "SAP S/4 HANA",
+    "Arquitectura cliente-servidor",
+    "WAS",
+    "Arquitectura basada en eventos",
+    "Scheduler",
+    "Schema.org",
+    "Waterfall",
+    "Scikit-learn",
+    "Scikit-Learn",
+    "SCM",
+    "Scrapy",
+    "ARM templates",
+    "WCAG 2.1",
+    "Scripts de mantenimiento",
+    "Arduino",
+    "apt",
+    "APQP",
+    "ACF",
+    "12-factor app",
+    "App Store Connect",
+    "Web3",
+    "Secrets Manager",
+    "web3.js",
+    "Sector financiero",
+    "Secure workflows",
+    "Security",
+    "Security fundamentals",
+    "Segmentaci\u00f3n",
+    "App Services",
+    "Appsdynamics",
+    "Seguridad de APIs",
+    "Seguridad de aplicaciones m\u00f3viles",
+    "Seguridad de bases de datos",
+    "Apple App Store",
+    "Seguridad de la informaci\u00f3n",
+    "Seguridad del sistema",
+    "Accuracy",
+    "Seguridad en desarrollo",
+    "Appian",
+    "Seguridad frontend",
+    "Seguridad m\u00f3vil",
+    "Seguridad perimetral",
+    "Seguridad SFDC",
+    "Aplicaciones desktop",
+    "Selfcheckout",
+    "SEM",
+    "Semantic Kernel",
+    "Semiconductores",
+    "WebAPI",
+    "Aplicaciones",
+    "WebApps",
+    "API Keys",
+    "Serverless Framework",
+    "Service Bus",
+    "API de Looker",
+    "Service Oriented systems",
+    "Servicios",
+    "Servicios cloud",
+    "Servicios de voz",
+    "Servicios distribuidos",
+    "Servicios escalables",
+    "Servicios externos",
+    "API Context",
+    "Web Components",
+    "Web development",
+    "Servidores web",
+    "Session replay",
+    "SEU",
+    "SFTP",
+    "SharedPreferences",
+    "Apex Data Loader",
+    "Apache Spark",
+    "Shell scripting",
+    "Shopify",
+    "SIEM",
+    "SIL testing",
+    "Single Sign On",
+    "Single Sign-On",
+    "Single SPA",
+    "Singleton",
+    "Sistemas de archivos",
+    "Sistemas de gesti\u00f3n integral",
+    "Sistemas de informaci\u00f3n",
+    "Apache NiFi",
+    "Sistemas distribu\u00eddos",
+    "Sistemas electr\u00f3nicos",
+    "Apache Kafka",
+    "Sistemas robustos",
+    "Sitecore",
+    "WebForms",
+    "Six Sigma",
+    "Sketch",
+    "Sklearn",
+    "SLA",
+    "Slack",
+    "SLF4J",
+    "Smart contracts",
+    "Smart POS",
+    "Apache",
+    "YAGNI",
+    "Snyk",
+    "SOA",
+    "Antivirus",
+    "SOAP API",
+    "SoapUI",
+    "SOAPUI",
+    "SocketIO",
+    "Sockets",
+    "Software de preparaci\u00f3n de impuestos",
+    "Software development",
+    "Software embebido",
+    "Software engineering",
+    "Software para equipos de prueba",
+    "Software Testing",
+    "WebHooks",
+    "Anthropic",
+    "Solidity",
+    "Soluciones distribuidas",
+    "ANSI SQL",
+    "Soluciones t\u00e9cnicas",
+    "Solutions engineering",
+    "Sonar",
+    "Animated API",
+    "Animaci\u00f3n web",
+    "WebLogic",
+    "SOSL",
+    "Access management",
+    "Angular JS",
+    "WebRTC",
+    "SPI",
+    "Web scraping",
+    "Angular 2",
+    "Android SDK",
+    "Anal\u00edtica web",
+    "Anal\u00edtica de producto",
+    "Anal\u00edtica",
+    "Accessibility",
+    "An\u00e1lisis predictivo",
+    "Sprint planning",
+    "Sprints",
+    "An\u00e1lisis multivariado",
+    "3D rendering",
+    "SQLite",
+    "An\u00e1lisis exploratorio de datos",
+    "SQL tuning",
+    "An\u00e1lisis de tendencias",
+    "SRE",
+    "SSG",
+    "SSH",
+    "An\u00e1lisis de rendimiento",
+    "An\u00e1lisis de im\u00e1genes",
+    "Accesibilidad web",
+    "SST",
+    "Stable Diffusion",
+    "Star schema",
+    "Statamic",
+    "An\u00e1lisis de evidencia",
+    "Stencil.JS",
+    "StepFunctions",
+    "An\u00e1lisis de crashes",
+    "Stored Procedures",
+    "An\u00e1lisis de correlaci\u00f3n",
+    "Streaming",
+    "Stripe",
+    "Structured data extraction",
+    "WebSphere",
+    "STT",
+    "yum",
+    "StyleSheet API",
+    "Subconsultas",
+    "Zabbix",
+    "Zapier",
+    "An\u00e1lisis de c\u00f3digo",
+    "SWC",
+    "An\u00e1lisis de casos de uso",
+    "An\u00e1lisis avanzado",
+    "SWR",
+    "Window functions",
+    "Symfony",
+    "Synapse",
+    "Synchronization",
+    "Data Analytics",
+    "DataDog",
+    "Dask",
+    "Dash",
+    "Data Factory",
+    "systemd",
+    "Dataflows Gen2",
+    "Dataform",
+    "DataFrames",
+    "Data ingestion",
+    "System design",
+    "Data lakehouse",
+    "Data Lakehouse",
+    "Dart",
+    "Data Mart",
+    "System Extensions",
+    "Dapp",
+    "Dataproc",
+    "Data QA",
+    "Data quality",
+    "System-level APIs",
+    "Daily",
+    "Datasets versionados",
+    "Data stack",
+    "Data Streams",
+    "Data Studio",
+    "Custom middlewares",
+    "Data warehouse",
+    "Customizaci\u00f3n",
+    "Data warehousing",
+    "Datos estructurados",
+    "DAX",
+    "DAX Studio",
+    "Customer success",
+    "DBA",
+    "Cursor AI",
+    "DBT",
+    "DC",
+    "DCL",
+    "System-on-chip",
+    "Cursor",
+    "DDS",
+    "curl",
+    "Debugging SQL",
+    "Cumplimiento normativo",
+    "Deep linking",
+    "SystemVerilog",
+    "Demostraciones de producto",
+    "CTE",
+    "Deployment de modelos",
+    "CS",
+    "Amplitude",
+    "Tableros de anal\u00edtica",
+    "Desarrollo cloud",
+    "Desarrollo de agentes inteligentes",
+    "Desarrollo de APIs",
+    "Tabular Editor",
+    "Desarrollo de aplicaciones web",
+    "Desarrollo de componentes reutilizables",
+    "Desarrollo de consultas",
+    "Desarrollo de escritorio",
+    "Desarrollo de extensiones",
+    "Desarrollo de informes",
+    "Desarrollo de interfaces",
+    "Desarrollo de interfaces de usuario",
+    "Desarrollo de KPIs",
+    "Desarrollo de modelos ML",
+    "Desarrollo de p\u00e1ginas",
+    "Desarrollo de plugins",
+    "Desarrollo de productos",
+    "Crystal Reports",
+    "Desarrollo de sistemas",
+    "crontab",
+    "Zoho",
+    "Desarrollo de temas",
+    "Tailwind CSS",
+    "Desarrollo frontend",
+    "Desarrollo full-stack",
+    "Cron jobs",
+    "Criptograf\u00eda",
+    "Desarrollo m\u00f3vil h\u00edbrido",
+    "CrewAI",
+    "Creaci\u00f3n de m\u00e9tricas",
+    "Desarrollo m\u00f3vil web",
+    "Creaci\u00f3n de librer\u00edas iOS",
+    "Desarrollo nativo",
+    "Desarrollo orientado a eventos",
+    "Desarrollo Salesforce",
+    "Talend",
+    "CQRS",
+    "TCL",
+    "CPQ",
+    "Design systems",
+    "Design Thinking",
+    "Desnormalizaci\u00f3n",
+    "cPanel",
+    "Despliegue cloud",
+    "Despliegue continuo",
+    "Cosmos DB",
+    "Despliegue de software",
+    "Despliegue en cloud",
+    "Despliegue frontend",
+    "Despliegues",
+    "Despliegues autom\u00e1ticos",
+    "Detecci\u00f3n de fraude",
+    "Deuda t\u00e9cnica",
+    "Coroutines",
+    "CoreData",
+    "Diagn\u00f3stico",
+    "Diagramas de arquitectura",
+    "Diffusion models",
+    "dig",
+    "Disaster recovery",
+    "Dise\u00f1o",
+    "Dise\u00f1o adaptativo",
+    "Dise\u00f1o de algoritmos",
+    "Dise\u00f1o de APIs",
+    "Dise\u00f1o de aplicaciones",
+    "Cordova",
+    "Dise\u00f1o de entidades",
+    "Dise\u00f1o de esquemas",
+    "TCP",
+    "Dise\u00f1o de modelos",
+    "Dise\u00f1o de modelos de monitoreo",
+    "Dise\u00f1o de nube",
+    "Windows OS",
+    "Dise\u00f1o de sistemas",
+    "Copias de seguridad",
+    "Dise\u00f1o de soluciones",
+    "AML",
+    "Dise\u00f1o modular",
+    "Dise\u00f1o orientado a objetos",
+    "Control-M",
+    "Dise\u00f1o web",
+    "Distributed systems",
+    "Controllers",
+    "Control de cambios",
+    "Teams",
+    "Control de calidad",
+    "Docker-compose",
+    "Docker Compose",
+    "Tech Lead",
+    "Docling",
+    "Control de accesos",
+    "Documentaci\u00f3n arquitect\u00f3nica",
+    "Documentaci\u00f3n de APIs",
+    "Context management",
+    "Documentaci\u00f3n de desarrollos",
+    "Documentaci\u00f3n de modelos",
+    "Documentaci\u00f3n de software",
+    "Documentaci\u00f3n de testing",
+    "Context API",
+    "Document AI",
+    "Document classification",
+    "Document databases",
+    "DOM",
+    "Contenidos digitales",
+    "Domain-Driven Design",
+    "DRF",
+    "Drivers",
+    "Drupal",
+    "DRY",
+    "DS",
+    "DSO.ai",
+    "DSPy",
+    "Durable Functions",
+    "Dynamics 365",
+    "Dynamics 365 Business Central",
+    "Dynamics NAV",
+    "Contenedores",
+    "Alta volumetr\u00eda",
+    "Telecomunicaciones",
+    "EC2",
+    "Eclipse",
+    "Eclipse IDE",
+    "Telefon\u00eda",
+    "ECR",
+    "Telefon\u00eda IP",
+    "EDR",
+    "Educaci\u00f3n digital",
+    "Containers",
+    "Elasticsearch"
+  ],
+  "embedding_2d": [
+    [
+      1.846724271774292,
+      9.080714225769043
+    ],
+    [
+      2.385828733444214,
+      8.893903732299805
+    ],
+    [
+      0.9829990863800049,
+      7.44794225692749
+    ],
+    [
+      2.8564705848693848,
+      11.484146118164062
+    ],
+    [
+      5.692201137542725,
+      8.273728370666504
+    ],
+    [
+      2.8811216354370117,
+      9.475010871887207
+    ],
+    [
+      1.540523648262024,
+      9.838605880737305
+    ],
+    [
+      3.6601359844207764,
+      10.545683860778809
+    ],
+    [
+      4.015774726867676,
+      8.034299850463867
+    ],
+    [
+      2.850290060043335,
+      8.429032325744629
+    ],
+    [
+      2.413623332977295,
+      10.895217895507812
+    ],
+    [
+      7.40478515625,
+      8.877687454223633
+    ],
+    [
+      5.778183460235596,
+      8.34328556060791
+    ],
+    [
+      3.037921905517578,
+      8.41766357421875
+    ],
+    [
+      3.0324370861053467,
+      6.776366710662842
+    ],
+    [
+      4.001325607299805,
+      8.033592224121094
+    ],
+    [
+      3.3668923377990723,
+      10.00473403930664
+    ],
+    [
+      1.9261993169784546,
+      9.180863380432129
+    ],
+    [
+      3.0324840545654297,
+      6.774654865264893
+    ],
+    [
+      3.6973347663879395,
+      10.915440559387207
+    ],
+    [
+      4.625064849853516,
+      7.09353494644165
+    ],
+    [
+      8.248579025268555,
+      8.831521034240723
+    ],
+    [
+      1.9954278469085693,
+      9.434974670410156
+    ],
+    [
+      2.983013868331909,
+      9.958741188049316
+    ],
+    [
+      5.3034467697143555,
+      7.154268741607666
+    ],
+    [
+      -0.11517509073019028,
+      8.406718254089355
+    ],
+    [
+      2.47253680229187,
+      10.911177635192871
+    ],
+    [
+      7.814321994781494,
+      7.345678806304932
+    ],
+    [
+      2.481877565383911,
+      8.575976371765137
+    ],
+    [
+      8.01975154876709,
+      8.428570747375488
+    ],
+    [
+      2.435694694519043,
+      10.828642845153809
+    ],
+    [
+      1.6526484489440918,
+      8.999584197998047
+    ],
+    [
+      4.4988603591918945,
+      9.480527877807617
+    ],
+    [
+      8.56540584564209,
+      6.89334774017334
+    ],
+    [
+      2.402177095413208,
+      10.798795700073242
+    ],
+    [
+      8.403450965881348,
+      5.949906349182129
+    ],
+    [
+      3.464291572570801,
+      10.854655265808105
+    ],
+    [
+      8.3414945602417,
+      8.52790641784668
+    ],
+    [
+      1.2586151361465454,
+      8.360757827758789
+    ],
+    [
+      6.336442947387695,
+      6.484724044799805
+    ],
+    [
+      2.4346842765808105,
+      10.93678092956543
+    ],
+    [
+      0.7017315030097961,
+      9.049185752868652
+    ],
+    [
+      6.968484878540039,
+      7.027395725250244
+    ],
+    [
+      1.8523870706558228,
+      9.77416706085205
+    ],
+    [
+      9.283722877502441,
+      8.442818641662598
+    ],
+    [
+      7.350476264953613,
+      6.481253623962402
+    ],
+    [
+      2.4703047275543213,
+      10.858585357666016
+    ],
+    [
+      3.8242242336273193,
+      9.125893592834473
+    ],
+    [
+      8.219297409057617,
+      8.060346603393555
+    ],
+    [
+      2.810478448867798,
+      9.76677417755127
+    ],
+    [
+      2.2901015281677246,
+      9.20036506652832
+    ],
+    [
+      1.6022459268569946,
+      9.008489608764648
+    ],
+    [
+      6.838419437408447,
+      6.45591402053833
+    ],
+    [
+      2.678102731704712,
+      10.935161590576172
+    ],
+    [
+      3.0725228786468506,
+      6.853299617767334
+    ],
+    [
+      8.665950775146484,
+      7.422687530517578
+    ],
+    [
+      1.8161115646362305,
+      10.891798973083496
+    ],
+    [
+      9.231646537780762,
+      8.363207817077637
+    ],
+    [
+      1.5638983249664307,
+      8.42834758758545
+    ],
+    [
+      2.206012487411499,
+      8.6857328414917
+    ],
+    [
+      2.0543785095214844,
+      9.154338836669922
+    ],
+    [
+      1.6485085487365723,
+      10.402095794677734
+    ],
+    [
+      7.3381266593933105,
+      8.387471199035645
+    ],
+    [
+      8.925148963928223,
+      8.380155563354492
+    ],
+    [
+      8.862863540649414,
+      7.52569580078125
+    ],
+    [
+      6.888990879058838,
+      8.049647331237793
+    ],
+    [
+      1.3545806407928467,
+      8.214483261108398
+    ],
+    [
+      2.9723808765411377,
+      7.011377811431885
+    ],
+    [
+      3.8797013759613037,
+      7.530426502227783
+    ],
+    [
+      3.5245585441589355,
+      9.635128021240234
+    ],
+    [
+      5.408995151519775,
+      7.138567924499512
+    ],
+    [
+      6.3663716316223145,
+      6.44634485244751
+    ],
+    [
+      4.027423858642578,
+      6.774666786193848
+    ],
+    [
+      6.183486461639404,
+      6.5754618644714355
+    ],
+    [
+      1.5924813747406006,
+      10.566747665405273
+    ],
+    [
+      0.9665176272392273,
+      8.701133728027344
+    ],
+    [
+      9.28233528137207,
+      8.45539665222168
+    ],
+    [
+      2.2919459342956543,
+      9.562934875488281
+    ],
+    [
+      7.612447261810303,
+      5.979457378387451
+    ],
+    [
+      0.3854650855064392,
+      7.468493461608887
+    ],
+    [
+      8.590444564819336,
+      8.648258209228516
+    ],
+    [
+      7.25999641418457,
+      7.496004581451416
+    ],
+    [
+      2.191131114959717,
+      9.42001724243164
+    ],
+    [
+      8.262060165405273,
+      6.8256144523620605
+    ],
+    [
+      2.1405837535858154,
+      8.994060516357422
+    ],
+    [
+      1.900763988494873,
+      9.582066535949707
+    ],
+    [
+      2.94976806640625,
+      9.939538955688477
+    ],
+    [
+      4.149962902069092,
+      9.762319564819336
+    ],
+    [
+      6.907172679901123,
+      8.459222793579102
+    ],
+    [
+      4.739068031311035,
+      8.726912498474121
+    ],
+    [
+      2.4317123889923096,
+      7.625288486480713
+    ],
+    [
+      3.8061683177948,
+      7.539148330688477
+    ],
+    [
+      2.5976033210754395,
+      7.9568634033203125
+    ],
+    [
+      6.238219738006592,
+      6.612614631652832
+    ],
+    [
+      2.1702208518981934,
+      7.467828750610352
+    ],
+    [
+      1.9944192171096802,
+      9.30417251586914
+    ],
+    [
+      6.070883750915527,
+      7.166744709014893
+    ],
+    [
+      7.7722039222717285,
+      6.552293300628662
+    ],
+    [
+      1.3824610710144043,
+      10.495291709899902
+    ],
+    [
+      7.751036643981934,
+      8.096274375915527
+    ],
+    [
+      4.028277397155762,
+      9.831281661987305
+    ],
+    [
+      1.2600998878479004,
+      8.375659942626953
+    ],
+    [
+      1.165138602256775,
+      8.43051528930664
+    ],
+    [
+      6.59077262878418,
+      8.699051856994629
+    ],
+    [
+      3.052006959915161,
+      6.902836799621582
+    ],
+    [
+      2.90643310546875,
+      9.821112632751465
+    ],
+    [
+      2.461442470550537,
+      9.313295364379883
+    ],
+    [
+      7.335099697113037,
+      9.708826065063477
+    ],
+    [
+      3.0142107009887695,
+      9.4274263381958
+    ],
+    [
+      2.4340624809265137,
+      7.88309907913208
+    ],
+    [
+      2.2130777835845947,
+      8.92922306060791
+    ],
+    [
+      2.0462958812713623,
+      9.717825889587402
+    ],
+    [
+      1.5154087543487549,
+      8.949889183044434
+    ],
+    [
+      1.9619066715240479,
+      7.308758735656738
+    ],
+    [
+      1.8255804777145386,
+      8.956454277038574
+    ],
+    [
+      2.0182430744171143,
+      8.64088249206543
+    ],
+    [
+      2.4743075370788574,
+      9.720039367675781
+    ],
+    [
+      3.1045801639556885,
+      6.75238561630249
+    ],
+    [
+      7.315911769866943,
+      8.182642936706543
+    ],
+    [
+      3.361346960067749,
+      8.255555152893066
+    ],
+    [
+      -0.11291366070508957,
+      7.8223066329956055
+    ],
+    [
+      0.03591477870941162,
+      7.67478084564209
+    ],
+    [
+      0.7222052812576294,
+      9.261817932128906
+    ],
+    [
+      2.044062852859497,
+      7.437400817871094
+    ],
+    [
+      8.92972183227539,
+      7.297846794128418
+    ],
+    [
+      3.91272234916687,
+      11.046867370605469
+    ],
+    [
+      4.38085412979126,
+      8.539825439453125
+    ],
+    [
+      4.537259578704834,
+      10.408863067626953
+    ],
+    [
+      3.3815767765045166,
+      8.558677673339844
+    ],
+    [
+      3.49692964553833,
+      8.220211029052734
+    ],
+    [
+      7.6453857421875,
+      7.074232578277588
+    ],
+    [
+      2.9346134662628174,
+      8.555212020874023
+    ],
+    [
+      5.759881019592285,
+      7.088698863983154
+    ],
+    [
+      2.972071647644043,
+      6.770822048187256
+    ],
+    [
+      2.25356388092041,
+      9.564496994018555
+    ],
+    [
+      8.916131973266602,
+      7.0995588302612305
+    ],
+    [
+      7.654635906219482,
+      5.971992015838623
+    ],
+    [
+      2.715031147003174,
+      7.173943042755127
+    ],
+    [
+      5.813326358795166,
+      9.119186401367188
+    ],
+    [
+      1.1985042095184326,
+      7.995164394378662
+    ],
+    [
+      0.20879316329956055,
+      9.101585388183594
+    ],
+    [
+      4.609908103942871,
+      7.763535499572754
+    ],
+    [
+      1.8103431463241577,
+      9.080156326293945
+    ],
+    [
+      3.988352060317993,
+      9.613409042358398
+    ],
+    [
+      1.1905890703201294,
+      8.300260543823242
+    ],
+    [
+      3.3763487339019775,
+      9.30376148223877
+    ],
+    [
+      2.493856906890869,
+      8.825458526611328
+    ],
+    [
+      1.2927731275558472,
+      8.36697769165039
+    ],
+    [
+      6.200252532958984,
+      8.049607276916504
+    ],
+    [
+      -0.11676067858934402,
+      7.708483695983887
+    ],
+    [
+      3.8672420978546143,
+      7.905375003814697
+    ],
+    [
+      0.10215457528829575,
+      7.791671276092529
+    ],
+    [
+      1.9445948600769043,
+      7.688872337341309
+    ],
+    [
+      2.3475327491760254,
+      7.6382246017456055
+    ],
+    [
+      8.526046752929688,
+      8.06448745727539
+    ],
+    [
+      7.295632362365723,
+      8.997685432434082
+    ],
+    [
+      3.0582547187805176,
+      8.673617362976074
+    ],
+    [
+      3.7894697189331055,
+      6.793703556060791
+    ],
+    [
+      6.470911979675293,
+      7.833099842071533
+    ],
+    [
+      1.6441341638565063,
+      9.015400886535645
+    ],
+    [
+      4.752647399902344,
+      9.809053421020508
+    ],
+    [
+      8.842187881469727,
+      8.07569408416748
+    ],
+    [
+      6.4542646408081055,
+      6.379451751708984
+    ],
+    [
+      2.9893858432769775,
+      9.888623237609863
+    ],
+    [
+      3.4975671768188477,
+      11.07577896118164
+    ],
+    [
+      0.9332371354103088,
+      7.49361515045166
+    ],
+    [
+      6.864147663116455,
+      8.448838233947754
+    ],
+    [
+      6.956275463104248,
+      6.963589191436768
+    ],
+    [
+      2.8146369457244873,
+      10.879613876342773
+    ],
+    [
+      1.1448743343353271,
+      8.352428436279297
+    ],
+    [
+      2.317018747329712,
+      7.472930908203125
+    ],
+    [
+      4.656136512756348,
+      7.148620128631592
+    ],
+    [
+      3.326775550842285,
+      11.122355461120605
+    ],
+    [
+      9.378390312194824,
+      7.541934490203857
+    ],
+    [
+      8.227958679199219,
+      7.617786407470703
+    ],
+    [
+      3.976574420928955,
+      8.917729377746582
+    ],
+    [
+      3.2575931549072266,
+      8.427105903625488
+    ],
+    [
+      3.472400188446045,
+      11.846453666687012
+    ],
+    [
+      1.6781991720199585,
+      7.647095203399658
+    ],
+    [
+      9.306700706481934,
+      8.320438385009766
+    ],
+    [
+      2.0323948860168457,
+      9.084261894226074
+    ],
+    [
+      4.309113502502441,
+      8.87317180633545
+    ],
+    [
+      6.927074909210205,
+      7.0650129318237305
+    ],
+    [
+      0.9645809531211853,
+      8.593024253845215
+    ],
+    [
+      6.825734615325928,
+      6.361312389373779
+    ],
+    [
+      4.7252278327941895,
+      11.58743667602539
+    ],
+    [
+      6.3820881843566895,
+      6.471760272979736
+    ],
+    [
+      2.6728267669677734,
+      8.4000825881958
+    ],
+    [
+      3.0962893962860107,
+      9.935572624206543
+    ],
+    [
+      2.440247058868408,
+      10.87252140045166
+    ],
+    [
+      2.489145517349243,
+      9.393763542175293
+    ],
+    [
+      2.5704336166381836,
+      10.192719459533691
+    ],
+    [
+      3.87904691696167,
+      6.142614364624023
+    ],
+    [
+      1.8425780534744263,
+      9.324670791625977
+    ],
+    [
+      1.935255765914917,
+      7.258674621582031
+    ],
+    [
+      3.490892171859741,
+      10.937469482421875
+    ],
+    [
+      4.917839050292969,
+      9.766325950622559
+    ],
+    [
+      6.710847854614258,
+      8.693612098693848
+    ],
+    [
+      3.6391797065734863,
+      6.754027843475342
+    ],
+    [
+      4.079362392425537,
+      8.555928230285645
+    ],
+    [
+      7.503935813903809,
+      6.202442169189453
+    ],
+    [
+      1.2384529113769531,
+      7.913011074066162
+    ],
+    [
+      9.16441822052002,
+      8.391349792480469
+    ],
+    [
+      7.584588050842285,
+      8.578102111816406
+    ],
+    [
+      4.987911224365234,
+      8.657684326171875
+    ],
+    [
+      6.81264591217041,
+      8.47327709197998
+    ],
+    [
+      8.358379364013672,
+      6.689184665679932
+    ],
+    [
+      1.6895147562026978,
+      10.329957962036133
+    ],
+    [
+      7.582797050476074,
+      7.283457279205322
+    ],
+    [
+      7.69583797454834,
+      7.327226161956787
+    ],
+    [
+      2.8730087280273438,
+      9.009486198425293
+    ],
+    [
+      8.321595191955566,
+      8.322375297546387
+    ],
+    [
+      3.170992374420166,
+      7.513272762298584
+    ],
+    [
+      4.352426528930664,
+      9.868545532226562
+    ],
+    [
+      2.9228131771087646,
+      8.573773384094238
+    ],
+    [
+      4.215925693511963,
+      8.918118476867676
+    ],
+    [
+      1.862357497215271,
+      9.570182800292969
+    ],
+    [
+      3.6975643634796143,
+      10.014143943786621
+    ],
+    [
+      4.719429969787598,
+      6.9695820808410645
+    ],
+    [
+      2.4073517322540283,
+      10.872708320617676
+    ],
+    [
+      3.06254506111145,
+      10.118237495422363
+    ],
+    [
+      2.5409858226776123,
+      7.593395709991455
+    ],
+    [
+      1.7391667366027832,
+      10.394840240478516
+    ],
+    [
+      1.8530151844024658,
+      10.85219669342041
+    ],
+    [
+      4.4929094314575195,
+      7.3328728675842285
+    ],
+    [
+      3.0542280673980713,
+      10.110426902770996
+    ],
+    [
+      3.155735731124878,
+      6.861570835113525
+    ],
+    [
+      4.401035785675049,
+      9.473155975341797
+    ],
+    [
+      8.556450843811035,
+      8.195267677307129
+    ],
+    [
+      8.603973388671875,
+      7.709979057312012
+    ],
+    [
+      1.4963316917419434,
+      10.55003833770752
+    ],
+    [
+      0.5437465906143188,
+      7.634284019470215
+    ],
+    [
+      7.254647731781006,
+      9.78632640838623
+    ],
+    [
+      2.889991044998169,
+      9.862210273742676
+    ],
+    [
+      8.806337356567383,
+      7.75917911529541
+    ],
+    [
+      1.7781869173049927,
+      10.816999435424805
+    ],
+    [
+      2.0798275470733643,
+      9.64646053314209
+    ],
+    [
+      3.0598177909851074,
+      8.333456993103027
+    ],
+    [
+      6.481292724609375,
+      6.617064952850342
+    ],
+    [
+      3.830756902694702,
+      11.143733978271484
+    ],
+    [
+      8.585630416870117,
+      6.259583950042725
+    ],
+    [
+      1.3883970975875854,
+      8.792620658874512
+    ],
+    [
+      7.187394142150879,
+      8.238457679748535
+    ],
+    [
+      2.5317180156707764,
+      8.57866382598877
+    ],
+    [
+      6.867982864379883,
+      6.365201473236084
+    ],
+    [
+      4.812947750091553,
+      9.761194229125977
+    ],
+    [
+      7.1421918869018555,
+      6.287051677703857
+    ],
+    [
+      2.495997905731201,
+      7.597980976104736
+    ],
+    [
+      8.394524574279785,
+      8.956783294677734
+    ],
+    [
+      2.41135311126709,
+      10.888361930847168
+    ],
+    [
+      7.610087871551514,
+      6.662115097045898
+    ],
+    [
+      0.6702647805213928,
+      7.447268962860107
+    ],
+    [
+      3.004103183746338,
+      9.038724899291992
+    ],
+    [
+      8.371321678161621,
+      6.330370903015137
+    ],
+    [
+      7.430400371551514,
+      6.633020877838135
+    ],
+    [
+      4.2376556396484375,
+      9.624869346618652
+    ],
+    [
+      0.6678969860076904,
+      8.492419242858887
+    ],
+    [
+      2.893531560897827,
+      9.845123291015625
+    ],
+    [
+      7.506414413452148,
+      6.413034439086914
+    ],
+    [
+      9.817770004272461,
+      6.296106815338135
+    ],
+    [
+      2.7755203247070312,
+      10.43514347076416
+    ],
+    [
+      0.20945464074611664,
+      8.890131950378418
+    ],
+    [
+      7.616422653198242,
+      5.956387519836426
+    ],
+    [
+      1.2914650440216064,
+      8.79332447052002
+    ],
+    [
+      1.3880928754806519,
+      8.756895065307617
+    ],
+    [
+      2.9614343643188477,
+      8.84285831451416
+    ],
+    [
+      1.8228484392166138,
+      10.800569534301758
+    ],
+    [
+      1.8519362211227417,
+      10.680289268493652
+    ],
+    [
+      0.8387695550918579,
+      7.294734954833984
+    ],
+    [
+      3.1540286540985107,
+      6.884921073913574
+    ],
+    [
+      5.903513431549072,
+      9.024118423461914
+    ],
+    [
+      1.5626834630966187,
+      8.310613632202148
+    ],
+    [
+      1.8682706356048584,
+      10.439621925354004
+    ],
+    [
+      0.5064149498939514,
+      8.436858177185059
+    ],
+    [
+      9.313055992126465,
+      7.084918022155762
+    ],
+    [
+      3.1613500118255615,
+      10.497804641723633
+    ],
+    [
+      5.665882587432861,
+      9.146305084228516
+    ],
+    [
+      6.821580410003662,
+      8.585869789123535
+    ],
+    [
+      5.916482448577881,
+      7.7701921463012695
+    ],
+    [
+      0.7446128726005554,
+      8.156440734863281
+    ],
+    [
+      4.425399303436279,
+      8.587457656860352
+    ],
+    [
+      -0.10528296232223511,
+      7.667191505432129
+    ],
+    [
+      7.926791667938232,
+      8.230424880981445
+    ],
+    [
+      3.0725293159484863,
+      9.947352409362793
+    ],
+    [
+      7.5341081619262695,
+      7.433103084564209
+    ],
+    [
+      7.060908794403076,
+      7.372264385223389
+    ],
+    [
+      5.304535865783691,
+      7.9410600662231445
+    ],
+    [
+      -0.060161489993333817,
+      7.659948348999023
+    ],
+    [
+      1.7060189247131348,
+      8.200353622436523
+    ],
+    [
+      1.37581467628479,
+      8.00570297241211
+    ],
+    [
+      4.603733062744141,
+      9.925281524658203
+    ],
+    [
+      4.766422748565674,
+      9.5518217086792
+    ],
+    [
+      4.440084457397461,
+      10.21359634399414
+    ],
+    [
+      4.87748908996582,
+      9.825434684753418
+    ],
+    [
+      3.9623308181762695,
+      9.962532043457031
+    ],
+    [
+      4.133638381958008,
+      9.969096183776855
+    ],
+    [
+      3.105923652648926,
+      9.462615966796875
+    ],
+    [
+      7.4234747886657715,
+      8.325202941894531
+    ],
+    [
+      8.000676155090332,
+      6.102649688720703
+    ],
+    [
+      2.356433868408203,
+      7.193930149078369
+    ],
+    [
+      3.805835247039795,
+      8.845714569091797
+    ],
+    [
+      9.836393356323242,
+      6.361604690551758
+    ],
+    [
+      0.6029971837997437,
+      8.025551795959473
+    ],
+    [
+      0.9922798275947571,
+      8.075475692749023
+    ],
+    [
+      9.820881843566895,
+      6.299182891845703
+    ],
+    [
+      9.588332176208496,
+      6.521231174468994
+    ],
+    [
+      1.85639226436615,
+      10.926973342895508
+    ],
+    [
+      3.742281436920166,
+      9.833176612854004
+    ],
+    [
+      2.3782477378845215,
+      9.91757583618164
+    ],
+    [
+      8.939685821533203,
+      7.040394306182861
+    ],
+    [
+      3.0211050510406494,
+      9.194305419921875
+    ],
+    [
+      8.32799243927002,
+      9.055558204650879
+    ],
+    [
+      2.5462207794189453,
+      8.832629203796387
+    ],
+    [
+      2.2015089988708496,
+      8.044852256774902
+    ],
+    [
+      2.3685402870178223,
+      9.98268985748291
+    ],
+    [
+      3.5213608741760254,
+      11.317571640014648
+    ],
+    [
+      3.1193673610687256,
+      6.724422931671143
+    ],
+    [
+      7.3279571533203125,
+      8.05325698852539
+    ],
+    [
+      3.2884557247161865,
+      8.085969924926758
+    ],
+    [
+      8.259248733520508,
+      9.049564361572266
+    ],
+    [
+      8.122002601623535,
+      8.62920093536377
+    ],
+    [
+      9.350871086120605,
+      7.435814380645752
+    ],
+    [
+      3.0304388999938965,
+      8.426790237426758
+    ],
+    [
+      6.353198528289795,
+      6.723252296447754
+    ],
+    [
+      1.2059550285339355,
+      7.935059070587158
+    ],
+    [
+      6.6330952644348145,
+      7.822753429412842
+    ],
+    [
+      2.203831195831299,
+      9.85991382598877
+    ],
+    [
+      8.740078926086426,
+      7.5206217765808105
+    ],
+    [
+      8.27423095703125,
+      9.164610862731934
+    ],
+    [
+      8.336597442626953,
+      9.239990234375
+    ],
+    [
+      8.315153121948242,
+      9.155682563781738
+    ],
+    [
+      3.467467784881592,
+      11.828019142150879
+    ],
+    [
+      0.6743784546852112,
+      7.844435214996338
+    ],
+    [
+      8.349271774291992,
+      5.829540252685547
+    ],
+    [
+      9.467994689941406,
+      7.749000072479248
+    ],
+    [
+      6.8286848068237305,
+      7.752127170562744
+    ],
+    [
+      4.138916492462158,
+      6.828402996063232
+    ],
+    [
+      3.117419958114624,
+      9.820271492004395
+    ],
+    [
+      7.395750999450684,
+      6.761495113372803
+    ],
+    [
+      6.541431903839111,
+      6.435878753662109
+    ],
+    [
+      6.316712379455566,
+      6.428571701049805
+    ],
+    [
+      4.737293720245361,
+      11.653787612915039
+    ],
+    [
+      4.688885688781738,
+      11.255788803100586
+    ],
+    [
+      7.338916778564453,
+      7.397214412689209
+    ],
+    [
+      2.0101749897003174,
+      8.087387084960938
+    ],
+    [
+      1.867712140083313,
+      9.382061958312988
+    ],
+    [
+      4.781007766723633,
+      7.932955741882324
+    ],
+    [
+      1.3201621770858765,
+      8.730568885803223
+    ],
+    [
+      4.173352241516113,
+      11.06561279296875
+    ],
+    [
+      0.14688700437545776,
+      7.986074447631836
+    ],
+    [
+      6.806464195251465,
+      7.522515773773193
+    ],
+    [
+      7.712477684020996,
+      5.920016288757324
+    ],
+    [
+      2.7678089141845703,
+      9.255542755126953
+    ],
+    [
+      2.996817111968994,
+      8.821361541748047
+    ],
+    [
+      2.466146945953369,
+      9.16443157196045
+    ],
+    [
+      1.5761592388153076,
+      8.023380279541016
+    ],
+    [
+      9.272040367126465,
+      8.45832347869873
+    ],
+    [
+      9.279462814331055,
+      8.466577529907227
+    ],
+    [
+      2.4823992252349854,
+      8.521754264831543
+    ],
+    [
+      7.465260028839111,
+      6.51991605758667
+    ],
+    [
+      1.1178641319274902,
+      7.349298000335693
+    ],
+    [
+      3.1711390018463135,
+      8.335060119628906
+    ],
+    [
+      1.7637039422988892,
+      8.429348945617676
+    ],
+    [
+      7.430080890655518,
+      6.55255126953125
+    ],
+    [
+      7.083511829376221,
+      7.294932842254639
+    ],
+    [
+      5.761338233947754,
+      7.572747230529785
+    ],
+    [
+      3.110487461090088,
+      8.182427406311035
+    ],
+    [
+      -0.10931986570358276,
+      7.514272212982178
+    ],
+    [
+      5.778793811798096,
+      8.302541732788086
+    ],
+    [
+      8.943328857421875,
+      7.004979133605957
+    ],
+    [
+      2.029081344604492,
+      8.679884910583496
+    ],
+    [
+      2.303654909133911,
+      9.500900268554688
+    ],
+    [
+      5.360132217407227,
+      7.193355083465576
+    ],
+    [
+      -0.1783575862646103,
+      7.715426921844482
+    ],
+    [
+      4.001943588256836,
+      8.82944107055664
+    ],
+    [
+      8.76673412322998,
+      6.442923545837402
+    ],
+    [
+      8.985891342163086,
+      7.052347660064697
+    ],
+    [
+      1.933432936668396,
+      9.679580688476562
+    ],
+    [
+      3.3957393169403076,
+      9.4560546875
+    ],
+    [
+      3.3188538551330566,
+      7.836705207824707
+    ],
+    [
+      3.4639108180999756,
+      8.055413246154785
+    ],
+    [
+      6.850795745849609,
+      7.5897722244262695
+    ],
+    [
+      1.5006098747253418,
+      8.819981575012207
+    ],
+    [
+      6.843120574951172,
+      7.592255115509033
+    ],
+    [
+      8.792929649353027,
+      7.8220014572143555
+    ],
+    [
+      3.915043354034424,
+      10.475976943969727
+    ],
+    [
+      0.6179524660110474,
+      7.5096001625061035
+    ],
+    [
+      5.544930458068848,
+      7.23075008392334
+    ],
+    [
+      7.81589937210083,
+      7.354246139526367
+    ],
+    [
+      -0.04303905367851257,
+      7.713548183441162
+    ],
+    [
+      3.483095169067383,
+      10.785890579223633
+    ],
+    [
+      8.095915794372559,
+      8.131816864013672
+    ],
+    [
+      7.412050724029541,
+      9.724822044372559
+    ],
+    [
+      7.990443706512451,
+      7.185647964477539
+    ],
+    [
+      0.9643800258636475,
+      7.515814781188965
+    ],
+    [
+      8.23068618774414,
+      5.861985683441162
+    ],
+    [
+      5.3619842529296875,
+      7.113447189331055
+    ],
+    [
+      3.7998223304748535,
+      7.953237056732178
+    ],
+    [
+      8.135673522949219,
+      8.000468254089355
+    ],
+    [
+      9.416967391967773,
+      8.18278980255127
+    ],
+    [
+      4.160702705383301,
+      8.178498268127441
+    ],
+    [
+      3.7399637699127197,
+      8.750313758850098
+    ],
+    [
+      3.6428275108337402,
+      9.59372615814209
+    ],
+    [
+      2.1337320804595947,
+      9.85910701751709
+    ],
+    [
+      2.1953160762786865,
+      8.45289421081543
+    ],
+    [
+      3.330228567123413,
+      9.022573471069336
+    ],
+    [
+      0.9016521573066711,
+      7.933925628662109
+    ],
+    [
+      7.322957515716553,
+      6.8102192878723145
+    ],
+    [
+      4.609499931335449,
+      7.684525489807129
+    ],
+    [
+      2.0741562843322754,
+      7.652314186096191
+    ],
+    [
+      9.410042762756348,
+      7.1767449378967285
+    ],
+    [
+      4.100494384765625,
+      8.671990394592285
+    ],
+    [
+      3.312208652496338,
+      7.589496612548828
+    ],
+    [
+      1.692221760749817,
+      8.972749710083008
+    ],
+    [
+      5.296407699584961,
+      7.666078090667725
+    ],
+    [
+      7.598752498626709,
+      6.1023783683776855
+    ],
+    [
+      4.276370525360107,
+      9.855563163757324
+    ],
+    [
+      1.9623305797576904,
+      8.69667911529541
+    ],
+    [
+      3.018198013305664,
+      9.335670471191406
+    ],
+    [
+      2.672302484512329,
+      7.933746814727783
+    ],
+    [
+      3.547837495803833,
+      6.356878280639648
+    ],
+    [
+      2.65498423576355,
+      7.782930374145508
+    ],
+    [
+      3.6493184566497803,
+      10.470010757446289
+    ],
+    [
+      8.940051078796387,
+      8.55378532409668
+    ],
+    [
+      8.313799858093262,
+      9.244125366210938
+    ],
+    [
+      8.53428840637207,
+      8.857660293579102
+    ],
+    [
+      8.360678672790527,
+      8.800085067749023
+    ],
+    [
+      7.998081207275391,
+      9.001973152160645
+    ],
+    [
+      6.580644130706787,
+      8.414800643920898
+    ],
+    [
+      1.5840306282043457,
+      10.605297088623047
+    ],
+    [
+      1.69569730758667,
+      8.1851224899292
+    ],
+    [
+      4.440243244171143,
+      7.894557952880859
+    ],
+    [
+      7.538486003875732,
+      6.60261869430542
+    ],
+    [
+      3.963986873626709,
+      10.183253288269043
+    ],
+    [
+      3.580719232559204,
+      8.825170516967773
+    ],
+    [
+      9.291910171508789,
+      8.469625473022461
+    ],
+    [
+      4.581311225891113,
+      8.627191543579102
+    ],
+    [
+      9.010274887084961,
+      7.950840950012207
+    ],
+    [
+      5.102581977844238,
+      8.374094009399414
+    ],
+    [
+      3.4949238300323486,
+      10.795539855957031
+    ],
+    [
+      3.388943910598755,
+      11.035396575927734
+    ],
+    [
+      4.54218053817749,
+      8.91209888458252
+    ],
+    [
+      8.227740287780762,
+      9.031329154968262
+    ],
+    [
+      1.9483474493026733,
+      9.416598320007324
+    ],
+    [
+      7.323081016540527,
+      7.147765159606934
+    ],
+    [
+      4.431386947631836,
+      8.307398796081543
+    ],
+    [
+      8.553447723388672,
+      7.615957736968994
+    ],
+    [
+      3.9900238513946533,
+      8.210789680480957
+    ],
+    [
+      4.3832926750183105,
+      8.907721519470215
+    ],
+    [
+      0.6804393529891968,
+      8.253130912780762
+    ],
+    [
+      0.2643369436264038,
+      8.278931617736816
+    ],
+    [
+      3.901700496673584,
+      7.759509563446045
+    ],
+    [
+      2.686995267868042,
+      8.014291763305664
+    ],
+    [
+      3.2887461185455322,
+      9.646224021911621
+    ],
+    [
+      4.341786861419678,
+      10.257919311523438
+    ],
+    [
+      4.848092079162598,
+      9.707063674926758
+    ],
+    [
+      4.707733631134033,
+      9.878252983093262
+    ],
+    [
+      0.0681164413690567,
+      7.759899139404297
+    ],
+    [
+      0.6089845895767212,
+      7.755105972290039
+    ],
+    [
+      6.688022136688232,
+      8.712787628173828
+    ],
+    [
+      6.287100791931152,
+      8.503480911254883
+    ],
+    [
+      7.568478584289551,
+      8.098832130432129
+    ],
+    [
+      7.667235374450684,
+      8.017827033996582
+    ],
+    [
+      7.519221305847168,
+      7.9772562980651855
+    ],
+    [
+      6.811578750610352,
+      8.65012264251709
+    ],
+    [
+      7.200002193450928,
+      8.550423622131348
+    ],
+    [
+      7.925260543823242,
+      8.15902042388916
+    ],
+    [
+      8.30747127532959,
+      7.137983798980713
+    ],
+    [
+      8.243013381958008,
+      9.018228530883789
+    ],
+    [
+      1.145111083984375,
+      8.675252914428711
+    ],
+    [
+      3.691840648651123,
+      10.625069618225098
+    ],
+    [
+      3.483377456665039,
+      10.209477424621582
+    ],
+    [
+      4.54543399810791,
+      6.940308094024658
+    ],
+    [
+      4.11860466003418,
+      9.26095962524414
+    ],
+    [
+      0.48925748467445374,
+      8.01530933380127
+    ],
+    [
+      1.0013267993927002,
+      8.083440780639648
+    ],
+    [
+      7.672025680541992,
+      6.60746431350708
+    ],
+    [
+      8.620440483093262,
+      6.2709479331970215
+    ],
+    [
+      5.401846885681152,
+      7.7187018394470215
+    ],
+    [
+      1.9028573036193848,
+      7.680721759796143
+    ],
+    [
+      1.9721183776855469,
+      7.339040279388428
+    ],
+    [
+      4.390922546386719,
+      9.728134155273438
+    ],
+    [
+      1.2833709716796875,
+      8.757795333862305
+    ],
+    [
+      7.192048072814941,
+      8.391654968261719
+    ],
+    [
+      6.793226718902588,
+      6.5033063888549805
+    ],
+    [
+      3.2603256702423096,
+      7.52349328994751
+    ],
+    [
+      2.795316219329834,
+      7.378357887268066
+    ],
+    [
+      9.690572738647461,
+      7.78584098815918
+    ],
+    [
+      9.69485855102539,
+      7.708599090576172
+    ],
+    [
+      9.687211990356445,
+      7.750464916229248
+    ],
+    [
+      9.230035781860352,
+      7.369118690490723
+    ],
+    [
+      2.992030620574951,
+      9.702865600585938
+    ],
+    [
+      3.558410167694092,
+      10.936483383178711
+    ],
+    [
+      -0.13630126416683197,
+      8.457895278930664
+    ],
+    [
+      3.030010223388672,
+      10.013087272644043
+    ],
+    [
+      3.4975993633270264,
+      9.076177597045898
+    ],
+    [
+      3.744112014770508,
+      6.182333946228027
+    ],
+    [
+      1.1169440746307373,
+      8.287810325622559
+    ],
+    [
+      7.091256618499756,
+      7.522770881652832
+    ],
+    [
+      7.3712239265441895,
+      7.509148120880127
+    ],
+    [
+      4.758137226104736,
+      9.189461708068848
+    ],
+    [
+      3.595184564590454,
+      9.72585678100586
+    ],
+    [
+      7.32493257522583,
+      9.74670124053955
+    ],
+    [
+      7.229950904846191,
+      9.752400398254395
+    ],
+    [
+      8.559345245361328,
+      8.258079528808594
+    ],
+    [
+      8.797178268432617,
+      7.852288246154785
+    ],
+    [
+      8.899420738220215,
+      7.2843523025512695
+    ],
+    [
+      8.139205932617188,
+      7.608675956726074
+    ],
+    [
+      8.606369972229004,
+      7.792701721191406
+    ],
+    [
+      2.8330936431884766,
+      8.2317476272583
+    ],
+    [
+      2.7604899406433105,
+      8.86874008178711
+    ],
+    [
+      0.4878273606300354,
+      8.490876197814941
+    ],
+    [
+      1.0258985757827759,
+      8.667787551879883
+    ],
+    [
+      3.401048183441162,
+      9.42636775970459
+    ],
+    [
+      4.947495937347412,
+      8.430642127990723
+    ],
+    [
+      5.605469226837158,
+      10.022520065307617
+    ],
+    [
+      8.713615417480469,
+      7.761508941650391
+    ],
+    [
+      2.677856683731079,
+      8.061197280883789
+    ],
+    [
+      6.969791889190674,
+      6.983211040496826
+    ],
+    [
+      9.355889320373535,
+      8.215615272521973
+    ],
+    [
+      8.860187530517578,
+      8.170981407165527
+    ],
+    [
+      9.198782920837402,
+      7.972537517547607
+    ],
+    [
+      8.201099395751953,
+      7.819697856903076
+    ],
+    [
+      -0.2066737860441208,
+      8.434040069580078
+    ],
+    [
+      7.442880153656006,
+      7.284637451171875
+    ],
+    [
+      2.7192304134368896,
+      10.453180313110352
+    ],
+    [
+      3.777001142501831,
+      11.14388370513916
+    ],
+    [
+      2.559767484664917,
+      10.876144409179688
+    ],
+    [
+      8.896239280700684,
+      7.809482574462891
+    ],
+    [
+      3.128032684326172,
+      9.539408683776855
+    ],
+    [
+      1.1585057973861694,
+      9.6433744430542
+    ],
+    [
+      2.7968239784240723,
+      8.978103637695312
+    ],
+    [
+      9.203006744384766,
+      8.035520553588867
+    ],
+    [
+      3.386115550994873,
+      6.414944171905518
+    ],
+    [
+      9.093255996704102,
+      6.34704065322876
+    ],
+    [
+      7.6310715675354,
+      8.773340225219727
+    ],
+    [
+      7.433106899261475,
+      7.7326741218566895
+    ],
+    [
+      8.539606094360352,
+      6.360997200012207
+    ],
+    [
+      4.6874918937683105,
+      8.193511009216309
+    ],
+    [
+      -0.1686689257621765,
+      8.014389991760254
+    ],
+    [
+      1.9297722578048706,
+      7.96906852722168
+    ],
+    [
+      1.9828722476959229,
+      7.303228855133057
+    ],
+    [
+      2.729573965072632,
+      10.228178977966309
+    ],
+    [
+      4.67795991897583,
+      7.812340259552002
+    ],
+    [
+      6.808304309844971,
+      7.536359786987305
+    ],
+    [
+      0.4595131278038025,
+      7.480822563171387
+    ],
+    [
+      2.021700143814087,
+      9.703121185302734
+    ],
+    [
+      2.0848400592803955,
+      8.194747924804688
+    ],
+    [
+      4.45416259765625,
+      8.14309024810791
+    ],
+    [
+      2.0699057579040527,
+      7.917115688323975
+    ],
+    [
+      2.972382068634033,
+      6.780151844024658
+    ],
+    [
+      7.811659812927246,
+      5.876131057739258
+    ],
+    [
+      7.5996270179748535,
+      5.987186431884766
+    ],
+    [
+      7.631189823150635,
+      5.886643886566162
+    ],
+    [
+      2.75443696975708,
+      10.801828384399414
+    ],
+    [
+      2.269170045852661,
+      9.176892280578613
+    ],
+    [
+      4.785462856292725,
+      7.294739723205566
+    ],
+    [
+      3.8352527618408203,
+      8.722896575927734
+    ],
+    [
+      0.23187272250652313,
+      8.279339790344238
+    ],
+    [
+      1.1303714513778687,
+      7.9382643699646
+    ],
+    [
+      4.681179046630859,
+      11.621825218200684
+    ],
+    [
+      7.406210899353027,
+      7.630865573883057
+    ],
+    [
+      7.309443473815918,
+      7.5989789962768555
+    ],
+    [
+      4.012973785400391,
+      7.9585089683532715
+    ],
+    [
+      6.46100378036499,
+      6.558185577392578
+    ],
+    [
+      6.413583278656006,
+      6.43834114074707
+    ],
+    [
+      4.26472806930542,
+      8.434720993041992
+    ],
+    [
+      3.4326393604278564,
+      8.622762680053711
+    ],
+    [
+      2.767889976501465,
+      8.95911979675293
+    ],
+    [
+      2.670738458633423,
+      8.972042083740234
+    ],
+    [
+      4.757053375244141,
+      7.359394073486328
+    ],
+    [
+      0.7711374163627625,
+      7.7974934577941895
+    ],
+    [
+      4.037973403930664,
+      6.971303939819336
+    ],
+    [
+      3.8506054878234863,
+      6.754440784454346
+    ],
+    [
+      7.278203010559082,
+      9.396063804626465
+    ],
+    [
+      3.032866954803467,
+      8.781749725341797
+    ],
+    [
+      4.825876235961914,
+      8.729714393615723
+    ],
+    [
+      8.27950668334961,
+      6.611945152282715
+    ],
+    [
+      7.441802978515625,
+      6.846086502075195
+    ],
+    [
+      7.455137729644775,
+      6.774929046630859
+    ],
+    [
+      3.3686747550964355,
+      11.45673656463623
+    ],
+    [
+      0.851065456867218,
+      7.758066177368164
+    ],
+    [
+      1.1658508777618408,
+      7.86023473739624
+    ],
+    [
+      0.5719875693321228,
+      8.739058494567871
+    ],
+    [
+      1.1313889026641846,
+      7.949302673339844
+    ],
+    [
+      3.8375227451324463,
+      7.423795223236084
+    ],
+    [
+      5.1452226638793945,
+      7.879217624664307
+    ],
+    [
+      0.3765019476413727,
+      8.068032264709473
+    ],
+    [
+      2.006685733795166,
+      8.933706283569336
+    ],
+    [
+      4.702327251434326,
+      9.059286117553711
+    ],
+    [
+      8.49323844909668,
+      7.3624396324157715
+    ],
+    [
+      8.484655380249023,
+      8.380731582641602
+    ],
+    [
+      3.866732120513916,
+      8.594773292541504
+    ],
+    [
+      3.659757137298584,
+      7.793420314788818
+    ],
+    [
+      7.306304454803467,
+      8.946030616760254
+    ],
+    [
+      7.385580062866211,
+      8.936678886413574
+    ],
+    [
+      5.080105304718018,
+      9.740192413330078
+    ],
+    [
+      0.6667831540107727,
+      8.230952262878418
+    ],
+    [
+      3.6252143383026123,
+      9.32580852508545
+    ],
+    [
+      0.15433019399642944,
+      8.298462867736816
+    ],
+    [
+      2.7886948585510254,
+      8.045660018920898
+    ],
+    [
+      2.521456480026245,
+      10.878119468688965
+    ],
+    [
+      3.417842388153076,
+      8.283035278320312
+    ],
+    [
+      1.5922625064849854,
+      10.719866752624512
+    ],
+    [
+      2.6669626235961914,
+      11.147390365600586
+    ],
+    [
+      0.699289083480835,
+      8.414941787719727
+    ],
+    [
+      3.25160551071167,
+      8.390356063842773
+    ],
+    [
+      5.621230125427246,
+      10.040764808654785
+    ],
+    [
+      3.3126821517944336,
+      9.240074157714844
+    ],
+    [
+      1.8754254579544067,
+      9.590686798095703
+    ],
+    [
+      2.7829182147979736,
+      10.562846183776855
+    ],
+    [
+      3.6185035705566406,
+      9.199172973632812
+    ],
+    [
+      1.4377387762069702,
+      8.712844848632812
+    ],
+    [
+      4.667898178100586,
+      6.993030548095703
+    ],
+    [
+      8.911918640136719,
+      7.125988006591797
+    ],
+    [
+      8.759398460388184,
+      7.915985107421875
+    ],
+    [
+      0.8807561993598938,
+      7.735443592071533
+    ],
+    [
+      0.3945830762386322,
+      7.945404529571533
+    ],
+    [
+      -0.08531948924064636,
+      7.786634922027588
+    ],
+    [
+      6.929842948913574,
+      7.0314040184021
+    ],
+    [
+      6.787878513336182,
+      7.642518997192383
+    ],
+    [
+      1.5497034788131714,
+      8.426939010620117
+    ],
+    [
+      8.43014144897461,
+      5.850507736206055
+    ],
+    [
+      7.508864879608154,
+      6.54940128326416
+    ],
+    [
+      2.491835594177246,
+      7.589603900909424
+    ],
+    [
+      2.1613121032714844,
+      9.891311645507812
+    ],
+    [
+      1.8040715456008911,
+      9.079561233520508
+    ],
+    [
+      3.7862813472747803,
+      9.873819351196289
+    ],
+    [
+      4.086741924285889,
+      10.175533294677734
+    ],
+    [
+      3.5829617977142334,
+      10.130338668823242
+    ],
+    [
+      0.36743178963661194,
+      9.232955932617188
+    ],
+    [
+      4.690614700317383,
+      9.252568244934082
+    ],
+    [
+      2.298325538635254,
+      9.23798656463623
+    ],
+    [
+      1.2152130603790283,
+      8.908123970031738
+    ],
+    [
+      1.1605669260025024,
+      8.779382705688477
+    ],
+    [
+      4.798855781555176,
+      8.7201509475708
+    ],
+    [
+      3.6478660106658936,
+      9.004697799682617
+    ],
+    [
+      0.4994736909866333,
+      7.477505683898926
+    ],
+    [
+      4.469103813171387,
+      9.423149108886719
+    ],
+    [
+      4.8827805519104,
+      8.915266036987305
+    ],
+    [
+      4.800293922424316,
+      8.957137107849121
+    ],
+    [
+      7.676374435424805,
+      6.156707763671875
+    ],
+    [
+      4.330146789550781,
+      7.944282054901123
+    ],
+    [
+      5.914447784423828,
+      7.5771708488464355
+    ],
+    [
+      5.985405921936035,
+      7.636655330657959
+    ],
+    [
+      1.9069907665252686,
+      7.212111949920654
+    ],
+    [
+      7.343746185302734,
+      6.684855937957764
+    ],
+    [
+      1.6419824361801147,
+      10.602179527282715
+    ],
+    [
+      4.567464351654053,
+      9.054640769958496
+    ],
+    [
+      7.467772006988525,
+      7.381572723388672
+    ],
+    [
+      3.384265661239624,
+      9.629228591918945
+    ],
+    [
+      3.081840991973877,
+      8.375358581542969
+    ],
+    [
+      3.7332656383514404,
+      8.626736640930176
+    ],
+    [
+      4.3826680183410645,
+      8.412958145141602
+    ],
+    [
+      7.961227893829346,
+      7.180599212646484
+    ],
+    [
+      8.29166030883789,
+      7.70207405090332
+    ],
+    [
+      3.7580103874206543,
+      8.112993240356445
+    ],
+    [
+      3.7852704524993896,
+      6.153018474578857
+    ],
+    [
+      0.7015032172203064,
+      8.155332565307617
+    ],
+    [
+      8.61142635345459,
+      7.736123561859131
+    ],
+    [
+      6.341915130615234,
+      6.513477325439453
+    ],
+    [
+      4.727780342102051,
+      6.9959893226623535
+    ],
+    [
+      3.2058050632476807,
+      8.596027374267578
+    ],
+    [
+      2.3680083751678467,
+      10.768948554992676
+    ],
+    [
+      8.300713539123535,
+      7.253489971160889
+    ],
+    [
+      8.260128021240234,
+      7.136976718902588
+    ],
+    [
+      7.903958320617676,
+      7.339362144470215
+    ],
+    [
+      7.6870036125183105,
+      6.906974792480469
+    ],
+    [
+      8.769928932189941,
+      7.797627925872803
+    ],
+    [
+      7.20758056640625,
+      7.3171467781066895
+    ],
+    [
+      1.8748056888580322,
+      7.3154096603393555
+    ],
+    [
+      8.794111251831055,
+      7.764711380004883
+    ],
+    [
+      0.37084972858428955,
+      7.423644542694092
+    ],
+    [
+      0.5112017393112183,
+      7.304955005645752
+    ],
+    [
+      0.10699005424976349,
+      7.649150371551514
+    ],
+    [
+      6.0557169914245605,
+      8.853158950805664
+    ],
+    [
+      6.06268835067749,
+      8.85467529296875
+    ],
+    [
+      6.016999244689941,
+      8.868775367736816
+    ],
+    [
+      6.019574165344238,
+      8.772444725036621
+    ],
+    [
+      6.4489054679870605,
+      8.298338890075684
+    ],
+    [
+      6.2281599044799805,
+      8.608609199523926
+    ],
+    [
+      9.20354175567627,
+      8.247529983520508
+    ],
+    [
+      7.582631587982178,
+      6.068817615509033
+    ],
+    [
+      2.076340436935425,
+      10.035235404968262
+    ],
+    [
+      4.0626959800720215,
+      8.81157112121582
+    ],
+    [
+      7.383975505828857,
+      7.820355415344238
+    ],
+    [
+      7.3842854499816895,
+      6.904049396514893
+    ],
+    [
+      4.721742153167725,
+      6.980448246002197
+    ],
+    [
+      1.5317152738571167,
+      7.632978439331055
+    ],
+    [
+      8.850317001342773,
+      7.649752616882324
+    ],
+    [
+      4.918503761291504,
+      9.275625228881836
+    ],
+    [
+      5.860908508300781,
+      8.96817398071289
+    ],
+    [
+      8.878453254699707,
+      7.66109037399292
+    ],
+    [
+      1.2098506689071655,
+      7.742532253265381
+    ],
+    [
+      1.2286605834960938,
+      7.792799949645996
+    ],
+    [
+      2.859633445739746,
+      9.913935661315918
+    ],
+    [
+      7.074881553649902,
+      6.96732234954834
+    ],
+    [
+      3.3082337379455566,
+      8.87523365020752
+    ],
+    [
+      4.973074913024902,
+      9.693392753601074
+    ],
+    [
+      0.20148703455924988,
+      7.663082599639893
+    ],
+    [
+      8.196545600891113,
+      7.955723762512207
+    ],
+    [
+      2.9479963779449463,
+      10.247627258300781
+    ],
+    [
+      3.510054111480713,
+      11.33770751953125
+    ],
+    [
+      4.5999298095703125,
+      8.534075736999512
+    ],
+    [
+      3.6888980865478516,
+      9.652591705322266
+    ],
+    [
+      7.619110107421875,
+      8.601043701171875
+    ],
+    [
+      7.582846641540527,
+      8.791505813598633
+    ],
+    [
+      3.175227165222168,
+      10.48908805847168
+    ],
+    [
+      3.2028582096099854,
+      10.644420623779297
+    ],
+    [
+      3.4491360187530518,
+      10.509925842285156
+    ],
+    [
+      3.1593453884124756,
+      9.523977279663086
+    ],
+    [
+      2.3053789138793945,
+      9.03092098236084
+    ],
+    [
+      2.1118721961975098,
+      9.720443725585938
+    ],
+    [
+      4.590213775634766,
+      8.59609317779541
+    ],
+    [
+      6.4707512855529785,
+      8.367349624633789
+    ],
+    [
+      6.798651695251465,
+      8.205406188964844
+    ],
+    [
+      4.88002872467041,
+      9.367427825927734
+    ],
+    [
+      3.6352193355560303,
+      10.461066246032715
+    ],
+    [
+      3.785304069519043,
+      11.801422119140625
+    ],
+    [
+      7.138166427612305,
+      8.607880592346191
+    ],
+    [
+      3.658292770385742,
+      8.476134300231934
+    ],
+    [
+      1.5849900245666504,
+      10.15921688079834
+    ],
+    [
+      3.1744368076324463,
+      9.124855995178223
+    ],
+    [
+      4.152461528778076,
+      8.568802833557129
+    ],
+    [
+      6.999125957489014,
+      6.370697498321533
+    ],
+    [
+      6.249000072479248,
+      6.620842456817627
+    ],
+    [
+      6.174951553344727,
+      6.655872344970703
+    ],
+    [
+      4.382714748382568,
+      8.372550964355469
+    ],
+    [
+      6.169999599456787,
+      6.6451096534729
+    ],
+    [
+      5.206668376922607,
+      8.366376876831055
+    ],
+    [
+      5.627173900604248,
+      9.997591972351074
+    ],
+    [
+      5.486109256744385,
+      8.430429458618164
+    ],
+    [
+      6.270156383514404,
+      8.413127899169922
+    ],
+    [
+      0.766395628452301,
+      8.177803993225098
+    ],
+    [
+      0.9029889702796936,
+      8.50755500793457
+    ],
+    [
+      9.209930419921875,
+      8.546947479248047
+    ],
+    [
+      5.804587364196777,
+      9.970168113708496
+    ],
+    [
+      6.646657466888428,
+      6.80172061920166
+    ],
+    [
+      8.143669128417969,
+      8.175454139709473
+    ],
+    [
+      4.719264984130859,
+      10.89569091796875
+    ],
+    [
+      3.716378688812256,
+      10.53166389465332
+    ],
+    [
+      0.7633222341537476,
+      7.752208709716797
+    ],
+    [
+      3.040717363357544,
+      7.404515743255615
+    ],
+    [
+      3.80608868598938,
+      8.374157905578613
+    ],
+    [
+      4.674259662628174,
+      8.09887981414795
+    ],
+    [
+      1.1249995231628418,
+      8.819438934326172
+    ],
+    [
+      2.790670394897461,
+      7.249249458312988
+    ],
+    [
+      6.483495712280273,
+      6.353244304656982
+    ],
+    [
+      6.213332653045654,
+      6.683836936950684
+    ],
+    [
+      0.38002243638038635,
+      7.582681655883789
+    ],
+    [
+      6.281155586242676,
+      6.592245578765869
+    ],
+    [
+      8.135663032531738,
+      7.370543003082275
+    ],
+    [
+      9.373263359069824,
+      8.05113697052002
+    ],
+    [
+      6.127182960510254,
+      6.661386489868164
+    ],
+    [
+      9.673247337341309,
+      7.780989646911621
+    ],
+    [
+      9.726632118225098,
+      7.682580947875977
+    ],
+    [
+      9.711467742919922,
+      7.686313152313232
+    ],
+    [
+      6.383315563201904,
+      6.5466437339782715
+    ],
+    [
+      9.670802116394043,
+      7.698075294494629
+    ],
+    [
+      9.570072174072266,
+      7.7344231605529785
+    ],
+    [
+      4.726624488830566,
+      6.911708831787109
+    ],
+    [
+      9.601548194885254,
+      7.697614669799805
+    ],
+    [
+      6.960620880126953,
+      7.190087795257568
+    ],
+    [
+      4.6434712409973145,
+      6.877033233642578
+    ],
+    [
+      9.642261505126953,
+      7.684856414794922
+    ],
+    [
+      9.442656517028809,
+      7.97297477722168
+    ],
+    [
+      9.63150691986084,
+      7.836650371551514
+    ],
+    [
+      9.62778377532959,
+      7.826600074768066
+    ],
+    [
+      1.0591737031936646,
+      7.240683555603027
+    ],
+    [
+      4.310520172119141,
+      8.160992622375488
+    ],
+    [
+      4.681308269500732,
+      7.0516037940979
+    ],
+    [
+      2.956702470779419,
+      9.718506813049316
+    ],
+    [
+      3.4194135665893555,
+      11.260693550109863
+    ],
+    [
+      4.238391399383545,
+      9.11384105682373
+    ],
+    [
+      2.7454755306243896,
+      10.049983978271484
+    ],
+    [
+      2.4173717498779297,
+      7.1934123039245605
+    ],
+    [
+      7.792145729064941,
+      7.554164886474609
+    ],
+    [
+      2.822016716003418,
+      9.825262069702148
+    ],
+    [
+      0.5070286989212036,
+      8.188335418701172
+    ],
+    [
+      2.6875603199005127,
+      8.37157917022705
+    ],
+    [
+      -0.06595276296138763,
+      8.34339427947998
+    ],
+    [
+      7.826124668121338,
+      6.509278297424316
+    ],
+    [
+      9.42418384552002,
+      7.37826681137085
+    ],
+    [
+      9.42512321472168,
+      7.400274276733398
+    ],
+    [
+      9.361370086669922,
+      7.49435567855835
+    ],
+    [
+      7.658636569976807,
+      6.8765764236450195
+    ],
+    [
+      3.7024691104888916,
+      7.958976745605469
+    ],
+    [
+      4.199007034301758,
+      10.013312339782715
+    ],
+    [
+      4.579370975494385,
+      10.617238998413086
+    ],
+    [
+      6.7703094482421875,
+      8.165155410766602
+    ],
+    [
+      3.5911316871643066,
+      10.541604042053223
+    ],
+    [
+      3.428060531616211,
+      10.488129615783691
+    ],
+    [
+      3.4907829761505127,
+      10.548869132995605
+    ],
+    [
+      3.532649040222168,
+      10.462950706481934
+    ],
+    [
+      3.5193984508514404,
+      11.124669075012207
+    ],
+    [
+      3.791877508163452,
+      10.663291931152344
+    ],
+    [
+      3.607706308364868,
+      10.420350074768066
+    ],
+    [
+      3.7427778244018555,
+      9.634822845458984
+    ],
+    [
+      2.0178563594818115,
+      8.205035209655762
+    ],
+    [
+      1.1670085191726685,
+      8.70672607421875
+    ],
+    [
+      2.483675241470337,
+      9.790306091308594
+    ],
+    [
+      1.0166313648223877,
+      8.9447021484375
+    ],
+    [
+      8.821028709411621,
+      7.758565425872803
+    ],
+    [
+      6.9298224449157715,
+      6.779738903045654
+    ],
+    [
+      5.039206027984619,
+      7.288346767425537
+    ],
+    [
+      3.005969762802124,
+      7.629499912261963
+    ],
+    [
+      2.3827452659606934,
+      7.956247806549072
+    ],
+    [
+      1.974308967590332,
+      7.205094814300537
+    ],
+    [
+      3.3088927268981934,
+      9.966649055480957
+    ],
+    [
+      2.4621825218200684,
+      7.080948829650879
+    ],
+    [
+      8.14736270904541,
+      8.227714538574219
+    ],
+    [
+      0.7173826694488525,
+      7.630987644195557
+    ],
+    [
+      3.139005184173584,
+      9.714667320251465
+    ],
+    [
+      2.995035409927368,
+      9.785901069641113
+    ],
+    [
+      2.823103666305542,
+      8.991859436035156
+    ],
+    [
+      4.686583518981934,
+      6.963393688201904
+    ],
+    [
+      3.0204639434814453,
+      9.109800338745117
+    ],
+    [
+      5.307218551635742,
+      7.151456356048584
+    ],
+    [
+      6.855230808258057,
+      6.815831184387207
+    ],
+    [
+      5.264324188232422,
+      7.17764139175415
+    ],
+    [
+      1.4696388244628906,
+      7.698358058929443
+    ],
+    [
+      7.257510185241699,
+      6.392743110656738
+    ],
+    [
+      2.528972864151001,
+      9.266778945922852
+    ],
+    [
+      7.82964563369751,
+      8.867755889892578
+    ],
+    [
+      2.6233506202697754,
+      9.990466117858887
+    ],
+    [
+      5.284548759460449,
+      7.098503589630127
+    ],
+    [
+      7.5553507804870605,
+      8.427800178527832
+    ],
+    [
+      1.9631613492965698,
+      9.580971717834473
+    ],
+    [
+      3.8454947471618652,
+      8.302509307861328
+    ],
+    [
+      4.085785865783691,
+      8.584770202636719
+    ],
+    [
+      1.24385666847229,
+      8.728686332702637
+    ],
+    [
+      2.7584922313690186,
+      9.912869453430176
+    ],
+    [
+      5.113978385925293,
+      8.362519264221191
+    ],
+    [
+      5.432131767272949,
+      8.385601043701172
+    ],
+    [
+      2.206242561340332,
+      9.498842239379883
+    ],
+    [
+      1.1073219776153564,
+      7.486744403839111
+    ],
+    [
+      0.8943695425987244,
+      8.483433723449707
+    ],
+    [
+      9.474772453308105,
+      7.087676525115967
+    ],
+    [
+      9.43463134765625,
+      7.227427005767822
+    ],
+    [
+      0.6650390028953552,
+      8.15183162689209
+    ],
+    [
+      9.474933624267578,
+      7.036195278167725
+    ],
+    [
+      9.46667766571045,
+      7.058226108551025
+    ],
+    [
+      2.9879872798919678,
+      11.074398040771484
+    ],
+    [
+      9.517196655273438,
+      6.828031539916992
+    ],
+    [
+      0.2941018044948578,
+      9.013757705688477
+    ],
+    [
+      0.3048184812068939,
+      8.671102523803711
+    ],
+    [
+      3.552510976791382,
+      10.58907413482666
+    ],
+    [
+      0.19540444016456604,
+      9.082023620605469
+    ],
+    [
+      1.0549976825714111,
+      7.237100601196289
+    ],
+    [
+      0.8359690308570862,
+      7.364652633666992
+    ],
+    [
+      4.5552449226379395,
+      6.955695152282715
+    ],
+    [
+      3.7400193214416504,
+      6.203035831451416
+    ],
+    [
+      0.8065335750579834,
+      8.654032707214355
+    ],
+    [
+      0.9943314790725708,
+      8.056110382080078
+    ],
+    [
+      2.052485227584839,
+      8.219332695007324
+    ],
+    [
+      7.312570095062256,
+      7.251163005828857
+    ],
+    [
+      7.265936374664307,
+      7.661620140075684
+    ],
+    [
+      4.492308139801025,
+      8.598602294921875
+    ],
+    [
+      7.045953750610352,
+      7.594315528869629
+    ],
+    [
+      4.8475446701049805,
+      7.946094989776611
+    ],
+    [
+      4.063266277313232,
+      10.340259552001953
+    ],
+    [
+      8.380743980407715,
+      8.507433891296387
+    ],
+    [
+      5.6885294914245605,
+      9.04638671875
+    ],
+    [
+      4.879640579223633,
+      7.923687934875488
+    ],
+    [
+      3.049398899078369,
+      11.16466999053955
+    ],
+    [
+      8.462788581848145,
+      7.3614935874938965
+    ],
+    [
+      6.7224297523498535,
+      7.576356410980225
+    ],
+    [
+      8.137374877929688,
+      8.33391284942627
+    ],
+    [
+      8.179328918457031,
+      8.232246398925781
+    ],
+    [
+      3.567528247833252,
+      8.327767372131348
+    ],
+    [
+      3.531304359436035,
+      9.668435096740723
+    ],
+    [
+      2.8186304569244385,
+      8.550036430358887
+    ],
+    [
+      6.69977331161499,
+      7.5663743019104
+    ],
+    [
+      5.889125347137451,
+      8.195781707763672
+    ],
+    [
+      3.447946786880493,
+      11.054153442382812
+    ],
+    [
+      7.423306941986084,
+      9.677987098693848
+    ],
+    [
+      6.876808166503906,
+      9.075620651245117
+    ],
+    [
+      7.331289291381836,
+      9.725071907043457
+    ],
+    [
+      7.339635372161865,
+      9.753252983093262
+    ],
+    [
+      3.4569835662841797,
+      11.007561683654785
+    ],
+    [
+      7.347509384155273,
+      9.779891014099121
+    ],
+    [
+      7.176445484161377,
+      9.816597938537598
+    ],
+    [
+      7.1752824783325195,
+      9.797981262207031
+    ],
+    [
+      6.935226917266846,
+      9.77568244934082
+    ],
+    [
+      8.749796867370605,
+      7.920777797698975
+    ],
+    [
+      8.118450164794922,
+      8.097668647766113
+    ],
+    [
+      3.875603437423706,
+      8.526034355163574
+    ],
+    [
+      3.5990374088287354,
+      10.962164878845215
+    ],
+    [
+      2.2643535137176514,
+      8.598791122436523
+    ],
+    [
+      2.2793545722961426,
+      8.599513053894043
+    ],
+    [
+      8.835906982421875,
+      7.335385322570801
+    ],
+    [
+      6.798346042633057,
+      8.891754150390625
+    ],
+    [
+      9.251051902770996,
+      8.34428596496582
+    ],
+    [
+      8.813886642456055,
+      8.271233558654785
+    ],
+    [
+      4.780383110046387,
+      10.79407024383545
+    ],
+    [
+      3.4252283573150635,
+      11.081208229064941
+    ],
+    [
+      9.731114387512207,
+      7.523743152618408
+    ],
+    [
+      3.42983078956604,
+      10.919620513916016
+    ],
+    [
+      8.086862564086914,
+      7.460273265838623
+    ],
+    [
+      3.509533405303955,
+      10.985625267028809
+    ],
+    [
+      4.95121955871582,
+      8.366643905639648
+    ],
+    [
+      7.424806594848633,
+      9.098625183105469
+    ],
+    [
+      8.217004776000977,
+      7.392611026763916
+    ],
+    [
+      8.223156929016113,
+      7.588244438171387
+    ],
+    [
+      4.753305435180664,
+      6.88686466217041
+    ],
+    [
+      4.138111591339111,
+      9.094342231750488
+    ],
+    [
+      1.0284050703048706,
+      7.429141521453857
+    ],
+    [
+      5.410219669342041,
+      7.114830493927002
+    ],
+    [
+      2.3541769981384277,
+      9.875537872314453
+    ],
+    [
+      7.482024192810059,
+      8.024796485900879
+    ],
+    [
+      7.645999908447266,
+      8.457501411437988
+    ],
+    [
+      8.578254699707031,
+      7.645174980163574
+    ],
+    [
+      7.982201099395752,
+      7.789085865020752
+    ],
+    [
+      1.7653107643127441,
+      9.48330020904541
+    ],
+    [
+      2.48492431640625,
+      8.135616302490234
+    ],
+    [
+      2.941436529159546,
+      8.073630332946777
+    ],
+    [
+      5.357789516448975,
+      7.12333345413208
+    ],
+    [
+      1.7127678394317627,
+      8.647797584533691
+    ],
+    [
+      2.2664742469787598,
+      9.33087158203125
+    ],
+    [
+      0.8531972765922546,
+      9.112089157104492
+    ],
+    [
+      0.9132630228996277,
+      9.071768760681152
+    ],
+    [
+      0.925113320350647,
+      9.14584732055664
+    ],
+    [
+      0.8942578434944153,
+      9.133374214172363
+    ],
+    [
+      0.1325492113828659,
+      9.011964797973633
+    ],
+    [
+      7.565269947052002,
+      6.771268844604492
+    ],
+    [
+      0.013288788497447968,
+      7.68168306350708
+    ],
+    [
+      8.553140640258789,
+      8.626873970031738
+    ],
+    [
+      6.377233505249023,
+      6.431595802307129
+    ],
+    [
+      1.4867744445800781,
+      10.073871612548828
+    ],
+    [
+      1.4098174571990967,
+      9.922449111938477
+    ],
+    [
+      1.428274154663086,
+      10.004114151000977
+    ],
+    [
+      1.4241050481796265,
+      9.982000350952148
+    ],
+    [
+      1.4346697330474854,
+      9.944991111755371
+    ],
+    [
+      1.4912606477737427,
+      9.982574462890625
+    ],
+    [
+      1.4987481832504272,
+      9.978826522827148
+    ],
+    [
+      1.447803020477295,
+      9.940093994140625
+    ],
+    [
+      0.5299175977706909,
+      7.792011737823486
+    ],
+    [
+      1.5169494152069092,
+      9.856809616088867
+    ],
+    [
+      1.2933636903762817,
+      9.198226928710938
+    ],
+    [
+      2.130333185195923,
+      10.708292007446289
+    ],
+    [
+      0.027809487655758858,
+      7.868101596832275
+    ],
+    [
+      0.3804433345794678,
+      8.04599380493164
+    ],
+    [
+      1.2101143598556519,
+      8.699020385742188
+    ],
+    [
+      1.3121347427368164,
+      9.368697166442871
+    ],
+    [
+      1.4437930583953857,
+      9.531660079956055
+    ],
+    [
+      1.2684192657470703,
+      7.1934285163879395
+    ],
+    [
+      3.975695848464966,
+      9.72749137878418
+    ],
+    [
+      0.7572191953659058,
+      8.461603164672852
+    ],
+    [
+      4.308780670166016,
+      7.89187479019165
+    ],
+    [
+      1.7312718629837036,
+      9.155271530151367
+    ],
+    [
+      7.834494590759277,
+      8.06737995147705
+    ],
+    [
+      7.86791467666626,
+      8.142231941223145
+    ],
+    [
+      1.7478502988815308,
+      9.13022232055664
+    ],
+    [
+      8.257506370544434,
+      5.853944778442383
+    ],
+    [
+      1.0109343528747559,
+      7.348401069641113
+    ],
+    [
+      4.264840126037598,
+      8.919872283935547
+    ],
+    [
+      4.428966999053955,
+      8.449105262756348
+    ],
+    [
+      5.586644172668457,
+      9.122475624084473
+    ],
+    [
+      2.783205509185791,
+      8.723567962646484
+    ],
+    [
+      3.9262359142303467,
+      9.002325057983398
+    ],
+    [
+      2.6916873455047607,
+      8.720355987548828
+    ],
+    [
+      3.735476493835449,
+      9.20346736907959
+    ],
+    [
+      2.9662275314331055,
+      6.679476737976074
+    ],
+    [
+      2.8152904510498047,
+      8.037300109863281
+    ],
+    [
+      1.4041762351989746,
+      8.048059463500977
+    ],
+    [
+      1.2180434465408325,
+      8.344988822937012
+    ],
+    [
+      0.8823239803314209,
+      9.449106216430664
+    ],
+    [
+      1.2784518003463745,
+      8.694753646850586
+    ],
+    [
+      4.7380290031433105,
+      9.065841674804688
+    ],
+    [
+      2.1511707305908203,
+      8.498046875
+    ],
+    [
+      2.7554075717926025,
+      7.703493118286133
+    ],
+    [
+      2.8174118995666504,
+      9.595084190368652
+    ],
+    [
+      2.4953649044036865,
+      9.838326454162598
+    ],
+    [
+      1.0051121711730957,
+      7.328890800476074
+    ],
+    [
+      0.8743836879730225,
+      8.12385368347168
+    ],
+    [
+      8.297357559204102,
+      8.397258758544922
+    ],
+    [
+      1.604684591293335,
+      7.699774742126465
+    ],
+    [
+      1.680962324142456,
+      7.638224124908447
+    ],
+    [
+      4.342799663543701,
+      9.975032806396484
+    ],
+    [
+      4.464792728424072,
+      9.964015007019043
+    ],
+    [
+      0.19804780185222626,
+      7.8171916007995605
+    ],
+    [
+      3.7554965019226074,
+      9.113605499267578
+    ],
+    [
+      4.765646457672119,
+      8.397943496704102
+    ],
+    [
+      1.236764907836914,
+      8.724333763122559
+    ],
+    [
+      5.357906341552734,
+      9.28825855255127
+    ],
+    [
+      0.6470441222190857,
+      8.338178634643555
+    ],
+    [
+      7.24701452255249,
+      6.844329357147217
+    ],
+    [
+      3.3866353034973145,
+      7.539400100708008
+    ],
+    [
+      4.924027919769287,
+      8.406005859375
+    ],
+    [
+      -0.228169247508049,
+      7.921579360961914
+    ],
+    [
+      0.25511467456817627,
+      8.22559928894043
+    ],
+    [
+      3.306912660598755,
+      7.51947021484375
+    ],
+    [
+      5.33125638961792,
+      7.108550548553467
+    ],
+    [
+      7.510772705078125,
+      7.6546430587768555
+    ],
+    [
+      6.2408766746521,
+      7.248931407928467
+    ],
+    [
+      2.4561524391174316,
+      7.406203746795654
+    ],
+    [
+      9.000768661499023,
+      6.454864978790283
+    ],
+    [
+      -0.1917353868484497,
+      7.8361992835998535
+    ],
+    [
+      -0.282275527715683,
+      8.051454544067383
+    ],
+    [
+      9.156457901000977,
+      7.385446548461914
+    ],
+    [
+      7.861021518707275,
+      7.780995845794678
+    ],
+    [
+      7.978273868560791,
+      7.81045389175415
+    ],
+    [
+      7.9896931648254395,
+      7.458221912384033
+    ],
+    [
+      9.146122932434082,
+      7.369250774383545
+    ],
+    [
+      3.308532238006592,
+      9.933042526245117
+    ],
+    [
+      3.3320658206939697,
+      7.552003860473633
+    ],
+    [
+      5.629721641540527,
+      10.067645072937012
+    ],
+    [
+      4.025341510772705,
+      9.386954307556152
+    ],
+    [
+      6.4236836433410645,
+      6.387533664703369
+    ],
+    [
+      3.5856127738952637,
+      9.3779296875
+    ],
+    [
+      0.31585514545440674,
+      9.15646743774414
+    ],
+    [
+      1.5797580480575562,
+      8.177428245544434
+    ],
+    [
+      3.51881742477417,
+      9.283836364746094
+    ],
+    [
+      1.240997076034546,
+      7.901129245758057
+    ],
+    [
+      6.938855171203613,
+      8.153769493103027
+    ],
+    [
+      4.935710430145264,
+      8.402925491333008
+    ],
+    [
+      3.537897825241089,
+      9.503606796264648
+    ],
+    [
+      3.633979558944702,
+      9.002861022949219
+    ],
+    [
+      8.148618698120117,
+      7.331378936767578
+    ],
+    [
+      7.537426948547363,
+      7.648494243621826
+    ],
+    [
+      4.454928874969482,
+      11.00288200378418
+    ],
+    [
+      3.386139392852783,
+      9.580350875854492
+    ],
+    [
+      3.692370653152466,
+      8.013846397399902
+    ],
+    [
+      -0.12592396140098572,
+      7.802090644836426
+    ],
+    [
+      8.415289878845215,
+      7.586472988128662
+    ],
+    [
+      5.384425163269043,
+      7.140923023223877
+    ],
+    [
+      5.243439197540283,
+      7.877317428588867
+    ],
+    [
+      4.338685035705566,
+      7.338528633117676
+    ],
+    [
+      2.580976724624634,
+      8.328575134277344
+    ],
+    [
+      2.320499897003174,
+      8.619621276855469
+    ],
+    [
+      8.342294692993164,
+      6.37454080581665
+    ],
+    [
+      2.129018545150757,
+      9.24355697631836
+    ],
+    [
+      2.712106466293335,
+      8.171893119812012
+    ],
+    [
+      3.545271635055542,
+      8.150461196899414
+    ],
+    [
+      3.2365562915802,
+      6.9385666847229
+    ],
+    [
+      9.434831619262695,
+      8.180363655090332
+    ],
+    [
+      9.612561225891113,
+      7.680607318878174
+    ],
+    [
+      9.733168601989746,
+      7.640044689178467
+    ],
+    [
+      9.691169738769531,
+      7.713768482208252
+    ],
+    [
+      3.2310738563537598,
+      9.44998550415039
+    ],
+    [
+      3.3745570182800293,
+      7.559894561767578
+    ],
+    [
+      3.3295459747314453,
+      7.518985748291016
+    ],
+    [
+      3.2369673252105713,
+      9.646065711975098
+    ],
+    [
+      8.792403221130371,
+      7.721661567687988
+    ],
+    [
+      7.302922248840332,
+      8.516919136047363
+    ],
+    [
+      8.539850234985352,
+      6.295538425445557
+    ],
+    [
+      2.392484664916992,
+      9.350975036621094
+    ],
+    [
+      3.4278221130371094,
+      11.375102996826172
+    ],
+    [
+      3.239523410797119,
+      7.664754390716553
+    ],
+    [
+      3.678959369659424,
+      8.834271430969238
+    ],
+    [
+      8.289249420166016,
+      7.490634918212891
+    ],
+    [
+      2.5841803550720215,
+      7.44514799118042
+    ],
+    [
+      2.883913516998291,
+      9.659074783325195
+    ],
+    [
+      8.519872665405273,
+      7.165493011474609
+    ],
+    [
+      1.697760820388794,
+      9.836536407470703
+    ],
+    [
+      4.696513652801514,
+      8.081254959106445
+    ],
+    [
+      0.038941096514463425,
+      8.462019920349121
+    ],
+    [
+      3.3049755096435547,
+      7.545507431030273
+    ],
+    [
+      -0.04939689859747887,
+      8.608771324157715
+    ],
+    [
+      -0.1856822967529297,
+      7.870748996734619
+    ],
+    [
+      0.33051079511642456,
+      7.661847114562988
+    ],
+    [
+      3.5724167823791504,
+      10.489727973937988
+    ],
+    [
+      8.459051132202148,
+      7.2534332275390625
+    ],
+    [
+      1.100250244140625,
+      7.781679153442383
+    ],
+    [
+      3.2132604122161865,
+      10.678077697753906
+    ],
+    [
+      3.861623764038086,
+      8.574771881103516
+    ],
+    [
+      1.9106298685073853,
+      7.254936218261719
+    ],
+    [
+      5.163671016693115,
+      10.314882278442383
+    ],
+    [
+      7.849090576171875,
+      7.376857757568359
+    ],
+    [
+      7.827020645141602,
+      7.347211837768555
+    ],
+    [
+      1.6358453035354614,
+      9.885581970214844
+    ],
+    [
+      7.806009292602539,
+      7.461058616638184
+    ],
+    [
+      7.851520538330078,
+      7.31336784362793
+    ],
+    [
+      6.6183061599731445,
+      6.638825416564941
+    ],
+    [
+      7.785467624664307,
+      7.329370498657227
+    ],
+    [
+      8.174951553344727,
+      6.5504631996154785
+    ],
+    [
+      8.193652153015137,
+      6.579853534698486
+    ],
+    [
+      8.261853218078613,
+      6.502624988555908
+    ],
+    [
+      7.735694885253906,
+      8.714409828186035
+    ],
+    [
+      7.587202548980713,
+      8.793922424316406
+    ],
+    [
+      5.814354419708252,
+      8.328484535217285
+    ],
+    [
+      5.71661901473999,
+      8.335943222045898
+    ],
+    [
+      4.519490718841553,
+      9.340080261230469
+    ],
+    [
+      2.866750717163086,
+      7.559815406799316
+    ],
+    [
+      9.354044914245605,
+      8.249160766601562
+    ],
+    [
+      7.471277236938477,
+      7.470035552978516
+    ],
+    [
+      2.593576669692993,
+      10.15677547454834
+    ],
+    [
+      2.9080941677093506,
+      10.695586204528809
+    ],
+    [
+      2.467121124267578,
+      11.053863525390625
+    ],
+    [
+      2.2846033573150635,
+      9.992511749267578
+    ],
+    [
+      4.728777885437012,
+      11.653146743774414
+    ],
+    [
+      1.941408634185791,
+      8.527352333068848
+    ],
+    [
+      3.4875106811523438,
+      9.938496589660645
+    ],
+    [
+      2.0553994178771973,
+      9.414559364318848
+    ],
+    [
+      9.115342140197754,
+      7.803973197937012
+    ],
+    [
+      9.304183959960938,
+      8.131092071533203
+    ],
+    [
+      7.863950252532959,
+      6.434434413909912
+    ],
+    [
+      -0.04979560151696205,
+      7.7570695877075195
+    ],
+    [
+      4.8804612159729,
+      9.821662902832031
+    ],
+    [
+      2.1246633529663086,
+      9.366537094116211
+    ],
+    [
+      7.6894025802612305,
+      7.438101291656494
+    ],
+    [
+      2.9763545989990234,
+      10.052760124206543
+    ],
+    [
+      3.531827926635742,
+      8.48988151550293
+    ],
+    [
+      4.557544708251953,
+      8.39858627319336
+    ],
+    [
+      0.6389002799987793,
+      7.854139804840088
+    ],
+    [
+      0.4629347026348114,
+      8.360053062438965
+    ],
+    [
+      3.1618826389312744,
+      6.807528972625732
+    ],
+    [
+      2.84177303314209,
+      7.810665607452393
+    ],
+    [
+      4.242146015167236,
+      8.691975593566895
+    ],
+    [
+      9.085041046142578,
+      7.361795902252197
+    ],
+    [
+      8.44389533996582,
+      6.777136325836182
+    ],
+    [
+      8.908069610595703,
+      6.783510684967041
+    ],
+    [
+      8.934924125671387,
+      6.5953240394592285
+    ],
+    [
+      8.946039199829102,
+      6.7422709465026855
+    ],
+    [
+      8.573163032531738,
+      6.9654951095581055
+    ],
+    [
+      8.781599044799805,
+      6.892013072967529
+    ],
+    [
+      3.9989562034606934,
+      9.000329971313477
+    ],
+    [
+      9.043638229370117,
+      6.227659225463867
+    ],
+    [
+      9.00873851776123,
+      6.263279438018799
+    ],
+    [
+      8.984941482543945,
+      6.346065044403076
+    ],
+    [
+      9.083958625793457,
+      6.881922721862793
+    ],
+    [
+      8.976888656616211,
+      6.239190101623535
+    ],
+    [
+      8.977477073669434,
+      6.211013317108154
+    ],
+    [
+      9.000655174255371,
+      6.25688362121582
+    ],
+    [
+      8.924081802368164,
+      6.192939758300781
+    ],
+    [
+      9.084660530090332,
+      6.286419868469238
+    ],
+    [
+      8.99913215637207,
+      6.2663798332214355
+    ],
+    [
+      9.034221649169922,
+      6.287827968597412
+    ],
+    [
+      9.071186065673828,
+      6.292397975921631
+    ],
+    [
+      0.008351355791091919,
+      7.987640380859375
+    ],
+    [
+      8.127486228942871,
+      5.824975490570068
+    ],
+    [
+      7.788607597351074,
+      6.011092662811279
+    ],
+    [
+      8.454206466674805,
+      5.936788558959961
+    ],
+    [
+      7.6860246658325195,
+      8.711427688598633
+    ],
+    [
+      3.0439834594726562,
+      8.566911697387695
+    ],
+    [
+      0.04318919777870178,
+      8.11166000366211
+    ],
+    [
+      0.18480098247528076,
+      8.380059242248535
+    ],
+    [
+      1.0356978178024292,
+      9.356291770935059
+    ],
+    [
+      0.2519001066684723,
+      8.487115859985352
+    ],
+    [
+      3.8364760875701904,
+      9.037538528442383
+    ],
+    [
+      1.4724482297897339,
+      7.951446533203125
+    ],
+    [
+      7.859642028808594,
+      6.471968650817871
+    ],
+    [
+      8.018157005310059,
+      6.575057506561279
+    ],
+    [
+      7.926329612731934,
+      6.443359375
+    ],
+    [
+      8.23106575012207,
+      6.672062873840332
+    ],
+    [
+      2.537612199783325,
+      7.514128684997559
+    ],
+    [
+      7.734979152679443,
+      6.536491870880127
+    ],
+    [
+      4.613227367401123,
+      7.50246524810791
+    ],
+    [
+      2.2630512714385986,
+      9.58543586730957
+    ],
+    [
+      9.633509635925293,
+      6.501614093780518
+    ],
+    [
+      9.444119453430176,
+      6.449303150177002
+    ],
+    [
+      0.17322808504104614,
+      8.994269371032715
+    ],
+    [
+      1.0026975870132446,
+      7.636435508728027
+    ],
+    [
+      1.6529620885849,
+      8.987695693969727
+    ],
+    [
+      1.769986867904663,
+      9.695090293884277
+    ],
+    [
+      3.764735460281372,
+      8.591728210449219
+    ],
+    [
+      6.601203918457031,
+      8.064617156982422
+    ],
+    [
+      4.676842212677002,
+      8.700674057006836
+    ],
+    [
+      5.475674629211426,
+      9.353667259216309
+    ],
+    [
+      3.272449254989624,
+      8.950477600097656
+    ],
+    [
+      6.785251617431641,
+      8.025737762451172
+    ],
+    [
+      3.710338592529297,
+      9.607722282409668
+    ],
+    [
+      2.8060240745544434,
+      8.95602798461914
+    ],
+    [
+      2.4496514797210693,
+      7.9670090675354
+    ],
+    [
+      1.0437061786651611,
+      7.621260643005371
+    ],
+    [
+      4.747122764587402,
+      9.237138748168945
+    ],
+    [
+      7.074649333953857,
+      8.485219955444336
+    ],
+    [
+      7.569419860839844,
+      8.832315444946289
+    ],
+    [
+      7.7153520584106445,
+      8.867555618286133
+    ],
+    [
+      1.4022210836410522,
+      7.713568210601807
+    ],
+    [
+      1.6557954549789429,
+      10.442731857299805
+    ],
+    [
+      4.046920299530029,
+      10.698088645935059
+    ],
+    [
+      3.1137125492095947,
+      6.80033540725708
+    ],
+    [
+      1.6301196813583374,
+      10.355454444885254
+    ],
+    [
+      1.5518765449523926,
+      10.371304512023926
+    ],
+    [
+      2.836205244064331,
+      8.714775085449219
+    ],
+    [
+      3.2714507579803467,
+      10.181646347045898
+    ],
+    [
+      3.4770023822784424,
+      8.415056228637695
+    ],
+    [
+      1.6073578596115112,
+      10.463818550109863
+    ],
+    [
+      1.843810796737671,
+      8.510778427124023
+    ],
+    [
+      4.7364397048950195,
+      6.936776161193848
+    ],
+    [
+      1.5050466060638428,
+      7.629571914672852
+    ],
+    [
+      2.095219850540161,
+      10.089118003845215
+    ],
+    [
+      7.866149425506592,
+      7.879354953765869
+    ],
+    [
+      1.9575817584991455,
+      7.210684299468994
+    ],
+    [
+      2.1522459983825684,
+      8.404219627380371
+    ],
+    [
+      0.8868677616119385,
+      9.492130279541016
+    ],
+    [
+      0.902331531047821,
+      9.5286226272583
+    ],
+    [
+      0.8329418301582336,
+      9.535137176513672
+    ],
+    [
+      0.8272446393966675,
+      9.527010917663574
+    ],
+    [
+      0.8174892067909241,
+      9.489245414733887
+    ],
+    [
+      2.683784008026123,
+      10.282244682312012
+    ],
+    [
+      2.119450807571411,
+      10.176025390625
+    ],
+    [
+      0.5736048817634583,
+      8.549368858337402
+    ],
+    [
+      0.5987238883972168,
+      7.90787410736084
+    ],
+    [
+      0.7375303506851196,
+      8.121907234191895
+    ],
+    [
+      3.486649513244629,
+      9.85363483428955
+    ],
+    [
+      4.947183132171631,
+      8.861310005187988
+    ],
+    [
+      7.091821670532227,
+      8.218192100524902
+    ],
+    [
+      1.9061224460601807,
+      8.50788688659668
+    ],
+    [
+      5.160888195037842,
+      7.779262542724609
+    ],
+    [
+      7.867767810821533,
+      8.936245918273926
+    ],
+    [
+      2.498521327972412,
+      8.559317588806152
+    ],
+    [
+      2.988227605819702,
+      8.85129451751709
+    ],
+    [
+      1.1494497060775757,
+      7.516904354095459
+    ],
+    [
+      9.318257331848145,
+      8.450215339660645
+    ],
+    [
+      8.712786674499512,
+      8.56676959991455
+    ],
+    [
+      2.1793296337127686,
+      9.69530963897705
+    ],
+    [
+      4.171804904937744,
+      10.545737266540527
+    ],
+    [
+      2.255382537841797,
+      8.325066566467285
+    ],
+    [
+      3.906674861907959,
+      8.380573272705078
+    ],
+    [
+      4.644055366516113,
+      10.470934867858887
+    ],
+    [
+      -0.10459072887897491,
+      8.33712100982666
+    ],
+    [
+      0.2515016794204712,
+      7.937811851501465
+    ],
+    [
+      4.884748935699463,
+      7.44525671005249
+    ],
+    [
+      2.2889058589935303,
+      10.793859481811523
+    ],
+    [
+      6.788698196411133,
+      7.349106311798096
+    ],
+    [
+      2.4579832553863525,
+      10.199373245239258
+    ],
+    [
+      0.04032103344798088,
+      7.882535934448242
+    ],
+    [
+      2.108856201171875,
+      7.915536880493164
+    ],
+    [
+      1.7176976203918457,
+      8.048555374145508
+    ],
+    [
+      0.19017256796360016,
+      7.599118232727051
+    ],
+    [
+      3.994934558868408,
+      8.571154594421387
+    ],
+    [
+      2.4977645874023438,
+      10.072280883789062
+    ],
+    [
+      4.2879791259765625,
+      10.2761869430542
+    ],
+    [
+      2.15620493888855,
+      10.092876434326172
+    ],
+    [
+      4.6480793952941895,
+      6.845523357391357
+    ],
+    [
+      2.762709140777588,
+      7.192547798156738
+    ],
+    [
+      5.544778823852539,
+      8.947060585021973
+    ],
+    [
+      2.4962961673736572,
+      9.24591064453125
+    ],
+    [
+      3.3893182277679443,
+      10.33644962310791
+    ],
+    [
+      3.130680561065674,
+      9.095324516296387
+    ],
+    [
+      5.774077415466309,
+      8.403837203979492
+    ],
+    [
+      1.5096545219421387,
+      7.9090495109558105
+    ],
+    [
+      3.8365392684936523,
+      11.456707954406738
+    ],
+    [
+      4.179521560668945,
+      8.098618507385254
+    ],
+    [
+      2.6550419330596924,
+      8.246325492858887
+    ],
+    [
+      4.011474609375,
+      11.04287338256836
+    ],
+    [
+      7.632741928100586,
+      6.037603378295898
+    ],
+    [
+      4.164096832275391,
+      11.09974193572998
+    ],
+    [
+      2.068154811859131,
+      10.094254493713379
+    ],
+    [
+      3.7694201469421387,
+      11.391339302062988
+    ],
+    [
+      7.659205913543701,
+      5.91422176361084
+    ],
+    [
+      7.657792568206787,
+      5.906285762786865
+    ],
+    [
+      7.546384811401367,
+      5.995514392852783
+    ],
+    [
+      7.832361698150635,
+      5.898327827453613
+    ],
+    [
+      4.073720455169678,
+      11.16138744354248
+    ],
+    [
+      1.1721457242965698,
+      7.747375965118408
+    ],
+    [
+      7.87074613571167,
+      6.569925785064697
+    ],
+    [
+      3.9585464000701904,
+      11.161455154418945
+    ],
+    [
+      6.189113140106201,
+      8.287130355834961
+    ],
+    [
+      7.590701580047607,
+      5.903797626495361
+    ],
+    [
+      7.6015753746032715,
+      5.956606864929199
+    ],
+    [
+      3.9148013591766357,
+      7.882174015045166
+    ],
+    [
+      4.192484378814697,
+      11.104944229125977
+    ],
+    [
+      2.9291598796844482,
+      11.067529678344727
+    ],
+    [
+      2.762901782989502,
+      10.66392707824707
+    ],
+    [
+      3.0226502418518066,
+      11.119811058044434
+    ],
+    [
+      3.025887966156006,
+      11.137020111083984
+    ],
+    [
+      2.631682872772217,
+      10.88404655456543
+    ],
+    [
+      2.7227020263671875,
+      10.95969295501709
+    ],
+    [
+      2.198854684829712,
+      10.200984001159668
+    ],
+    [
+      2.623201847076416,
+      11.011138916015625
+    ],
+    [
+      3.7303948402404785,
+      6.206088542938232
+    ],
+    [
+      6.8922529220581055,
+      7.905141353607178
+    ],
+    [
+      4.0671610832214355,
+      11.079401016235352
+    ],
+    [
+      4.02130651473999,
+      11.076226234436035
+    ],
+    [
+      7.597029209136963,
+      6.222158432006836
+    ],
+    [
+      7.627570152282715,
+      6.267459392547607
+    ],
+    [
+      7.491183280944824,
+      6.424724102020264
+    ],
+    [
+      -0.13411684334278107,
+      8.310821533203125
+    ],
+    [
+      -0.06859223544597626,
+      8.290837287902832
+    ],
+    [
+      2.3782734870910645,
+      9.972345352172852
+    ],
+    [
+      4.015477180480957,
+      11.076722145080566
+    ],
+    [
+      1.3453978300094604,
+      8.06870174407959
+    ],
+    [
+      2.5977838039398193,
+      9.686013221740723
+    ],
+    [
+      2.3213839530944824,
+      9.674310684204102
+    ],
+    [
+      2.4267990589141846,
+      8.77302074432373
+    ],
+    [
+      4.021580219268799,
+      10.88901138305664
+    ],
+    [
+      5.4035420417785645,
+      7.76767635345459
+    ],
+    [
+      4.367247581481934,
+      9.952157020568848
+    ],
+    [
+      8.942378997802734,
+      7.066088676452637
+    ],
+    [
+      3.5756094455718994,
+      8.047203063964844
+    ],
+    [
+      7.38707160949707,
+      6.968654632568359
+    ],
+    [
+      7.433557033538818,
+      6.93129825592041
+    ],
+    [
+      7.469666481018066,
+      6.963167190551758
+    ],
+    [
+      8.28493881225586,
+      9.142521858215332
+    ],
+    [
+      3.9849894046783447,
+      11.040252685546875
+    ],
+    [
+      4.76090669631958,
+      7.481351375579834
+    ],
+    [
+      0.8906266093254089,
+      9.577371597290039
+    ],
+    [
+      8.071027755737305,
+      6.383479595184326
+    ],
+    [
+      0.12245878577232361,
+      7.946321964263916
+    ],
+    [
+      2.078862190246582,
+      9.554369926452637
+    ],
+    [
+      4.976832389831543,
+      9.028091430664062
+    ],
+    [
+      -0.1101028174161911,
+      7.813427448272705
+    ],
+    [
+      0.12368708848953247,
+      8.271000862121582
+    ],
+    [
+      4.372998237609863,
+      8.70273494720459
+    ],
+    [
+      -0.07634179294109344,
+      8.444395065307617
+    ],
+    [
+      3.6457631587982178,
+      11.09611701965332
+    ],
+    [
+      4.564093589782715,
+      7.64949369430542
+    ],
+    [
+      4.138861179351807,
+      11.095580101013184
+    ],
+    [
+      8.22881031036377,
+      6.434319972991943
+    ],
+    [
+      4.708967685699463,
+      8.029805183410645
+    ],
+    [
+      3.795964479446411,
+      11.149571418762207
+    ],
+    [
+      8.753348350524902,
+      7.797168254852295
+    ],
+    [
+      7.339224338531494,
+      7.9266486167907715
+    ],
+    [
+      7.025722026824951,
+      7.7360734939575195
+    ],
+    [
+      0.9251254796981812,
+      7.243870258331299
+    ],
+    [
+      4.039968967437744,
+      8.976665496826172
+    ],
+    [
+      2.2877795696258545,
+      9.292479515075684
+    ],
+    [
+      4.123612880706787,
+      11.144131660461426
+    ],
+    [
+      2.623800039291382,
+      9.703401565551758
+    ],
+    [
+      1.005664348602295,
+      7.270981788635254
+    ],
+    [
+      1.4882230758666992,
+      7.6824493408203125
+    ],
+    [
+      4.0439043045043945,
+      11.083070755004883
+    ],
+    [
+      4.039215564727783,
+      9.662985801696777
+    ],
+    [
+      4.048609733581543,
+      11.062829971313477
+    ],
+    [
+      3.8999881744384766,
+      11.137603759765625
+    ],
+    [
+      1.8026316165924072,
+      7.946948528289795
+    ],
+    [
+      0.21788477897644043,
+      8.47153377532959
+    ],
+    [
+      0.07300266623497009,
+      8.417258262634277
+    ],
+    [
+      8.086386680603027,
+      6.328430652618408
+    ],
+    [
+      2.740781307220459,
+      11.400359153747559
+    ],
+    [
+      2.941652297973633,
+      11.454329490661621
+    ],
+    [
+      8.905718803405762,
+      7.004618167877197
+    ],
+    [
+      9.376517295837402,
+      7.496154308319092
+    ],
+    [
+      9.281404495239258,
+      7.770877361297607
+    ],
+    [
+      9.287532806396484,
+      8.085265159606934
+    ],
+    [
+      9.355937957763672,
+      7.8234944343566895
+    ],
+    [
+      3.682131767272949,
+      8.755789756774902
+    ],
+    [
+      7.0874152183532715,
+      6.330463886260986
+    ],
+    [
+      5.196061134338379,
+      9.38266658782959
+    ],
+    [
+      3.4440643787384033,
+      8.067550659179688
+    ],
+    [
+      2.845029354095459,
+      11.513869285583496
+    ],
+    [
+      7.067746639251709,
+      8.333844184875488
+    ],
+    [
+      5.141862392425537,
+      9.379600524902344
+    ],
+    [
+      0.9300577044487,
+      7.303638935089111
+    ],
+    [
+      1.8986902236938477,
+      7.806153297424316
+    ],
+    [
+      2.0593924522399902,
+      7.9403276443481445
+    ],
+    [
+      1.9529669284820557,
+      7.899598121643066
+    ],
+    [
+      7.459190845489502,
+      8.713225364685059
+    ],
+    [
+      2.9737589359283447,
+      11.455669403076172
+    ],
+    [
+      3.7222118377685547,
+      9.964418411254883
+    ],
+    [
+      3.056623935699463,
+      11.402771949768066
+    ],
+    [
+      3.3541579246520996,
+      11.57382869720459
+    ],
+    [
+      3.20521879196167,
+      6.758752822875977
+    ],
+    [
+      4.736231803894043,
+      11.665696144104004
+    ],
+    [
+      4.758813381195068,
+      11.66767692565918
+    ],
+    [
+      0.41877281665802,
+      7.6326494216918945
+    ],
+    [
+      4.7500152587890625,
+      11.621152877807617
+    ],
+    [
+      4.734637260437012,
+      11.58577823638916
+    ],
+    [
+      4.74459981918335,
+      11.56279468536377
+    ],
+    [
+      4.6387505531311035,
+      11.615757942199707
+    ],
+    [
+      4.6992082595825195,
+      11.605194091796875
+    ],
+    [
+      4.71970796585083,
+      11.617006301879883
+    ],
+    [
+      0.11830123513936996,
+      7.86619234085083
+    ],
+    [
+      4.638186454772949,
+      11.64988899230957
+    ],
+    [
+      3.6700122356414795,
+      8.111665725708008
+    ],
+    [
+      3.630258798599243,
+      8.046266555786133
+    ],
+    [
+      3.952631711959839,
+      6.753023147583008
+    ],
+    [
+      7.937144756317139,
+      8.225707054138184
+    ],
+    [
+      4.564304351806641,
+      8.705702781677246
+    ],
+    [
+      7.073132514953613,
+      6.3279900550842285
+    ],
+    [
+      6.422128200531006,
+      7.7899298667907715
+    ],
+    [
+      2.139906167984009,
+      9.920853614807129
+    ],
+    [
+      6.450591087341309,
+      7.854712009429932
+    ],
+    [
+      6.497097492218018,
+      7.8846116065979
+    ],
+    [
+      6.4726176261901855,
+      7.831348896026611
+    ],
+    [
+      6.470208168029785,
+      7.843262672424316
+    ],
+    [
+      6.457268238067627,
+      7.837692737579346
+    ],
+    [
+      6.554673671722412,
+      7.782700538635254
+    ],
+    [
+      6.4462761878967285,
+      7.821971893310547
+    ],
+    [
+      7.048279762268066,
+      6.32667875289917
+    ],
+    [
+      4.287793159484863,
+      9.344398498535156
+    ],
+    [
+      5.402746677398682,
+      8.82262897491455
+    ],
+    [
+      3.859027147293091,
+      6.193053245544434
+    ],
+    [
+      5.106987953186035,
+      8.515271186828613
+    ],
+    [
+      2.101860523223877,
+      8.859626770019531
+    ],
+    [
+      2.6201179027557373,
+      9.298077583312988
+    ],
+    [
+      1.206652045249939,
+      9.34032917022705
+    ],
+    [
+      6.509097099304199,
+      8.347609519958496
+    ],
+    [
+      5.628374099731445,
+      10.087984085083008
+    ],
+    [
+      7.244315147399902,
+      7.565103054046631
+    ],
+    [
+      7.335991382598877,
+      8.323383331298828
+    ],
+    [
+      6.61814546585083,
+      7.47627067565918
+    ],
+    [
+      5.0189595222473145,
+      8.064955711364746
+    ],
+    [
+      3.8668839931488037,
+      6.241979598999023
+    ],
+    [
+      5.254333019256592,
+      7.6062140464782715
+    ],
+    [
+      3.2914493083953857,
+      7.991265296936035
+    ],
+    [
+      4.202179431915283,
+      8.08678913116455
+    ],
+    [
+      2.1534125804901123,
+      10.102582931518555
+    ],
+    [
+      8.825448036193848,
+      8.074080467224121
+    ],
+    [
+      7.298677444458008,
+      8.240782737731934
+    ],
+    [
+      7.2946391105651855,
+      8.287683486938477
+    ],
+    [
+      3.7876532077789307,
+      8.358646392822266
+    ],
+    [
+      3.726996898651123,
+      8.162229537963867
+    ],
+    [
+      9.027050018310547,
+      8.250357627868652
+    ],
+    [
+      9.24687385559082,
+      8.24402141571045
+    ],
+    [
+      7.977624893188477,
+      6.881740570068359
+    ],
+    [
+      6.382333278656006,
+      6.477832794189453
+    ],
+    [
+      0.9841206669807434,
+      7.813271522521973
+    ],
+    [
+      7.627955913543701,
+      6.763640880584717
+    ],
+    [
+      6.462040424346924,
+      6.431740760803223
+    ],
+    [
+      6.434527397155762,
+      6.3892011642456055
+    ],
+    [
+      8.560328483581543,
+      6.048935890197754
+    ],
+    [
+      6.432427883148193,
+      6.512943744659424
+    ],
+    [
+      6.237153053283691,
+      6.413687229156494
+    ],
+    [
+      8.420119285583496,
+      5.876253128051758
+    ],
+    [
+      6.375819206237793,
+      6.415647506713867
+    ],
+    [
+      3.446845054626465,
+      9.594090461730957
+    ],
+    [
+      4.455587387084961,
+      8.503423690795898
+    ],
+    [
+      7.199803352355957,
+      9.04686450958252
+    ],
+    [
+      8.411859512329102,
+      5.8207879066467285
+    ],
+    [
+      6.902703762054443,
+      7.73726749420166
+    ],
+    [
+      4.157166004180908,
+      8.47616195678711
+    ],
+    [
+      1.5402891635894775,
+      10.5740327835083
+    ],
+    [
+      2.648832082748413,
+      8.938704490661621
+    ],
+    [
+      6.92646598815918,
+      7.928189277648926
+    ],
+    [
+      2.759117841720581,
+      8.845744132995605
+    ],
+    [
+      1.5085859298706055,
+      10.647068977355957
+    ],
+    [
+      1.201603889465332,
+      9.334856986999512
+    ],
+    [
+      1.1104755401611328,
+      8.192943572998047
+    ],
+    [
+      1.5224372148513794,
+      10.622895240783691
+    ],
+    [
+      2.347804307937622,
+      7.545954704284668
+    ],
+    [
+      1.081438660621643,
+      8.301548957824707
+    ],
+    [
+      1.232269525527954,
+      8.512486457824707
+    ],
+    [
+      1.4380980730056763,
+      8.534734725952148
+    ],
+    [
+      4.910592555999756,
+      8.631295204162598
+    ],
+    [
+      1.0373929738998413,
+      8.477075576782227
+    ],
+    [
+      3.634805917739868,
+      8.322464942932129
+    ],
+    [
+      4.6719279289245605,
+      8.51858139038086
+    ],
+    [
+      4.79362154006958,
+      8.503252029418945
+    ],
+    [
+      4.626401424407959,
+      8.57138442993164
+    ],
+    [
+      2.2933175563812256,
+      8.945724487304688
+    ],
+    [
+      1.583772897720337,
+      8.127952575683594
+    ],
+    [
+      0.819930374622345,
+      7.766304969787598
+    ],
+    [
+      3.497180223464966,
+      9.50737476348877
+    ],
+    [
+      2.4735822677612305,
+      9.406003952026367
+    ],
+    [
+      2.8433454036712646,
+      8.523184776306152
+    ],
+    [
+      2.493379592895508,
+      10.953486442565918
+    ],
+    [
+      2.5046141147613525,
+      7.4675140380859375
+    ],
+    [
+      1.2694915533065796,
+      7.993392467498779
+    ],
+    [
+      3.8124656677246094,
+      6.694047927856445
+    ],
+    [
+      9.108949661254883,
+      8.225664138793945
+    ],
+    [
+      8.930490493774414,
+      8.289631843566895
+    ],
+    [
+      0.33109480142593384,
+      8.457268714904785
+    ],
+    [
+      1.9201281070709229,
+      9.500551223754883
+    ],
+    [
+      4.045462131500244,
+      6.780389308929443
+    ],
+    [
+      4.060129642486572,
+      6.826744079589844
+    ],
+    [
+      4.123703479766846,
+      6.776428699493408
+    ],
+    [
+      3.9931752681732178,
+      6.8357834815979
+    ],
+    [
+      3.9119269847869873,
+      6.71722936630249
+    ],
+    [
+      3.375988483428955,
+      9.577363014221191
+    ],
+    [
+      6.761491298675537,
+      7.7859110832214355
+    ],
+    [
+      6.5804033279418945,
+      8.395394325256348
+    ],
+    [
+      2.6430411338806152,
+      8.629262924194336
+    ],
+    [
+      8.65013313293457,
+      6.3347930908203125
+    ],
+    [
+      4.193419456481934,
+      8.087973594665527
+    ],
+    [
+      7.5518951416015625,
+      6.722935199737549
+    ],
+    [
+      7.497215747833252,
+      6.907647609710693
+    ],
+    [
+      1.3166265487670898,
+      9.335932731628418
+    ],
+    [
+      7.377603530883789,
+      9.389618873596191
+    ],
+    [
+      7.489780902862549,
+      9.343280792236328
+    ],
+    [
+      7.335419178009033,
+      9.383017539978027
+    ],
+    [
+      4.589372634887695,
+      7.127895355224609
+    ],
+    [
+      3.024350881576538,
+      8.82486343383789
+    ],
+    [
+      8.258438110351562,
+      9.166062355041504
+    ],
+    [
+      4.123473167419434,
+      7.598995685577393
+    ],
+    [
+      9.3510160446167,
+      8.034188270568848
+    ],
+    [
+      8.311495780944824,
+      9.186304092407227
+    ],
+    [
+      4.076961994171143,
+      7.425849437713623
+    ],
+    [
+      3.9763386249542236,
+      7.4376044273376465
+    ],
+    [
+      1.6518431901931763,
+      8.679681777954102
+    ],
+    [
+      8.287853240966797,
+      6.516842842102051
+    ],
+    [
+      3.381875514984131,
+      10.034682273864746
+    ],
+    [
+      8.186782836914062,
+      6.341366767883301
+    ],
+    [
+      1.4910017251968384,
+      8.81350040435791
+    ],
+    [
+      8.344718933105469,
+      8.99760627746582
+    ],
+    [
+      3.7922422885894775,
+      6.192946434020996
+    ],
+    [
+      4.955452919006348,
+      9.167485237121582
+    ],
+    [
+      -0.04561486095190048,
+      8.37092399597168
+    ],
+    [
+      7.089661598205566,
+      9.023776054382324
+    ],
+    [
+      5.254755973815918,
+      7.718409061431885
+    ],
+    [
+      6.906366348266602,
+      6.373668670654297
+    ],
+    [
+      8.372432708740234,
+      7.226066589355469
+    ],
+    [
+      4.395455837249756,
+      7.985102653503418
+    ],
+    [
+      8.183798789978027,
+      9.008929252624512
+    ],
+    [
+      9.300501823425293,
+      7.776246547698975
+    ],
+    [
+      9.36960220336914,
+      8.284018516540527
+    ],
+    [
+      7.956811428070068,
+      9.239943504333496
+    ],
+    [
+      5.84182596206665,
+      9.073210716247559
+    ],
+    [
+      8.311487197875977,
+      9.223401069641113
+    ],
+    [
+      8.147438049316406,
+      9.25950813293457
+    ],
+    [
+      8.712691307067871,
+      7.6863532066345215
+    ],
+    [
+      3.0348546504974365,
+      7.024982452392578
+    ],
+    [
+      3.076479196548462,
+      6.771488666534424
+    ],
+    [
+      4.181601047515869,
+      9.348836898803711
+    ],
+    [
+      4.3194756507873535,
+      9.880773544311523
+    ],
+    [
+      4.226895809173584,
+      7.970470905303955
+    ],
+    [
+      7.516904830932617,
+      7.042693138122559
+    ],
+    [
+      4.672503471374512,
+      7.713706970214844
+    ],
+    [
+      8.324864387512207,
+      5.878695487976074
+    ],
+    [
+      8.380216598510742,
+      6.0323896408081055
+    ],
+    [
+      8.379319190979004,
+      5.846694469451904
+    ],
+    [
+      0.60392165184021,
+      7.588621139526367
+    ],
+    [
+      0.21599942445755005,
+      8.300057411193848
+    ],
+    [
+      0.15970320999622345,
+      9.015059471130371
+    ],
+    [
+      8.798554420471191,
+      7.2435173988342285
+    ],
+    [
+      8.825349807739258,
+      7.483648777008057
+    ],
+    [
+      8.812468528747559,
+      7.446063995361328
+    ],
+    [
+      0.09273724257946014,
+      7.593291759490967
+    ],
+    [
+      3.7090814113616943,
+      8.784144401550293
+    ],
+    [
+      4.4073872566223145,
+      9.923933029174805
+    ],
+    [
+      1.7006500959396362,
+      9.119820594787598
+    ],
+    [
+      8.175863265991211,
+      9.229432106018066
+    ],
+    [
+      0.7069876194000244,
+      8.963024139404297
+    ],
+    [
+      0.47061970829963684,
+      8.85798454284668
+    ],
+    [
+      0.7303675413131714,
+      8.283041954040527
+    ],
+    [
+      4.078926086425781,
+      6.948559761047363
+    ],
+    [
+      4.522022247314453,
+      6.960877418518066
+    ],
+    [
+      0.0723358616232872,
+      7.470550537109375
+    ],
+    [
+      6.238571643829346,
+      8.406869888305664
+    ],
+    [
+      8.543402671813965,
+      9.037152290344238
+    ],
+    [
+      2.5463058948516846,
+      8.642288208007812
+    ],
+    [
+      1.9453412294387817,
+      7.177182674407959
+    ],
+    [
+      9.154208183288574,
+      8.503641128540039
+    ],
+    [
+      0.6609635949134827,
+      8.781916618347168
+    ],
+    [
+      9.111997604370117,
+      8.573537826538086
+    ],
+    [
+      1.9115413427352905,
+      7.942302227020264
+    ],
+    [
+      5.7644243240356445,
+      9.122556686401367
+    ],
+    [
+      7.9770307540893555,
+      8.652303695678711
+    ],
+    [
+      3.486205816268921,
+      11.853553771972656
+    ],
+    [
+      3.4877102375030518,
+      11.85119342803955
+    ],
+    [
+      3.4762227535247803,
+      11.869810104370117
+    ],
+    [
+      3.4770255088806152,
+      11.902982711791992
+    ],
+    [
+      3.4341840744018555,
+      11.747750282287598
+    ],
+    [
+      3.462178945541382,
+      11.871633529663086
+    ],
+    [
+      3.4312050342559814,
+      11.849664688110352
+    ],
+    [
+      3.4019579887390137,
+      11.713055610656738
+    ],
+    [
+      3.453505754470825,
+      11.900976181030273
+    ],
+    [
+      3.5723717212677,
+      11.783499717712402
+    ],
+    [
+      1.0455571413040161,
+      8.03701114654541
+    ],
+    [
+      0.2174907624721527,
+      7.690616130828857
+    ],
+    [
+      8.186177253723145,
+      9.204054832458496
+    ],
+    [
+      8.602811813354492,
+      8.168234825134277
+    ],
+    [
+      3.90409517288208,
+      9.748496055603027
+    ],
+    [
+      0.5650346875190735,
+      8.71731948852539
+    ],
+    [
+      3.068995952606201,
+      11.303081512451172
+    ],
+    [
+      0.5438219904899597,
+      8.724178314208984
+    ],
+    [
+      0.5182443857192993,
+      8.64013957977295
+    ],
+    [
+      0.5648850202560425,
+      8.873491287231445
+    ],
+    [
+      0.5804293155670166,
+      8.718178749084473
+    ],
+    [
+      8.023246765136719,
+      9.231494903564453
+    ],
+    [
+      1.3981705904006958,
+      7.637670993804932
+    ],
+    [
+      6.51104211807251,
+      8.469297409057617
+    ],
+    [
+      3.700294017791748,
+      8.34328556060791
+    ],
+    [
+      3.5421018600463867,
+      9.467330932617188
+    ],
+    [
+      3.487180709838867,
+      9.207684516906738
+    ],
+    [
+      3.8612468242645264,
+      7.418410301208496
+    ],
+    [
+      3.8666677474975586,
+      7.421728134155273
+    ],
+    [
+      0.29596906900405884,
+      7.93235969543457
+    ],
+    [
+      3.014688730239868,
+      8.085034370422363
+    ],
+    [
+      5.180474758148193,
+      9.002839088439941
+    ],
+    [
+      2.8362252712249756,
+      8.33432388305664
+    ],
+    [
+      6.2781901359558105,
+      7.074967861175537
+    ],
+    [
+      2.428079605102539,
+      9.214629173278809
+    ],
+    [
+      1.7334115505218506,
+      8.219512939453125
+    ],
+    [
+      0.14151816070079803,
+      8.921187400817871
+    ],
+    [
+      0.19105520844459534,
+      8.247783660888672
+    ],
+    [
+      4.659592628479004,
+      11.027177810668945
+    ],
+    [
+      3.6114704608917236,
+      10.534470558166504
+    ],
+    [
+      1.7728160619735718,
+      7.645328521728516
+    ],
+    [
+      3.662792205810547,
+      6.257201671600342
+    ],
+    [
+      1.8141926527023315,
+      7.459283351898193
+    ],
+    [
+      8.488265991210938,
+      7.242648601531982
+    ],
+    [
+      4.021600723266602,
+      8.928730964660645
+    ],
+    [
+      4.044437408447266,
+      8.815999031066895
+    ],
+    [
+      4.04071569442749,
+      8.95073413848877
+    ],
+    [
+      7.452540397644043,
+      6.672122478485107
+    ],
+    [
+      4.541234016418457,
+      10.750000953674316
+    ],
+    [
+      4.480667591094971,
+      10.750115394592285
+    ],
+    [
+      8.176918983459473,
+      8.083029747009277
+    ],
+    [
+      7.762979984283447,
+      8.364215850830078
+    ],
+    [
+      9.106206893920898,
+      8.300797462463379
+    ],
+    [
+      3.618196964263916,
+      10.481057167053223
+    ],
+    [
+      8.525059700012207,
+      8.267562866210938
+    ],
+    [
+      8.445686340332031,
+      8.48530101776123
+    ],
+    [
+      4.6729350090026855,
+      8.204300880432129
+    ],
+    [
+      8.187459945678711,
+      8.491063117980957
+    ],
+    [
+      2.6691231727600098,
+      7.830888748168945
+    ],
+    [
+      6.176973342895508,
+      8.31822681427002
+    ],
+    [
+      7.919608116149902,
+      8.537240028381348
+    ],
+    [
+      8.263108253479004,
+      8.522336959838867
+    ],
+    [
+      8.30685043334961,
+      8.453645706176758
+    ],
+    [
+      7.258906364440918,
+      8.117225646972656
+    ],
+    [
+      4.054941654205322,
+      9.339993476867676
+    ],
+    [
+      0.9062117338180542,
+      8.05086898803711
+    ],
+    [
+      4.7301554679870605,
+      9.314513206481934
+    ],
+    [
+      7.925228118896484,
+      8.4562406539917
+    ],
+    [
+      3.0304300785064697,
+      6.73193359375
+    ],
+    [
+      7.251456260681152,
+      8.048640251159668
+    ],
+    [
+      3.878126859664917,
+      10.0802640914917
+    ],
+    [
+      3.132068395614624,
+      6.783501148223877
+    ],
+    [
+      4.393640041351318,
+      8.816045761108398
+    ],
+    [
+      4.4246978759765625,
+      10.936245918273926
+    ],
+    [
+      3.5517687797546387,
+      7.161898136138916
+    ],
+    [
+      5.470179080963135,
+      9.438478469848633
+    ],
+    [
+      7.335954666137695,
+      8.87590503692627
+    ],
+    [
+      7.094484329223633,
+      9.115888595581055
+    ],
+    [
+      7.338387489318848,
+      9.001557350158691
+    ],
+    [
+      8.457762718200684,
+      8.759505271911621
+    ],
+    [
+      8.202672004699707,
+      9.124387741088867
+    ],
+    [
+      7.366687774658203,
+      8.985711097717285
+    ],
+    [
+      3.337135076522827,
+      6.551273822784424
+    ],
+    [
+      5.507805347442627,
+      10.010886192321777
+    ],
+    [
+      5.0664567947387695,
+      9.106271743774414
+    ],
+    [
+      7.409414291381836,
+      8.979168891906738
+    ],
+    [
+      4.797816276550293,
+      8.028943061828613
+    ],
+    [
+      0.7951951622962952,
+      7.890106678009033
+    ],
+    [
+      0.4221041202545166,
+      8.298467636108398
+    ],
+    [
+      3.8908417224884033,
+      9.91922664642334
+    ],
+    [
+      2.7064480781555176,
+      10.666688919067383
+    ],
+    [
+      2.8773927688598633,
+      9.214713096618652
+    ],
+    [
+      4.604650974273682,
+      8.538226127624512
+    ],
+    [
+      3.9877219200134277,
+      9.264581680297852
+    ],
+    [
+      0.8403489589691162,
+      7.911106586456299
+    ],
+    [
+      4.58762264251709,
+      6.832880020141602
+    ],
+    [
+      4.588918685913086,
+      7.616586208343506
+    ],
+    [
+      4.676508903503418,
+      7.64766263961792
+    ],
+    [
+      4.626164436340332,
+      7.555216312408447
+    ],
+    [
+      4.572417736053467,
+      7.556068420410156
+    ],
+    [
+      8.737049102783203,
+      8.498222351074219
+    ],
+    [
+      8.987765312194824,
+      8.220559120178223
+    ],
+    [
+      8.863204956054688,
+      8.481111526489258
+    ],
+    [
+      2.882594347000122,
+      9.201032638549805
+    ],
+    [
+      8.59770393371582,
+      8.627265930175781
+    ],
+    [
+      8.666946411132812,
+      8.548535346984863
+    ],
+    [
+      2.7839834690093994,
+      9.226409912109375
+    ],
+    [
+      8.583395957946777,
+      8.700521469116211
+    ],
+    [
+      2.466505765914917,
+      10.130210876464844
+    ],
+    [
+      3.779402017593384,
+      9.827746391296387
+    ],
+    [
+      0.9568504691123962,
+      9.133111953735352
+    ],
+    [
+      3.0529561042785645,
+      8.72834587097168
+    ],
+    [
+      3.849754810333252,
+      7.449938774108887
+    ],
+    [
+      0.8766695261001587,
+      7.664338111877441
+    ],
+    [
+      3.01432466506958,
+      8.43178653717041
+    ],
+    [
+      0.12209820747375488,
+      8.11400318145752
+    ],
+    [
+      3.8796756267547607,
+      9.416199684143066
+    ],
+    [
+      3.8899998664855957,
+      9.080299377441406
+    ],
+    [
+      2.752187728881836,
+      9.18966293334961
+    ],
+    [
+      2.1499054431915283,
+      8.138689994812012
+    ],
+    [
+      2.1603784561157227,
+      8.708269119262695
+    ],
+    [
+      1.2656720876693726,
+      7.568220138549805
+    ],
+    [
+      3.110382080078125,
+      9.233439445495605
+    ],
+    [
+      2.7044620513916016,
+      6.826135158538818
+    ],
+    [
+      2.3634769916534424,
+      7.0776591300964355
+    ],
+    [
+      2.373973846435547,
+      7.0289459228515625
+    ],
+    [
+      2.703629970550537,
+      8.314875602722168
+    ],
+    [
+      3.7298407554626465,
+      8.505661964416504
+    ],
+    [
+      6.61945915222168,
+      7.018063068389893
+    ],
+    [
+      5.052138328552246,
+      9.131338119506836
+    ],
+    [
+      6.48378849029541,
+      7.225876331329346
+    ],
+    [
+      5.028087615966797,
+      9.595687866210938
+    ],
+    [
+      6.572737216949463,
+      6.658320426940918
+    ],
+    [
+      4.740421772003174,
+      7.083756923675537
+    ],
+    [
+      3.7588443756103516,
+      9.859381675720215
+    ],
+    [
+      3.1567275524139404,
+      7.988389015197754
+    ],
+    [
+      4.4742937088012695,
+      8.345426559448242
+    ],
+    [
+      8.528807640075684,
+      8.620088577270508
+    ],
+    [
+      2.4487357139587402,
+      10.911778450012207
+    ],
+    [
+      8.919919967651367,
+      7.146274089813232
+    ],
+    [
+      5.055706977844238,
+      9.753364562988281
+    ],
+    [
+      1.6007044315338135,
+      9.161128044128418
+    ],
+    [
+      3.1233463287353516,
+      6.7041096687316895
+    ],
+    [
+      7.355043411254883,
+      8.367979049682617
+    ],
+    [
+      3.71391224861145,
+      9.912701606750488
+    ],
+    [
+      0.08432866632938385,
+      7.872095584869385
+    ],
+    [
+      3.7711076736450195,
+      6.186492919921875
+    ],
+    [
+      1.942123293876648,
+      9.052848815917969
+    ],
+    [
+      3.702934980392456,
+      9.910099029541016
+    ],
+    [
+      0.8779305219650269,
+      7.2690324783325195
+    ],
+    [
+      4.633428573608398,
+      8.958296775817871
+    ],
+    [
+      1.9451713562011719,
+      9.073256492614746
+    ],
+    [
+      2.2957851886749268,
+      9.579193115234375
+    ],
+    [
+      9.552258491516113,
+      6.72477388381958
+    ],
+    [
+      9.606751441955566,
+      6.6199469566345215
+    ],
+    [
+      9.50564193725586,
+      6.6387715339660645
+    ],
+    [
+      4.780063629150391,
+      8.136101722717285
+    ],
+    [
+      9.73556137084961,
+      6.370713233947754
+    ],
+    [
+      4.532792091369629,
+      7.464085578918457
+    ],
+    [
+      4.0956130027771,
+      7.842303276062012
+    ],
+    [
+      9.790427207946777,
+      6.369571208953857
+    ],
+    [
+      5.069477081298828,
+      9.101223945617676
+    ],
+    [
+      2.590376377105713,
+      10.582417488098145
+    ],
+    [
+      9.85175609588623,
+      6.365314483642578
+    ],
+    [
+      2.551974058151245,
+      11.025835037231445
+    ],
+    [
+      9.824112892150879,
+      6.28567361831665
+    ],
+    [
+      0.6549680829048157,
+      7.887951374053955
+    ],
+    [
+      0.4123672544956207,
+      7.974639892578125
+    ],
+    [
+      1.1150497198104858,
+      8.752808570861816
+    ],
+    [
+      9.703373908996582,
+      6.316220760345459
+    ],
+    [
+      9.80994987487793,
+      6.2863311767578125
+    ],
+    [
+      6.980904579162598,
+      7.2111921310424805
+    ],
+    [
+      0.43411725759506226,
+      7.9101386070251465
+    ],
+    [
+      5.018016338348389,
+      8.610160827636719
+    ],
+    [
+      3.678858995437622,
+      9.499870300292969
+    ],
+    [
+      3.44537353515625,
+      8.773308753967285
+    ],
+    [
+      9.824811935424805,
+      6.295314788818359
+    ],
+    [
+      1.91720449924469,
+      7.318498611450195
+    ],
+    [
+      4.883918285369873,
+      10.735027313232422
+    ],
+    [
+      9.792552947998047,
+      6.370476245880127
+    ],
+    [
+      4.775712013244629,
+      9.817252159118652
+    ],
+    [
+      9.81753921508789,
+      6.304997444152832
+    ],
+    [
+      3.677957534790039,
+      8.610599517822266
+    ],
+    [
+      2.7462215423583984,
+      8.63884449005127
+    ],
+    [
+      5.050013065338135,
+      9.529480934143066
+    ],
+    [
+      3.5581395626068115,
+      10.126755714416504
+    ],
+    [
+      0.48625317215919495,
+      7.790131092071533
+    ],
+    [
+      2.253417491912842,
+      8.34460163116455
+    ],
+    [
+      3.0499765872955322,
+      6.730321884155273
+    ],
+    [
+      8.044676780700684,
+      7.3063178062438965
+    ],
+    [
+      3.362565040588379,
+      9.599146842956543
+    ],
+    [
+      3.050413131713867,
+      8.238133430480957
+    ],
+    [
+      9.77614688873291,
+      6.273523807525635
+    ],
+    [
+      0.24084153771400452,
+      7.925253868103027
+    ],
+    [
+      9.860003471374512,
+      6.258820533752441
+    ],
+    [
+      9.78747844696045,
+      6.3705596923828125
+    ],
+    [
+      0.38046154379844666,
+      7.702800750732422
+    ],
+    [
+      4.932346343994141,
+      10.632804870605469
+    ],
+    [
+      1.963093876838684,
+      9.790404319763184
+    ],
+    [
+      3.1630518436431885,
+      8.385132789611816
+    ],
+    [
+      4.712930679321289,
+      8.622992515563965
+    ],
+    [
+      4.380221843719482,
+      9.939075469970703
+    ],
+    [
+      4.11466646194458,
+      9.923880577087402
+    ],
+    [
+      2.153277635574341,
+      8.597344398498535
+    ],
+    [
+      2.0755536556243896,
+      8.414596557617188
+    ],
+    [
+      4.21934175491333,
+      10.025816917419434
+    ],
+    [
+      2.0629241466522217,
+      8.649724960327148
+    ],
+    [
+      3.131242036819458,
+      9.013754844665527
+    ],
+    [
+      3.794001579284668,
+      9.641674041748047
+    ],
+    [
+      3.350661039352417,
+      9.450506210327148
+    ],
+    [
+      4.821986675262451,
+      9.834724426269531
+    ],
+    [
+      5.675387382507324,
+      9.21190357208252
+    ],
+    [
+      4.4370269775390625,
+      10.22032642364502
+    ],
+    [
+      4.437435150146484,
+      10.221059799194336
+    ],
+    [
+      2.5998694896698,
+      8.710428237915039
+    ],
+    [
+      4.316526412963867,
+      10.062569618225098
+    ],
+    [
+      5.6507039070129395,
+      9.208185195922852
+    ],
+    [
+      2.243131160736084,
+      7.828319549560547
+    ],
+    [
+      3.9081215858459473,
+      10.006587028503418
+    ],
+    [
+      4.494716644287109,
+      9.905028343200684
+    ],
+    [
+      4.734050750732422,
+      9.8189697265625
+    ],
+    [
+      3.261321783065796,
+      6.778805255889893
+    ],
+    [
+      2.934993267059326,
+      8.06805419921875
+    ],
+    [
+      8.51962661743164,
+      5.834856986999512
+    ],
+    [
+      3.8413703441619873,
+      9.227821350097656
+    ],
+    [
+      4.263145923614502,
+      9.623945236206055
+    ],
+    [
+      3.615633964538574,
+      10.09111213684082
+    ],
+    [
+      5.129669666290283,
+      9.267504692077637
+    ],
+    [
+      4.500717639923096,
+      9.972347259521484
+    ],
+    [
+      7.397302150726318,
+      6.516818523406982
+    ],
+    [
+      4.724457740783691,
+      9.81843376159668
+    ],
+    [
+      8.866278648376465,
+      8.110784530639648
+    ],
+    [
+      1.8261874914169312,
+      9.106291770935059
+    ],
+    [
+      2.5483436584472656,
+      10.042562484741211
+    ],
+    [
+      6.926939964294434,
+      9.090518951416016
+    ],
+    [
+      1.3622851371765137,
+      9.434072494506836
+    ],
+    [
+      3.420866012573242,
+      7.63284969329834
+    ],
+    [
+      1.6963515281677246,
+      8.254361152648926
+    ],
+    [
+      0.6335835456848145,
+      7.816333293914795
+    ],
+    [
+      -0.009544008411467075,
+      7.6891374588012695
+    ],
+    [
+      5.477341651916504,
+      9.103075981140137
+    ],
+    [
+      3.498058319091797,
+      8.050494194030762
+    ],
+    [
+      0.007070556282997131,
+      7.6747331619262695
+    ],
+    [
+      1.9267404079437256,
+      8.429821014404297
+    ],
+    [
+      2.5993001461029053,
+      11.094935417175293
+    ],
+    [
+      7.68779182434082,
+      6.792790412902832
+    ],
+    [
+      4.658547878265381,
+      9.019634246826172
+    ],
+    [
+      2.7396602630615234,
+      9.472786903381348
+    ],
+    [
+      6.353350639343262,
+      6.436045169830322
+    ],
+    [
+      0.5802044868469238,
+      8.035284042358398
+    ],
+    [
+      8.512543678283691,
+      6.238658905029297
+    ],
+    [
+      0.8803897500038147,
+      8.125776290893555
+    ],
+    [
+      4.600203514099121,
+      8.181360244750977
+    ],
+    [
+      9.554747581481934,
+      6.647050857543945
+    ],
+    [
+      6.689123630523682,
+      8.864974021911621
+    ],
+    [
+      7.641427993774414,
+      7.885208606719971
+    ],
+    [
+      7.58756685256958,
+      7.956608295440674
+    ],
+    [
+      4.067708492279053,
+      9.57400131225586
+    ],
+    [
+      7.468985557556152,
+      8.27127742767334
+    ],
+    [
+      7.577855110168457,
+      8.037460327148438
+    ],
+    [
+      7.7412109375,
+      7.819252967834473
+    ],
+    [
+      7.454477310180664,
+      8.072352409362793
+    ],
+    [
+      7.428653717041016,
+      8.012662887573242
+    ],
+    [
+      7.6089301109313965,
+      7.904996395111084
+    ],
+    [
+      7.571583271026611,
+      7.9662394523620605
+    ],
+    [
+      7.587945938110352,
+      8.012245178222656
+    ],
+    [
+      7.571183681488037,
+      7.931119441986084
+    ],
+    [
+      7.720589637756348,
+      7.716157913208008
+    ],
+    [
+      7.468801498413086,
+      8.068448066711426
+    ],
+    [
+      7.387764930725098,
+      7.988152503967285
+    ],
+    [
+      7.551795959472656,
+      7.97482967376709
+    ],
+    [
+      4.583738803863525,
+      7.920887470245361
+    ],
+    [
+      7.745254039764404,
+      8.09304141998291
+    ],
+    [
+      1.8703835010528564,
+      8.450407981872559
+    ],
+    [
+      2.271467685699463,
+      8.59287166595459
+    ],
+    [
+      7.549067497253418,
+      7.8851165771484375
+    ],
+    [
+      3.612553834915161,
+      9.288375854492188
+    ],
+    [
+      6.236833572387695,
+      8.432257652282715
+    ],
+    [
+      6.610687255859375,
+      8.759413719177246
+    ],
+    [
+      4.070713043212891,
+      8.300104141235352
+    ],
+    [
+      7.727511882781982,
+      6.6273932456970215
+    ],
+    [
+      6.8450026512146,
+      8.526383399963379
+    ],
+    [
+      2.735468864440918,
+      7.170644760131836
+    ],
+    [
+      8.283080101013184,
+      6.546616554260254
+    ],
+    [
+      6.966429710388184,
+      8.511273384094238
+    ],
+    [
+      7.895998477935791,
+      7.7473344802856445
+    ],
+    [
+      6.737072467803955,
+      8.552665710449219
+    ],
+    [
+      6.516042709350586,
+      8.43075180053711
+    ],
+    [
+      6.514623165130615,
+      8.88169002532959
+    ],
+    [
+      5.744114398956299,
+      8.342290878295898
+    ],
+    [
+      0.7022811770439148,
+      8.58759880065918
+    ],
+    [
+      -0.0030315995682030916,
+      7.730780124664307
+    ],
+    [
+      0.14405305683612823,
+      8.934507369995117
+    ],
+    [
+      5.68765926361084,
+      9.209121704101562
+    ],
+    [
+      5.761373043060303,
+      9.145176887512207
+    ],
+    [
+      7.405406951904297,
+      6.481349468231201
+    ],
+    [
+      1.7146040201187134,
+      9.299555778503418
+    ],
+    [
+      5.999899387359619,
+      7.802525997161865
+    ],
+    [
+      6.0578765869140625,
+      7.606807708740234
+    ],
+    [
+      3.0018668174743652,
+      10.890095710754395
+    ],
+    [
+      6.271705150604248,
+      7.458302021026611
+    ],
+    [
+      6.104805946350098,
+      7.705618858337402
+    ],
+    [
+      5.98334264755249,
+      8.095573425292969
+    ],
+    [
+      5.9787163734436035,
+      7.693027973175049
+    ],
+    [
+      6.165093898773193,
+      7.360633373260498
+    ],
+    [
+      7.862637519836426,
+      6.46364688873291
+    ],
+    [
+      8.933812141418457,
+      7.012570381164551
+    ],
+    [
+      3.7704074382781982,
+      9.444938659667969
+    ],
+    [
+      1.926533818244934,
+      10.61645793914795
+    ],
+    [
+      8.150121688842773,
+      6.898459434509277
+    ],
+    [
+      8.387395858764648,
+      9.187935829162598
+    ],
+    [
+      8.97567081451416,
+      6.328526020050049
+    ],
+    [
+      2.342830181121826,
+      8.116782188415527
+    ],
+    [
+      5.250274181365967,
+      9.036715507507324
+    ],
+    [
+      7.869002342224121,
+      8.449785232543945
+    ],
+    [
+      7.709860324859619,
+      8.653876304626465
+    ],
+    [
+      8.017488479614258,
+      8.096023559570312
+    ],
+    [
+      8.001151084899902,
+      7.93729305267334
+    ],
+    [
+      7.80103063583374,
+      8.262904167175293
+    ],
+    [
+      3.236163854598999,
+      9.100417137145996
+    ],
+    [
+      8.049555778503418,
+      7.926146030426025
+    ],
+    [
+      7.979748725891113,
+      7.995921611785889
+    ],
+    [
+      1.239183783531189,
+      8.755805969238281
+    ],
+    [
+      8.585376739501953,
+      6.463359355926514
+    ],
+    [
+      8.534843444824219,
+      6.310340881347656
+    ],
+    [
+      7.972848415374756,
+      8.734904289245605
+    ],
+    [
+      2.336893081665039,
+      9.472761154174805
+    ],
+    [
+      8.40766716003418,
+      8.335372924804688
+    ],
+    [
+      8.26932144165039,
+      8.3428373336792
+    ],
+    [
+      7.875937461853027,
+      8.43479061126709
+    ],
+    [
+      0.07370129227638245,
+      7.713276386260986
+    ],
+    [
+      7.746882438659668,
+      8.653346061706543
+    ],
+    [
+      6.883177280426025,
+      8.141092300415039
+    ],
+    [
+      3.9897875785827637,
+      7.867067813873291
+    ],
+    [
+      7.546069145202637,
+      8.497058868408203
+    ],
+    [
+      5.518925189971924,
+      9.404052734375
+    ],
+    [
+      4.153397083282471,
+      8.135066986083984
+    ],
+    [
+      8.336405754089355,
+      6.013020038604736
+    ],
+    [
+      4.250359535217285,
+      8.046706199645996
+    ],
+    [
+      8.248239517211914,
+      6.383475303649902
+    ],
+    [
+      3.7140069007873535,
+      10.5801420211792
+    ],
+    [
+      3.6944494247436523,
+      10.585221290588379
+    ],
+    [
+      9.019676208496094,
+      7.189984321594238
+    ],
+    [
+      4.508715629577637,
+      8.615316390991211
+    ],
+    [
+      8.222895622253418,
+      6.282725811004639
+    ],
+    [
+      8.405595779418945,
+      6.874922752380371
+    ],
+    [
+      8.215677261352539,
+      7.092966556549072
+    ],
+    [
+      3.597510814666748,
+      6.277126789093018
+    ],
+    [
+      8.299994468688965,
+      6.940379619598389
+    ],
+    [
+      8.423856735229492,
+      6.663464069366455
+    ],
+    [
+      8.3219575881958,
+      6.91501522064209
+    ],
+    [
+      8.368905067443848,
+      6.833991527557373
+    ],
+    [
+      3.257230520248413,
+      6.451624870300293
+    ],
+    [
+      3.353419065475464,
+      7.553073883056641
+    ],
+    [
+      4.837882995605469,
+      9.339486122131348
+    ],
+    [
+      4.930919170379639,
+      9.32738971710205
+    ],
+    [
+      1.3819159269332886,
+      8.832263946533203
+    ],
+    [
+      8.533519744873047,
+      8.177976608276367
+    ],
+    [
+      5.936008930206299,
+      9.045879364013672
+    ],
+    [
+      0.2618802785873413,
+      8.192304611206055
+    ],
+    [
+      4.131484508514404,
+      8.163751602172852
+    ],
+    [
+      1.7647345066070557,
+      9.383172988891602
+    ],
+    [
+      2.4124350547790527,
+      7.918689727783203
+    ],
+    [
+      0.7964242696762085,
+      8.119272232055664
+    ],
+    [
+      2.216527223587036,
+      7.038478374481201
+    ],
+    [
+      2.2484283447265625,
+      7.976832389831543
+    ],
+    [
+      4.895474433898926,
+      10.720663070678711
+    ],
+    [
+      2.9277234077453613,
+      10.58809757232666
+    ],
+    [
+      3.0022192001342773,
+      10.74360466003418
+    ],
+    [
+      3.0650501251220703,
+      10.655890464782715
+    ],
+    [
+      7.633778095245361,
+      8.777297019958496
+    ],
+    [
+      7.812438488006592,
+      6.288349628448486
+    ],
+    [
+      7.3507890701293945,
+      9.021862983703613
+    ],
+    [
+      1.2653831243515015,
+      8.003447532653809
+    ],
+    [
+      2.36769700050354,
+      8.8347806930542
+    ],
+    [
+      2.220151901245117,
+      9.93336009979248
+    ],
+    [
+      7.255006790161133,
+      8.921095848083496
+    ],
+    [
+      0.23840025067329407,
+      7.833293437957764
+    ],
+    [
+      7.298184394836426,
+      9.0957670211792
+    ],
+    [
+      0.16916774213314056,
+      7.749179840087891
+    ],
+    [
+      8.555946350097656,
+      8.165000915527344
+    ],
+    [
+      4.440219879150391,
+      8.70277214050293
+    ],
+    [
+      3.33640718460083,
+      9.151182174682617
+    ]
+  ]
+}

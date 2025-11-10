@@ -1,0 +1,3708 @@
+{
+  "metadata": {
+    "created_at": "2025-11-05T21:02:01.009284Z",
+    "selection_criteria": {
+      "limit": 400,
+      "min_frequency": 3,
+      "skill_type": "hard",
+      "exclude_generic": true,
+      "data_source": "gold_standard_annotations"
+    },
+    "model_info": {
+      "embedding_model": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0",
+      "embedding_dim": 768
+    }
+  },
+  "analysis": {
+    "total_skills": 400,
+    "frequency_stats": {
+      "min": 3,
+      "max": 97,
+      "mean": 10.6925,
+      "median": 5,
+      "total": 4277
+    },
+    "job_coverage_stats": {
+      "min": 1.0,
+      "max": 32.3,
+      "mean": 3.560749999999996,
+      "median": 1.7
+    },
+    "categories": {
+      "languages": 27,
+      "frameworks": 21,
+      "cloud": 13,
+      "databases": 15,
+      "devops": 12,
+      "methodologies": 8,
+      "tools": 3,
+      "concepts": 30,
+      "other": 271
+    },
+    "top_10_skills": [
+      {
+        "skill": "JavaScript",
+        "frequency": 97
+      },
+      {
+        "skill": "Python",
+        "frequency": 93
+      },
+      {
+        "skill": "CI/CD",
+        "frequency": 86
+      },
+      {
+        "skill": "AWS",
+        "frequency": 74
+      },
+      {
+        "skill": "Git",
+        "frequency": 72
+      },
+      {
+        "skill": "Java",
+        "frequency": 71
+      },
+      {
+        "skill": "Docker",
+        "frequency": 66
+      },
+      {
+        "skill": "React",
+        "frequency": 63
+      },
+      {
+        "skill": "Agile",
+        "frequency": 59
+      },
+      {
+        "skill": "SQL",
+        "frequency": 58
+      }
+    ],
+    "category_breakdown": {
+      "languages": [
+        "JavaScript",
+        "Python",
+        "Java",
+        "TypeScript",
+        "C#",
+        "MongoDB",
+        "Algoritmos",
+        "Django",
+        "PHP",
+        "Go",
+        "Ruby on Rails",
+        "Swift",
+        "Kotlin",
+        "Código limpio",
+        "Google Cloud",
+        "Ruby",
+        "C++",
+        "Documentación de código",
+        "Infraestructura como código",
+        "Arquitectura hexagonal",
+        "Cobertura de código",
+        "Golang",
+        "Juegos 2D",
+        "Juegos 3D",
+        "Liderazgo técnico",
+        "SwiftUI",
+        "Versionado de código"
+      ],
+      "frameworks": [
+        "React",
+        "Angular",
+        "Spring Boot",
+        ".NET",
+        ".NET Core",
+        "React Native",
+        "Vue.js",
+        "Express",
+        "Vue",
+        "Flask",
+        "Spring Data",
+        "ASP.NET",
+        "NestJS",
+        ".NET Framework",
+        "MVC.NET",
+        "Spring Framework",
+        "Spring",
+        "Spring Security",
+        "Laravel",
+        "React Testing Library",
+        "Spring Cloud"
+      ],
+      "cloud": [
+        "AWS",
+        "Azure",
+        "GCP",
+        "Cloud",
+        "Azure DevOps",
+        "Lambda",
+        "Serverless",
+        "CloudFormation",
+        "Cloud-native",
+        "Microsoft Azure",
+        "Azure Functions",
+        "Cloud Computing",
+        "Service Cloud"
+      ],
+      "databases": [
+        "SQL",
+        "SQL Server",
+        "PostgreSQL",
+        "MySQL",
+        "NoSQL",
+        "Oracle",
+        "Redis",
+        "DynamoDB",
+        "MS SQL",
+        "T-SQL",
+        "PL/SQL",
+        "Bases de datos NoSQL",
+        "Cardboard",
+        "DB2",
+        "dbt"
+      ],
+      "devops": [
+        "CI/CD",
+        "Git",
+        "Docker",
+        "Kubernetes",
+        "DevOps",
+        "GitHub",
+        "Jenkins",
+        "Terraform",
+        "GitHub Actions",
+        "GitLab",
+        "Ansible",
+        "GitLab CI"
+      ],
+      "methodologies": [
+        "Agile",
+        "Scrum",
+        "Metodologías ágiles",
+        "Lean",
+        "Kanban",
+        "Clean Code",
+        "Clean Architecture",
+        "SCRUM"
+      ],
+      "tools": [
+        "Jira",
+        "Postman",
+        "JIRA"
+      ],
+      "concepts": [
+        "Microservicios",
+        "REST API",
+        "API",
+        "Testing",
+        "Arquitectura de software",
+        "Seguridad",
+        "Escalabilidad",
+        "GraphQL",
+        "Testing automatizado",
+        "API REST",
+        "REST",
+        "Testing unitario",
+        "Testing de integración",
+        "APIs",
+        "API Gateway",
+        "FastAPI",
+        "Performance",
+        "Testing web",
+        "Unit testing",
+        "Ciberseguridad",
+        "API testing",
+        "API RESTful",
+        "Seguridad de datos",
+        "APIs REST",
+        "Optimización de performance",
+        "Herramientas de testing",
+        "Arquitectura escalable",
+        "Arquitectura limpia",
+        "Performance optimization",
+        "Seguridad en la nube"
+      ],
+      "other": [
+        "Node.js",
+        "Code review",
+        "HTML",
+        "Machine Learning",
+        "Patrones de diseño",
+        "Documentación técnica",
+        "CSS",
+        "Control de versiones",
+        "Pruebas unitarias",
+        "Bases de datos relacionales",
+        "Automatización",
+        "Fullstack",
+        "HTML5",
+        "Linux",
+        "Inteligencia Artificial",
+        "Bases de datos",
+        "CSS3",
+        "Kafka",
+        "Desarrollo web",
+        "Análisis de datos",
+        "Estructuras de datos",
+        "Programación orientada a objetos",
+        "Redux",
+        "Pruebas de integración",
+        "QA",
+        "ETL",
+        "iOS",
+        "Sistemas distribuidos",
+        "Android",
+        "Optimización de rendimiento",
+        "Bases de datos no relacionales",
+        "Documentación",
+        "Debugging",
+        "Data pipelines",
+        "Desarrollo móvil",
+        "UX",
+        "Desarrollo de software",
+        "SOAP",
+        "Big Data",
+        "Monitoreo",
+        "MVC",
+        "Unix",
+        "Principios SOLID",
+        "ES6",
+        "Infraestructura IT",
+        "JSON",
+        "SOLID",
+        "Next.js",
+        "Desarrollo fullstack",
+        "Bash",
+        "Maven",
+        "Aplicaciones web",
+        "SonarQube",
+        "Web Services",
+        "Scripting",
+        "TDD",
+        "Flux",
+        "Modelado de datos",
+        "RDS",
+        "Spark",
+        "RabbitMQ",
+        "Responsive design",
+        "Scala",
+        "Swagger",
+        "Backbone",
+        "Inglés técnico",
+        "Integración",
+        "Jest",
+        "jQuery",
+        "C",
+        "Optimización de consultas",
+        "Pipelines",
+        "Procedimientos almacenados",
+        "Casos de prueba",
+        "Desarrollo móvil multiplataforma",
+        "LLM",
+        "Procesamiento de datos",
+        "Servicios web",
+        "Pipelines de datos",
+        "ES7",
+        "ES2015",
+        "Airflow",
+        "Observabilidad",
+        "UI",
+        "Hibernate",
+        "Relay",
+        "IaC",
+        "Data Science",
+        "SDLC",
+        "Pandas",
+        "SEO",
+        "Integración de sistemas",
+        "Marionette",
+        "Administración de bases de datos",
+        "Power BI",
+        "JPA",
+        "Bootstrap",
+        "S3",
+        "Gestión de proyectos",
+        "Planes de prueba",
+        "Pruebas automatizadas",
+        "Integración de servicios",
+        "Salesforce",
+        "Flutter",
+        "Accesibilidad",
+        "NLP",
+        "BigQuery",
+        "Webpack",
+        "Diseño responsivo",
+        "Diseño de bases de datos",
+        "Troubleshooting",
+        "Integración continua",
+        "Bitbucket",
+        "Desarrollo móvil nativo",
+        "State management",
+        "Buenas prácticas",
+        "JUnit",
+        "Desarrollo desde cero",
+        "Business Intelligence",
+        "SaaS",
+        "AI",
+        "Data engineering",
+        "Networking",
+        "Pub/Sub",
+        "Dashboards",
+        "Optimización",
+        "WordPress",
+        "Tableau",
+        "Integración de datos",
+        "Automatización de procesos",
+        "Autenticación",
+        "Validación de modelos",
+        "Desarrollo multiplataforma",
+        "VPN",
+        "Design patterns",
+        "IAM",
+        "Fortify scan",
+        "Despliegue",
+        "HTTP",
+        "Transformación de datos",
+        "Firebase",
+        "Domain Driven Design",
+        "CRM",
+        "Despliegue de modelos",
+        "Entity Framework",
+        "ERP",
+        "Análisis de requisitos",
+        "PWA",
+        "Weaviate",
+        "Windows Server",
+        "Groovy",
+        "OAuth",
+        "Orquestación",
+        "OCI",
+        "Pinecone",
+        "CMS",
+        "Aplicaciones móviles",
+        "JWT",
+        "OpenShift",
+        "UX/UI",
+        "Soluciones escalables",
+        "Xcode",
+        "SQS",
+        "Depuración",
+        "Deep Learning",
+        "Cypress",
+        "Stored procedures",
+        "Automatización de pruebas",
+        "Logging",
+        "BitBucket",
+        "Inteligencia Artificial Generativa",
+        "YAML",
+        "Ambientes productivos",
+        "Análisis de defectos",
+        "Análisis de requerimientos",
+        "Analítica predictiva",
+        "Android Studio",
+        "Apex",
+        "Aplicaciones de escritorio",
+        "Aplicaciones escalables",
+        "Artifactory",
+        "Asincronismo",
+        "Axios",
+        "Bases de datos vectoriales",
+        "BI",
+        "Blender",
+        "Chatbots",
+        "Chef",
+        "Chroma",
+        "Ciencia de datos",
+        "Code reviews",
+        "Colas de mensajes",
+        "Contenedorización",
+        "Databricks",
+        "Datadog",
+        "Data Engineering",
+        "Data lakes",
+        "Data visualization",
+        "Data warehouses",
+        "DDL",
+        "Deployment",
+        "DevSecOps",
+        "Diseño de software",
+        "DML",
+        "EKS",
+        "ElasticSearch",
+        "Excel",
+        "FinTech",
+        "Firewalls",
+        "Gestión de bases de datos",
+        "IA",
+        "Índices",
+        "Infraestructura de datos",
+        "Ingeniería de software",
+        "Integraciones",
+        "ITIL",
+        "Jetpack Compose",
+        "LangChain",
+        "Línea de comandos",
+        "LLMs",
+        "Low-code",
+        "Maya",
+        "Mentoría técnica",
+        "Microfrontends",
+        "MLOps",
+        "Mobile",
+        "Mockito",
+        "Modelado 3D",
+        "Modularización",
+        "n8n",
+        "Normalización",
+        "NumPy",
+        "OAuth2",
+        "Oculus",
+        "Openshift",
+        "Open source",
+        "Optimización de bases de datos",
+        "ORM",
+        "OWASP",
+        "Perl",
+        "Planes de ejecución",
+        "Power Apps",
+        "Power Automate",
+        "Pruebas",
+        "Pruebas de regresión",
+        "Realidad Virtual",
+        "Resolución de incidentes",
+        "RPA",
+        "Samsung Gear VR",
+        "Sass",
+        "Scripts de prueba",
+        "Seguimiento de errores",
+        "Selenium",
+        "SharePoint",
+        "Shell",
+        "Sistemas escalables",
+        "Snowflake",
+        "Soporte técnico",
+        "SSIS",
+        "SSR",
+        "Storybook",
+        "Tecnologías web",
+        "TensorFlow",
+        "Texturizado 3D",
+        "Transacciones",
+        "Trello",
+        "Triggers",
+        "Unity 3D",
+        "Visualforce",
+        "Visualización de datos",
+        "Visual Studio Code"
+      ]
+    }
+  },
+  "skills": [
+    {
+      "skill_text": "JavaScript",
+      "frequency": 97,
+      "job_count": 97,
+      "job_coverage_pct": 32.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Python",
+      "frequency": 93,
+      "job_count": 93,
+      "job_coverage_pct": 31.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "CI/CD",
+      "frequency": 86,
+      "job_count": 86,
+      "job_coverage_pct": 28.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "AWS",
+      "frequency": 74,
+      "job_count": 74,
+      "job_coverage_pct": 24.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Git",
+      "frequency": 72,
+      "job_count": 72,
+      "job_coverage_pct": 24.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Java",
+      "frequency": 71,
+      "job_count": 71,
+      "job_coverage_pct": 23.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Docker",
+      "frequency": 66,
+      "job_count": 66,
+      "job_coverage_pct": 22.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "React",
+      "frequency": 63,
+      "job_count": 63,
+      "job_coverage_pct": 21.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Agile",
+      "frequency": 59,
+      "job_count": 59,
+      "job_coverage_pct": 19.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SQL",
+      "frequency": 58,
+      "job_count": 58,
+      "job_coverage_pct": 19.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Microservicios",
+      "frequency": 55,
+      "job_count": 55,
+      "job_coverage_pct": 18.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Scrum",
+      "frequency": 51,
+      "job_count": 51,
+      "job_coverage_pct": 17.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "REST API",
+      "frequency": 46,
+      "job_count": 46,
+      "job_coverage_pct": 15.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Angular",
+      "frequency": 46,
+      "job_count": 46,
+      "job_coverage_pct": 15.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "API",
+      "frequency": 45,
+      "job_count": 45,
+      "job_coverage_pct": 15.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Node.js",
+      "frequency": 45,
+      "job_count": 45,
+      "job_coverage_pct": 15.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Kubernetes",
+      "frequency": 45,
+      "job_count": 45,
+      "job_coverage_pct": 15.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Azure",
+      "frequency": 44,
+      "job_count": 44,
+      "job_coverage_pct": 14.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Testing",
+      "frequency": 42,
+      "job_count": 42,
+      "job_coverage_pct": 14.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Arquitectura de software",
+      "frequency": 42,
+      "job_count": 42,
+      "job_coverage_pct": 14.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "TypeScript",
+      "frequency": 38,
+      "job_count": 38,
+      "job_coverage_pct": 12.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "DevOps",
+      "frequency": 37,
+      "job_count": 37,
+      "job_coverage_pct": 12.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "GCP",
+      "frequency": 36,
+      "job_count": 36,
+      "job_coverage_pct": 12.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Code review",
+      "frequency": 36,
+      "job_count": 36,
+      "job_coverage_pct": 12.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Metodologías ágiles",
+      "frequency": 34,
+      "job_count": 34,
+      "job_coverage_pct": 11.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SQL Server",
+      "frequency": 34,
+      "job_count": 34,
+      "job_coverage_pct": 11.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Lean",
+      "frequency": 33,
+      "job_count": 33,
+      "job_coverage_pct": 11.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "PostgreSQL",
+      "frequency": 31,
+      "job_count": 31,
+      "job_coverage_pct": 10.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "HTML",
+      "frequency": 31,
+      "job_count": 31,
+      "job_coverage_pct": 10.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Machine Learning",
+      "frequency": 31,
+      "job_count": 31,
+      "job_coverage_pct": 10.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Patrones de diseño",
+      "frequency": 31,
+      "job_count": 31,
+      "job_coverage_pct": 10.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "MySQL",
+      "frequency": 30,
+      "job_count": 30,
+      "job_coverage_pct": 10.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Documentación técnica",
+      "frequency": 30,
+      "job_count": 30,
+      "job_coverage_pct": 10.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Seguridad",
+      "frequency": 29,
+      "job_count": 29,
+      "job_coverage_pct": 9.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "CSS",
+      "frequency": 29,
+      "job_count": 29,
+      "job_coverage_pct": 9.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Control de versiones",
+      "frequency": 29,
+      "job_count": 29,
+      "job_coverage_pct": 9.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Cloud",
+      "frequency": 29,
+      "job_count": 29,
+      "job_coverage_pct": 9.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pruebas unitarias",
+      "frequency": 28,
+      "job_count": 28,
+      "job_coverage_pct": 9.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "NoSQL",
+      "frequency": 27,
+      "job_count": 27,
+      "job_coverage_pct": 9.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bases de datos relacionales",
+      "frequency": 27,
+      "job_count": 27,
+      "job_coverage_pct": 9.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Escalabilidad",
+      "frequency": 27,
+      "job_count": 27,
+      "job_coverage_pct": 9.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "GraphQL",
+      "frequency": 27,
+      "job_count": 27,
+      "job_coverage_pct": 9.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "C#",
+      "frequency": 27,
+      "job_count": 27,
+      "job_coverage_pct": 9.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Automatización",
+      "frequency": 26,
+      "job_count": 26,
+      "job_coverage_pct": 8.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "MongoDB",
+      "frequency": 26,
+      "job_count": 26,
+      "job_coverage_pct": 8.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Fullstack",
+      "frequency": 25,
+      "job_count": 25,
+      "job_coverage_pct": 8.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Algoritmos",
+      "frequency": 25,
+      "job_count": 25,
+      "job_coverage_pct": 8.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "GitHub",
+      "frequency": 24,
+      "job_count": 24,
+      "job_coverage_pct": 8.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "HTML5",
+      "frequency": 23,
+      "job_count": 23,
+      "job_coverage_pct": 7.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Testing automatizado",
+      "frequency": 23,
+      "job_count": 23,
+      "job_coverage_pct": 7.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Linux",
+      "frequency": 23,
+      "job_count": 23,
+      "job_coverage_pct": 7.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Inteligencia Artificial",
+      "frequency": 22,
+      "job_count": 22,
+      "job_coverage_pct": 7.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Oracle",
+      "frequency": 22,
+      "job_count": 22,
+      "job_coverage_pct": 7.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "API REST",
+      "frequency": 22,
+      "job_count": 22,
+      "job_coverage_pct": 7.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spring Boot",
+      "frequency": 22,
+      "job_count": 22,
+      "job_coverage_pct": 7.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bases de datos",
+      "frequency": 21,
+      "job_count": 21,
+      "job_coverage_pct": 7.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "CSS3",
+      "frequency": 21,
+      "job_count": 21,
+      "job_coverage_pct": 7.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Jenkins",
+      "frequency": 21,
+      "job_count": 21,
+      "job_coverage_pct": 7.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": ".NET",
+      "frequency": 20,
+      "job_count": 20,
+      "job_coverage_pct": 6.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Kafka",
+      "frequency": 20,
+      "job_count": 20,
+      "job_coverage_pct": 6.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo web",
+      "frequency": 20,
+      "job_count": 20,
+      "job_coverage_pct": 6.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Análisis de datos",
+      "frequency": 19,
+      "job_count": 19,
+      "job_coverage_pct": 6.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Estructuras de datos",
+      "frequency": 19,
+      "job_count": 19,
+      "job_coverage_pct": 6.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Programación orientada a objetos",
+      "frequency": 19,
+      "job_count": 19,
+      "job_coverage_pct": 6.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Kanban",
+      "frequency": 18,
+      "job_count": 18,
+      "job_coverage_pct": 6.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "REST",
+      "frequency": 17,
+      "job_count": 17,
+      "job_coverage_pct": 5.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Clean Code",
+      "frequency": 16,
+      "job_count": 16,
+      "job_coverage_pct": 5.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Terraform",
+      "frequency": 16,
+      "job_count": 16,
+      "job_coverage_pct": 5.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Redux",
+      "frequency": 16,
+      "job_count": 16,
+      "job_coverage_pct": 5.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": ".NET Core",
+      "frequency": 15,
+      "job_count": 15,
+      "job_coverage_pct": 5.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pruebas de integración",
+      "frequency": 15,
+      "job_count": 15,
+      "job_coverage_pct": 5.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "QA",
+      "frequency": 15,
+      "job_count": 15,
+      "job_coverage_pct": 5.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "React Native",
+      "frequency": 15,
+      "job_count": 15,
+      "job_coverage_pct": 5.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Testing unitario",
+      "frequency": 15,
+      "job_count": 15,
+      "job_coverage_pct": 5.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ETL",
+      "frequency": 14,
+      "job_count": 14,
+      "job_coverage_pct": 4.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "iOS",
+      "frequency": 14,
+      "job_count": 14,
+      "job_coverage_pct": 4.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Sistemas distribuidos",
+      "frequency": 14,
+      "job_count": 14,
+      "job_coverage_pct": 4.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Android",
+      "frequency": 14,
+      "job_count": 14,
+      "job_coverage_pct": 4.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Optimización de rendimiento",
+      "frequency": 14,
+      "job_count": 14,
+      "job_coverage_pct": 4.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bases de datos no relacionales",
+      "frequency": 14,
+      "job_count": 14,
+      "job_coverage_pct": 4.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "GitHub Actions",
+      "frequency": 13,
+      "job_count": 13,
+      "job_coverage_pct": 4.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Django",
+      "frequency": 13,
+      "job_count": 13,
+      "job_coverage_pct": 4.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Documentación",
+      "frequency": 13,
+      "job_count": 13,
+      "job_coverage_pct": 4.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "PHP",
+      "frequency": 13,
+      "job_count": 13,
+      "job_coverage_pct": 4.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Debugging",
+      "frequency": 12,
+      "job_count": 12,
+      "job_coverage_pct": 4.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data pipelines",
+      "frequency": 12,
+      "job_count": 12,
+      "job_coverage_pct": 4.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo móvil",
+      "frequency": 12,
+      "job_count": 12,
+      "job_coverage_pct": 4.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "UX",
+      "frequency": 12,
+      "job_count": 12,
+      "job_coverage_pct": 4.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Go",
+      "frequency": 12,
+      "job_count": 12,
+      "job_coverage_pct": 4.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Redis",
+      "frequency": 12,
+      "job_count": 12,
+      "job_coverage_pct": 4.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Jira",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo de software",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SOAP",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Testing de integración",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Big Data",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Monitoreo",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "MVC",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Unix",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Principios SOLID",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ES6",
+      "frequency": 11,
+      "job_count": 11,
+      "job_coverage_pct": 3.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Postman",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ruby on Rails",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Infraestructura IT",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "GitLab",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Swift",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "JSON",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SOLID",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Next.js",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo fullstack",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bash",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "APIs",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Maven",
+      "frequency": 10,
+      "job_count": 10,
+      "job_coverage_pct": 3.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Aplicaciones web",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SonarQube",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Web Services",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Scripting",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Kotlin",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "TDD",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Flux",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Vue.js",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "API Gateway",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Modelado de datos",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Azure DevOps",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "RDS",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Lambda",
+      "frequency": 9,
+      "job_count": 9,
+      "job_coverage_pct": 3.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spark",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "RabbitMQ",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Responsive design",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Scala",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Swagger",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Backbone",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "FastAPI",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Inglés técnico",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Integración",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Jest",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "jQuery",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "C",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Optimización de consultas",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Código limpio",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Performance",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pipelines",
+      "frequency": 8,
+      "job_count": 8,
+      "job_coverage_pct": 2.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Procedimientos almacenados",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Casos de prueba",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo móvil multiplataforma",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "LLM",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Procesamiento de datos",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Servicios web",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pipelines de datos",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "JIRA",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ES7",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ES2015",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Airflow",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "DynamoDB",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Observabilidad",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "UI",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Google Cloud",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Express",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Hibernate",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Relay",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "IaC",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data Science",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SDLC",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pandas",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SEO",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Integración de sistemas",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Vue",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Marionette",
+      "frequency": 7,
+      "job_count": 7,
+      "job_coverage_pct": 2.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Administración de bases de datos",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Power BI",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ruby",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "JPA",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bootstrap",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "S3",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "MS SQL",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Gestión de proyectos",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Planes de prueba",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pruebas automatizadas",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Integración de servicios",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Salesforce",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Flutter",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Accesibilidad",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ansible",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Testing web",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Serverless",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "CloudFormation",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "NLP",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "BigQuery",
+      "frequency": 6,
+      "job_count": 6,
+      "job_coverage_pct": 2.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Webpack",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Flask",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Diseño responsivo",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Diseño de bases de datos",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Unit testing",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "T-SQL",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Troubleshooting",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Integración continua",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bitbucket",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo móvil nativo",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "State management",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Buenas prácticas",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "JUnit",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spring Data",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo desde cero",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Business Intelligence",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "C++",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ciberseguridad",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "API testing",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ASP.NET",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SaaS",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "AI",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "NestJS",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data engineering",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": ".NET Framework",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Networking",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pub/Sub",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Dashboards",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Cloud-native",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Optimización",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Documentación de código",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "WordPress",
+      "frequency": 5,
+      "job_count": 5,
+      "job_coverage_pct": 1.7,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Tableau",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Integración de datos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "API RESTful",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Automatización de procesos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Seguridad de datos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "APIs REST",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Autenticación",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Microsoft Azure",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Validación de modelos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Desarrollo multiplataforma",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Optimización de performance",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Infraestructura como código",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "VPN",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Design patterns",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "IAM",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Fortify scan",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Despliegue",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "HTTP",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "MVC.NET",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Transformación de datos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Firebase",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Domain Driven Design",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "CRM",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Despliegue de modelos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Entity Framework",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ERP",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Análisis de requisitos",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Herramientas de testing",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "PWA",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Weaviate",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Windows Server",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Groovy",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "OAuth",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Orquestación",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "GitLab CI",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "OCI",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spring Framework",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pinecone",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "CMS",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Aplicaciones móviles",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "JWT",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "OpenShift",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spring",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spring Security",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "UX/UI",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Soluciones escalables",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Xcode",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SQS",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Depuración",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Deep Learning",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Cypress",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "PL/SQL",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Stored procedures",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Automatización de pruebas",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Logging",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "BitBucket",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Inteligencia Artificial Generativa",
+      "frequency": 4,
+      "job_count": 4,
+      "job_coverage_pct": 1.3,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "YAML",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ambientes productivos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Análisis de defectos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Análisis de requerimientos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Analítica predictiva",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Android Studio",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Apex",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Aplicaciones de escritorio",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Aplicaciones escalables",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Arquitectura escalable",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Arquitectura hexagonal",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Arquitectura limpia",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Artifactory",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Asincronismo",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Axios",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Azure Functions",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bases de datos NoSQL",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Bases de datos vectoriales",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "BI",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Blender",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Cardboard",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Chatbots",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Chef",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Chroma",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ciencia de datos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Clean Architecture",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Cloud Computing",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Cobertura de código",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Code reviews",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Colas de mensajes",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Contenedorización",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Databricks",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Datadog",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data Engineering",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data lakes",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data visualization",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Data warehouses",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "DB2",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "dbt",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "DDL",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Deployment",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "DevSecOps",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Diseño de software",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "DML",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "EKS",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ElasticSearch",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Excel",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "FinTech",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Firewalls",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Gestión de bases de datos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Golang",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "IA",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Índices",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Infraestructura de datos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Ingeniería de software",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Integraciones",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ITIL",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Jetpack Compose",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Juegos 2D",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Juegos 3D",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "LangChain",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Laravel",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Liderazgo técnico",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Línea de comandos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "LLMs",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Low-code",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Maya",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Mentoría técnica",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Microfrontends",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "MLOps",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Mobile",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Mockito",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Modelado 3D",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Modularización",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "n8n",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Normalización",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "NumPy",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "OAuth2",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Oculus",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Openshift",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Open source",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Optimización de bases de datos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "ORM",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "OWASP",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Performance optimization",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Perl",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Planes de ejecución",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Power Apps",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Power Automate",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pruebas",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Pruebas de regresión",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "React Testing Library",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Realidad Virtual",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Resolución de incidentes",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "RPA",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Samsung Gear VR",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Sass",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Scripts de prueba",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SCRUM",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Seguimiento de errores",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Seguridad en la nube",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Selenium",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Service Cloud",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SharePoint",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Shell",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Sistemas escalables",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Snowflake",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Soporte técnico",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Spring Cloud",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SSIS",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SSR",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Storybook",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "SwiftUI",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Tecnologías web",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "TensorFlow",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Texturizado 3D",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Transacciones",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Trello",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Triggers",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Unity 3D",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Versionado de código",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Visualforce",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Visualización de datos",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    },
+    {
+      "skill_text": "Visual Studio Code",
+      "frequency": 3,
+      "job_count": 3,
+      "job_coverage_pct": 1.0,
+      "model_name": "intfloat/multilingual-e5-base",
+      "model_version": "v1.0"
+    }
+  ]
+}

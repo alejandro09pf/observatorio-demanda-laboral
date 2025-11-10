@@ -1,0 +1,175 @@
+{
+  "metadata": {
+    "dataset_name": "pipeline_b_300_post_exp1",
+    "created_at": "2025-11-07T18:01:36.763039",
+    "n_skills": 234,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 5,
+        "min_samples": 3,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 10,
+    "n_samples": 234,
+    "n_noise": 14,
+    "noise_percentage": 5.982905982905983,
+    "silhouette_score": 0.26003047823905945,
+    "davies_bouldin_score": 0.6085884527528049,
+    "largest_cluster_size": 114,
+    "smallest_cluster_size": 5,
+    "mean_cluster_size": 22.0
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 20,
+      "label": "Algoritmos, An\u00e1lisis de Datos, Servicios Web...",
+      "top_skills": [
+        "Algoritmos",
+        "An\u00e1lisis de Datos",
+        "Servicios Web",
+        "Estad\u00edstica",
+        "An\u00e1lisis de datos"
+      ],
+      "total_frequency": 41,
+      "mean_frequency": 2.05
+    },
+    {
+      "cluster_id": 1,
+      "size": 9,
+      "label": "Machine Learning, Angular, machine learning...",
+      "top_skills": [
+        "Machine Learning",
+        "Angular",
+        "machine learning",
+        "Deep Learning",
+        "Scikit-learn"
+      ],
+      "total_frequency": 142,
+      "mean_frequency": 15.777777777777779
+    },
+    {
+      "cluster_id": 2,
+      "size": 7,
+      "label": "React, Playwright, Video...",
+      "top_skills": [
+        "React",
+        "Playwright",
+        "Video",
+        "Roles",
+        "Tablas"
+      ],
+      "total_frequency": 99,
+      "mean_frequency": 14.142857142857142
+    },
+    {
+      "cluster_id": 3,
+      "size": 9,
+      "label": "Git, GitLab CI/CD, GitHub Actions...",
+      "top_skills": [
+        "Git",
+        "GitLab CI/CD",
+        "GitHub Actions",
+        "Go",
+        "GitHub"
+      ],
+      "total_frequency": 365,
+      "mean_frequency": 40.55555555555556
+    },
+    {
+      "cluster_id": 4,
+      "size": 15,
+      "label": "Containerization, React Testing Library, Responsive Design...",
+      "top_skills": [
+        "Containerization",
+        "React Testing Library",
+        "Responsive Design",
+        "Domain Driven Design",
+        "Backend Development"
+      ],
+      "total_frequency": 24,
+      "mean_frequency": 1.6
+    },
+    {
+      "cluster_id": 5,
+      "size": 5,
+      "label": "Microservices, Firebase, Serverless...",
+      "top_skills": [
+        "Microservices",
+        "Firebase",
+        "Serverless",
+        "ServiceNow",
+        "microservices"
+      ],
+      "total_frequency": 83,
+      "mean_frequency": 16.6
+    },
+    {
+      "cluster_id": 6,
+      "size": 9,
+      "label": "Tableau, Data Pipelines, Data Lakes...",
+      "top_skills": [
+        "Tableau",
+        "Data Pipelines",
+        "Data Lakes",
+        "Data Warehouses",
+        "Datadog"
+      ],
+      "total_frequency": 29,
+      "mean_frequency": 3.2222222222222223
+    },
+    {
+      "cluster_id": 7,
+      "size": 15,
+      "label": "SQL, MySQL, MongoDB...",
+      "top_skills": [
+        "SQL",
+        "MySQL",
+        "MongoDB",
+        "PostgreSQL",
+        "SQL Server"
+      ],
+      "total_frequency": 623,
+      "mean_frequency": 41.53333333333333
+    },
+    {
+      "cluster_id": 8,
+      "size": 17,
+      "label": "Bash, Swift, ETL...",
+      "top_skills": [
+        "Bash",
+        "Swift",
+        "ETL",
+        "Rust",
+        "SOLID"
+      ],
+      "total_frequency": 63,
+      "mean_frequency": 3.7058823529411766
+    },
+    {
+      "cluster_id": 9,
+      "size": 114,
+      "label": "Docker, Kubernetes, Python...",
+      "top_skills": [
+        "Docker",
+        "Kubernetes",
+        "Python",
+        "JavaScript",
+        "GraphQL"
+      ],
+      "total_frequency": 1779,
+      "mean_frequency": 15.605263157894736
+    }
+  ]
+}

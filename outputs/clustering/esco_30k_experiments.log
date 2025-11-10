@@ -1,0 +1,151 @@
+================================================================================
+ESCO 30K - PARAMETER EXPERIMENTATION
+================================================================================
+
+📥 Fetching ESCO skills with embeddings...
+✅ Loaded 1,700 ESCO skills with embeddings
+   Frequency range: 1 - 4722
+   Embeddings shape: (1700, 768)
+
+🧪 Running 20 experiments...
+   n_neighbors: [10, 15, 20, 30]
+   min_cluster_size: [3, 5, 7, 10, 15]
+
+[1/20] nn10_mcs3... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (4.2s) - 112 clusters, sil=0.620
+[2/20] nn10_mcs5... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.4s) - 103 clusters, sil=0.610
+[3/20] nn10_mcs7... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.2s) - 92 clusters, sil=0.576
+[4/20] nn10_mcs10... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.2s) - 60 clusters, sil=0.511
+[5/20] nn10_mcs15... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.3s) - 35 clusters, sil=0.461
+[6/20] nn15_mcs3... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.4s) - 104 clusters, sil=0.562
+[7/20] nn15_mcs5... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.4s) - 91 clusters, sil=0.558
+[8/20] nn15_mcs7... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.5s) - 79 clusters, sil=0.533
+[9/20] nn15_mcs10... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.4s) - 58 clusters, sil=0.515
+[10/20] nn15_mcs15... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.4s) - 36 clusters, sil=0.475
+[11/20] nn20_mcs3... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.6s) - 111 clusters, sil=0.591
+[12/20] nn20_mcs5... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.5s) - 99 clusters, sil=0.582
+[13/20] nn20_mcs7... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.5s) - 78 clusters, sil=0.520
+[14/20] nn20_mcs10... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.6s) - 54 clusters, sil=0.470
+[15/20] nn20_mcs15... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.6s) - 35 clusters, sil=0.423
+[16/20] nn30_mcs3... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.7s) - 95 clusters, sil=0.511
+[17/20] nn30_mcs5... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.8s) - 81 clusters, sil=0.496
+[18/20] nn30_mcs7... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.7s) - 75 clusters, sil=0.501
+[19/20] nn30_mcs10... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.8s) - 42 clusters, sil=0.427
+[20/20] nn30_mcs15... /Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+✓ (2.8s) - 2 clusters, sil=0.142
+
+✅ All experiments completed in 0.9 minutes
+
+================================================================================
+RESULTS COMPARISON
+================================================================================
+
+    Config  n_neighbors  min_cluster_size  Clusters Noise% Silhouette Davies-Bouldin
+ nn10_mcs3           10                 3       112  25.9%      0.620          0.437
+ nn10_mcs5           10                 5       103  25.4%      0.610          0.460
+ nn10_mcs7           10                 7        92  23.3%      0.576          0.509
+nn10_mcs10           10                10        60  23.6%      0.511          0.578
+nn10_mcs15           10                15        35  27.8%      0.461          0.686
+ nn15_mcs3           15                 3       104  27.8%      0.562          0.500
+ nn15_mcs5           15                 5        91  26.9%      0.558          0.507
+ nn15_mcs7           15                 7        79  24.6%      0.533          0.555
+nn15_mcs10           15                10        58  27.5%      0.515          0.602
+nn15_mcs15           15                15        36  32.8%      0.475          0.652
+ nn20_mcs3           20                 3       111  32.0%      0.591          0.480
+ nn20_mcs5           20                 5        99  31.0%      0.582          0.495
+ nn20_mcs7           20                 7        78  27.5%      0.520          0.541
+nn20_mcs10           20                10        54  30.9%      0.470          0.629
+nn20_mcs15           20                15        35  35.4%      0.423          0.687
+ nn30_mcs3           30                 3        95  31.5%      0.511          0.529
+ nn30_mcs5           30                 5        81  32.1%      0.496          0.550
+ nn30_mcs7           30                 7        75  34.1%      0.501          0.579
+nn30_mcs10           30                10        42  28.6%      0.427          0.755
+nn30_mcs15           30                15         2   0.9%      0.142          0.727
+
+================================================================================
+RANKING (Multi-criteria scoring)
+================================================================================
+
+    Config Score Silhouette    DB  Clusters Noise%
+nn15_mcs15 0.726      0.475 0.652        36  32.8%
+nn10_mcs15 0.712      0.461 0.686        35  27.8%
+nn10_mcs10 0.710      0.511 0.578        60  23.6%
+nn15_mcs10 0.671      0.515 0.602        58  27.5%
+ nn15_mcs7 0.639      0.533 0.555        79  24.6%
+nn20_mcs10 0.635      0.470 0.629        54  30.9%
+nn20_mcs15 0.624      0.423 0.687        35  35.4%
+ nn20_mcs7 0.591      0.520 0.541        78  27.5%
+nn30_mcs10 0.589      0.427 0.755        42  28.6%
+ nn10_mcs3 0.586      0.620 0.437       112  25.9%
+ nn10_mcs7 0.586      0.576 0.509        92  23.3%
+ nn10_mcs5 0.576      0.610 0.460       103  25.4%
+ nn30_mcs7 0.573      0.501 0.579        75  34.1%
+ nn20_mcs3 0.560      0.591 0.480       111  32.0%
+ nn20_mcs5 0.552      0.582 0.495        99  31.0%
+ nn15_mcs3 0.536      0.562 0.500       104  27.8%
+ nn15_mcs5 0.533      0.558 0.507        91  26.9%
+ nn30_mcs3 0.496      0.511 0.529        95  31.5%
+ nn30_mcs5 0.482      0.496 0.550        81  32.1%
+nn30_mcs15 0.357      0.142 0.727         2   0.9%
+
+================================================================================
+TOP 3 RECOMMENDED CONFIGURATIONS
+================================================================================
+
+1. nn15_mcs15
+   Score: 0.726
+   Clusters: 36, Noise: 32.8%
+   Silhouette: 0.475, Davies-Bouldin: 0.652
+
+2. nn10_mcs15
+   Score: 0.712
+   Clusters: 35, Noise: 27.8%
+   Silhouette: 0.461, Davies-Bouldin: 0.686
+
+3. nn10_mcs10
+   Score: 0.710
+   Clusters: 60, Noise: 23.6%
+   Silhouette: 0.511, Davies-Bouldin: 0.578
+
+💾 Results saved to: outputs/clustering/esco_30k_experiments/
+
+🎯 Next step: Review top 3, then run final clustering with best config
+

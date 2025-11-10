@@ -1,0 +1,938 @@
+{
+  "baseline": {
+    "true_positives": 25,
+    "false_positives": 25,
+    "true_negatives": 0,
+    "false_negatives": 0,
+    "details": [
+      {
+        "case_id": 1,
+        "skill": "Python",
+        "expected": true,
+        "found": true,
+        "esco_label": "Python",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 2,
+        "skill": "JavaScript",
+        "expected": true,
+        "found": true,
+        "esco_label": "JavaScript",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 3,
+        "skill": "React",
+        "expected": true,
+        "found": true,
+        "esco_label": "React",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 4,
+        "skill": "Angular",
+        "expected": true,
+        "found": true,
+        "esco_label": "Angular",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 5,
+        "skill": "Docker",
+        "expected": true,
+        "found": true,
+        "esco_label": "Docker",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 6,
+        "skill": "Kubernetes",
+        "expected": true,
+        "found": true,
+        "esco_label": "Kubernetes",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 7,
+        "skill": "SQL",
+        "expected": true,
+        "found": true,
+        "esco_label": "SQL",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 8,
+        "skill": "MongoDB",
+        "expected": true,
+        "found": true,
+        "esco_label": "MongoDB",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 9,
+        "skill": "Redis",
+        "expected": true,
+        "found": true,
+        "esco_label": "Redis",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 10,
+        "skill": "TypeScript",
+        "expected": true,
+        "found": true,
+        "esco_label": "TypeScript",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 11,
+        "skill": "node.js",
+        "expected": true,
+        "found": true,
+        "esco_label": "Node.js",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 12,
+        "skill": "DevOps",
+        "expected": true,
+        "found": true,
+        "esco_label": "DevOps",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 13,
+        "skill": "agile",
+        "expected": true,
+        "found": true,
+        "esco_label": "Agile",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 14,
+        "skill": "Scrum",
+        "expected": true,
+        "found": true,
+        "esco_label": "Scrum",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 15,
+        "skill": "CI/CD",
+        "expected": true,
+        "found": true,
+        "esco_label": "GitLab CI/CD",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 16,
+        "skill": "machine learning",
+        "expected": true,
+        "found": true,
+        "esco_label": "Machine Learning",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 17,
+        "skill": "deep learning",
+        "expected": true,
+        "found": true,
+        "esco_label": "Deep Learning",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 18,
+        "skill": "Flask",
+        "expected": true,
+        "found": true,
+        "esco_label": "Flask",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 19,
+        "skill": "Django",
+        "expected": true,
+        "found": true,
+        "esco_label": "Django",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 20,
+        "skill": "GraphQL",
+        "expected": true,
+        "found": true,
+        "esco_label": "GraphQL",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 21,
+        "skill": "RabbitMQ",
+        "expected": true,
+        "found": true,
+        "esco_label": "RabbitMQ",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 22,
+        "skill": "kafka",
+        "expected": true,
+        "found": true,
+        "esco_label": "Apache Kafka",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 23,
+        "skill": "TensorFlow",
+        "expected": true,
+        "found": true,
+        "esco_label": "TensorFlow",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 24,
+        "skill": "Unity",
+        "expected": true,
+        "found": true,
+        "esco_label": "Unity (sistemas de creación de juegos digitales)",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 25,
+        "skill": "Ruby",
+        "expected": true,
+        "found": true,
+        "esco_label": "Ruby",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 26,
+        "skill": "Europa",
+        "expected": false,
+        "found": true,
+        "esco_label": "neuropatología",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 27,
+        "skill": "Oferta",
+        "expected": false,
+        "found": true,
+        "esco_label": "ofertas de empleo",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 28,
+        "skill": "Acceso",
+        "expected": false,
+        "found": true,
+        "esco_label": "diferenciar accesorios",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 29,
+        "skill": "Piano",
+        "expected": false,
+        "found": true,
+        "esco_label": "tocar el piano",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 30,
+        "skill": "Apoyo",
+        "expected": false,
+        "found": true,
+        "esco_label": "proporcionar apoyo psicológico a los pacientes",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 31,
+        "skill": "Perfil",
+        "expected": false,
+        "found": true,
+        "esco_label": "elaborar perfiles",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 32,
+        "skill": "Bordo",
+        "expected": false,
+        "found": true,
+        "esco_label": "ofrecer formación sobre seguridad a bordo",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 33,
+        "skill": "Fondo",
+        "expected": false,
+        "found": true,
+        "esco_label": "gestionar fondos de pensiones",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 34,
+        "skill": "Polanco",
+        "expected": false,
+        "found": true,
+        "esco_label": "polaco",
+        "score": 0.92,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 35,
+        "skill": "CORTES",
+        "expected": false,
+        "found": true,
+        "esco_label": "tipos de cortes de carne",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 36,
+        "skill": "Puntos",
+        "expected": false,
+        "found": true,
+        "esco_label": "seleccionar puntos de acupuntura",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 37,
+        "skill": "Vales",
+        "expected": false,
+        "found": true,
+        "esco_label": "organizar exposiciones festivales y actos culturales",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 38,
+        "skill": "Clara",
+        "expected": false,
+        "found": true,
+        "esco_label": "inspeccionar las declaraciones fiscales",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 39,
+        "skill": "Excel",
+        "expected": false,
+        "found": true,
+        "esco_label": "aspirar a la excelencia en la fabricación de productos alimenticios",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 40,
+        "skill": "Cursos",
+        "expected": false,
+        "found": true,
+        "esco_label": "gestionar licencias para el aprovechamiento de recursos terrestres",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 41,
+        "skill": "ASTECI",
+        "expected": false,
+        "found": true,
+        "esco_label": "garantizar un abastecimiento responsable en las cadenas de suministro alimentario",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 42,
+        "skill": "Seguro",
+        "expected": false,
+        "found": true,
+        "esco_label": "asumir la responsabilidad por el mantenimiento de un entorno seguro a bordo del buque",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 43,
+        "skill": "Video",
+        "expected": false,
+        "found": true,
+        "esco_label": "supervisar el equipo de edición de imágenes de video y películas",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 44,
+        "skill": "Empleo",
+        "expected": false,
+        "found": true,
+        "esco_label": "analizar las tasas de desempleo",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 45,
+        "skill": "Banca",
+        "expected": false,
+        "found": true,
+        "esco_label": "entrevistar a personas que han solicitado un crédito bancario",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 46,
+        "skill": "Bonos",
+        "expected": false,
+        "found": true,
+        "esco_label": "asesorar sobre abonos para plantas",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 47,
+        "skill": "Centro",
+        "expected": false,
+        "found": true,
+        "esco_label": "determinar el centro de gravedad de la carga",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 48,
+        "skill": "Crane",
+        "expected": false,
+        "found": true,
+        "esco_label": "realizar una estimulación magnética transcraneana",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 49,
+        "skill": "Estar",
+        "expected": false,
+        "found": true,
+        "esco_label": "adoptar vías para fomentar la biodiversidad y el bienestar animal",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 50,
+        "skill": "GRUPO",
+        "expected": false,
+        "found": true,
+        "esco_label": "ponerse en el lugar de grupos externos",
+        "score": 1.0,
+        "outcome": "❌ FP"
+      }
+    ],
+    "metrics": {
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1_score": 0.6666666666666666,
+      "accuracy": 0.5
+    }
+  },
+  "improved": {
+    "true_positives": 22,
+    "false_positives": 1,
+    "true_negatives": 24,
+    "false_negatives": 3,
+    "details": [
+      {
+        "case_id": 1,
+        "skill": "Python",
+        "expected": true,
+        "found": true,
+        "esco_label": "Python",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 2,
+        "skill": "JavaScript",
+        "expected": true,
+        "found": true,
+        "esco_label": "JavaScript",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 3,
+        "skill": "React",
+        "expected": true,
+        "found": true,
+        "esco_label": "React",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 4,
+        "skill": "Angular",
+        "expected": true,
+        "found": true,
+        "esco_label": "Angular",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 5,
+        "skill": "Docker",
+        "expected": true,
+        "found": true,
+        "esco_label": "Docker",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 6,
+        "skill": "Kubernetes",
+        "expected": true,
+        "found": true,
+        "esco_label": "Kubernetes",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 7,
+        "skill": "SQL",
+        "expected": true,
+        "found": true,
+        "esco_label": "SQL",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 8,
+        "skill": "MongoDB",
+        "expected": true,
+        "found": true,
+        "esco_label": "MongoDB",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 9,
+        "skill": "Redis",
+        "expected": true,
+        "found": true,
+        "esco_label": "Redis",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 10,
+        "skill": "TypeScript",
+        "expected": true,
+        "found": true,
+        "esco_label": "TypeScript",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 11,
+        "skill": "node.js",
+        "expected": true,
+        "found": true,
+        "esco_label": "Node.js",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 12,
+        "skill": "DevOps",
+        "expected": true,
+        "found": true,
+        "esco_label": "DevOps",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 13,
+        "skill": "agile",
+        "expected": true,
+        "found": true,
+        "esco_label": "Agile",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 14,
+        "skill": "Scrum",
+        "expected": true,
+        "found": true,
+        "esco_label": "Scrum",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 15,
+        "skill": "CI/CD",
+        "expected": true,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "❌ FN"
+      },
+      {
+        "case_id": 16,
+        "skill": "machine learning",
+        "expected": true,
+        "found": true,
+        "esco_label": "Machine Learning",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 17,
+        "skill": "deep learning",
+        "expected": true,
+        "found": true,
+        "esco_label": "Deep Learning",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 18,
+        "skill": "Flask",
+        "expected": true,
+        "found": true,
+        "esco_label": "Flask",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 19,
+        "skill": "Django",
+        "expected": true,
+        "found": true,
+        "esco_label": "Django",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 20,
+        "skill": "GraphQL",
+        "expected": true,
+        "found": true,
+        "esco_label": "GraphQL",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 21,
+        "skill": "RabbitMQ",
+        "expected": true,
+        "found": true,
+        "esco_label": "RabbitMQ",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 22,
+        "skill": "kafka",
+        "expected": true,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "❌ FN"
+      },
+      {
+        "case_id": 23,
+        "skill": "TensorFlow",
+        "expected": true,
+        "found": true,
+        "esco_label": "TensorFlow",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 24,
+        "skill": "Unity",
+        "expected": true,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "❌ FN"
+      },
+      {
+        "case_id": 25,
+        "skill": "Ruby",
+        "expected": true,
+        "found": true,
+        "esco_label": "Ruby",
+        "score": 1.0,
+        "outcome": "✅ TP"
+      },
+      {
+        "case_id": 26,
+        "skill": "Europa",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 27,
+        "skill": "Oferta",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 28,
+        "skill": "Acceso",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 29,
+        "skill": "Piano",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 30,
+        "skill": "Apoyo",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 31,
+        "skill": "Perfil",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 32,
+        "skill": "Bordo",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 33,
+        "skill": "Fondo",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 34,
+        "skill": "Polanco",
+        "expected": false,
+        "found": true,
+        "esco_label": "polaco",
+        "score": 0.92,
+        "outcome": "❌ FP"
+      },
+      {
+        "case_id": 35,
+        "skill": "CORTES",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 36,
+        "skill": "Puntos",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 37,
+        "skill": "Vales",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 38,
+        "skill": "Clara",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 39,
+        "skill": "Excel",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 40,
+        "skill": "Cursos",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 41,
+        "skill": "ASTECI",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 42,
+        "skill": "Seguro",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 43,
+        "skill": "Video",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 44,
+        "skill": "Empleo",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 45,
+        "skill": "Banca",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 46,
+        "skill": "Bonos",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 47,
+        "skill": "Centro",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 48,
+        "skill": "Crane",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 49,
+        "skill": "Estar",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      },
+      {
+        "case_id": 50,
+        "skill": "GRUPO",
+        "expected": false,
+        "found": false,
+        "esco_label": null,
+        "score": 0.0,
+        "outcome": "✅ TN"
+      }
+    ],
+    "metrics": {
+      "precision": 0.9565217391304348,
+      "recall": 0.88,
+      "f1_score": 0.9166666666666666,
+      "accuracy": 0.92
+    }
+  },
+  "comparison": {
+    "precision_improvement": 0.4565217391304348,
+    "recall_improvement": -0.12,
+    "f1_improvement": 0.25,
+    "accuracy_improvement": 0.42000000000000004,
+    "false_positives_reduction": 24,
+    "false_negatives_increase": 3
+  }
+}

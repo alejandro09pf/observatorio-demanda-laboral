@@ -1,0 +1,50 @@
+2025-11-07 18:50:20,043 - INFO - 
+================================================================================
+2025-11-07 18:50:20,043 - INFO - ANÁLISIS CUALITATIVO DE CLUSTERING
+2025-11-07 18:50:20,043 - INFO - ================================================================================
+2025-11-07 18:50:20,043 - INFO - 
+
+### PARTE 1: ANÁLISIS DE TOP SKILLS POR EXPERIMENTO ###
+
+2025-11-07 18:50:20,075 - INFO - 
+================================================================================
+2025-11-07 18:50:20,075 - INFO - ANALIZANDO CLUSTERS: Manual 300 Pre-ESCO
+2025-11-07 18:50:20,076 - INFO - ================================================================================
+2025-11-07 18:50:20,098 - INFO - Total skills: 2184
+2025-11-07 18:50:20,098 - INFO - Top 20 skills por frecuencia:
+2025-11-07 18:50:20,098 - INFO -    1. Trabajo en equipo                        (freq: 211, jobs: 211)
+2025-11-07 18:50:20,098 - INFO -    2. Colaboración                             (freq: 150, jobs: 149)
+2025-11-07 18:50:20,098 - INFO -    3. Comunicación                             (freq: 124, jobs: 124)
+2025-11-07 18:50:20,098 - INFO -    4. Resolución de problemas                  (freq: 115, jobs: 115)
+2025-11-07 18:50:20,098 - INFO -    5. JavaScript                               (freq:  97, jobs:  97)
+2025-11-07 18:50:20,098 - INFO -    6. Python                                   (freq:  93, jobs:  93)
+2025-11-07 18:50:20,098 - INFO -    7. CI/CD                                    (freq:  86, jobs:  86)
+2025-11-07 18:50:20,098 - INFO -    8. Backend                                  (freq:  74, jobs:  74)
+2025-11-07 18:50:20,098 - INFO -    9. AWS                                      (freq:  74, jobs:  74)
+2025-11-07 18:50:20,098 - INFO -   10. Git                                      (freq:  72, jobs:  72)
+2025-11-07 18:50:20,098 - INFO -   11. Java                                     (freq:  71, jobs:  71)
+2025-11-07 18:50:20,098 - INFO -   12. Docker                                   (freq:  66, jobs:  66)
+2025-11-07 18:50:20,098 - INFO -   13. React                                    (freq:  63, jobs:  63)
+2025-11-07 18:50:20,098 - INFO -   14. Innovación                               (freq:  62, jobs:  62)
+2025-11-07 18:50:20,098 - INFO -   15. Agile                                    (freq:  59, jobs:  59)
+2025-11-07 18:50:20,098 - INFO -   16. SQL                                      (freq:  58, jobs:  58)
+2025-11-07 18:50:20,098 - INFO -   17. Microservicios                           (freq:  55, jobs:  55)
+2025-11-07 18:50:20,098 - INFO -   18. Frontend                                 (freq:  54, jobs:  54)
+2025-11-07 18:50:20,098 - INFO -   19. Proactividad                             (freq:  53, jobs:  53)
+2025-11-07 18:50:20,098 - INFO -   20. Scrum                                    (freq:  51, jobs:  51)
+2025-11-07 18:50:20,103 - INFO - 
+================================================================================
+2025-11-07 18:50:20,103 - INFO - ANALIZANDO CLUSTERS: Pipeline B (gemma-3-4b-instruct)
+2025-11-07 18:50:20,103 - INFO - ================================================================================
+Traceback (most recent call last):
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/qualitative_cluster_analysis.py", line 256, in <module>
+    main()
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/qualitative_cluster_analysis.py", line 163, in main
+    pipeline_b_pre = analyze_clusters_from_db(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/qualitative_cluster_analysis.py", line 67, in analyze_clusters_from_db
+    cur.execute(query)
+psycopg2.errors.UndefinedColumn: column "source" does not exist
+LINE 4:         WHERE source = 'Pipeline B (gemma-3-4b-instruct)'
+                      ^
+

@@ -1,0 +1,99 @@
+10:58:48 - INFO - ================================================================================
+10:58:48 - INFO - CLUSTERING: PIPELINE_B_300_POST_EXP8_LOCAL_LEAF
+10:58:48 - INFO - ================================================================================
+10:58:48 - INFO - 
+================================================================================
+10:58:48 - INFO - EXTRACTING SKILLS
+10:58:48 - INFO - ================================================================================
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:64: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+11:01:15 - INFO -    ✅ Extracted 2401 unique skills
+11:01:15 - INFO -    Frequency range: 1 - 294
+11:01:15 - INFO -    Total mentions: 9,458
+11:01:15 - INFO - 
+================================================================================
+11:01:15 - INFO - FETCHING EMBEDDINGS
+11:01:15 - INFO - ================================================================================
+11:01:15 - INFO - Requesting embeddings for 2401 skills...
+11:01:15 - INFO -    ✅ Found embeddings: 1937/2401
+11:01:15 - INFO -    Coverage: 80.7%
+11:01:15 - WARNING -    ⚠️  Missing 464 skills
+11:01:15 - INFO -    Using 1937 skills with embeddings
+11:01:15 - INFO - 
+================================================================================
+11:01:15 - INFO - RUNNING UMAP (src/analyzer/dimension_reducer.py)
+11:01:15 - INFO - ================================================================================
+11:01:15 - INFO - DimensionReducer initialized: n_components=2, n_neighbors=5, min_dist=0.1, metric=cosine
+11:01:15 - INFO - Fitting UMAP on 1937 samples with 768 features
+11:01:15 - INFO - Parameters: n_neighbors=5, min_dist=0.1, metric=cosine
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+UMAP(angular_rp_forest=True, metric='cosine', n_neighbors=5, random_state=42, verbose=True)
+Sat Nov  8 11:01:15 2025 Construct fuzzy simplicial set
+Sat Nov  8 11:01:17 2025 Finding Nearest Neighbors
+Sat Nov  8 11:01:19 2025 Finished Nearest Neighbor Search
+Sat Nov  8 11:01:21 2025 Construct embedding
+Epochs completed:   0%|            0/500 [00:00]Epochs completed:   0%|            1/500 [00:00]Epochs completed:  10%| █          51/500 [00:00]Epochs completed:  20%| ██         101/500 [00:00]Epochs completed:  28%| ██▊        140/500 [00:00]Epochs completed:  35%| ███▌       177/500 [00:00]Epochs completed:  42%| ████▏      210/500 [00:00]Epochs completed:  50%| ████▉      249/500 [00:01]Epochs completed:  59%| █████▉     297/500 [00:01]Epochs completed:  69%| ██████▉    346/500 [00:01]Epochs completed:  79%| ███████▉   395/500 [00:01]Epochs completed:  89%| ████████▊  443/500 [00:01]Epochs completed:  98%| █████████▊ 488/500 [00:01]Epochs completed: 100%| ██████████ 500/500 [00:01]
+11:01:23 - INFO - UMAP transformation complete
+11:01:23 - INFO - Output shape: (1937, 2)
+11:01:23 - INFO - Coordinate ranges: X=[-4.67, 15.87], Y=[0.60, 16.15]
+11:01:23 - INFO - 
+================================================================================
+11:01:23 - INFO - RUNNING HDBSCAN (src/analyzer/clustering.py)
+11:01:23 - INFO - ================================================================================
+11:01:23 - INFO - SkillClusterer initialized: min_cluster_size=3, min_samples=2, metric=euclidean
+11:01:23 - INFO - Clustering 1937 samples in 2D space
+11:01:23 - INFO - Parameters: min_cluster_size=3, min_samples=2
+11:01:23 - INFO - Clustering complete
+11:01:23 - INFO - Clusters detected: 305
+11:01:23 - INFO - Noise points: 313 (16.2%)
+11:01:23 - INFO - Cluster sizes: {256: 10, 292: 10, 247: 3, 291: 3, 170: 7, 299: 4, 298: 10, 297: 5, 75: 3, 104: 7, 122: 7, 150: 4, 3: 4, 277: 8, 239: 3, 301: 6, 287: 4, 145: 4, 32: 4, 84: 8, 213: 13, 109: 11, 22: 4, 94: 6, 33: 9, 85: 4, 59: 7, 181: 10, 229: 6, 185: 6, 300: 4, 144: 8, 143: 3, 114: 6, 8: 9, 208: 6, 146: 5, 271: 5, 68: 4, 102: 6, 230: 9, 57: 10, 273: 5, 295: 6, 216: 8, 9: 6, 276: 8, 76: 10, 14: 4, 50: 10, 188: 9, 92: 4, 20: 7, 243: 3, 13: 3, 103: 12, 46: 15, 281: 5, 154: 8, 252: 3, 179: 9, 25: 11, 303: 3, 255: 6, 15: 3, 279: 3, 202: 3, 0: 4, 2: 8, 74: 9, 116: 4, 108: 6, 249: 7, 283: 7, 115: 9, 206: 5, 304: 5, 56: 10, 149: 4, 204: 9, 296: 5, 268: 6, 91: 5, 245: 4, 17: 11, 43: 4, 209: 4, 81: 5, 118: 6, 178: 4, 47: 7, 220: 3, 163: 3, 286: 4, 222: 5, 6: 6, 184: 8, 211: 4, 173: 3, 45: 6, 226: 4, 60: 5, 78: 5, 139: 5, 90: 4, 217: 5, 203: 5, 66: 4, 198: 15, 130: 6, 259: 6, 172: 8, 34: 6, 87: 3, 54: 4, 86: 6, 37: 6, 196: 5, 135: 4, 270: 4, 5: 3, 199: 6, 223: 10, 7: 7, 237: 8, 152: 9, 290: 4, 136: 5, 72: 3, 38: 4, 65: 4, 124: 6, 248: 4, 242: 5, 278: 4, 131: 4, 119: 5, 123: 4, 214: 8, 195: 5, 83: 6, 35: 8, 193: 3, 285: 3, 263: 6, 174: 23, 228: 5, 79: 8, 73: 4, 80: 8, 175: 3, 82: 7, 246: 6, 225: 5, 98: 6, 111: 8, 42: 7, 62: 3, 302: 3, 288: 3, 27: 10, 1: 5, 264: 9, 113: 6, 26: 4, 106: 3, 183: 5, 120: 3, 127: 5, 284: 4, 262: 3, 205: 4, 61: 3, 240: 7, 55: 3, 11: 4, 265: 4, 166: 3, 53: 4, 40: 5, 267: 6, 93: 3, 194: 5, 289: 5, 29: 7, 44: 4, 250: 4, 12: 8, 189: 3, 99: 4, 129: 5, 117: 3, 254: 3, 171: 3, 233: 3, 201: 3, 280: 3, 164: 9, 96: 4, 275: 4, 218: 4, 167: 3, 97: 3, 221: 5, 234: 3, 71: 3, 70: 4, 293: 5, 69: 5, 142: 5, 294: 5, 140: 3, 138: 8, 31: 3, 212: 5, 19: 5, 231: 9, 4: 3, 232: 5, 36: 4, 155: 3, 227: 3, 236: 4, 30: 3, 258: 7, 269: 4, 187: 6, 219: 4, 151: 4, 88: 3, 180: 7, 134: 13, 161: 3, 153: 3, 64: 5, 156: 5, 253: 3, 160: 4, 186: 6, 241: 3, 272: 3, 105: 4, 107: 13, 137: 9, 162: 3, 16: 3, 49: 6, 133: 4, 112: 8, 190: 3, 158: 3, 191: 3, 215: 3, 147: 4, 67: 4, 18: 4, 77: 3, 10: 5, 235: 4, 21: 4, 257: 10, 100: 6, 110: 6, 266: 4, 251: 5, 24: 4, 244: 3, 274: 6, 200: 6, 168: 4, 238: 4, 192: 4, 282: 4, 261: 4, 165: 4, 39: 3, 125: 5, 58: 3, 148: 3, 89: 5, 177: 4, 28: 4, 121: 5, 159: 7, 128: 4, 260: 3, 176: 4, 141: 5, 197: 6, 41: 5, 157: 5, 224: 4, 101: 3, 169: 5, 48: 4, 51: 8, 182: 4, 207: 3, 95: 3, 63: 4, 52: 3, 132: 5, 210: 3, 126: 6, 23: 3}
+11:01:23 - INFO - Quality metrics calculated:
+11:01:23 - INFO -   Silhouette: 0.618
+11:01:23 - INFO -   Davies-Bouldin: 0.439
+11:01:23 - INFO - 
+📊 Clustering Results:
+11:01:23 - INFO -    Clusters: 305
+11:01:23 - INFO -    Noise: 313 (16.2%)
+11:01:23 - INFO -    Silhouette: 0.618
+11:01:23 - INFO -    Davies-Bouldin: 0.439
+11:01:23 - INFO - 
+📊 Analyzing clusters...
+11:01:23 - INFO - 
+⏭  Skipping temporal analysis (no temporal_sql_query in config)
+11:01:23 - INFO - 
+================================================================================
+11:01:23 - INFO - GENERATING VISUALIZATIONS
+11:01:23 - INFO - ================================================================================
+11:01:23 - INFO - 
+🎨 UMAP scatter plot (enhanced)...
+11:01:38 - INFO -    ✅ Saved: umap_scatter.png (enhanced with labels)
+11:01:38 - INFO - 
+⏭  Skipping temporal visualizations (no temporal data available)
+11:01:38 - INFO - 
+================================================================================
+11:01:38 - INFO - SAVING RESULTS
+11:01:38 - INFO - ================================================================================
+11:01:38 - INFO -    ✅ results.json
+11:01:38 - INFO -    ✅ metrics_summary.json
+11:01:38 - INFO - 
+================================================================================
+11:01:38 - INFO - ✅ CLUSTERING COMPLETE
+11:01:38 - INFO - ================================================================================
+11:01:38 - INFO -    Dataset: pipeline_b_300_post_exp8_local_leaf
+11:01:38 - INFO -    Skills: 1937
+11:01:38 - INFO -    Clusters: 305
+11:01:38 - INFO -    Silhouette: 0.618
+11:01:38 - INFO -    Output: outputs/clustering/experiments/pipeline_b_300_post/exp8_local_leaf/
+11:01:38 - INFO - ================================================================================
+	completed  0  /  500 epochs
+	completed  50  /  500 epochs
+	completed  100  /  500 epochs
+	completed  150  /  500 epochs
+	completed  200  /  500 epochs
+	completed  250  /  500 epochs
+	completed  300  /  500 epochs
+	completed  350  /  500 epochs
+	completed  400  /  500 epochs
+	completed  450  /  500 epochs
+Sat Nov  8 11:01:22 2025 Finished embedding

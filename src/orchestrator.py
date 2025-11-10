@@ -935,6 +935,194 @@ def test_embeddings(
 
 
 # =====================================================================
+# CLUSTERING COMMANDS
+# =====================================================================
+
+@app.command()
+def cluster(
+    config: str = typer.Argument(..., help="Config name (e.g., 'manual_300_post_final' or full path)"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output")
+):
+    """Run clustering analysis with specified configuration."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("CLUSTERING ANALYSIS")
+    typer.echo("="*60)
+    typer.echo()
+
+    # Determine config path
+    config_path = Path(config)
+    if not config_path.exists():
+        # Try in configs/clustering/
+        config_path = Path(__file__).parent.parent / "configs" / "clustering" / f"{config}.json"
+
+    if not config_path.exists():
+        typer.echo(f"❌ Config not found: {config}")
+        typer.echo(f"   Tried: {config_path}")
+        raise typer.Exit(code=1)
+
+    typer.echo(f"Config: {config_path.name}")
+    typer.echo()
+
+    # Build command
+    project_dir = Path(__file__).parent.parent
+    script_path = project_dir / "scripts" / "clustering_analysis.py"
+
+    cmd = [
+        sys.executable,
+        str(script_path),
+        "--config", str(config_path)
+    ]
+
+    # Set environment
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(project_dir / "src")
+
+    # Run clustering
+    try:
+        if verbose:
+            result = subprocess.run(cmd, env=env, cwd=project_dir)
+        else:
+            result = subprocess.run(cmd, env=env, cwd=project_dir, capture_output=True, text=True)
+
+            # Parse output for key metrics
+            if result.returncode == 0:
+                output = result.stdout
+                for line in output.split('\n'):
+                    if 'Clusters:' in line or 'Silhouette:' in line or 'Skills:' in line:
+                        typer.echo(line)
+
+                typer.echo("\n✅ Clustering completed successfully!")
+            else:
+                typer.echo("❌ Clustering failed:")
+                typer.echo(result.stderr)
+
+        if result.returncode != 0:
+            raise typer.Exit(code=1)
+
+    except Exception as e:
+        typer.echo(f"❌ Error running clustering: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def cluster_all_final(
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output")
+):
+    """Run clustering for all production configs (*_final.json)."""
+    import subprocess
+    from datetime import datetime
+
+    typer.echo("\n" + "="*80)
+    typer.echo("CLUSTERING - ALL PRODUCTION CONFIGS")
+    typer.echo("="*80)
+    typer.echo()
+
+    # Find all final configs
+    configs_dir = Path(__file__).parent.parent / "configs" / "clustering"
+    final_configs = sorted(configs_dir.glob("*_final.json"))
+
+    if not final_configs:
+        typer.echo("❌ No final configs found in configs/clustering/")
+        raise typer.Exit(code=1)
+
+    typer.echo(f"Found {len(final_configs)} production configs:")
+    for cfg in final_configs:
+        typer.echo(f"  - {cfg.stem}")
+    typer.echo()
+
+    # Track results
+    results = []
+    start_time = datetime.now()
+
+    # Run each clustering
+    for i, config_path in enumerate(final_configs, 1):
+        typer.echo(f"\n{'='*80}")
+        typer.echo(f"[{i}/{len(final_configs)}] Processing: {config_path.stem}")
+        typer.echo(f"{'='*80}\n")
+
+        # Build command
+        project_dir = Path(__file__).parent.parent
+        script_path = project_dir / "scripts" / "clustering_analysis.py"
+
+        cmd = [
+            sys.executable,
+            str(script_path),
+            "--config", str(config_path)
+        ]
+
+        # Set environment
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(project_dir / "src")
+
+        # Run clustering
+        config_start = datetime.now()
+        try:
+            if verbose:
+                result = subprocess.run(cmd, env=env, cwd=project_dir)
+            else:
+                result = subprocess.run(cmd, env=env, cwd=project_dir, capture_output=True, text=True)
+
+            duration = (datetime.now() - config_start).total_seconds()
+
+            # Parse metrics from output
+            metrics = {"duration": duration, "success": result.returncode == 0}
+            if result.returncode == 0:
+                output = result.stdout
+                for line in output.split('\n'):
+                    if 'Clusters:' in line:
+                        metrics['clusters'] = line.strip()
+                    elif 'Skills:' in line:
+                        metrics['skills'] = line.strip()
+                    elif 'Silhouette:' in line:
+                        metrics['silhouette'] = line.strip()
+
+                typer.echo(f"\n✅ Completed in {duration:.1f}s")
+                for key, val in metrics.items():
+                    if key not in ['duration', 'success']:
+                        typer.echo(f"   {val}")
+            else:
+                typer.echo(f"\n❌ Failed after {duration:.1f}s")
+                if not verbose:
+                    typer.echo(result.stderr[:500])
+
+            results.append({
+                "config": config_path.stem,
+                **metrics
+            })
+
+        except Exception as e:
+            typer.echo(f"❌ Error: {e}")
+            results.append({
+                "config": config_path.stem,
+                "success": False,
+                "error": str(e)
+            })
+
+    # Summary
+    total_duration = (datetime.now() - start_time).total_seconds()
+    successful = sum(1 for r in results if r.get('success'))
+
+    typer.echo(f"\n\n{'='*80}")
+    typer.echo("SUMMARY")
+    typer.echo(f"{'='*80}\n")
+    typer.echo(f"Total time: {total_duration/60:.1f} min")
+    typer.echo(f"Successful: {successful}/{len(final_configs)}")
+    typer.echo()
+
+    # Show results table
+    typer.echo("Results:")
+    for r in results:
+        status = "✅" if r.get('success') else "❌"
+        duration = r.get('duration', 0)
+        typer.echo(f"  {status} {r['config']:<30} ({duration:.1f}s)")
+
+    if successful < len(final_configs):
+        raise typer.Exit(code=1)
+
+
+# =====================================================================
 # LLM COMMANDS
 # =====================================================================
 
@@ -1312,6 +1500,146 @@ def llm_test(
     except Exception as e:
         typer.echo(f"\n Error testing model: {e}")
         logger.exception("LLM test failed")
+        raise typer.Exit(code=1)
+
+
+# =====================================================================
+# DATA CLEANING COMMANDS
+# =====================================================================
+
+@app.command()
+def clean(
+    batch_size: int = typer.Option(1000, "--batch-size", "-b", help="Batch size for processing"),
+    portal: Optional[str] = typer.Option(None, "--portal", "-p", help="Clean only specific portal"),
+    country: Optional[str] = typer.Option(None, "--country", "-c", help="Clean only specific country")
+):
+    """Clean raw jobs and store in cleaned_jobs table."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("DATA CLEANING - RAW JOBS")
+    typer.echo("="*60)
+    typer.echo()
+
+    if portal:
+        typer.echo(f"Portal filter: {portal}")
+    if country:
+        typer.echo(f"Country filter: {country}")
+    typer.echo(f"Batch size: {batch_size}")
+    typer.echo()
+
+    # Build command
+    script_path = Path(__file__).parent.parent / "scripts" / "clean_raw_jobs.py"
+    cmd = [sys.executable, str(script_path), "--batch-size", str(batch_size)]
+
+    if portal:
+        cmd.extend(["--portal", portal])
+    if country:
+        cmd.extend(["--country", country])
+
+    # Run cleaning
+    try:
+        result = subprocess.run(cmd, check=True)
+        if result.returncode == 0:
+            typer.echo("\n Cleaning completed successfully!")
+            typer.echo("Cleaned jobs saved to: cleaned_jobs table")
+        else:
+            typer.echo(f"\n Cleaning failed (exit code: {result.returncode})")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error during cleaning: {e}")
+        raise typer.Exit(code=1)
+
+
+# =====================================================================
+# EMBEDDING GENERATION COMMANDS - EXTRACTED SKILLS
+# =====================================================================
+
+@app.command("generate-extracted-embeddings")
+def generate_extracted_embeddings(
+    batch_size: int = typer.Option(256, "--batch-size", "-b", help="Batch size for embedding generation"),
+    source: str = typer.Option("extracted_skills", "--source", "-s",
+                               help="Source table: extracted_skills, enhanced_skills, gold_standard_annotations")
+):
+    """Generate embeddings for extracted/enhanced skills (NOT ESCO)."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("GENERATE EXTRACTED SKILLS EMBEDDINGS")
+    typer.echo("="*60)
+    typer.echo()
+    typer.echo(f"Source table: {source}")
+    typer.echo(f"Batch size: {batch_size}")
+    typer.echo(f"Model: intfloat/multilingual-e5-base (768D)")
+    typer.echo()
+
+    # Build command
+    script_path = Path(__file__).parent.parent / "scripts" / "generate_all_extracted_skills_embeddings.py"
+
+    # Set environment
+    env = os.environ.copy()
+    project_dir = Path(__file__).parent.parent
+    env["PYTHONPATH"] = str(project_dir / "src")
+    env["DATABASE_URL"] = settings.database_url
+
+    cmd = [sys.executable, str(script_path), "--batch-size", str(batch_size)]
+
+    # Run embedding generation
+    try:
+        result = subprocess.run(cmd, env=env, check=True, cwd=project_dir)
+        if result.returncode == 0:
+            typer.echo("\n Embeddings generated successfully!")
+            typer.echo("Saved to: extracted_skill_embeddings table")
+        else:
+            typer.echo(f"\n Failed to generate embeddings (exit code: {result.returncode})")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error generating embeddings: {e}")
+        raise typer.Exit(code=1)
+
+
+# =====================================================================
+# TEMPORAL ANALYSIS COMMANDS
+# =====================================================================
+
+@app.command("temporal-analysis")
+def temporal_analysis(
+    config: Optional[str] = typer.Option(None, "--config", "-c",
+                                        help="Clustering config to analyze (optional)")
+):
+    """Generate temporal analysis (heatmaps, line charts) from clustering results."""
+    import subprocess
+
+    typer.echo("\n" + "="*60)
+    typer.echo("TEMPORAL CLUSTERING ANALYSIS")
+    typer.echo("="*60)
+    typer.echo()
+
+    if config:
+        typer.echo(f"Analyzing clustering: {config}")
+    else:
+        typer.echo("Analyzing ALL gold standard skills")
+    typer.echo()
+
+    # Build command
+    script_path = Path(__file__).parent.parent / "scripts" / "temporal_clustering_analysis.py"
+
+    # Set environment
+    env = os.environ.copy()
+    project_dir = Path(__file__).parent.parent
+    env["PYTHONPATH"] = str(project_dir / "src")
+    env["DATABASE_URL"] = settings.database_url
+
+    cmd = [sys.executable, str(script_path)]
+
+    # Run temporal analysis
+    try:
+        result = subprocess.run(cmd, env=env, check=True, cwd=project_dir)
+        if result.returncode == 0:
+            typer.echo("\n Temporal analysis completed successfully!")
+            typer.echo("Visualizations saved to: outputs/temporal/")
+        else:
+            typer.echo(f"\n Failed to generate temporal analysis (exit code: {result.returncode})")
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"\n Error during temporal analysis: {e}")
         raise typer.Exit(code=1)
 
 

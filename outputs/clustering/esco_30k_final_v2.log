@@ -1,0 +1,169 @@
+23:54:01 - INFO - DimensionReducer initialized: n_components=2, n_neighbors=15, min_dist=0.1, metric=cosine
+23:54:01 - INFO - Fitting UMAP on 1698 samples with 768 features
+23:54:01 - INFO - Parameters: n_neighbors=15, min_dist=0.1, metric=cosine
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+23:54:06 - INFO - UMAP transformation complete
+23:54:06 - INFO - Output shape: (1698, 2)
+23:54:06 - INFO - Coordinate ranges: X=[1.79, 10.00], Y=[5.46, 13.39]
+23:54:06 - INFO - SkillClusterer initialized: min_cluster_size=15, min_samples=5, metric=euclidean
+23:54:06 - INFO - Clustering 1698 samples in 2D space
+23:54:06 - INFO - Parameters: min_cluster_size=15, min_samples=5
+23:54:06 - INFO - Clustering complete
+23:54:06 - INFO - Clusters detected: 41
+23:54:06 - INFO - Noise points: 575 (33.9%)
+23:54:06 - INFO - Cluster sizes: {16: 74, 29: 25, 31: 16, 19: 20, 18: 27, 25: 34, 12: 17, 7: 38, 15: 21, 6: 20, 5: 25, 38: 30, 17: 25, 14: 17, 1: 25, 27: 18, 24: 49, 36: 72, 39: 23, 28: 59, 23: 18, 37: 32, 22: 33, 13: 17, 33: 16, 8: 26, 2: 33, 26: 40, 0: 20, 21: 18, 30: 16, 32: 41, 9: 33, 20: 24, 35: 20, 4: 18, 10: 17, 3: 20, 11: 15, 34: 16, 40: 15}
+23:54:06 - INFO - Analyzing 41 clusters...
+23:54:06 - INFO - Cluster 0: 20 skills, label='Contar, Operar, Cargar...'
+23:54:06 - INFO - Cluster 1: 25 skills, label='design, Power, Pilar...'
+23:54:06 - INFO - Cluster 2: 33 skills, label='Prima, Prior, Favor...'
+23:54:06 - INFO - Cluster 3: 20 skills, label='Remoto, Polanco, remoto...'
+23:54:06 - INFO - Cluster 4: 18 skills, label='Banca, Bancos, Marcos...'
+23:54:06 - INFO - Cluster 5: 25 skills, label='Sales, Ventas, ventas...'
+23:54:06 - INFO - Cluster 6: 20 skills, label='Office, helm, cross...'
+23:54:06 - INFO - Cluster 7: 38 skills, label='less, Build, scikit-learn...'
+23:54:06 - INFO - Cluster 8: 26 skills, label='Juntos, Bonos, Mejora...'
+23:54:06 - INFO - Cluster 9: 33 skills, label='Salud, Electricidad, SALUD...'
+23:54:06 - INFO - Cluster 10: 17 skills, label='Ciberseguridad, Seguro, base de datos...'
+23:54:06 - INFO - Cluster 11: 15 skills, label='Gastos, BODEGA, bodega...'
+23:54:06 - INFO - Cluster 12: 17 skills, label='Azure, zoom, snowflake...'
+23:54:06 - INFO - Cluster 13: 17 skills, label='chef, playwright, Admin...'
+23:54:06 - INFO - Cluster 14: 17 skills, label='kafka, apache spark, apache kafka...'
+23:54:06 - INFO - Cluster 15: 21 skills, label='authorization, rest apis, authentication...'
+23:54:06 - INFO - Cluster 16: 74 skills, label='Python, JavaScript, Docker...'
+23:54:06 - INFO - Cluster 17: 25 skills, label='containerization, infrastructure as code, continuo...'
+23:54:06 - INFO - Cluster 18: 27 skills, label='SQL, oracle, PostgreSQL...'
+23:54:06 - INFO - Cluster 19: 20 skills, label='Microsoft Azure, microsoft excel, google sheets...'
+23:54:06 - INFO - Cluster 20: 24 skills, label='arial, Works, Labor...'
+23:54:06 - INFO - Cluster 21: 18 skills, label='People, Pagar, PEOPLE...'
+23:54:06 - INFO - Cluster 22: 33 skills, label='Planificar, planificar, Adopt...'
+23:54:06 - INFO - Cluster 23: 18 skills, label='prometheus, CONTE, Intern...'
+23:54:06 - INFO - Cluster 24: 49 skills, label='Europe, Swift, Europa...'
+23:54:06 - INFO - Cluster 25: 34 skills, label='React, Access, Acceso...'
+23:54:06 - INFO - Cluster 26: 40 skills, label='Vision, Solid, Sketch...'
+23:54:06 - INFO - Cluster 27: 18 skills, label='Dental, Legal, dbt...'
+23:54:06 - INFO - Cluster 28: 59 skills, label='Hacer, Jest, Estar...'
+23:54:06 - INFO - Cluster 29: 25 skills, label='Go, Asesor, ASESOR...'
+23:54:06 - INFO - Cluster 30: 16 skills, label='Flutter, Tampa, Corte...'
+23:54:06 - INFO - Cluster 31: 16 skills, label='Oferta, dart, OFERTA...'
+23:54:06 - INFO - Cluster 32: 41 skills, label='GRUPO, Cursos, Campo...'
+23:54:06 - INFO - Cluster 33: 16 skills, label='Centro, Idioma, Medio...'
+23:54:06 - INFO - Cluster 34: 16 skills, label='Carta, Firma, Listo...'
+23:54:06 - INFO - Cluster 35: 20 skills, label='vercel, ASTECI, strapi...'
+23:54:06 - INFO - Cluster 36: 72 skills, label='Redis, sas, redux...'
+23:54:06 - INFO - Cluster 37: 32 skills, label='Perfil, Fondo, Viajes...'
+23:54:06 - INFO - Cluster 38: 30 skills, label='figma, Maven, Macros...'
+23:54:06 - INFO - Cluster 39: 23 skills, label='postman, Stripe, JUnit...'
+23:54:06 - INFO - Cluster 40: 15 skills, label='Linea, PARTE, LINEA...'
+23:54:06 - INFO - Noise cluster: 575 skills (outliers)
+23:54:06 - INFO - Quality metrics calculated:
+23:54:06 - INFO -   Silhouette: 0.486
+23:54:06 - INFO -   Davies-Bouldin: 0.659
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_esco_30k_final.py:243: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_esco_30k_final.py:247: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  df['quarter_str'] = df['quarter'].dt.to_period('Q').astype(str)
+
+================================================================================
+ESCO 30K - FINAL CLUSTERING ANALYSIS
+================================================================================
+Date: 2025-11-06 23:53:58
+Parameters: n_neighbors=15, min_cluster_size=15
+================================================================================
+
+Output directory: outputs/clustering/esco_30k/
+================================================================================
+EXTRACTING ESCO-MATCHED SKILLS FROM 30K JOBS
+================================================================================
+   ✅ Extracted 1698 unique ESCO hard skills
+   Frequency range: 1 - 4722
+   Total mentions: 68,152
+
+================================================================================
+FETCHING EMBEDDINGS
+================================================================================
+Requesting embeddings for 1698 skills...
+   ✅ Found embeddings: 1698/1698
+   Coverage: 100.0%
+
+   Using 1698 skills for clustering
+
+================================================================================
+RUNNING UMAP + HDBSCAN CLUSTERING (nn15_mcs15)
+================================================================================
+
+🚀 UMAP dimensionality reduction...
+   Parameters: n_neighbors=15, min_dist=0.1, metric=cosine
+   ✅ UMAP complete: (1698, 2)
+
+🚀 HDBSCAN clustering...
+   Parameters: min_cluster_size=15, min_samples=5, metric=euclidean
+
+📊 Analyzing clusters...
+
+📏 Calculating metrics...
+
+================================================================================
+CLUSTERING RESULTS
+================================================================================
+   Clusters detected: 41
+   Noise points: 575 (33.9%)
+   Silhouette score: 0.486
+   Davies-Bouldin: 0.659
+
+   Expected from experiments:
+   Clusters: ~36, Noise: ~32.8%, Silhouette: ~0.475, DB: ~0.652
+
+================================================================================
+EXTRACTING TEMPORAL FREQUENCIES
+================================================================================
+   ✅ Extracted temporal data
+   Quarters: 17
+   Date range: 2016Q2 - 2025Q4
+   Total records: 2,163
+
+================================================================================
+CREATING TEMPORAL CLUSTER MATRIX
+================================================================================
+   ✅ Matrix shape: (17, 42)
+   Quarters: 17
+   Clusters: 42
+
+================================================================================
+GENERATING VISUALIZATIONS
+================================================================================
+
+================================================================================
+GENERATING TEMPORAL HEATMAP
+================================================================================
+   ✅ Saved: outputs/clustering/esco_30k/temporal_heatmap.png
+
+================================================================================
+GENERATING TOP 10 CLUSTERS EVOLUTION
+================================================================================
+   ✅ Saved: outputs/clustering/esco_30k/top_clusters_evolution.png
+
+================================================================================
+GENERATING UMAP SCATTER PLOT
+================================================================================
+   ✅ Saved: outputs/clustering/esco_30k/umap_scatter.png
+
+================================================================================
+SAVING RESULTS
+================================================================================
+   ✅ Saved: outputs/clustering/esco_30k/esco_30k_results.json
+   ✅ Saved: outputs/clustering/esco_30k/temporal_matrix.csv
+   ✅ Saved: outputs/clustering/esco_30k/metrics_summary.json
+
+================================================================================
+✅ CLUSTERING COMPLETE
+================================================================================
+   Skills clustered: 1698
+   Clusters detected: 41
+   Silhouette score: 0.486
+   Davies-Bouldin: 0.659
+   Temporal quarters: 17
+
+   All results saved to: outputs/clustering/esco_30k/
+
+================================================================================

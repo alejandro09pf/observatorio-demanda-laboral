@@ -1,0 +1,55 @@
+23:53:20 - INFO - Use pytorch device_name: mps
+23:53:20 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+
+================================================================================
+MISSING ESCO 30k EMBEDDINGS GENERATOR
+================================================================================
+Model: intfloat/multilingual-e5-base
+Source: extracted_skills (NER + REGEX methods)
+================================================================================
+
+================================================================================
+FINDING MISSING ESCO SKILLS (NER+REGEX)
+================================================================================
+
+✅ Found 5 ESCO skills without embeddings
+
+Skills to process:
+   - nodejs                                                       (132 mentions)
+   - GraphQL APIs                                                 (2 mentions)
+   - and full-stack development                                   (1 mentions)
+   - Our full-stack development                                   (1 mentions)
+   - Contabilidad
+                                                (1 mentions)
+
+================================================================================
+GENERATING EMBEDDINGS
+================================================================================
+
+Loading model: intfloat/multilingual-e5-base
+
+Generating embeddings for 5 skills...
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  4.79it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  4.78it/s]
+
+✅ Embeddings generated: (5, 768)
+
+================================================================================
+SAVING TO DATABASE
+================================================================================
+Saving:   0%|          | 0/5 [00:00<?, ?it/s]Saving: 100%|██████████| 5/5 [00:00<00:00, 77.25it/s]
+
+================================================================================
+RESULTS
+================================================================================
+   Inserted:    5
+   Updated:     0
+   Errors:      0
+   Total in DB: 17,086
+
+================================================================================
+✅ PROCESS COMPLETE
+================================================================================
+
+🎯 Next step: Re-run clustering ESCO 30k
+   python scripts/clustering_esco_30k_final.py
+

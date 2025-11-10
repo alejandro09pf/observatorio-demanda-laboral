@@ -1,0 +1,99 @@
+10:58:47 - INFO - ================================================================================
+10:58:47 - INFO - CLUSTERING: PIPELINE_B_300_POST_EXP5_LEAF_MCS5
+10:58:47 - INFO - ================================================================================
+10:58:47 - INFO - 
+================================================================================
+10:58:47 - INFO - EXTRACTING SKILLS
+10:58:47 - INFO - ================================================================================
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:64: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+11:01:14 - INFO -    ✅ Extracted 2401 unique skills
+11:01:14 - INFO -    Frequency range: 1 - 294
+11:01:14 - INFO -    Total mentions: 9,458
+11:01:14 - INFO - 
+================================================================================
+11:01:14 - INFO - FETCHING EMBEDDINGS
+11:01:14 - INFO - ================================================================================
+11:01:14 - INFO - Requesting embeddings for 2401 skills...
+11:01:14 - INFO -    ✅ Found embeddings: 1937/2401
+11:01:14 - INFO -    Coverage: 80.7%
+11:01:14 - WARNING -    ⚠️  Missing 464 skills
+11:01:14 - INFO -    Using 1937 skills with embeddings
+11:01:14 - INFO - 
+================================================================================
+11:01:14 - INFO - RUNNING UMAP (src/analyzer/dimension_reducer.py)
+11:01:14 - INFO - ================================================================================
+11:01:14 - INFO - DimensionReducer initialized: n_components=2, n_neighbors=15, min_dist=0.1, metric=cosine
+11:01:14 - INFO - Fitting UMAP on 1937 samples with 768 features
+11:01:14 - INFO - Parameters: n_neighbors=15, min_dist=0.1, metric=cosine
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+UMAP(angular_rp_forest=True, metric='cosine', random_state=42, verbose=True)
+Sat Nov  8 11:01:14 2025 Construct fuzzy simplicial set
+Sat Nov  8 11:01:17 2025 Finding Nearest Neighbors
+Sat Nov  8 11:01:19 2025 Finished Nearest Neighbor Search
+Sat Nov  8 11:01:20 2025 Construct embedding
+Epochs completed:   0%|            0/500 [00:00]Epochs completed:   0%|            1/500 [00:00]Epochs completed:   6%| ▋          32/500 [00:00]Epochs completed:  10%| █          51/500 [00:00]Epochs completed:  14%| █▍         69/500 [00:00]Epochs completed:  18%| █▊         89/500 [00:00]Epochs completed:  23%| ██▎        115/500 [00:00]Epochs completed:  28%| ██▊        141/500 [00:01]Epochs completed:  33%| ███▎       167/500 [00:01]Epochs completed:  39%| ███▉       195/500 [00:01]Epochs completed:  44%| ████▍      221/500 [00:01]Epochs completed:  50%| ████▉      248/500 [00:01]Epochs completed:  55%| █████▌     275/500 [00:01]Epochs completed:  61%| ██████     303/500 [00:01]Epochs completed:  66%| ██████▌    330/500 [00:01]Epochs completed:  71%| ███████    353/500 [00:01]Epochs completed:  75%| ███████▌   376/500 [00:02]Epochs completed:  81%| ████████   403/500 [00:02]Epochs completed:  86%| ████████▌  430/500 [00:02]Epochs completed:  91%| █████████  454/500 [00:02]Epochs completed:  96%| █████████▌ 481/500 [00:02]Epochs completed: 100%| ██████████ 500/500 [00:02]
+11:01:22 - INFO - UMAP transformation complete
+11:01:22 - INFO - Output shape: (1937, 2)
+11:01:22 - INFO - Coordinate ranges: X=[-0.35, 7.66], Y=[4.83, 12.25]
+11:01:22 - INFO - 
+================================================================================
+11:01:22 - INFO - RUNNING HDBSCAN (src/analyzer/clustering.py)
+11:01:22 - INFO - ================================================================================
+11:01:22 - INFO - SkillClusterer initialized: min_cluster_size=5, min_samples=3, metric=euclidean
+11:01:22 - INFO - Clustering 1937 samples in 2D space
+11:01:22 - INFO - Parameters: min_cluster_size=5, min_samples=3
+11:01:23 - INFO - Clustering complete
+11:01:23 - INFO - Clusters detected: 151
+11:01:23 - INFO - Noise points: 522 (26.9%)
+11:01:23 - INFO - Cluster sizes: {54: 21, 149: 5, 126: 14, 139: 10, 150: 19, 79: 11, 140: 8, 105: 6, 84: 10, 67: 8, 80: 22, 15: 5, 3: 18, 89: 18, 21: 10, 77: 14, 20: 7, 1: 14, 125: 11, 42: 21, 134: 9, 35: 7, 122: 15, 69: 7, 2: 7, 25: 8, 107: 13, 112: 15, 47: 21, 136: 11, 99: 9, 108: 5, 11: 20, 143: 17, 60: 6, 5: 8, 137: 10, 41: 11, 4: 6, 18: 6, 111: 7, 91: 7, 123: 8, 28: 15, 118: 20, 135: 9, 146: 6, 94: 6, 26: 9, 0: 8, 71: 6, 19: 8, 10: 8, 106: 8, 133: 9, 82: 7, 45: 8, 144: 12, 104: 9, 131: 8, 51: 17, 96: 11, 64: 13, 116: 9, 14: 10, 147: 12, 9: 14, 100: 8, 86: 8, 44: 7, 115: 11, 148: 19, 95: 7, 57: 12, 88: 6, 120: 6, 29: 5, 75: 17, 12: 7, 145: 16, 78: 16, 61: 5, 27: 6, 33: 9, 37: 5, 119: 7, 114: 9, 34: 7, 24: 18, 63: 12, 76: 7, 39: 7, 43: 8, 65: 10, 23: 11, 40: 5, 113: 5, 31: 13, 93: 5, 30: 5, 90: 6, 17: 11, 70: 15, 85: 8, 22: 5, 124: 5, 83: 7, 55: 7, 32: 6, 103: 9, 102: 5, 138: 5, 48: 10, 46: 5, 110: 13, 49: 6, 58: 8, 59: 12, 98: 12, 73: 5, 13: 6, 36: 7, 62: 7, 121: 5, 129: 15, 142: 5, 117: 6, 38: 5, 130: 7, 141: 8, 81: 14, 50: 12, 66: 7, 74: 6, 101: 15, 6: 7, 127: 11, 109: 10, 52: 5, 72: 5, 53: 7, 56: 5, 16: 5, 132: 5, 97: 7, 87: 7, 68: 5, 92: 9, 7: 5, 128: 5, 8: 6}
+11:01:23 - INFO - Quality metrics calculated:
+11:01:23 - INFO -   Silhouette: 0.555
+11:01:23 - INFO -   Davies-Bouldin: 0.531
+11:01:23 - INFO - 
+📊 Clustering Results:
+11:01:23 - INFO -    Clusters: 151
+11:01:23 - INFO -    Noise: 522 (26.9%)
+11:01:23 - INFO -    Silhouette: 0.555
+11:01:23 - INFO -    Davies-Bouldin: 0.531
+11:01:23 - INFO - 
+📊 Analyzing clusters...
+11:01:23 - INFO - 
+⏭  Skipping temporal analysis (no temporal_sql_query in config)
+11:01:23 - INFO - 
+================================================================================
+11:01:23 - INFO - GENERATING VISUALIZATIONS
+11:01:23 - INFO - ================================================================================
+11:01:23 - INFO - 
+🎨 UMAP scatter plot (enhanced)...
+11:01:32 - INFO -    ✅ Saved: umap_scatter.png (enhanced with labels)
+11:01:32 - INFO - 
+⏭  Skipping temporal visualizations (no temporal data available)
+11:01:32 - INFO - 
+================================================================================
+11:01:32 - INFO - SAVING RESULTS
+11:01:32 - INFO - ================================================================================
+11:01:32 - INFO -    ✅ results.json
+11:01:32 - INFO -    ✅ metrics_summary.json
+11:01:32 - INFO - 
+================================================================================
+11:01:32 - INFO - ✅ CLUSTERING COMPLETE
+11:01:32 - INFO - ================================================================================
+11:01:32 - INFO -    Dataset: pipeline_b_300_post_exp5_leaf_mcs5
+11:01:32 - INFO -    Skills: 1937
+11:01:32 - INFO -    Clusters: 151
+11:01:32 - INFO -    Silhouette: 0.555
+11:01:32 - INFO -    Output: outputs/clustering/experiments/pipeline_b_300_post/exp5_leaf_mcs5/
+11:01:32 - INFO - ================================================================================
+	completed  0  /  500 epochs
+	completed  50  /  500 epochs
+	completed  100  /  500 epochs
+	completed  150  /  500 epochs
+	completed  200  /  500 epochs
+	completed  250  /  500 epochs
+	completed  300  /  500 epochs
+	completed  350  /  500 epochs
+	completed  400  /  500 epochs
+	completed  450  /  500 epochs
+Sat Nov  8 11:01:22 2025 Finished embedding

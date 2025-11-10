@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "dataset_name": "manual_300_post_exp2",
+    "created_at": "2025-11-08T01:13:47.705688",
+    "n_skills": 236,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 10,
+        "min_samples": 5,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 5,
+    "n_samples": 236,
+    "n_noise": 37,
+    "noise_percentage": 15.677966101694915,
+    "silhouette_score": 0.40804561972618103,
+    "davies_bouldin_score": 0.5712327119520426,
+    "largest_cluster_size": 128,
+    "smallest_cluster_size": 11,
+    "mean_cluster_size": 39.8
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 27,
+      "label": "Algoritmos, An\u00e1lisis de datos, Servicios web...",
+      "top_skills": [
+        "Algoritmos",
+        "An\u00e1lisis de datos",
+        "Servicios web",
+        "Gesti\u00f3n de proyectos",
+        "Ciberseguridad"
+      ],
+      "total_frequency": 90,
+      "mean_frequency": 3.3333333333333335
+    },
+    {
+      "cluster_id": 1,
+      "size": 12,
+      "label": "Code review, Responsive design, Domain Driven Design...",
+      "top_skills": [
+        "Code review",
+        "Responsive design",
+        "Domain Driven Design",
+        "Code reviews",
+        "React Testing Library"
+      ],
+      "total_frequency": 61,
+      "mean_frequency": 5.083333333333333
+    },
+    {
+      "cluster_id": 2,
+      "size": 11,
+      "label": "Azure, Machine Learning, Cloud...",
+      "top_skills": [
+        "Azure",
+        "Machine Learning",
+        "Cloud",
+        "React Native",
+        "Cloud-native"
+      ],
+      "total_frequency": 132,
+      "mean_frequency": 12.0
+    },
+    {
+      "cluster_id": 3,
+      "size": 21,
+      "label": "SQL, SQL Server, PostgreSQL...",
+      "top_skills": [
+        "SQL",
+        "SQL Server",
+        "PostgreSQL",
+        "MySQL",
+        "NoSQL"
+      ],
+      "total_frequency": 265,
+      "mean_frequency": 12.619047619047619
+    },
+    {
+      "cluster_id": 4,
+      "size": 128,
+      "label": "JavaScript, Python, CI/CD...",
+      "top_skills": [
+        "JavaScript",
+        "Python",
+        "CI/CD",
+        "Git",
+        "Docker"
+      ],
+      "total_frequency": 1343,
+      "mean_frequency": 10.4921875
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+{
+  "metadata": {
+    "dataset_name": "pipeline_a_300_post_final",
+    "created_at": "2025-11-07T15:06:25.287133",
+    "n_skills": 289,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 5,
+        "min_samples": 3,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 20,
+    "n_samples": 289,
+    "n_noise": 72,
+    "noise_percentage": 24.91349480968858,
+    "silhouette_score": 0.4092116057872772,
+    "davies_bouldin_score": 0.5791587854845157,
+    "largest_cluster_size": 42,
+    "smallest_cluster_size": 5,
+    "mean_cluster_size": 10.85
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 23,
+      "label": "rest apis, backend development, FastAPI...",
+      "top_skills": [
+        "rest apis",
+        "backend development",
+        "FastAPI",
+        "ASTECI",
+        "frontend development"
+      ],
+      "total_frequency": 107,
+      "mean_frequency": 4.6521739130434785
+    },
+    {
+      "cluster_id": 1,
+      "size": 7,
+      "label": "oauth, Unity, authentication...",
+      "top_skills": [
+        "oauth",
+        "Unity",
+        "authentication",
+        "sequelize",
+        "authorization"
+      ],
+      "total_frequency": 20,
+      "mean_frequency": 2.857142857142857
+    },
+    {
+      "cluster_id": 2,
+      "size": 5,
+      "label": "grafana, new relic, Rocha...",
+      "top_skills": [
+        "grafana",
+        "new relic",
+        "Rocha",
+        "nats",
+        "Nesta"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.6
+    },
+    {
+      "cluster_id": 3,
+      "size": 5,
+      "label": "Ciberseguridad, servicio al cliente, base de datos...",
+      "top_skills": [
+        "Ciberseguridad",
+        "servicio al cliente",
+        "base de datos",
+        "detectas problemas",
+        "datos estructurados"
+      ],
+      "total_frequency": 5,
+      "mean_frequency": 1.0
+    },
+    {
+      "cluster_id": 4,
+      "size": 18,
+      "label": "Europa, Oferta, Acceso...",
+      "top_skills": [
+        "Europa",
+        "Oferta",
+        "Acceso",
+        "Apoyo",
+        "Perfil"
+      ],
+      "total_frequency": 89,
+      "mean_frequency": 4.944444444444445
+    },
+    {
+      "cluster_id": 5,
+      "size": 6,
+      "label": "Bordo, Fondo, Polanco...",
+      "top_skills": [
+        "Bordo",
+        "Fondo",
+        "Polanco",
+        "remoto",
+        "Remoto"
+      ],
+      "total_frequency": 9,
+      "mean_frequency": 1.5
+    },
+    {
+      "cluster_id": 6,
+      "size": 5,
+      "label": "CORTES, Puntos, Clases...",
+      "top_skills": [
+        "CORTES",
+        "Puntos",
+        "Clases",
+        "Bonos",
+        "Tipos"
+      ],
+      "total_frequency": 7,
+      "mean_frequency": 1.4
+    },
+    {
+      "cluster_id": 7,
+      "size": 18,
+      "label": "SQL, sql server, MySQL...",
+      "top_skills": [
+        "SQL",
+        "sql server",
+        "MySQL",
+        "nosql",
+        "oracle"
+      ],
+      "total_frequency": 278,
+      "mean_frequency": 15.444444444444445
+    },
+    {
+      "cluster_id": 8,
+      "size": 7,
+      "label": "DevOps, microservices, mlops...",
+      "top_skills": [
+        "DevOps",
+        "microservices",
+        "mlops",
+        "owasp",
+        "devops"
+      ],
+      "total_frequency": 85,
+      "mean_frequency": 12.142857142857142
+    },
+    {
+      "cluster_id": 9,
+      "size": 13,
+      "label": "agile, Scrum, spark...",
+      "top_skills": [
+        "agile",
+        "Scrum",
+        "spark",
+        "Flutter",
+        "Flask"
+      ],
+      "total_frequency": 178,
+      "mean_frequency": 13.692307692307692
+    },
+    {
+      "cluster_id": 10,
+      "size": 7,
+      "label": "Ruby, bash, Swift...",
+      "top_skills": [
+        "Ruby",
+        "bash",
+        "Swift",
+        "scala",
+        "sass"
+      ],
+      "total_frequency": 53,
+      "mean_frequency": 7.571428571428571
+    },
+    {
+      "cluster_id": 11,
+      "size": 5,
+      "label": "TensorFlow, apache spark, apache airflow...",
+      "top_skills": [
+        "TensorFlow",
+        "apache spark",
+        "apache airflow",
+        "red hat openshift",
+        "apache kafka"
+      ],
+      "total_frequency": 10,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 12,
+      "size": 8,
+      "label": "CI/CD, React Native, scikit-learn...",
+      "top_skills": [
+        "CI/CD",
+        "React Native",
+        "scikit-learn",
+        "cloud native",
+        "spring framework"
+      ],
+      "total_frequency": 113,
+      "mean_frequency": 14.125
+    },
+    {
+      "cluster_id": 13,
+      "size": 17,
+      "label": "Vales, dbt, Stack...",
+      "top_skills": [
+        "Vales",
+        "dbt",
+        "Stack",
+        "Video",
+        "Build"
+      ],
+      "total_frequency": 35,
+      "mean_frequency": 2.0588235294117645
+    },
+    {
+      "cluster_id": 14,
+      "size": 6,
+      "label": "SOLID, expo, Solid...",
+      "top_skills": [
+        "SOLID",
+        "expo",
+        "Solid",
+        "less",
+        "Depend"
+      ],
+      "total_frequency": 18,
+      "mean_frequency": 3.0
+    },
+    {
+      "cluster_id": 15,
+      "size": 6,
+      "label": "Clara, Prima, Idear...",
+      "top_skills": [
+        "Clara",
+        "Prima",
+        "Idear",
+        "Guiar",
+        "Mentor"
+      ],
+      "total_frequency": 8,
+      "mean_frequency": 1.3333333333333333
+    },
+    {
+      "cluster_id": 16,
+      "size": 6,
+      "label": "GraphQL, RabbitMQ, Lambda...",
+      "top_skills": [
+        "GraphQL",
+        "RabbitMQ",
+        "Lambda",
+        "bigquery",
+        "LDAP"
+      ],
+      "total_frequency": 48,
+      "mean_frequency": 8.0
+    },
+    {
+      "cluster_id": 17,
+      "size": 5,
+      "label": "machine learning, Cloud, deep learning...",
+      "top_skills": [
+        "machine learning",
+        "Cloud",
+        "deep learning",
+        "natural language processing",
+        "computer vision"
+      ],
+      "total_frequency": 53,
+      "mean_frequency": 10.6
+    },
+    {
+      "cluster_id": 18,
+      "size": 8,
+      "label": "facebook, Ruby on Rails, asp.net...",
+      "top_skills": [
+        "facebook",
+        "Ruby on Rails",
+        "asp.net",
+        "Entity Framework",
+        "zoom"
+      ],
+      "total_frequency": 70,
+      "mean_frequency": 8.75
+    },
+    {
+      "cluster_id": 19,
+      "size": 42,
+      "label": "Python, JavaScript, CSS...",
+      "top_skills": [
+        "Python",
+        "JavaScript",
+        "CSS",
+        "TypeScript",
+        "node.js"
+      ],
+      "total_frequency": 501,
+      "mean_frequency": 11.928571428571429
+    }
+  ]
+}

@@ -1,0 +1,1483 @@
+00:07:10 - INFO - ================================================================================
+00:07:10 - INFO - GENERATING MISSING EMBEDDINGS FOR CLUSTERING
+00:07:10 - INFO - ================================================================================
+00:07:10 - INFO - Start time: 2025-11-07 00:07:10.477393
+00:07:10 - INFO - ================================================================================
+00:07:10 - INFO - IDENTIFYING MISSING EMBEDDINGS
+00:07:10 - INFO - ================================================================================
+00:07:10 - INFO - 
+1. gold_standard_annotations (Manual)
+00:07:10 - INFO -    Missing: 3 skills
+00:07:10 - INFO - 
+2. enhanced_skills Pre-ESCO (Pipeline B)
+00:07:10 - INFO -    Missing: 710 skills
+00:07:10 - INFO - 
+3. enhanced_skills Post-ESCO (Pipeline B)
+00:07:10 - INFO -    Missing: 5 skills
+00:07:10 - INFO - 
+   TOTAL MISSING: 718 skills
+00:07:10 - INFO - 
+📊 Unique skills to embed: 715
+00:07:10 - INFO - 
+================================================================================
+00:07:10 - INFO - LOADING EMBEDDING MODEL
+00:07:10 - INFO - ================================================================================
+00:07:10 - INFO -    Model: intfloat/multilingual-e5-base
+00:07:10 - INFO - Use pytorch device_name: mps
+00:07:10 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+00:07:14 - INFO -    ✅ Model loaded
+00:07:14 - INFO - 
+================================================================================
+00:07:14 - INFO - GENERATING EMBEDDINGS
+00:07:14 - INFO - ================================================================================
+00:07:14 - INFO - 
+🚀 Generating embeddings for 715 skills...
+Batches:   0%|          | 0/23 [00:00<?, ?it/s]Batches:   4%|▍         | 1/23 [00:00<00:06,  3.35it/s]Batches:  13%|█▎        | 3/23 [00:00<00:02,  7.77it/s]Batches:  22%|██▏       | 5/23 [00:00<00:01, 10.26it/s]Batches:  30%|███       | 7/23 [00:00<00:01, 11.78it/s]Batches:  43%|████▎     | 10/23 [00:00<00:00, 14.40it/s]Batches:  52%|█████▏    | 12/23 [00:00<00:00, 15.66it/s]Batches:  65%|██████▌   | 15/23 [00:01<00:00, 18.61it/s]Batches:  74%|███████▍  | 17/23 [00:01<00:00, 18.54it/s]Batches:  91%|█████████▏| 21/23 [00:01<00:00, 22.57it/s]Batches: 100%|██████████| 23/23 [00:01<00:00, 13.50it/s]
+00:07:15 - INFO -    ✅ Generated embeddings shape: (715, 768)
+00:07:15 - INFO - 
+================================================================================
+00:07:15 - INFO - SAVING TO DATABASE
+00:07:15 - INFO - ================================================================================
+00:07:15 - INFO - 
+💾 Saving 715 embeddings to database...
+Inserting:   0%|          | 0/715 [00:00<?, ?it/s]00:07:15 - WARNING -    Failed to insert 'Microsoft Fabric Lakehouse': null value in column "model_name" of relation "skill_embeddings" violates not-null constraint
+DETAIL:  Failing row contains (680c8e43-a42d-4fde-8ad4-8bc20cd0e641, Microsoft Fabric Lakehouse, {-0.0069535947,0.050542798,-0.0035515775,-0.01797274,0.022964938..., null, null, 2025-11-07 00:07:15.822107).
+
+00:07:15 - WARNING -    Failed to insert 'Cloud-Native Technologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Backup and Recovery': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Procesamiento de Datos a Gran Escala': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Restricciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Problemas de Resolución': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Automation Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Diagnóstico de Sistemas Embebidos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Optimización SEO': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'ITSM Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Stateful and Stateless System Orchestration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Integración con aplicaciones externas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Personalización de temas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Agile (Scrum/Kanban)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Testing End-to-End': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'API Gateways': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Tuning de SQL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Recovery': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Predictive Analytics': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Database schemas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Real-time Data Sources': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Prompt Chaining': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Microsoft CRM': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Personalización dinámica': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Computation Complexity': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Visual Generative AI': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Analysis': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Solutions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Diagnóstico y Resolución de Problemas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Scripting en Python': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'PL-SQL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Administración de bases de datos SQL Server': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Dimensional Data Modeling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Management Information Reports': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Site Reliability Engineer': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Test-driven development (TDD)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Testes (Jest)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'DAGs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'ETL/ELT Pipelines': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'SQL concepts': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Virtual Machines': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'E2E Tests': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'C/C++': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Secuencias de comandos de prueba': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Mobile App Security': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'UTMs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'E-commerce': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Information Technology': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'PHP 7+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Automation tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Automatización de tareas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Mongo DB': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Frontend Performance Optimization': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Lightning': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Soluciones de Backend': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Cloud': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Testing (Unit Testing, SIL Testing)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'ReactJS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Integración HW-SW': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Debugging Website Issues': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Change Data Capture': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Integración de Sistemas Complejos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Cloud Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Bash/Sh': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'ES2015 (ES6 / ES7)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'JPA (Java Persistence API)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Servicios de API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Análise de fluxo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Document AI de Google Cloud': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Unit Tests': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Arquitectura de sistemas escalables': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Floss': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Streaming API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Artefactos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Azure WebApps': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'AI coding assistant (Cursor, Copilot, etc.)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Normalización y desnormalización': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Lead generation landing pages': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Workflow Orchestration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'JavaScript/JQuery': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Serverless Autoscaling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'CLI Usage': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Orientación al cliente externo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Migración de bases de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'FL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Structures': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Storage': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Crash Analysis': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'entrenamiento': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'PagerDuty': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Schema-on-read': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Hexagonal Architecture': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Postgres': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Unit testing and debugging': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  13%|█▎        | 94/715 [00:00<00:00, 934.44it/s]00:07:15 - WARNING -    Failed to insert 'Pipelines de CI/CD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Express-Typescript': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Dispositivos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Predictive Analysis': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'APIs Internas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'AWS (S3, Glue, Redshift, RDS)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Agile methodologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Advanced SQL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Prompts de Inteligencia Artificial': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Nivel avanzado de inglés': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Cross-Team Collaboration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Comandos básicos en DML': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Funciones PL/SQL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Promociones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Objetos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Temporal': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'CI/CD (Azure DevOps or GitHub Actions)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Bandit': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'SAP S/4 HANA Cloud Public': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Automação de infraestrutura': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'React-native': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'metodologías agiles': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'IA en atención al cliente': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Database': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Modelos de Classificação': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Detox': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Tipos de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Cloud Services': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Integration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'SSR/CSR': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Batch Data Sources': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Security': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'CI/CD Pipelines': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Google Cloud Platform (GCP)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Modelos de Machine Learning': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Procesos ETL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Synthesis': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Arquitectura Backend': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'CI/CD pipelines': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Deployment Automatizado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Python web frameworks': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Text-to-Speech': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert '.NET 6': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'LWC': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Despliegue de Aplicaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert '.NET Core/.NET 5+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'ODBC/JDBC': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Automations': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'OCP/Kubernetes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Lakehouses': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Bulk API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Data Reliability': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'JavaScript (ES6+)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Testing with TDD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'Complex SQL Queries': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:15 - WARNING -    Failed to insert 'cumplimiento': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Orquestadores': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Gobernanza de Datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'BPMN notation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Metodologias Agiles': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'English proficiency': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Despliegue en entornos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Analysis of Images': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Automatizaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entornos Cloud': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Liderazgo de equipos técnicos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Messaging': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Scripting en Unix/Linux': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Springboot 2': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Reporting': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Test automatizadas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'IAM Protocols (OAuth, OIDC, SAML)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Node': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Native Mobile Modules': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Modularización del Código': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Fechas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Horarios flexibles': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Microservices Architecture': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Azure Fabric': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'control de fuente': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Websphere MQ 8.0': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'WYSIWYG website builder': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'LLM Models': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud Implementation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Webflow': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'MVP': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Tipos y manejo de cursores': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Nube': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CUDA': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'socio externo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Non-Relational Databases': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Implementación CI/CD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Monitoreo de Datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Retailers': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  26%|██▋       | 188/715 [00:00<00:00, 764.25it/s]00:07:16 - WARNING -    Failed to insert 'BUS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Nuevas tecnologías': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mexico': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL Queries': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL Avanzado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Net': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Oracle Cloud Infrastructure (OCI)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Web service integration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Install Referrers': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'IaC (Terraform, CloudFormation)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API Integration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Web Applications': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Flosum': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert '.NET Core 5+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Java Script': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Python Scripts': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API integration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Deduplicación': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AI/Document Intelligence': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Contratos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agregaciones Incrementales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'MEAN': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Autonomous components': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agentes de Inteligencia Artificial': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API Development': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Triggered Campaigns': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Flujos de Trabajo de Automatización': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mensagens': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Network Monitoring': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Record Types': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Herramientas de debugging': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Relational/non-relational databases': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Observability': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Scalable': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Linux/Unix System Administration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Kubernetes (OKE)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Gestão de estado/contexto': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SuiteScript 2.x': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AI Coding Assistants (GitHub Copilot, ChatGPT)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud (AWS, Azure, GCP)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ML Deployment/Monitoring': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Oracle Autonomous DB': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Remedy': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CI/CD para BI/Fabric': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Backend Engineering': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Sistemas CMS / Commerce': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Code': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mantenimiento de APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura Moderna de Datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Atención de incidentes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Implementación de modelos de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Java Avanzado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Automatic Workload Repository (AWR)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Engineer': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'System Extensions development': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Modos de Visualización': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Administración de firewalls': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Model Lifecycle Management': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CRUD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Metodología Agile': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'GAMF': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Siniestros': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Testing frameworks': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Databricks deployments': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'React js': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Marketing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Performance Testing Software': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Fabric': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'arquitectura de microservicios': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Async events': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mensajería en Cola': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SPA': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Vector DBs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Optimization': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Metodología ágil': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Compilación': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Optimization': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'iTOP': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Copado': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  37%|███▋      | 267/715 [00:00<00:00, 655.10it/s]00:07:16 - WARNING -    Failed to insert 'Distributed Version Control Systems': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Configuration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Boomi': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Dynamic Data Masking': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agregación': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Payments': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entornos multiculturales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Infraestructura y Redes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AngularJS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Estructuras distribuidas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Game Development': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'PDFs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Pub/Sub API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Diseño de patrones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Bases de datos locales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud Storage': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'VR/AR projects': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'compilación': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mantenimiento de base de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Backend Solutions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'TI/Tecnología de la información': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'NgStore': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Attribution': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Extraction': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Validación de Datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Refactorización': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Latency Tuning': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Wrangling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Versionar código': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'iOS/Android APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Reactjs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Test de Integración': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Creación de bases de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Funciones y procedimientos almacenados': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Augmentation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Headless Browsers': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Infraestructura Windows Server': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'mentorías': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Gearset': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Desarrollo de Proyectos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Desplegar componentes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Patrones de diseño de software': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Autoscale': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'resolución de problemas complejos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Motores de bases de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL queries': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Container-Based Workflows': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Lighthouse': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Row-Level Security': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Visual Data Processing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Gestión de sitios': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cumplimiento de la LGPD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data and Model Execution': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Landing Page': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Web Services (SOAP)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'DDD Knowledge': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API platforms': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Permission Sets': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mensajería': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'NET': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Non-relational databases': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'operaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Big Query': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ERP en la nube': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Profiles': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'PWAs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'APIs Externas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud Services (Azure, AWS, GCP)': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  47%|████▋     | 335/715 [00:00<00:00, 619.03it/s]00:07:16 - WARNING -    Failed to insert 'Publicación multiplataforma': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Database schema migration tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Web Services API's': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AL (Application Language)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Django Rest Framework': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Fuentes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Predictivos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Diseño de pruebas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Páginas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Consultas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SuiteScript 1.0': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Consumo de APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Event-driven workflows': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entornos ágiles': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SIP': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Personalización de plugins': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud (GCP/AWS)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Frameworks de Frontend': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Optimización de APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Kioskos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Celery': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'HTML/CSS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Unit Testing (JUnit, Mockito, MockK)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'administración de etiquetas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura Orientada a Microservicios': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Encryption': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Compensación en USD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Computational Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SOAP APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Despliegue de aplicaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'KMM (Kotlin Multiplatform Mobile)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Reporting': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agile/Scrum': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura de Sistemas Distribuidos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Serverless Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'integración con APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'bases sólidas de Bases de Datos relacionales (Oracle principalmente) y no relacionales (REDIS)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Desarrollo de software .NET': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Pruebas de API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Salesforce Financial Services Cloud': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Java 8+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'DB2 para AS400': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Browser-based Debugging': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud managed services': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Accesibilidad (WCAG 2.1)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Strategy': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'proveedores': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Reportes Complejos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agentic Patterns': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Node JS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Identity Management Technologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SDKs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'D3.js': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Componentes Lightning': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud-Native Development': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Client-Facing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'VS Code': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Cleaning': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Drivers development': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Landing Page Operations': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'NgEffects': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ANSI': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Integración de analítica': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  56%|█████▌    | 398/715 [00:00<00:00, 563.99it/s]00:07:16 - WARNING -    Failed to insert 'Execution Plans': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura en la nube': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Consumo de API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Servicios de contenedores': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Streaming Technologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Boost libraries': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API integration testing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'English': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Evolução da plataforma': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'MDM solutions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Relational databases': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'JavaScript (ES6)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Pega Systems': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'VueJs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Real-time Inference': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Implementación de APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Publicación': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Test Unitarios': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Jobs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Serverless tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'UI/UX Collaboration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Governance': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AI tooling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Transformation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Headless CMS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Redes LAN/WAN': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Sisense': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Ingesta de Eventos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Lambdas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Unitarias': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'FTPs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Diseño de Patrones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Antivirus empresariales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Database Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Containerized services': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Vendor and Open Source Object Storage Technologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Scalable Software Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Serving': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Web Servers/App Servers': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Algebra': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Database Management': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Modelos de Crédito Consignado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Versionamento de APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Git/GitHub/Bitbucket': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Tipos de datos en Oracle': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'File Automation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Dinamicas de acciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Private Link': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'NgComponentStore': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agile Methodologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Procedures': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Relational Databases': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Statistical Modeling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'GitHub/GitHub Actions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Experiencia de juego': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Particionamiento de tablas avanzado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud (GCP desirable)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AWS (ECR, EKS, S3, RDS)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Architecture': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Explorer': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Model Pipelines': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Spring Scheduling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Migration': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  64%|██████▍   | 461/715 [00:00<00:00, 582.48it/s]00:07:16 - WARNING -    Failed to insert 'Data Flow': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura REST': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Loader': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API Usage': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Binding': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Bases de datos (relacionales o no)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Power Query': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ASP.NET Web API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cargas de Datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Jitterbit': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Azure Fabric Hub': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CI/CD Scripting Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agile Methods': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Continuidad del Negocio': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'HLS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Process modeling': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entornos Contenedorizados': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'TensorRT': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Flujos Conversacionales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Websphere App Server 8.5': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AWS (API Gateway, ECS, Lambda, SQS/SNS, DynamoDB)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Validación UAT': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Platform Events': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Testeo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Texturizado en objetos 3D': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Flutter Test': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Optimización de hosting': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Orientación al cliente interno': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL DB2': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'red': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agentes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Modelos de Regressão': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Despliegue en ambiente productivo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ETL Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Object-Oriented Programming': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Consulting': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ETL Pipelines': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Validation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Dependencias': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Document DBs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'React.js': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Analysis Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Tableros': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Monitoring/Observability': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CICD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Implementaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ES6+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Implementación de proyectos en Realidad Virtual': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL stored procedures': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL Server Integration Services (SSIS)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'XGBOOST 2.0': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL avanzado (T-SQL)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Independent worker': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Operaciones básicas de manejo de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud Native Application Development': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert '3D object implementation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Funciones básicas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL avanzado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'OpenTelemetry': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Pólizas': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  73%|███████▎  | 521/715 [00:00<00:00, 546.45it/s]00:07:16 - WARNING -    Failed to insert 'CI/CD Pipeline': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Web3 Dapp': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Remote Integrations': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Embedded Systems': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Algorithms': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'XML Layouts': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Registrar actividades': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Pipelines CI/CD': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Fast Inference': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Automation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cotizaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Openshift Container Planform': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Container Technologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Control de errores': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'IA en UX': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Website fixes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL Profiler': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Management': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Manejo de concurrencia': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'UI Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Python Web Frameworks': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API Building': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Automated Tests': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Observabilidade': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'OCI Container Registries': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Redux (Thunks/Sagas)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Patrones de Diseño de Software': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Guards': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Ambiente laboral innovador': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud Platforms': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Time Travel': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cross-Device Identity': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API Integration Testing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'JPA-JSP': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SNMP': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ASP.NET Core MVC/Web API': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Equipos de desarrollo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entrenamientos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CICD in Azure DevOps': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Swagger/OpenAPI': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ML Lifecycle': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitecturas SOA': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Exchange Interfaces': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Delta Lake': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agile environments': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Optimización de data warehouses': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SaaS application': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Testing Frameworks': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Argo Flows': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'IFRS 9': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CLI usage': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud-Native Deployments': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Matplotlib': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'BI Publisher': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Optimización de Sistemas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'OWASP Top 10': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Procesos de negocio': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Microcontroladores (Arduino, Raspberry Pi)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data-driven manufacturing improvements': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ReactJs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Complementos de control': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Kubernetes Operators': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Desarrollo de Aplicaciones Móviles': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'EDR/XDR': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Frameworks de Pruebas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Rastreamento de chamadas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Servicios de terceros': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  82%|████████▏ | 588/715 [00:00<00:00, 579.91it/s]00:07:16 - WARNING -    Failed to insert 'Queries complejas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Issue Tracking (Jira)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'OAuth2 / JWT (JSON Web Tokens)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'NoSQL Databases': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'API Integrations': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'ETL Processes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Column-Level Security': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Respaldo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Linux administration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Ciclo de Vida de Desarrollo de Software (SDLC)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Frameworks de Automatización de Pruebas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Database Tuning': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Speech-to-Text': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Licencias por mater/paternidad': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data and Model Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Unix/Linux': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cluster State Management': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Tests Automatizados': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Control de versiones (SCM)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Fine-tuning of LLMs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Backup and Recovery': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cadenas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data aggregation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Processing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Marco de trabajo Agile (Scrum)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'JS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'TikTok Ads APIs': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'AWS CloudFront': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Servicios de Contenedores': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura Cloud Native': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Mentorías': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Scheduling Decisions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Diseño de data warehouses': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud Security': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'CI/CD integration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert '12-factor app methodology': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Semántico': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agentes Inteligentes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agentes con Inteligencia Artificial': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'MVC 3.5+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Arquitectura de Microservicios': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'QA process improvement': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Geofencing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Eventstreams': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agentic Orchestration': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Collections': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Integración de modelos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Eventhouse': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Comandos básicos en DLL': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Ruteo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Versionado con Git/Azure DevOps': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Desktop': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'mecanografiado': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Usability in games': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SQL Server 2012+': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Personalizaciones de aplicaciones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Precios': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Cloud-native solutions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Gradle Build System': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  90%|█████████ | 647/715 [00:01<00:00, 561.39it/s]00:07:16 - WARNING -    Failed to insert 'Synapse Analytics': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Hardware': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Aprovisionamiento de Ambientes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Hybrid Work': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Componentes reutilizables': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Microservices architecture': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Software': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'WebPageTest': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Strong Engineering Practices': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Agile (Scrum)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Federos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Functions': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Funciones generales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Accuracy': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Dataflows': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Sistemas de integración continua': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Always On': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'IA en mercadeo': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Data Interpretation': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Salesforce DX (SFDX)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Sistemas de versionamiento de código': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Tolerancia a fallas': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Segurança': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'SLF4J + Logback/Log4j': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Informes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'UX/UI Design': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entornos de producción': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'IT/Information Technology': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Entorno Scrum': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Flows': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Validaciones de Datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Gutenberg': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Modelos de bases de datos': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Desarrollo Serverless': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Scripting Skills': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Servicios de IA': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:16 - WARNING -    Failed to insert 'Modelado AS-IS/TO-BE': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Airbyte': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Aura': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Automated Testing': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Firewalls (Palo Alto, Fortinet, Check Point)': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Oracle Analytics Server': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Azure Fabric Activator': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'MLOps Pipeline Setup': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'RLS/OLS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Problem Solving': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Queries': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Pipelines de creación y aprovisionamiento de ambientes': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Cloud Technologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Customization': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Data analysis': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Transactional Code': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Agile/Scrum methodologies': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Reporte de resultados mensuales': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Sistemas comunes en el sector seguros': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'SSO': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Inicio de sesión único': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting:  98%|█████████▊| 704/715 [00:01<00:00, 497.45it/s]00:07:17 - WARNING -    Failed to insert 'MPLS': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Software Design Patterns': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Extensiones': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Fullstack.NET': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Optimización de Performance Web': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'bases fuertes de POO': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Documentar': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Omnistudio': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Problem-Solving': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Monitoring Tools': current transaction is aborted, commands ignored until end of transaction block
+
+00:07:17 - WARNING -    Failed to insert 'Asistente de Importación': current transaction is aborted, commands ignored until end of transaction block
+
+Inserting: 100%|██████████| 715/715 [00:01<00:00, 570.25it/s]
+00:07:17 - INFO -    ✅ Saved 0 embeddings
+00:07:17 - INFO - 
+================================================================================
+00:07:17 - INFO - ✅ COMPLETE
+00:07:17 - INFO - ================================================================================
+00:07:17 - INFO -    Skills processed: 715
+00:07:17 - INFO -    Embeddings saved: 0
+00:07:17 - INFO -    End time: 2025-11-07 00:07:17.076829
+00:07:17 - INFO - ================================================================================

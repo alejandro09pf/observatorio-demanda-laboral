@@ -1,0 +1,90 @@
+2025-11-07 19:08:29,069 - INFO - ================================================================================
+2025-11-07 19:08:29,069 - INFO - MAPPING GOLD STANDARD ANNOTATIONS TO ESCO
+2025-11-07 19:08:29,069 - INFO - ================================================================================
+2025-11-07 19:08:29,069 - INFO - 
+1. Initializing ESCOMatcher3Layers...
+2025-11-07 19:08:29,071 - INFO - Layer 3 (semantic matching) is DISABLED - skipping FAISS index load
+2025-11-07 19:08:29,071 - INFO - ✅ ESCOMatcher3Layers initialized
+2025-11-07 19:08:29,071 - INFO - 
+2. Fetching unique skills from gold_standard_annotations...
+2025-11-07 19:08:29,120 - INFO -    Found 2220 unique skills
+2025-11-07 19:08:29,120 - INFO -    - Hard skills: 1914
+2025-11-07 19:08:29,120 - INFO -    - Soft skills: 306
+2025-11-07 19:08:29,120 - INFO - 
+3. Matching skills to ESCO (this may take a few minutes)...
+2025-11-07 19:10:26,997 - INFO - 
+4. Matching Results:
+2025-11-07 19:10:26,997 - INFO -    Total skills:      2184
+2025-11-07 19:10:26,997 - INFO -    Matched to ESCO:   245 (11.2%)
+2025-11-07 19:10:26,997 - INFO -    Emergent (no map): 1939 (88.8%)
+2025-11-07 19:10:26,997 - INFO - 
+   By method:
+2025-11-07 19:10:26,997 - INFO -    - Exact matches:    204
+2025-11-07 19:10:26,997 - INFO -    - Fuzzy matches:    41
+2025-11-07 19:10:26,997 - INFO -    - Semantic matches: 0
+2025-11-07 19:10:26,997 - INFO - 
+5. Updating database...
+Traceback (most recent call last):
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/map_gold_standard_to_esco.py", line 152, in <module>
+    main()
+  File "/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/map_gold_standard_to_esco.py", line 118, in main
+    match.esco_preferred_label,
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ESCOMatch' object has no attribute 'esco_preferred_label'
+2025-11-07 19:11:01,093 - INFO - ================================================================================
+2025-11-07 19:11:01,093 - INFO - MAPPING GOLD STANDARD ANNOTATIONS TO ESCO
+2025-11-07 19:11:01,093 - INFO - ================================================================================
+2025-11-07 19:11:01,093 - INFO - 
+1. Initializing ESCOMatcher3Layers...
+2025-11-07 19:11:01,095 - INFO - Layer 3 (semantic matching) is DISABLED - skipping FAISS index load
+2025-11-07 19:11:01,095 - INFO - ✅ ESCOMatcher3Layers initialized
+2025-11-07 19:11:01,095 - INFO - 
+2. Fetching unique skills from gold_standard_annotations...
+2025-11-07 19:11:01,144 - INFO -    Found 2220 unique skills
+2025-11-07 19:11:01,144 - INFO -    - Hard skills: 1914
+2025-11-07 19:11:01,144 - INFO -    - Soft skills: 306
+2025-11-07 19:11:01,144 - INFO - 
+3. Matching skills to ESCO (this may take a few minutes)...
+2025-11-07 19:13:02,381 - INFO - 
+4. Matching Results:
+2025-11-07 19:13:02,381 - INFO -    Total skills:      2184
+2025-11-07 19:13:02,381 - INFO -    Matched to ESCO:   245 (11.2%)
+2025-11-07 19:13:02,382 - INFO -    Emergent (no map): 1939 (88.8%)
+2025-11-07 19:13:02,382 - INFO - 
+   By method:
+2025-11-07 19:13:02,382 - INFO -    - Exact matches:    204
+2025-11-07 19:13:02,382 - INFO -    - Fuzzy matches:    41
+2025-11-07 19:13:02,382 - INFO -    - Semantic matches: 0
+2025-11-07 19:13:02,382 - INFO - 
+5. Updating database...
+2025-11-07 19:13:15,644 - INFO -    ✅ Updated 7848 annotation records
+2025-11-07 19:13:15,644 - INFO -    - 245 unique skills mapped to ESCO
+2025-11-07 19:13:15,644 - INFO -    - 1939 unique skills marked as emergent
+2025-11-07 19:13:15,644 - INFO - 
+6. Sample ESCO Matches:
+2025-11-07 19:13:15,644 - INFO -    'ABAP' → 'ABAP' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Adobe Illustrator' → 'Adobe Illustrator' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Adobe Photoshop' → 'Adobe Photoshop' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Agile' → 'Agile' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'AJAX' → 'AJAX' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Álgebra' → 'álgebra' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Algoritmos' → 'algoritmos' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Análisis de datos' → 'análisis de datos' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Angular' → 'Angular' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO -    'Ansible' → 'Ansible' (method=exact, score=1.000)
+2025-11-07 19:13:15,644 - INFO - 
+7. Sample Emergent Skills (No ESCO Match):
+2025-11-07 19:13:15,644 - INFO -    '12-factor app'
+2025-11-07 19:13:15,644 - INFO -    '3D rendering'
+2025-11-07 19:13:15,644 - INFO -    '3ds Max'
+2025-11-07 19:13:15,644 - INFO -    'AB-INITIO'
+2025-11-07 19:13:15,644 - INFO -    'Ably'
+2025-11-07 19:13:15,644 - INFO -    'Abstracción'
+2025-11-07 19:13:15,644 - INFO -    'A/B testing'
+2025-11-07 19:13:15,644 - INFO -    'Accesibilidad'
+2025-11-07 19:13:15,644 - INFO -    'Accesibilidad web'
+2025-11-07 19:13:15,644 - INFO -    'Accessibility'
+2025-11-07 19:13:15,644 - INFO - 
+================================================================================
+2025-11-07 19:13:15,644 - INFO - ✅ MAPPING COMPLETE
+2025-11-07 19:13:15,644 - INFO - ================================================================================

@@ -1,0 +1,25 @@
+{
+  "execution_date": "2025-11-06T23:54:08.866171",
+  "parameters": {
+    "n_neighbors": 15,
+    "min_cluster_size": 15,
+    "min_dist": 0.1,
+    "metric_umap": "cosine",
+    "metric_hdbscan": "euclidean"
+  },
+  "metrics": {
+    "n_clusters": 41,
+    "n_samples": 1698,
+    "n_noise": 575,
+    "noise_percentage": 33.86336866902238,
+    "silhouette_score": 0.4856092929840088,
+    "davies_bouldin_score": 0.6593876493982161,
+    "largest_cluster_size": 74,
+    "smallest_cluster_size": 15,
+    "mean_cluster_size": 27.390243902439025
+  },
+  "n_skills_total": 1698,
+  "n_skills_clustered": 1123,
+  "n_clusters": 41,
+  "temporal_quarters": 17
+}

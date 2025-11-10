@@ -1,0 +1,1 @@
+🚀 RE-EJECUTANDO Pipeline A 30k PRE con 100% de embeddings echo Antes: 3,241 skills (3.3%) echo Ahora: 98,857 skills (100%) echo  env DATABASE_URL=postgresql://labor_user:123456@localhost:5433/labor_observatory  PYTHONPATH=src venv/bin/python3 -m src.orchestrator cluster pipeline_a_30k_pre_final -v 

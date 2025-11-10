@@ -1,0 +1,245 @@
+{
+  "metadata": {
+    "dataset_name": "manual_300_post_exp1",
+    "created_at": "2025-11-08T01:13:33.404509",
+    "n_skills": 236,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 5,
+        "min_samples": 3,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 15,
+    "n_samples": 236,
+    "n_noise": 70,
+    "noise_percentage": 29.66101694915254,
+    "silhouette_score": 0.4940877854824066,
+    "davies_bouldin_score": 0.6011422644205922,
+    "largest_cluster_size": 28,
+    "smallest_cluster_size": 5,
+    "mean_cluster_size": 11.066666666666666
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 28,
+      "label": "React, Algoritmos, An\u00e1lisis de datos...",
+      "top_skills": [
+        "React",
+        "Algoritmos",
+        "An\u00e1lisis de datos",
+        "Servicios web",
+        "Gesti\u00f3n de proyectos"
+      ],
+      "total_frequency": 153,
+      "mean_frequency": 5.464285714285714
+    },
+    {
+      "cluster_id": 1,
+      "size": 11,
+      "label": "Code review, Responsive design, Domain Driven Design...",
+      "top_skills": [
+        "Code review",
+        "Responsive design",
+        "Domain Driven Design",
+        "Code reviews",
+        "React Testing Library"
+      ],
+      "total_frequency": 60,
+      "mean_frequency": 5.454545454545454
+    },
+    {
+      "cluster_id": 2,
+      "size": 11,
+      "label": "Machine Learning, React Native, Cloud-native...",
+      "top_skills": [
+        "Machine Learning",
+        "React Native",
+        "Cloud-native",
+        "Deep Learning",
+        "scikit-learn"
+      ],
+      "total_frequency": 64,
+      "mean_frequency": 5.818181818181818
+    },
+    {
+      "cluster_id": 3,
+      "size": 6,
+      "label": "Next.js, Vue.js, Webpack...",
+      "top_skills": [
+        "Next.js",
+        "Vue.js",
+        "Webpack",
+        "Nest.js",
+        "Express.js"
+      ],
+      "total_frequency": 29,
+      "mean_frequency": 4.833333333333333
+    },
+    {
+      "cluster_id": 4,
+      "size": 5,
+      "label": "Datadog, Data lakes, Data warehouses...",
+      "top_skills": [
+        "Datadog",
+        "Data lakes",
+        "Data warehouses",
+        "Data Lake",
+        "DataDog"
+      ],
+      "total_frequency": 12,
+      "mean_frequency": 2.4
+    },
+    {
+      "cluster_id": 5,
+      "size": 13,
+      "label": "SQL, PostgreSQL, NoSQL...",
+      "top_skills": [
+        "SQL",
+        "PostgreSQL",
+        "NoSQL",
+        "MongoDB",
+        "Oracle"
+      ],
+      "total_frequency": 183,
+      "mean_frequency": 14.076923076923077
+    },
+    {
+      "cluster_id": 6,
+      "size": 22,
+      "label": "REST API, GraphQL, Ruby on Rails...",
+      "top_skills": [
+        "REST API",
+        "GraphQL",
+        "Ruby on Rails",
+        "Lambda",
+        "RabbitMQ"
+      ],
+      "total_frequency": 143,
+      "mean_frequency": 6.5
+    },
+    {
+      "cluster_id": 7,
+      "size": 11,
+      "label": "CI/CD, Docker, Kubernetes...",
+      "top_skills": [
+        "CI/CD",
+        "Docker",
+        "Kubernetes",
+        "DevOps",
+        "GitHub"
+      ],
+      "total_frequency": 288,
+      "mean_frequency": 26.181818181818183
+    },
+    {
+      "cluster_id": 8,
+      "size": 6,
+      "label": "Redux, Redis, Sentry...",
+      "top_skills": [
+        "Redux",
+        "Redis",
+        "Sentry",
+        "Redes",
+        "Keras"
+      ],
+      "total_frequency": 34,
+      "mean_frequency": 5.666666666666667
+    },
+    {
+      "cluster_id": 9,
+      "size": 5,
+      "label": "Linux, Pandas, Canvas...",
+      "top_skills": [
+        "Linux",
+        "Pandas",
+        "Canvas",
+        "macOS",
+        "pandas"
+      ],
+      "total_frequency": 33,
+      "mean_frequency": 6.6
+    },
+    {
+      "cluster_id": 10,
+      "size": 6,
+      "label": "Spring Boot, Postman, Cypress...",
+      "top_skills": [
+        "Spring Boot",
+        "Postman",
+        "Cypress",
+        "Spring",
+        "Playwright"
+      ],
+      "total_frequency": 43,
+      "mean_frequency": 7.166666666666667
+    },
+    {
+      "cluster_id": 11,
+      "size": 8,
+      "label": "Agile, Scrum, Spark...",
+      "top_skills": [
+        "Agile",
+        "Scrum",
+        "Spark",
+        "Flutter",
+        "Flask"
+      ],
+      "total_frequency": 135,
+      "mean_frequency": 16.875
+    },
+    {
+      "cluster_id": 12,
+      "size": 5,
+      "label": "Git, Go, Jest...",
+      "top_skills": [
+        "Git",
+        "Go",
+        "Jest",
+        "Dart",
+        "Rust"
+      ],
+      "total_frequency": 94,
+      "mean_frequency": 18.8
+    },
+    {
+      "cluster_id": 13,
+      "size": 12,
+      "label": "Node.js, TypeScript, Kotlin...",
+      "top_skills": [
+        "Node.js",
+        "TypeScript",
+        "Kotlin",
+        "jQuery",
+        "WordPress"
+      ],
+      "total_frequency": 117,
+      "mean_frequency": 9.75
+    },
+    {
+      "cluster_id": 14,
+      "size": 17,
+      "label": "C#, iOS, PHP...",
+      "top_skills": [
+        "C#",
+        "iOS",
+        "PHP",
+        "Unix",
+        "C++"
+      ],
+      "total_frequency": 89,
+      "mean_frequency": 5.235294117647059
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+17:59:46 - INFO - ================================================================================
+17:59:46 - INFO - GENERATING MISSING EMBEDDINGS FOR CLUSTERING
+17:59:46 - INFO - ================================================================================
+17:59:46 - INFO - Start time: 2025-11-09 17:59:46.991547
+17:59:47 - INFO - ================================================================================
+17:59:47 - INFO - IDENTIFYING MISSING EMBEDDINGS
+17:59:47 - INFO - ================================================================================
+17:59:47 - INFO - 
+1. gold_standard_annotations (Manual)
+17:59:47 - INFO -    Missing: 0 skills
+17:59:47 - INFO - 
+2. enhanced_skills Pre-ESCO (Pipeline B)
+17:59:47 - INFO -    Missing: 0 skills
+17:59:47 - INFO - 
+3. enhanced_skills Post-ESCO (Pipeline B)
+17:59:47 - INFO -    Missing: 0 skills
+17:59:47 - INFO - 
+   TOTAL MISSING: 0 skills
+17:59:47 - INFO - 
+✅ No missing embeddings! All skills already have embeddings.

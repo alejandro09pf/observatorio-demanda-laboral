@@ -1,0 +1,357 @@
+{
+  "metadata": {
+    "dataset_name": "pipeline_a_300_pre_exp3",
+    "created_at": "2025-11-08T01:14:17.467286",
+    "n_skills": 1314,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 15,
+        "min_samples": 5,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 23,
+    "n_samples": 1314,
+    "n_noise": 390,
+    "noise_percentage": 29.68036529680365,
+    "silhouette_score": 0.4297861158847809,
+    "davies_bouldin_score": 0.6275902041934436,
+    "largest_cluster_size": 177,
+    "smallest_cluster_size": 15,
+    "mean_cluster_size": 40.17391304347826
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 17,
+      "label": "Redis, redux, Redux...",
+      "top_skills": [
+        "Redis",
+        "redux",
+        "Redux",
+        "redes",
+        "Metas"
+      ],
+      "total_frequency": 91,
+      "mean_frequency": 5.352941176470588
+    },
+    {
+      "cluster_id": 1,
+      "size": 26,
+      "label": "horarios flexibles, nuevas tecnolog\u00edas, procedimientos almacenados...",
+      "top_skills": [
+        "horarios flexibles",
+        "nuevas tecnolog\u00edas",
+        "procedimientos almacenados",
+        "mensajer\u00eda",
+        "automatizaciones"
+      ],
+      "total_frequency": 115,
+      "mean_frequency": 4.423076923076923
+    },
+    {
+      "cluster_id": 2,
+      "size": 21,
+      "label": "SQL, MySQL, sql server...",
+      "top_skills": [
+        "SQL",
+        "MySQL",
+        "sql server",
+        "nosql",
+        "PostgreSQL"
+      ],
+      "total_frequency": 270,
+      "mean_frequency": 12.857142857142858
+    },
+    {
+      "cluster_id": 3,
+      "size": 31,
+      "label": "backend development, frontend development, Product Owners...",
+      "top_skills": [
+        "backend development",
+        "frontend development",
+        "Product Owners",
+        "full-stack development",
+        "test-driven development"
+      ],
+      "total_frequency": 84,
+      "mean_frequency": 2.7096774193548385
+    },
+    {
+      "cluster_id": 4,
+      "size": 16,
+      "label": "React Native, React.js, React Testing Library...",
+      "top_skills": [
+        "React Native",
+        "React.js",
+        "React Testing Library",
+        "react testing library",
+        "React Query"
+      ],
+      "total_frequency": 51,
+      "mean_frequency": 3.1875
+    },
+    {
+      "cluster_id": 5,
+      "size": 15,
+      "label": "node.js, Node, Vue.js...",
+      "top_skills": [
+        "node.js",
+        "Node",
+        "Vue.js",
+        "nodejs",
+        "next.js"
+      ],
+      "total_frequency": 120,
+      "mean_frequency": 8.0
+    },
+    {
+      "cluster_id": 6,
+      "size": 89,
+      "label": "DevOps, Microsoft Azure, Azure...",
+      "top_skills": [
+        "DevOps",
+        "Microsoft Azure",
+        "Azure",
+        "machine learning",
+        "oracle"
+      ],
+      "total_frequency": 520,
+      "mean_frequency": 5.842696629213483
+    },
+    {
+      "cluster_id": 7,
+      "size": 41,
+      "label": "kafka, Maven, spark...",
+      "top_skills": [
+        "kafka",
+        "Maven",
+        "spark",
+        "SOLID",
+        "Flask"
+      ],
+      "total_frequency": 136,
+      "mean_frequency": 3.317073170731707
+    },
+    {
+      "cluster_id": 8,
+      "size": 22,
+      "label": "algoritmos, Inteligencia Artificial, Informatica...",
+      "top_skills": [
+        "algoritmos",
+        "Inteligencia Artificial",
+        "Informatica",
+        "Ingl\u00e9s B2",
+        "videojuegos"
+      ],
+      "total_frequency": 71,
+      "mean_frequency": 3.227272727272727
+    },
+    {
+      "cluster_id": 9,
+      "size": 70,
+      "label": "control de versiones, buenas pr\u00e1cticas, Autenticaci\u00f3n...",
+      "top_skills": [
+        "control de versiones",
+        "buenas pr\u00e1cticas",
+        "Autenticaci\u00f3n",
+        "mantenibilidad",
+        "aprendizaje"
+      ],
+      "total_frequency": 254,
+      "mean_frequency": 3.6285714285714286
+    },
+    {
+      "cluster_id": 10,
+      "size": 33,
+      "label": "frameworks, testing, scripts...",
+      "top_skills": [
+        "frameworks",
+        "testing",
+        "scripts",
+        "scripting",
+        "Frameworks"
+      ],
+      "total_frequency": 147,
+      "mean_frequency": 4.454545454545454
+    },
+    {
+      "cluster_id": 11,
+      "size": 56,
+      "label": "Scrum, agile, Agile...",
+      "top_skills": [
+        "Scrum",
+        "agile",
+        "Agile",
+        "Lean",
+        "Backbone"
+      ],
+      "total_frequency": 385,
+      "mean_frequency": 6.875
+    },
+    {
+      "cluster_id": 12,
+      "size": 20,
+      "label": "Docker, Kubernetes, Hibernate...",
+      "top_skills": [
+        "Docker",
+        "Kubernetes",
+        "Hibernate",
+        "firebase",
+        "Weaviate"
+      ],
+      "total_frequency": 167,
+      "mean_frequency": 8.35
+    },
+    {
+      "cluster_id": 13,
+      "size": 26,
+      "label": "Hardware, English, red...",
+      "top_skills": [
+        "Hardware",
+        "English",
+        "red",
+        "NET",
+        "Desktop"
+      ],
+      "total_frequency": 146,
+      "mean_frequency": 5.615384615384615
+    },
+    {
+      "cluster_id": 14,
+      "size": 20,
+      "label": "AI, IA Generativa, ia generativa...",
+      "top_skills": [
+        "AI",
+        "IA Generativa",
+        "ia generativa",
+        "IA generativa",
+        "Cursor"
+      ],
+      "total_frequency": 48,
+      "mean_frequency": 2.4
+    },
+    {
+      "cluster_id": 15,
+      "size": 47,
+      "label": "APIs, APIs REST, API...",
+      "top_skills": [
+        "APIs",
+        "APIs REST",
+        "API",
+        "API Gateway",
+        "rest apis"
+      ],
+      "total_frequency": 279,
+      "mean_frequency": 5.9361702127659575
+    },
+    {
+      "cluster_id": 16,
+      "size": 30,
+      "label": "Web Services, Power BI, airflow...",
+      "top_skills": [
+        "Web Services",
+        "Power BI",
+        "airflow",
+        "Airflow",
+        "webpack"
+      ],
+      "total_frequency": 84,
+      "mean_frequency": 2.8
+    },
+    {
+      "cluster_id": 17,
+      "size": 28,
+      "label": "Artifactory, Databricks, datadog...",
+      "top_skills": [
+        "Artifactory",
+        "Databricks",
+        "datadog",
+        "Lakehouse",
+        "data modeling"
+      ],
+      "total_frequency": 56,
+      "mean_frequency": 2.0
+    },
+    {
+      "cluster_id": 18,
+      "size": 24,
+      "label": "c, ideas, Video...",
+      "top_skills": [
+        "c",
+        "ideas",
+        "Video",
+        "suite",
+        "video"
+      ],
+      "total_frequency": 133,
+      "mean_frequency": 5.541666666666667
+    },
+    {
+      "cluster_id": 19,
+      "size": 57,
+      "label": "Seguridad, Europa, Oferta...",
+      "top_skills": [
+        "Seguridad",
+        "Europa",
+        "Oferta",
+        "Acceso",
+        "Apoyo"
+      ],
+      "total_frequency": 259,
+      "mean_frequency": 4.543859649122807
+    },
+    {
+      "cluster_id": 20,
+      "size": 31,
+      "label": "Ruby on Rails, asp.net, Excel...",
+      "top_skills": [
+        "Ruby on Rails",
+        "asp.net",
+        "Excel",
+        "scala",
+        "Entity Framework"
+      ],
+      "total_frequency": 99,
+      "mean_frequency": 3.193548387096774
+    },
+    {
+      "cluster_id": 21,
+      "size": 27,
+      "label": "JavaScript, Java, TypeScript...",
+      "top_skills": [
+        "JavaScript",
+        "Java",
+        "TypeScript",
+        "JSON",
+        "Javascript"
+      ],
+      "total_frequency": 348,
+      "mean_frequency": 12.88888888888889
+    },
+    {
+      "cluster_id": 22,
+      "size": 177,
+      "label": "Python, AWS, CI...",
+      "top_skills": [
+        "Python",
+        "AWS",
+        "CI",
+        "CSS",
+        "HTML"
+      ],
+      "total_frequency": 1018,
+      "mean_frequency": 5.751412429378531
+    }
+  ]
+}

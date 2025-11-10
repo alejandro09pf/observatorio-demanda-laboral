@@ -1,0 +1,119 @@
+15:47:40 - INFO - ================================================================================
+15:47:40 - INFO - CLUSTERING: PIPELINE_B_300_POST_EXP12_FEWER_MCS20
+15:47:40 - INFO - ================================================================================
+15:47:40 - INFO - 
+================================================================================
+15:47:40 - INFO - EXTRACTING SKILLS
+15:47:40 - INFO - ================================================================================
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:64: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+15:49:52 - INFO -    ✅ Extracted 2401 unique skills
+15:49:52 - INFO -    Frequency range: 1 - 294
+15:49:52 - INFO -    Total mentions: 9,458
+15:49:52 - INFO - 
+================================================================================
+15:49:52 - INFO - FETCHING EMBEDDINGS
+15:49:52 - INFO - ================================================================================
+15:49:52 - INFO - Requesting embeddings for 2401 skills...
+15:49:53 - INFO -    ✅ Found embeddings: 1937/2401
+15:49:53 - INFO -    Coverage: 80.7%
+15:49:53 - WARNING -    ⚠️  Missing 464 skills
+15:49:53 - INFO -    Using 1937 skills with embeddings
+15:49:53 - INFO - 
+================================================================================
+15:49:53 - INFO - RUNNING UMAP (src/analyzer/dimension_reducer.py)
+15:49:53 - INFO - ================================================================================
+15:49:53 - INFO - DimensionReducer initialized: n_components=2, n_neighbors=5, min_dist=0.1, metric=cosine
+15:49:53 - INFO - Fitting UMAP on 1937 samples with 768 features
+15:49:53 - INFO - Parameters: n_neighbors=5, min_dist=0.1, metric=cosine
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+UMAP(angular_rp_forest=True, metric='cosine', n_neighbors=5, random_state=42, verbose=True)
+Sat Nov  8 15:49:53 2025 Construct fuzzy simplicial set
+Sat Nov  8 15:49:55 2025 Finding Nearest Neighbors
+Sat Nov  8 15:49:57 2025 Finished Nearest Neighbor Search
+Sat Nov  8 15:49:58 2025 Construct embedding
+Epochs completed:   0%|            0/500 [00:00]Epochs completed:   0%|            1/500 [00:00]Epochs completed:  10%| █          52/500 [00:00]Epochs completed:  17%| █▋         84/500 [00:00]Epochs completed:  23%| ██▎        114/500 [00:00]Epochs completed:  29%| ██▉        144/500 [00:00]Epochs completed:  34%| ███▍       171/500 [00:00]Epochs completed:  40%| ████       201/500 [00:00]Epochs completed:  47%| ████▋      233/500 [00:01]Epochs completed:  55%| █████▌     275/500 [00:01]Epochs completed:  64%| ██████▎    318/500 [00:01]Epochs completed:  73%| ███████▎   366/500 [00:01]Epochs completed:  83%| ████████▎  413/500 [00:01]Epochs completed:  92%| █████████▏ 459/500 [00:01]Epochs completed: 100%| ██████████ 500/500 [00:01]
+15:50:00 - INFO - UMAP transformation complete
+15:50:00 - INFO - Output shape: (1937, 2)
+15:50:00 - INFO - Coordinate ranges: X=[-4.67, 15.87], Y=[0.60, 16.15]
+15:50:00 - INFO - 
+================================================================================
+15:50:00 - INFO - RUNNING HDBSCAN (src/analyzer/clustering.py)
+15:50:00 - INFO - ================================================================================
+15:50:00 - INFO - SkillClusterer initialized: min_cluster_size=20, min_samples=2, metric=euclidean
+15:50:00 - INFO - Clustering 1937 samples in 2D space
+15:50:00 - INFO - Parameters: min_cluster_size=20, min_samples=2
+15:50:00 - INFO - Clustering complete
+15:50:00 - INFO - Clusters detected: 30
+15:50:00 - INFO - Noise points: 598 (30.9%)
+15:50:00 - INFO - Cluster sizes: {25: 42, 29: 231, 14: 34, 8: 59, 12: 46, 0: 35, 24: 81, 10: 34, 21: 36, 28: 22, 6: 25, 18: 67, 27: 66, 4: 36, 7: 26, 3: 35, 2: 33, 20: 33, 22: 24, 5: 23, 13: 26, 15: 79, 23: 29, 9: 22, 26: 27, 1: 20, 11: 22, 19: 23, 16: 54, 17: 49}
+15:50:00 - INFO - Quality metrics calculated:
+15:50:00 - INFO -   Silhouette: 0.333
+15:50:00 - INFO -   Davies-Bouldin: 0.789
+15:50:00 - INFO - 
+📊 Clustering Results:
+15:50:00 - INFO -    Clusters: 30
+15:50:00 - INFO -    Noise: 598 (30.9%)
+15:50:00 - INFO -    Silhouette: 0.333
+15:50:00 - INFO -    Davies-Bouldin: 0.789
+15:50:00 - INFO - 
+📊 Analyzing clusters...
+15:50:00 - INFO - 
+================================================================================
+15:50:00 - INFO - META-CLUSTERING (Hierarchical Grouping)
+15:50:00 - INFO - ================================================================================
+15:50:00 - INFO - Clustering 30 fine-grained clusters into meta-clusters...
+15:50:00 - INFO - Meta-clusters detected: 3
+15:50:00 - INFO - Unclustered fine clusters: 4
+15:50:00 - INFO - Meta-clustering Silhouette: 0.175
+15:50:00 - INFO - Meta-clustering Davies-Bouldin: 1.533
+15:50:00 - INFO - 
+⏭  Skipping temporal analysis (no temporal_sql_query in config)
+15:50:00 - INFO - 
+================================================================================
+15:50:00 - INFO - GENERATING VISUALIZATIONS
+15:50:00 - INFO - ================================================================================
+15:50:00 - INFO - 
+🎨 UMAP scatter plot (enhanced)...
+15:50:03 - INFO -    ✅ Saved: umap_scatter.png (enhanced with labels)
+15:50:03 - INFO - 
+⏭  Skipping temporal visualizations (no temporal data available)
+15:50:03 - INFO - 
+================================================================================
+15:50:03 - INFO - GENERATING HIERARCHICAL VISUALIZATIONS
+15:50:03 - INFO - ================================================================================
+15:50:03 - INFO - 
+🎨 Fine-grained view (colored by meta-cluster with annotations)...
+15:50:05 - INFO -    ✅ Saved: umap_fine_by_meta.png
+15:50:05 - INFO - 
+🎨 Macro view (top cluster centroids)...
+15:50:05 - INFO -    Showing top 30 clusters (by frequency)
+15:50:08 - INFO -    ✅ Saved: umap_macro_centroids.png
+15:50:08 - INFO - 
+================================================================================
+15:50:08 - INFO - SAVING RESULTS
+15:50:08 - INFO - ================================================================================
+15:50:08 - INFO -    ✅ results.json
+15:50:08 - INFO -    ✅ metrics_summary.json
+15:50:08 - INFO - 
+================================================================================
+15:50:08 - INFO - ✅ CLUSTERING COMPLETE
+15:50:08 - INFO - ================================================================================
+15:50:08 - INFO -    Dataset: pipeline_b_300_post_exp12_fewer_mcs20
+15:50:08 - INFO -    Skills: 1937
+15:50:08 - INFO -    Clusters: 30
+15:50:08 - INFO -    Silhouette: 0.333
+15:50:08 - INFO -    Output: outputs/clustering/experiments/pipeline_b_300_post/exp12_fewer_mcs20/
+15:50:08 - INFO - ================================================================================
+	completed  0  /  500 epochs
+	completed  50  /  500 epochs
+	completed  100  /  500 epochs
+	completed  150  /  500 epochs
+	completed  200  /  500 epochs
+	completed  250  /  500 epochs
+	completed  300  /  500 epochs
+	completed  350  /  500 epochs
+	completed  400  /  500 epochs
+	completed  450  /  500 epochs
+Sat Nov  8 15:50:00 2025 Finished embedding

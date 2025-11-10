@@ -1,0 +1,21 @@
+{
+  "dataset_name": "pipeline_b_300_post_exp3",
+  "description": "Pipeline B (LLM) - 300 gold standard jobs - Post-ESCO mapping - Exp3 (mcs=15)",
+  "sql_query": "SELECT normalized_skill as skill_text, COUNT(*) as frequency, COUNT(DISTINCT job_id) as job_count FROM enhanced_skills WHERE job_id IN (SELECT DISTINCT job_id FROM gold_standard_annotations) AND skill_type = 'hard' AND esco_concept_uri IS NOT NULL AND esco_concept_uri != '' GROUP BY normalized_skill ORDER BY frequency DESC",
+  "temporal_sql_query": "SELECT normalized_skill as skill_text, DATE_TRUNC('quarter', rj.posted_date) as quarter, COUNT(*) as frequency FROM enhanced_skills es JOIN raw_jobs rj ON es.job_id = rj.job_id WHERE es.job_id IN (SELECT DISTINCT job_id FROM gold_standard_annotations) AND es.skill_type = 'hard' AND es.esco_concept_uri IS NOT NULL AND es.esco_concept_uri != '' GROUP BY normalized_skill, quarter",
+  "output_dir": "outputs/clustering/experiments/pipeline_b_300_post/exp3_nn15_mcs15",
+  "clustering_params": {
+    "umap": {
+      "n_components": 2,
+      "n_neighbors": 15,
+      "min_dist": 0.1,
+      "metric": "cosine",
+      "random_state": 42
+    },
+    "hdbscan": {
+      "min_cluster_size": 15,
+      "min_samples": 5,
+      "metric": "euclidean"
+    }
+  }
+}

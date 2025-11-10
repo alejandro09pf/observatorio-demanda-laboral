@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "dataset_name": "pipeline_a_300_post_exp2",
+    "created_at": "2025-11-07T11:54:58.360584",
+    "n_skills": 289,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 15,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 10,
+        "min_samples": 5,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 3,
+    "n_samples": 289,
+    "n_noise": 22,
+    "noise_percentage": 7.612456747404845,
+    "silhouette_score": 0.3895241320133209,
+    "davies_bouldin_score": 0.6910116871401767,
+    "largest_cluster_size": 152,
+    "smallest_cluster_size": 21,
+    "mean_cluster_size": 89.0
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 94,
+      "label": "Angular, Europa, Oferta...",
+      "top_skills": [
+        "Angular",
+        "Europa",
+        "Oferta",
+        "Acceso",
+        "Go"
+      ],
+      "total_frequency": 312,
+      "mean_frequency": 3.3191489361702127
+    },
+    {
+      "cluster_id": 1,
+      "size": 21,
+      "label": "rest apis, backend development, FastAPI...",
+      "top_skills": [
+        "rest apis",
+        "backend development",
+        "FastAPI",
+        "ASTECI",
+        "frontend development"
+      ],
+      "total_frequency": 99,
+      "mean_frequency": 4.714285714285714
+    },
+    {
+      "cluster_id": 2,
+      "size": 152,
+      "label": "Python, JavaScript, CI/CD...",
+      "top_skills": [
+        "Python",
+        "JavaScript",
+        "CI/CD",
+        "agile",
+        "Docker"
+      ],
+      "total_frequency": 1854,
+      "mean_frequency": 12.197368421052632
+    }
+  ]
+}

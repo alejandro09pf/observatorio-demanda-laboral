@@ -1,0 +1,116 @@
+18:01:32 - INFO - ================================================================================
+18:01:32 - INFO - CLUSTERING: PIPELINE_B_300_POST_EXP1
+18:01:32 - INFO - ================================================================================
+18:01:32 - INFO - 
+================================================================================
+18:01:32 - INFO - EXTRACTING SKILLS
+18:01:32 - INFO - ================================================================================
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:64: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+18:01:32 - INFO -    ✅ Extracted 234 unique skills
+18:01:32 - INFO -    Frequency range: 1 - 202
+18:01:32 - INFO -    Total mentions: 3,379
+18:01:32 - INFO - 
+================================================================================
+18:01:32 - INFO - FETCHING EMBEDDINGS
+18:01:32 - INFO - ================================================================================
+18:01:32 - INFO - Requesting embeddings for 234 skills...
+18:01:32 - INFO -    ✅ Found embeddings: 234/234
+18:01:32 - INFO -    Coverage: 100.0%
+18:01:32 - INFO - 
+================================================================================
+18:01:32 - INFO - RUNNING UMAP (src/analyzer/dimension_reducer.py)
+18:01:32 - INFO - ================================================================================
+18:01:32 - INFO - DimensionReducer initialized: n_components=2, n_neighbors=15, min_dist=0.1, metric=cosine
+18:01:32 - INFO - Fitting UMAP on 234 samples with 768 features
+18:01:32 - INFO - Parameters: n_neighbors=15, min_dist=0.1, metric=cosine
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/venv/lib/python3.11/site-packages/umap/umap_.py:1943: UserWarning: n_jobs value -1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(f"n_jobs value {self.n_jobs} overridden to 1 by setting random_state. Use no seed for parallelism.")
+UMAP(angular_rp_forest=True, metric='cosine', random_state=42, verbose=True)
+Fri Nov  7 18:01:32 2025 Construct fuzzy simplicial set
+Fri Nov  7 18:01:32 2025 Finding Nearest Neighbors
+Fri Nov  7 18:01:33 2025 Finished Nearest Neighbor Search
+Fri Nov  7 18:01:34 2025 Construct embedding
+Epochs completed:   0%|            0/500 [00:00]Epochs completed:   0%|            1/500 [00:00]Epochs completed:  66%| ██████▋    332/500 [00:00]Epochs completed: 100%| ██████████ 500/500 [00:00]
+18:01:34 - INFO - UMAP transformation complete
+18:01:34 - INFO - Output shape: (234, 2)
+18:01:34 - INFO - Coordinate ranges: X=[6.43, 13.53], Y=[8.12, 13.48]
+18:01:34 - INFO - 
+================================================================================
+18:01:34 - INFO - RUNNING HDBSCAN (src/analyzer/clustering.py)
+18:01:34 - INFO - ================================================================================
+18:01:34 - INFO - SkillClusterer initialized: min_cluster_size=5, min_samples=3, metric=euclidean
+18:01:34 - INFO - Clustering 234 samples in 2D space
+18:01:34 - INFO - Parameters: min_cluster_size=5, min_samples=3
+18:01:34 - INFO - Clustering complete
+18:01:34 - INFO - Clusters detected: 10
+18:01:34 - INFO - Noise points: 14 (6.0%)
+18:01:34 - INFO - Cluster sizes: {3: 9, 9: 114, 7: 15, 2: 7, 1: 9, 5: 5, 8: 17, 0: 20, 6: 9, 4: 15}
+18:01:34 - INFO - Quality metrics calculated:
+18:01:34 - INFO -   Silhouette: 0.260
+18:01:34 - INFO -   Davies-Bouldin: 0.609
+18:01:34 - INFO - 
+📊 Clustering Results:
+18:01:34 - INFO -    Clusters: 10
+18:01:34 - INFO -    Noise: 14 (6.0%)
+18:01:34 - INFO -    Silhouette: 0.260
+18:01:34 - INFO -    Davies-Bouldin: 0.609
+18:01:34 - INFO - 
+📊 Analyzing clusters...
+18:01:34 - INFO - 
+================================================================================
+18:01:34 - INFO - EXTRACTING TEMPORAL DATA
+18:01:34 - INFO - ================================================================================
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:141: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn)
+/Users/nicocamacho/Documents/Tesis/observatorio-demanda-laboral/scripts/clustering_analysis.py:145: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  df['quarter_str'] = df['quarter'].dt.to_period('Q').astype(str)
+18:01:34 - INFO -    ✅ Extracted temporal data
+18:01:34 - INFO -    Quarters: 6
+18:01:34 - INFO -    Date range: 2016Q2 - NaT
+18:01:34 - INFO - 
+================================================================================
+18:01:34 - INFO - CREATING TEMPORAL MATRIX
+18:01:34 - INFO - ================================================================================
+18:01:34 - INFO -    ✅ Matrix shape: (6, 11)
+18:01:34 - INFO - 
+================================================================================
+18:01:34 - INFO - GENERATING VISUALIZATIONS
+18:01:34 - INFO - ================================================================================
+18:01:34 - INFO - 
+🎨 UMAP scatter plot...
+18:01:35 - INFO -    ✅ Saved: umap_scatter.png
+18:01:35 - INFO - 
+🎨 Temporal heatmap...
+18:01:36 - INFO -    ✅ Saved: temporal_heatmap.png
+18:01:36 - INFO - 
+🎨 Top clusters evolution...
+18:01:36 - INFO -    ✅ Saved: top_clusters_evolution.png
+18:01:36 - INFO - 
+================================================================================
+18:01:36 - INFO - SAVING RESULTS
+18:01:36 - INFO - ================================================================================
+18:01:36 - INFO -    ✅ results.json
+18:01:36 - INFO -    ✅ temporal_matrix.csv
+18:01:36 - INFO -    ✅ metrics_summary.json
+18:01:36 - INFO - 
+================================================================================
+18:01:36 - INFO - ✅ CLUSTERING COMPLETE
+18:01:36 - INFO - ================================================================================
+18:01:36 - INFO -    Dataset: pipeline_b_300_post_exp1
+18:01:36 - INFO -    Skills: 234
+18:01:36 - INFO -    Clusters: 10
+18:01:36 - INFO -    Silhouette: 0.260
+18:01:36 - INFO -    Output: outputs/clustering/experiments/pipeline_b_300_post/exp1_nn15_mcs5/
+18:01:36 - INFO - ================================================================================
+	completed  0  /  500 epochs
+	completed  50  /  500 epochs
+	completed  100  /  500 epochs
+	completed  150  /  500 epochs
+	completed  200  /  500 epochs
+	completed  250  /  500 epochs
+	completed  300  /  500 epochs
+	completed  350  /  500 epochs
+	completed  400  /  500 epochs
+	completed  450  /  500 epochs
+Fri Nov  7 18:01:34 2025 Finished embedding

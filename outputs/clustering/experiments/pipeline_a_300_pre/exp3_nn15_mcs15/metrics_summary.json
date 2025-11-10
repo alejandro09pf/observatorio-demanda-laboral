@@ -1,0 +1,28 @@
+{
+  "execution_date": "2025-11-08T01:14:17.468865",
+  "parameters": {
+    "umap": {
+      "n_components": 2,
+      "n_neighbors": 15,
+      "min_dist": 0.1,
+      "metric": "cosine",
+      "random_state": 42
+    },
+    "hdbscan": {
+      "min_cluster_size": 15,
+      "min_samples": 5,
+      "metric": "euclidean"
+    }
+  },
+  "metrics": {
+    "n_clusters": 23,
+    "n_samples": 1314,
+    "n_noise": 390,
+    "noise_percentage": 29.68036529680365,
+    "silhouette_score": 0.4297861158847809,
+    "davies_bouldin_score": 0.6275902041934436,
+    "largest_cluster_size": 177,
+    "smallest_cluster_size": 15,
+    "mean_cluster_size": 40.17391304347826
+  }
+}

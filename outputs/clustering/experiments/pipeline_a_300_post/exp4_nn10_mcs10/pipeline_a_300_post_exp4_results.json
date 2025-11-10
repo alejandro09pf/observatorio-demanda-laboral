@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "dataset_name": "pipeline_a_300_post_exp4",
+    "created_at": "2025-11-07T11:55:45.634130",
+    "n_skills": 289,
+    "algorithm": "UMAP + HDBSCAN",
+    "parameters": {
+      "umap": {
+        "n_components": 2,
+        "n_neighbors": 10,
+        "min_dist": 0.1,
+        "metric": "cosine",
+        "random_state": 42
+      },
+      "hdbscan": {
+        "min_cluster_size": 10,
+        "min_samples": 5,
+        "metric": "euclidean"
+      }
+    }
+  },
+  "metrics": {
+    "n_clusters": 5,
+    "n_samples": 289,
+    "n_noise": 55,
+    "noise_percentage": 19.031141868512112,
+    "silhouette_score": 0.4032517671585083,
+    "davies_bouldin_score": 0.5980620307114526,
+    "largest_cluster_size": 96,
+    "smallest_cluster_size": 12,
+    "mean_cluster_size": 46.8
+  },
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 87,
+      "label": "React, Angular, Europa...",
+      "top_skills": [
+        "React",
+        "Angular",
+        "Europa",
+        "Oferta",
+        "Acceso"
+      ],
+      "total_frequency": 373,
+      "mean_frequency": 4.287356321839081
+    },
+    {
+      "cluster_id": 1,
+      "size": 23,
+      "label": "rest apis, backend development, FastAPI...",
+      "top_skills": [
+        "rest apis",
+        "backend development",
+        "FastAPI",
+        "ASTECI",
+        "frontend development"
+      ],
+      "total_frequency": 104,
+      "mean_frequency": 4.521739130434782
+    },
+    {
+      "cluster_id": 2,
+      "size": 16,
+      "label": "SQL, sql server, MySQL...",
+      "top_skills": [
+        "SQL",
+        "sql server",
+        "MySQL",
+        "nosql",
+        "oracle"
+      ],
+      "total_frequency": 259,
+      "mean_frequency": 16.1875
+    },
+    {
+      "cluster_id": 3,
+      "size": 12,
+      "label": "agile, Scrum, spark...",
+      "top_skills": [
+        "agile",
+        "Scrum",
+        "spark",
+        "Flask",
+        "snowflake"
+      ],
+      "total_frequency": 170,
+      "mean_frequency": 14.166666666666666
+    },
+    {
+      "cluster_id": 4,
+      "size": 96,
+      "label": "Python, JavaScript, CI/CD...",
+      "top_skills": [
+        "Python",
+        "JavaScript",
+        "CI/CD",
+        "Git",
+        "Docker"
+      ],
+      "total_frequency": 1301,
+      "mean_frequency": 13.552083333333334
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+00:07:42 - INFO - ================================================================================
+00:07:42 - INFO - GENERATING MISSING EMBEDDINGS FOR CLUSTERING
+00:07:42 - INFO - ================================================================================
+00:07:42 - INFO - Start time: 2025-11-07 00:07:42.999478
+00:07:43 - INFO - ================================================================================
+00:07:43 - INFO - IDENTIFYING MISSING EMBEDDINGS
+00:07:43 - INFO - ================================================================================
+00:07:43 - INFO - 
+1. gold_standard_annotations (Manual)
+00:07:43 - INFO -    Missing: 3 skills
+00:07:43 - INFO - 
+2. enhanced_skills Pre-ESCO (Pipeline B)
+00:07:43 - INFO -    Missing: 710 skills
+00:07:43 - INFO - 
+3. enhanced_skills Post-ESCO (Pipeline B)
+00:07:43 - INFO -    Missing: 5 skills
+00:07:43 - INFO - 
+   TOTAL MISSING: 718 skills
+00:07:43 - INFO - 
+📊 Unique skills to embed: 715
+00:07:43 - INFO - 
+================================================================================
+00:07:43 - INFO - LOADING EMBEDDING MODEL
+00:07:43 - INFO - ================================================================================
+00:07:43 - INFO -    Model: intfloat/multilingual-e5-base
+00:07:43 - INFO - Use pytorch device_name: mps
+00:07:43 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+'(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 71fad112-7aef-4c9c-aac8-fb1c4c89735e)')' thrown while requesting HEAD https://huggingface.co/intfloat/multilingual-e5-base/resolve/main/./modules.json
+00:09:14 - WARNING - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 71fad112-7aef-4c9c-aac8-fb1c4c89735e)')' thrown while requesting HEAD https://huggingface.co/intfloat/multilingual-e5-base/resolve/main/./modules.json
+Retrying in 1s [Retry 1/5].
+00:09:14 - WARNING - Retrying in 1s [Retry 1/5].
+00:09:18 - INFO -    ✅ Model loaded
+00:09:18 - INFO - 
+================================================================================
+00:09:18 - INFO - GENERATING EMBEDDINGS
+00:09:18 - INFO - ================================================================================
+00:09:18 - INFO - 
+🚀 Generating embeddings for 715 skills...
+Batches:   0%|          | 0/23 [00:00<?, ?it/s]Batches:   4%|▍         | 1/23 [00:00<00:04,  4.49it/s]Batches:  13%|█▎        | 3/23 [00:00<00:02,  9.07it/s]Batches:  22%|██▏       | 5/23 [00:00<00:01, 12.09it/s]Batches:  30%|███       | 7/23 [00:00<00:01, 12.85it/s]Batches:  39%|███▉      | 9/23 [00:00<00:00, 14.21it/s]Batches:  48%|████▊     | 11/23 [00:00<00:00, 15.60it/s]Batches:  61%|██████    | 14/23 [00:00<00:00, 17.91it/s]Batches:  74%|███████▍  | 17/23 [00:01<00:00, 19.04it/s]Batches:  91%|█████████▏| 21/23 [00:01<00:00, 22.75it/s]Batches: 100%|██████████| 23/23 [00:01<00:00, 17.29it/s]
+00:09:20 - INFO -    ✅ Generated embeddings shape: (715, 768)
+00:09:20 - INFO - 
+================================================================================
+00:09:20 - INFO - SAVING TO DATABASE
+00:09:20 - INFO - ================================================================================
+00:09:20 - INFO - 
+💾 Saving 715 embeddings to database...
+Inserting:   0%|          | 0/715 [00:00<?, ?it/s]Inserting:   5%|▍         | 33/715 [00:00<00:02, 323.75it/s]Inserting:  11%|█▏        | 81/715 [00:00<00:01, 411.76it/s]Inserting:  20%|█▉        | 140/715 [00:00<00:01, 491.04it/s]Inserting:  28%|██▊       | 197/715 [00:00<00:00, 519.59it/s]Inserting:  35%|███▍      | 249/715 [00:00<00:00, 488.27it/s]Inserting:  42%|████▏     | 299/715 [00:00<00:00, 468.84it/s]Inserting:  49%|████▊     | 347/715 [00:00<00:00, 465.94it/s]Inserting:  55%|█████▌    | 394/715 [00:00<00:00, 442.65it/s]Inserting:  61%|██████▏   | 439/715 [00:00<00:00, 411.68it/s]Inserting:  67%|██████▋   | 481/715 [00:01<00:00, 388.10it/s]Inserting:  73%|███████▎  | 521/715 [00:01<00:00, 374.10it/s]Inserting:  78%|███████▊  | 559/715 [00:01<00:00, 359.83it/s]Inserting:  83%|████████▎ | 596/715 [00:01<00:00, 359.24it/s]Inserting:  89%|████████▊ | 633/715 [00:01<00:00, 346.51it/s]Inserting:  94%|█████████▎| 670/715 [00:01<00:00, 351.34it/s]Inserting: 100%|█████████▉| 712/715 [00:01<00:00, 370.29it/s]Inserting: 100%|██████████| 715/715 [00:01<00:00, 402.90it/s]
+00:09:21 - INFO -    ✅ Saved 715 embeddings
+00:09:21 - INFO - 
+================================================================================
+00:09:21 - INFO - ✅ COMPLETE
+00:09:21 - INFO - ================================================================================
+00:09:21 - INFO -    Skills processed: 715
+00:09:21 - INFO -    Embeddings saved: 715
+00:09:21 - INFO -    End time: 2025-11-07 00:09:21.953888
+00:09:21 - INFO - ================================================================================
