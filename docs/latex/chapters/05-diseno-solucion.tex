@@ -6,19 +6,19 @@ La construcción de un observatorio de demanda laboral automatizado requiere la 
 
 \subsection{Reconocimiento de Entidades Nombradas (NER)}
 
-El Reconocimiento de Entidades Nombradas es una tarea fundamental de NLP que consiste en localizar y clasificar entidades en texto dentro de categorías predefinidas \cite{nadeau2007}. Los sistemas NER modernos se basan en modelos de aprendizaje supervisado, particularmente arquitecturas basadas en transformers \cite{devlin2019}. Para el dominio de habilidades técnicas, NER presenta ventajas significativas: alta precisión para entidades conocidas ($>$90\%), contextualización bidireccional para desambiguación, y eficiencia computacional con latencias de milisegundos por documento \cite{zhang2018}. Sin embargo, enfrenta limitaciones críticas: dependencia del vocabulario de entrenamiento, baja cobertura en dominios especializados, y la incapacidad de inferir habilidades implícitas no mencionadas explícitamente en el texto \cite{canete2020}.
+El Reconocimiento de Entidades Nombradas es una tarea fundamental de NLP que consiste en localizar y clasificar entidades en texto dentro de categorías predefinidas \cite{nadeau2007}. Los sistemas NER modernos se basan en modelos de aprendizaje supervisado, particularmente arquitecturas basadas en transformers \cite{devlin2019}. Para el dominio de habilidades técnicas, NER presenta ventajas teóricas significativas: alta precisión para entidades conocidas en datasets balanceados ($>$90\%), contextualización bidireccional para desambiguación, y eficiencia computacional con latencias de milisegundos por documento \cite{zhang2018}. Sin embargo, enfrenta limitaciones críticas: dependencia del vocabulario de entrenamiento, baja cobertura en dominios especializados, y la incapacidad de inferir habilidades implícitas no mencionadas explícitamente en el texto \cite{canete2020}.
 
-En este proyecto se adoptó un enfoque híbrido que combina el modelo base \texttt{es\_core\_news\_lg} de spaCy con un EntityRuler personalizado poblado con 666 patrones de habilidades técnicas de la taxonomía ESCO, permitiendo reconocimiento directo de terminología técnica no presente en el modelo pre-entrenado \cite{decorte2021}.
+En este proyecto se adoptó un enfoque híbrido que combina el modelo base \texttt{es\_core\_news\_lg} de spaCy con un EntityRuler personalizado poblado con 666 patrones de habilidades técnicas de la taxonomía ESCO, permitiendo reconocimiento directo de terminología técnica no presente en el modelo pre-entrenado \cite{decorte2021}. Los resultados experimentales revelaron que NER en este contexto específico presentó desempeño mixto: si bien aporta cobertura adicional de skills contextuales (mejora de +6.91pp F1 Pre-ESCO), introduce ruido que degrada precisión Post-ESCO (-6.64pp versus configuración Regex-Only). A pesar de este trade-off, NER se mantuvo en Pipeline A dado que incrementa recall detectando menciones contextuales que patrones deterministas omiten, como se documenta en la sección de pruebas de modelos.
 
 \subsection{Extracción basada en Expresiones Regulares}
 
-Las expresiones regulares (regex) son patrones de búsqueda basados en lenguajes formales que permiten identificar secuencias de caracteres con estructuras específicas \cite{friedl2006}. En el contexto de extracción de habilidades técnicas, regex fue particularmente efectiva para tecnologías con nomenclaturas estandarizadas: versiones numeradas (``Python 3.x'', ``Java 8+''), frameworks con sufijos convencionales (``.js'', ``SQL''), y acrónimos técnicos (``REST API'', ``CI/CD''). Sus ventajas incluyeron precisión del 100\% en patrones bien definidos, transparencia y auditabilidad, velocidad extrema (microsegundos por documento), y ausencia de requisitos de entrenamiento. Las limitaciones principales fueron fragilidad ante variaciones ortográficas, mantenimiento manual intensivo, y ausencia de comprensión contextual \cite{chiticariu2013}.
+Las expresiones regulares (regex) son patrones de búsqueda basados en lenguajes formales que permiten identificar secuencias de caracteres con estructuras específicas \cite{friedl2006}. En el contexto de extracción de habilidades técnicas, regex fue particularmente efectiva para tecnologías con nomenclaturas estandarizadas: versiones numeradas (``Python 3.x'', ``Java 8+''), frameworks con sufijos convencionales (``.js'', ``SQL''), y acrónimos técnicos (``REST API'', ``CI/CD''). La implementación final consistió en 548 patrones organizados en 18 categorías técnicas (lenguajes de programación, frameworks, bases de datos, plataformas cloud, DevOps, ciencia de datos, entre otras). Sus ventajas incluyeron precisión determinística del 100\% en patrones bien definidos, transparencia y auditabilidad, velocidad extrema (microsegundos por documento), y ausencia de requisitos de entrenamiento. Las limitaciones principales fueron fragilidad ante variaciones ortográficas, mantenimiento manual intensivo de patrones, y ausencia de comprensión contextual \cite{chiticariu2013}.
 
 \subsection{Extracción basada en Modelos de Lenguaje Grandes (LLMs)}
 
 Los Large Language Models representaron un cambio de paradigma en NLP, basándose en arquitecturas transformer pre-entrenadas sobre corpus masivos mediante objetivos de modelado de lenguaje \cite{brown2020, touvron2023}. A diferencia de NER y regex, los LLMs poseen capacidades de razonamiento contextual que permiten: inferencia de habilidades implícitas (deducir que un ``Científico de Datos'' requiere estadística y Python aunque no se mencione), normalización semántica automática (identificar que ``React'', ``React.js'' y ``ReactJS'' son equivalentes), desambiguación contextual, adaptación al lenguaje informal y ``Spanglish'', y razonamiento explicable mediante prompt engineering \cite{zhang2023, wei2023, vilares2016}.
 
-Sin embargo, presentaron limitaciones significativas: latencia 100-1000x mayor que NER (segundos vs. milisegundos), no-determinismo con temperatura $>$ 0, alucinaciones que generaron habilidades incorrectas, alto costo computacional (GPUs o APIs de pago), y sesgo lingüístico hacia el inglés con rendimiento degradado en español técnico \cite{elazar2023, ji2023, banon2020}.
+Sin embargo, presentaron limitaciones significativas: latencia 43x mayor que Pipeline A (42s vs. 1s por documento), no-determinismo con temperatura $>$ 0, alucinaciones que generaron habilidades incorrectas, alto costo computacional (GPUs 4-6GB o APIs de pago), y sesgo lingüístico hacia el inglés con rendimiento degradado en español técnico \cite{elazar2023, ji2023, banon2020}.
 
 \subsection{Justificación del Enfoque Dual}
 
@@ -30,19 +30,19 @@ La Tabla \ref{tab:comparacion-tecnicas-extraccion} presenta una comparación sis
 \label{tab:comparacion-tecnicas-extraccion}
 \begin{tabular}{|p{3cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
 \hline
-\textbf{Criterio} & \textbf{NER + EntityRuler} & \textbf{Regex} & \textbf{LLMs (Gemma 3 4B)} \\
+\textbf{Criterio} & \textbf{Pipeline A (NER+Regex)} & \textbf{Regex Solo} & \textbf{LLMs (Gemma 3 4B)} \\
 \hline
-Precisión (explícitas) & 9.3\% post-filtrado & 78.4\% & 43.3\% \\
+Precision Post-ESCO & 65.50\% & 86.36\% & \textbf{89.25\%} \\
 \hline
-Recall (cobertura) & 64.43\% & 40.16\% (solo regex) & 45.4\% \\
+Recall Post-ESCO & \textbf{81.25\%} & 73.08\% & 79.81\% \\
 \hline
-F1-Score Pre-ESCO & 24.98\% (Pipeline A) & 18.07\% (solo regex) & \textbf{46.23\%} \\
+F1-Score Pre-ESCO & 24.98\% & 18.07\% & \textbf{46.23\%} \\
 \hline
-F1-Score Post-ESCO & 72.53\% (Pipeline A) & 79.17\% (solo regex) & \textbf{84.26\%} \\
+F1-Score Post-ESCO & 72.53\% & 79.17\% & \textbf{84.26\%} \\
 \hline
 Habilidades implícitas & No soportado & No soportado & Sí (126\% soft skills) \\
 \hline
-Latencia & 50-80 ms & $<$1 ms & 42.07 s/job \\
+Latencia & 0.97 s/job & $<$1 ms & 42.07 s/job \\
 \hline
 Costo computacional & Bajo (CPU) & Muy bajo (CPU) & Alto (GPU 4-6 GB) \\
 \hline
@@ -55,7 +55,7 @@ Español LATAM & Medio & Alto & Alto \\
 
 \textit{Nota: Los valores presentados en la Tabla \ref{tab:comparacion-tecnicas-extraccion} fueron obtenidos mediante evaluación experimental sobre el conjunto de datos gold standard de 300 ofertas laborales (100 por país: CO, MX, AR). El F1-Score Post-ESCO refleja el rendimiento después de normalización con la taxonomía ESCO. Pipeline A combina NER+Regex+ESCO en arquitectura dual. La métrica de habilidades implícitas para LLMs (126\% soft skills) indica que el modelo detectó 26\% más soft skills que las anotadas manualmente, validando la hipótesis de inferencia contextual.}
 
-Dado que ninguna técnica individual satisface todos los requisitos, se propone una comparación empírica entre dos enfoques: \textbf{Pipeline A} (NER + Regex + ESCO) optimizado para alta precisión y baja latencia; y \textbf{Pipeline B} (LLMs) para enriquecimiento semántico y detección de habilidades implícitas. Esta comparación permite evaluar qué pipeline logra mejor balance entre precisión y cobertura. El pipeline ganador (LLM con Gemma 3 4B) sería el implementado a futuro, con posibilidad de combinar ambos enfoques donde el LLM también evalúe las extracciones clásicas \cite{li2023}.
+Dado que ninguna técnica individual satisface todos los requisitos, se propone una comparación empírica entre dos enfoques: \textbf{Pipeline A} (NER + Regex + ESCO) implementado para procesamiento escalable del corpus completo; y \textbf{Pipeline B} (LLMs) implementado experimentalmente sobre gold standard para enriquecimiento semántico y detección de habilidades implícitas. Esta comparación permite evaluar qué pipeline logra mejor balance entre precisión y cobertura. El Pipeline B con Gemma 3 4B fue evaluado sobre 299 de las 300 ofertas del gold standard (99.3\% cobertura), demostrando superioridad cuantitativa (F1=84.26\% vs 72.53\% Pipeline A) pero con trade-off de costo computacional 43$\times$ mayor, validando su viabilidad como método de enriquecimiento selectivo complementario al procesamiento masivo con Pipeline A \cite{li2023}.
 
 \subsection{Modelos de Lenguaje Grandes: Selección y Evaluación}
 
@@ -118,7 +118,7 @@ Jobs procesados & 299/300 (99.3\%) & 10/10 (test) \\
 \end{tabular}
 \end{table}
 
-\textit{Nota: La tabla presenta comparación entre los dos modelos principales de cuatro candidatos evaluados (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini). Gemma y Llama fueron seleccionados para comparación detallada por representar mejor balance rendimiento/recursos. Los valores de Gemma 3 4B fueron obtenidos mediante evaluación experimental completa sobre 299 de las 300 ofertas del gold standard (99.3\% de cobertura; 2 jobs presentaron mode collapse). Los valores de Llama 3 3B marcados como ``est.'' (estimados) se extrapolaron de evaluación en 10 jobs de prueba. F1 Pre-ESCO mide rendimiento sin normalización taxonómica; F1 Post-ESCO mide rendimiento después de mapeo a ESCO. Soft skills coverage de 126\% indica detección de habilidades implícitas no anotadas manualmente. Las 7 alucinaciones de Llama corresponden a skills de Data Science (NumPy, Pandas, Machine Learning) extraídas erróneamente en una oferta de Python Developer AWS serverless que no mencionaba dichas tecnologías.}
+\textit{Nota: La tabla presenta comparación entre los dos modelos principales de cuatro candidatos evaluados (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini). Los cuatro modelos fueron evaluados inicialmente sobre 10 ofertas laborales para selección preliminar. Basándose en resultados superiores de Gemma, este modelo fue seleccionado para evaluación exhaustiva sobre las 299 de 300 ofertas del gold standard (99.3\% cobertura; 2 jobs presentaron mode collapse). Los valores de Llama 3 3B, Qwen 2.5 3B y Phi-3.5 Mini marcados como ``est.'' (estimados) se extrapolaron de la evaluación inicial en 10 jobs. Los valores de Gemma 3 4B corresponden a evaluación completa sobre 299 jobs. Posteriormente, Gemma fue comparado con Pipeline A sobre las 300 ofertas completas del gold standard para determinar el método ganador. F1 Pre-ESCO mide rendimiento sin normalización taxonómica; F1 Post-ESCO mide rendimiento después de mapeo a ESCO. Soft skills coverage de 126\% indica detección de habilidades implícitas no anotadas manualmente. Las 7 alucinaciones de Llama corresponden a skills de Data Science (NumPy, Pandas, Machine Learning) extraídas erróneamente en una oferta de Python Developer AWS serverless que no mencionaba dichas tecnologías.}
 
 \textbf{Resultados de la Evaluación Comparativa:}
 
@@ -150,11 +150,11 @@ Una vez que las habilidades fueron extraídas, normalizadas y representadas como
 
 \textbf{UMAP (Uniform Manifold Approximation and Projection):}
 
-UMAP es un algoritmo de reducción dimensional no lineal fundamentado en teoría de variedades Riemannianas y topología algebraica \cite{mcinnes2018umap}. A diferencia de t-SNE, UMAP preservó tanto estructura local (relaciones entre vecinos cercanos) como estructura global (relaciones entre clústeres distantes), fundamental para análisis de mercado laboral donde se requirió mantener jerarquías de habilidades. Los parámetros clave fueron: \texttt{n\_neighbors=15} (balance entre estructura local y global), \texttt{min\_dist=0.1} (compactación de puntos cercanos), y \texttt{metric='cosine'} (métrica de similitud apropiada para embeddings normalizados). UMAP redujo vectores de 768 dimensiones a 2-3 dimensiones visualizables manteniendo propiedades semánticas.
+UMAP es un algoritmo de reducción dimensional no lineal fundamentado en teoría de variedades Riemannianas y topología algebraica \cite{mcinnes2018umap}. A diferencia de t-SNE, UMAP preserva tanto estructura local (relaciones entre vecinos cercanos) como estructura global (relaciones entre clústeres distantes), característica fundamental para análisis de mercado laboral donde se requiere mantener jerarquías de habilidades. Los parámetros utilizados fueron: \texttt{n\_neighbors=15} (balance entre estructura local y global), \texttt{min\_dist=0.1} (compactación de puntos cercanos), y \texttt{metric='cosine'} (métrica de similitud apropiada para embeddings normalizados). UMAP redujo vectores de 768 dimensiones a 2-3 dimensiones visualizables manteniendo propiedades semánticas.
 
 \textbf{HDBSCAN (Hierarchical Density-Based Spatial Clustering):}
 
-HDBSCAN es un algoritmo de clustering jerárquico basado en densidad que extiende DBSCAN mediante construcción de un árbol de conectividad mínima \cite{campello2013}. Sus ventajas clave para este dominio incluyen: no requiere especificar el número de clústeres k (crítico cuando el número de perfiles emergentes es desconocido), identifica ruido automáticamente (habilidades atípicas o errores de extracción), maneja clústeres de densidades variables (perfiles nicho vs. mainstream), y proporciona jerarquía que permite análisis multinivel (familias de roles $\rightarrow$ roles específicos). Parámetros: \texttt{min\_cluster\_size=5} (tamaño mínimo de clúster válido), \texttt{min\_samples=3} (puntos mínimos para núcleo de densidad), y \texttt{metric='euclidean'} (post-reducción dimensional con UMAP).
+HDBSCAN es un algoritmo de clustering jerárquico basado en densidad que extiende DBSCAN mediante construcción de un árbol de conectividad mínima \cite{campello2013}. Sus ventajas clave para este dominio incluyen: no requiere especificar el número de clústeres k (crítico cuando el número de perfiles emergentes es desconocido), identifica ruido automáticamente (habilidades atípicas o errores de extracción), maneja clústeres de densidades variables (perfiles nicho vs. mainstream), y proporciona jerarquía que permite análisis multinivel (familias de roles $\rightarrow$ roles específicos). Parámetros de producción: \texttt{min\_cluster\_size=12} (tamaño mínimo de clúster válido para interpretabilidad), \texttt{min\_samples=3} (puntos mínimos para núcleo de densidad), \texttt{cluster\_selection\_method='eom'} (Excess of Mass para clusters más estables), y \texttt{metric='euclidean'} (post-reducción dimensional con UMAP).
 
 \subsection{Taxonomías de Habilidades Laborales}
 
@@ -202,7 +202,7 @@ Se evaluó el rendimiento de los dos métodos del Pipeline A (Regex y NER) sobre
 
 \textbf{Resultados de Extracción con Expresiones Regulares:}
 
-El módulo regex implementó 47 patrones especializados para tecnologías con nomenclatura estructurada. Resultados sobre el gold standard de 300 ofertas: F1-Score solo regex Pre-ESCO 18.07\%, F1-Score Post-ESCO 79.17\%, precision 86.36\% (post-ESCO), recall 73.08\%, latencia $<$1ms por documento. Las skills detectadas correctamente incluyeron Python, React, AWS, Docker, PostgreSQL, Kubernetes, Git, JavaScript, SQL, FastAPI. Los falsos positivos pre-ESCO correspondieron a acrónimos ambiguos (``ML'' en contextos no técnicos) y nombres de empresas similares a tecnologías (``Oracle'' empresa vs. ``Oracle Database''), pero fueron efectivamente filtrados mediante matching con ESCO. Conclusión: regex demostró alta precision post-normalización (86.36\%) validando su uso como método base, con velocidad submilisegundos permitiendo procesamiento masivo.
+El módulo regex implementó 548 patrones organizados en 18 categorías técnicas para tecnologías con nomenclatura estructurada. Resultados sobre el gold standard de 300 ofertas: F1-Score solo regex Pre-ESCO 18.07\%, F1-Score Post-ESCO 79.17\%, precision 86.36\% (post-ESCO), recall 73.08\%, latencia $<$1ms por documento. Las skills detectadas correctamente incluyeron Python, React, AWS, Docker, PostgreSQL, Kubernetes, Git, JavaScript, SQL, FastAPI. Los falsos positivos pre-ESCO correspondieron a acrónimos ambiguos (``ML'' en contextos no técnicos) y nombres de empresas similares a tecnologías (``Oracle'' empresa vs. ``Oracle Database''), pero fueron efectivamente filtrados mediante matching con ESCO. Conclusión: regex demostró alta precision post-normalización (86.36\%) validando su uso como método base, con velocidad submilisegundos permitiendo procesamiento masivo.
 
 \textbf{Resultados de Extracción con NER y spaCy:}
 
@@ -214,7 +214,7 @@ La arquitectura final combinó ambos métodos con deduplicación posterior, logr
 
 \subsection{Evaluación del Sistema Completo con Gold Standard}
 
-Se ejecutó un test end-to-end procesando 300 ofertas laborales del gold standard (100 por país: Colombia, México, Argentina) con el pipeline completo. Resultados globales: jobs procesados exitosamente 300/300 (100\%), total skills extraídas 8,268 (27.6 skills/job promedio), skills matched con ESCO 1,038 (12.6\% match rate), emergent skills sin match 7,230 (87.4\%), latencia promedio 1.82 segundos/job.
+Se ejecutó un test end-to-end procesando 300 ofertas laborales del gold standard (100 por país: Colombia, México, Argentina) con el pipeline completo utilizando el matcher ESCO implementado de dos capas (exact + fuzzy). Resultados globales: jobs procesados exitosamente 300/300 (100\%), total skills extraídas 8,268 (27.6 skills/job promedio), skills matched con ESCO 1,038 (12.6\% match rate), emergent skills sin match 7,230 (87.4\%), latencia promedio 1.82 segundos/job. Posteriormente se desarrolló un matcher experimental mejorado con mapeos manuales curados que incrementó el match rate a aproximadamente 25\%, permitiendo identificar y cuantificar con mayor precisión las habilidades emergentes ausentes en ESCO v1.1.0. Sin embargo, esta versión experimental no fue integrada al pipeline productivo para evitar introducir sesgos en la comparación entre Pipeline A y Pipeline B, manteniendo condiciones de evaluación equitativas donde ambos pipelines utilizan el mismo matcher sin bias.
 
 La distribución de matching por capa fue: Layer 1 (exact match) 149 skills (43.1\% del matched, confidence 1.00), Layer 2 (fuzzy match) 197 skills (56.9\% del matched, confidence 0.85-0.99). El análisis por país reveló variación: Colombia 15.3\% match rate (mayor proporción de stacks enterprise tradicionales: Java, .NET, Oracle, SAP), México 11.3\% (mayor adopción de frameworks modernos), Argentina 12.5\% (balance intermedio).
 
@@ -381,7 +381,7 @@ Las Tablas \ref{tab:tech-stack-infra} y \ref{tab:tech-stack-analytics} resumen l
 \hline
 Base de datos & PostgreSQL 15+ con pgvector & Soporte JSONB para metadatos flexibles, extensión pgvector para vectores 768D, robustez ACID, particionamiento para escalabilidad. \\
 \hline
-Taxonomía & ESCO v1.1.0 (+ 174 manuales) & Cobertura 13,000+ skills con etiquetas español/inglés, estructura ontológica con URIs, respaldo institucional CE, licencia CC BY 4.0. \\
+Taxonomía & ESCO v1.1.0 (+ 276 ext.) & Cobertura 13,000+ skills con etiquetas español/inglés, extendida con 152 O*NET + 124 manual (total 14,215), estructura ontológica con URIs, respaldo institucional CE, licencia CC BY 4.0. \\
 \hline
 Framework scraping & Scrapy 2.11 + Selenium 4.15 & Arquitectura asíncrona (100+ req/min), manejo robusto de reintentos, middlewares extensibles, Selenium para JavaScript dinámico. \\
 \hline

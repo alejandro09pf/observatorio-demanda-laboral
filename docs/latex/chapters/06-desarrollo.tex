@@ -405,10 +405,10 @@ La decisión de implementar un pipeline basado en LLMs se fundamentó en las lim
 Esta arquitectura dual responde a los siguientes atributos de calidad del sistema:
 
 \begin{itemize}
-    \item \textbf{Precision}: LLMs alcanzan 86.36\% F1 Post-ESCO, vs. 72.53\% de Pipeline A (+13.83pp mejora)
-    \item \textbf{Cobertura semántica}: Captura skills implícitas que Pipeline A omite (promedio 18.7 skills/oferta vs. 50.3, pero más relevantes)
-    \item \textbf{Costo-Efectividad}: Aplicación selectiva (gold standard, muestreo temporal) balancera calidad vs. latencia
-    \item \textbf{Escalabilidad}: Cuantización INT4 permite inferencia en GPUs consumer (RTX 3090), evitando dependencia de APIs comerciales
+    \item \textbf{Precision}: LLMs (Gemma 3 4B) alcanzan 84.26\% F1 Post-ESCO, vs. 72.53\% de Pipeline A (+11.73pp mejora)
+    \item \textbf{Cobertura semántica}: Captura skills implícitas que Pipeline A omite (promedio 27.8 skills/oferta con mayor relevancia contextual)
+    \item \textbf{Costo-Efectividad}: Aplicación selectiva (gold standard experimental) balancea calidad vs. latencia
+    \item \textbf{Escalabilidad}: Cuantización Q4 permite inferencia en GPUs consumer (4-6GB VRAM), evitando dependencia de APIs comerciales
 \end{itemize}
 
 \subsubsection{Selección del Modelo}
@@ -430,12 +430,12 @@ Todos los modelos se ejecutaron con cuantización INT4 mediante \texttt{bitsandb
 \textbf{Resultados de la evaluación comparativa}:
 
 \begin{itemize}
-    \item \textbf{Gemma 3 4B Instruct}: F1-Score 44.4\% Pre-ESCO
+    \item \textbf{Gemma 3 4B Instruct}: F1-Score 46.23\% Pre-ESCO
         \begin{itemize}
-            \item Formato JSON válido en 94\% de respuestas
-            \item Extracción balanceada: 15-25 skills/oferta
-            \item Sin alucinaciones evidentes detectadas en revisión manual
-            \item Latencia promedio: 42.3s/oferta
+            \item Formato JSON válido en 99\% de respuestas (299/300 jobs procesados exitosamente)
+            \item Extracción balanceada: 27.8 skills/oferta promedio
+            \item Sin alucinaciones evidentes detectadas en revisión manual de 300 ofertas
+            \item Latencia promedio: 42.07s/oferta
         \end{itemize}
 
     \item \textbf{Llama 3.2 3B Instruct}: F1-Score 39.7\% Pre-ESCO
@@ -465,10 +465,10 @@ Todos los modelos se ejecutaron con cuantización INT4 mediante \texttt{bitsandb
 Se seleccionó \textbf{Gemma 3 4B Instruct} como modelo de producción fundamentado en:
 
 \begin{itemize}
-    \item \textbf{Mejor F1-Score}: 44.4\% superó a alternativas en +4.7pp (vs. Llama) hasta +9.2pp (vs. Phi)
-    \item \textbf{Estabilidad de formato}: 94\% de respuestas en JSON válido redujo complejidad de parsing
-    \item \textbf{Ausencia de alucinaciones críticas}: Revisión manual de 50 ofertas no detectó skills irrelevantes sistemáticas
-    \item \textbf{Latencia aceptable}: 42.3s/oferta permitió procesamiento de 300 ofertas gold standard en $<$4 horas
+    \item \textbf{Mejor F1-Score}: 46.23\% Pre-ESCO y 84.26\% Post-ESCO, superando significativamente a alternativas
+    \item \textbf{Estabilidad de formato}: 99\% de respuestas en JSON válido (299/300 jobs procesados exitosamente)
+    \item \textbf{Ausencia de alucinaciones críticas}: Revisión manual de 300 ofertas no detectó skills irrelevantes sistemáticas
+    \item \textbf{Latencia aceptable}: 42.07s/oferta permitió procesamiento de 299 ofertas gold standard en 3.5 horas
 \end{itemize}
 
 Esta decisión responde al atributo de calidad de \textbf{Confiabilidad}: Un pipeline de producción debe generar resultados predecibles sin alucinaciones que contaminen análisis agregados, incluso si esto implica sacrificar marginal F1-Score.

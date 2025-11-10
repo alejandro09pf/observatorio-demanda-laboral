@@ -657,12 +657,14 @@ extraction_methods = ['regex']  # Sin NER
 
 ### Resumen Progreso Pipeline A (Exp #0 → #5)
 
-| Métrica | Exp #0 (Baseline) | Exp #5 (Final) | Δ Total |
-|---------|-------------------|----------------|---------|
+| Métrica | Exp #0 (Baseline) | Exp #5 (Intermedio) | Δ Total |
+|---------|-------------------|---------------------|---------|
 | **Garbage Rate** | 75% | **0%** | **-75pp** ✅ |
 | **Recall** | ~30% | **64.43%** | **+34pp** ✅ |
 | **Precision** | ~20% | ~45% | +25pp |
 | **F1 Post-ESCO** | ~35% | **72.53%** | **+37pp** ✅ |
+
+> **NOTA IMPORTANTE**: Los valores de Recall mostrados en Exp #5 (64.43%) son INTERMEDIOS. Después de iteraciones adicionales y refinamiento del matcher ESCO, el **Recall final de Pipeline A alcanzó 81.25%** (ver Comparación Final 3 Pipelines arriba). El F1 Post-ESCO se mantuvo en 72.53%.
 
 **Mejoras implementadas** (17 total):
 1. Stopwords NER (200+ palabras)
