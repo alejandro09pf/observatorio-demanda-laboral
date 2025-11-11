@@ -70,6 +70,55 @@ El trade-off crítico fue \textbf{Flexibilidad vs Estandarización}: Pre-ESCO fa
 
 Esta sección presenta hallazgos del análisis sobre el corpus completo de 30,660 ofertas procesadas, caracterizando distribución de skills, identificando tecnologías emergentes, y documentando tendencias temporales del mercado tech latinoamericano durante 2018-2025.
 
+\subsection{Resultados de Configuraciones de Clustering}
+
+El sistema de clustering se ejecutó sobre 8 configuraciones de producción representando tres pipelines de extracción (Manual annotations, Pipeline A, Pipeline B), dos escenarios ESCO (PRE, POST), y dos escalas de dataset (300 jobs gold standard, 30,660 jobs corpus completo). Esta matriz experimental cuantificó el impacto del mapeo ESCO en estructura de clustering y validó escalabilidad del sistema a corpus completo.
+
+\textbf{Impacto del mapeo ESCO en estructura de clusters}:
+
+Las configuraciones PRE-ESCO vs. POST-ESCO revelaron transformaciones estructurales del clustering causadas por normalización taxonómica. Manual Annotations experimentó colapso severo: 61 clusters (1,914 skills) PRE-ESCO redujeron a 2 clusters (236 skills) POST-ESCO, pérdida del 87.7\% de diversidad léxica. Pipeline A en dataset completo mostró impacto más extremo: 2,044 clusters (98,829 skills) PRE-ESCO colapsaron a 53 clusters (1,698 skills) POST-ESCO, descartando 98.3\% de extracciones por falta de mapeo ESCO. Pipeline B presentó comportamiento anómalo: 34 clusters PRE-ESCO expandieron a 50 clusters POST-ESCO, reflejando que LLMs generan extracciones implícitamente pre-normalizadas a vocabulario ESCO durante inferencia.
+
+\textbf{Degradación de métricas con escala}:
+
+La evaluación de Pipeline A en 300 jobs vs. 30,660 jobs cuantificó el trade-off diversidad-cohesión inherente a clustering de corpus grandes. Silhouette Score degradó de 0.456 (300 jobs) a 0.361 (30,660 jobs), reducción del 19.2\% atribuible a la emergencia de long-tail de skills raras (aparecen 1-5 veces). El porcentaje de ruido incrementó de 25.2\% a 34.1\% (+8.9pp) reflejando que ~9,000 skills del corpus completo son menciones únicas de tecnologías altamente especializadas o errores de extracción residuales. Sin embargo, Silhouette $>$ 0.3 se mantiene en rango aceptable según literatura, y los 2,044 clusters detectados automáticamente revelan micro-especializaciones tecnológicas invisibles en dataset reducido.
+
+\textbf{Capacidades validadas del sistema}:
+
+Las 8 configuraciones de producción validaron tres capacidades críticas: (1) \textit{Escalabilidad}: procesamiento exitoso de 98,829 skills únicas en $<$10 minutos con métricas aceptables (Silhouette 0.361, Davies-Bouldin 0.735); (2) \textit{Adaptabilidad}: detección automática de 2-2,044 clusters según granularidad de datos sin intervención manual; y (3) \textit{Robustez}: estructura macro de 2 meta-clusters (hard skills técnicos vs. soft skills transversales) persiste consistentemente en todas las escalas y pipelines, confirmando que el sistema captura dicotomía fundamental del mercado laboral.
+
+El análisis comparativo completo de métricas por configuración se documenta en el Documento de Pruebas (Capítulo 13, Sección ``Análisis Comparativo de Clustering en Producción'').
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../../outputs/clustering/experiments/comparison_table.png}
+\caption{Tabla comparativa de las 8 configuraciones de clustering ejecutadas, mostrando número de clusters, métricas de calidad (Silhouette Score, Davies-Bouldin Index), porcentaje de ruido y cantidad de skills únicas procesadas. Las configuraciones PRE-ESCO generan significativamente más clusters que POST-ESCO debido a la mayor diversidad léxica antes de normalización taxonómica.}
+\label{fig:clustering_comparison_table}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../../outputs/clustering/experiments/manual_300_pre/exp2_nn15_mcs10/umap_scatter.png}
+    \caption*{(a) Manual 300 PRE-ESCO: 61 clusters}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../../outputs/clustering/experiments/manual_300_post/exp2_nn15_mcs10/umap_scatter.png}
+    \caption*{(b) Manual 300 POST-ESCO: 2 clusters}
+\end{minipage}
+\caption{Visualización UMAP 2D del clustering con Manual Annotations (300 jobs, $min\_cluster\_size=10$). La proyección PRE-ESCO (a) identifica 61 clusters interpretables reflejando diversidad léxica completa, mientras POST-ESCO (b) colapsa a 2 clusters debido a que 87.7\% de skills no mapean a ESCO, demostrando el impacto dramático de la normalización taxonómica en la estructura de agrupamiento.}
+\label{fig:clustering_pre_post_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../../outputs/clustering/analysis/parameter_comparison.png}
+\caption{Comparación de hiperparámetros UMAP+HDBSCAN sobre dataset Manual 300 POST-ESCO. Se muestran resultados de experimentos con $min\_cluster\_size$ variando entre 5, 10, 15 y 20. El gráfico ilustra el trade-off fundamental: valores bajos generan alta granularidad (305 clusters con $mcs=3$) con Silhouette excelente pero baja interpretabilidad; valores altos producen pocos clusters genéricos (2 clusters con $mcs=15$). La configuración óptima ($mcs=12$) balancea métricas (Silhouette=0.35) con utilidad analítica (50-60 clusters).}
+\label{fig:parameter_comparison}
+\end{figure}
+
 \subsection{Distribución de Skills y Dominios Tecnológicos}
 
 El procesamiento del dataset completo mediante Pipeline B (Gemma) identificó 15,079 extracciones totales correspondiendo a 6,498 skills únicas. Tras normalización y clustering Post-ESCO con configuración óptima (n\_neighbors=15, min\_cluster\_size=15), se generaron 156 clusters interpretables representando familias tecnológicas. \textit{Nota: Los valores específicos de distribución de clusters requieren actualización con los resultados finales del análisis de clustering. Los 10 clusters más poblados concentraron aproximadamente 68\% de la demanda total:}
@@ -89,7 +138,19 @@ El procesamiento del dataset completo mediante Pipeline B (Gemma) identificó 15
 
 La distribución por idioma mostró 52.4\% ofertas en inglés, 33.2\% español, y 14.4\% mixto (Spanglish), reflejando naturaleza bilingüe del mercado tech donde herramientas se mencionan en inglés pero contexto en español. El fenómeno Spanglish fue más prevalente en México (17.9\% ofertas) versus Colombia (8.9\%) o Argentina (11.2\%).
 
-\subsection{Skills Emergentes No Representadas en ESCO}
+\subsection{Cobertura ESCO y Skills Emergentes}
+
+El mapeo sistemático de extracciones a taxonomía ESCO reveló una brecha crítica entre vocabulario técnico del mercado laboral LATAM 2025 y taxonomías europeas estandarizadas actualizadas en 2019-2021. Esta brecha se cuantificó mediante evaluación exhaustiva de cobertura y validación cualitativa de skills sin mapeo, determinando que la gran mayoría representan demanda real de tecnologías emergentes, no errores de extracción.
+
+\subsubsection{Cuantificación de la Brecha ESCO}
+
+El análisis agregado de los tres pipelines de extracción determinó que un promedio ponderado del 95\% de skills extraídas no mapearon a ESCO v1.1.0: Manual Annotations 87.7\% sin mapeo (1,678/1,914 skills), Pipeline A dataset completo 98.3\% sin mapeo (97,131/98,829), Pipeline B 88.8\% sin mapeo. La consistencia de esta brecha a través de tres métodos de extracción independientes (humano, NER+Regex, LLM) indica que no es un artefacto metodológico sino una limitación estructural de taxonomías generalistas para mercados tech emergentes.
+
+\subsubsection{Validación de Skills Emergentes Genuinas}
+
+Para descartar la hipótesis de que skills sin mapeo son errores del matcher, se ejecutó validación exhaustiva mediante fuzzy matching de 1,430 skills sin mapeo contra el catálogo completo ESCO (20,327,450 comparaciones). El análisis determinó que 99.6\% de skills sin mapeo (1,423/1,430) no tienen coincidencia razonable (score $<$ 0.85) con ninguna habilidad ESCO, confirmando que son genuinamente emergentes. Solo 7 skills (0.4\%) presentaron scores $\geq$ 0.85 indicando falsos negativos del matcher que podrían corregirse. Esta validación es crítica: demuestra empíricamente que la baja cobertura ESCO refleja características reales del mercado tech 2025, no deficiencias del sistema de extracción o mapeo.
+
+\subsubsection{Categorización de Skills Emergentes}
 
 El análisis identificó 47 skills técnicas con frecuencia $\geq$5 jobs extraídas por Pipeline B sin mapeo ESCO, categorizadas en cinco familias emergentes:
 
@@ -104,6 +165,12 @@ El análisis identificó 47 skills técnicas con frecuencia $\geq$5 jobs extraí
 \textbf{(5) Data Engineering Moderno} (12 skills): dbt (0), Airbyte (0), Dagster (0), Prefect (0), Snowflake (2), Databricks (3), Delta Lake (0), Apache Iceberg (0), Great Expectations (0), dlt (0), Mage (0), Kestra (0). Adopción limitada sugiere que mercado LATAM usa herramientas tradicionales (Airflow, Spark).
 
 La baja frecuencia absoluta de skills emergentes ($<$5 jobs para 80\% de ellas) indica que mercado tech latinoamericano exhibe lag de 18-36 meses respecto a tendencias globales: tecnologías mainstream en Silicon Valley 2023 (Next.js, Tailwind, dbt) aparecen escasamente en LATAM 2024-2025.
+
+\subsubsection{Implicaciones para el Observatorio}
+
+Los hallazgos sugieren que análisis basados exclusivamente en ESCO (POST-ESCO) sacrifican 95\% de señal informativa del mercado para ganar estandarización taxonómica. Por tanto, se implementó estrategia dual: clustering POST-ESCO para comparabilidad internacional con métricas estables (Silhouette 0.68-0.75, 10-50 clusters coherentes), complementado con análisis PRE-ESCO para captura completa de demanda tecnológica local (117-2,044 clusters reflejando granularidad real). Esta dualidad permite que el observatorio balancee rigor taxonómico con cobertura de innovación tecnológica LATAM.
+
+El documento de pruebas (Capítulo 13, Sección ``Análisis de Cobertura ESCO'') detalla la metodología de validación exhaustiva, clasificación de 311 skills emergentes por categoría tecnológica, y análisis comparativo de cobertura entre pipelines.
 
 \subsection{Tendencias Temporales y Evolución del Mercado}
 

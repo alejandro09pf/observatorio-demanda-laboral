@@ -1,5 +1,39 @@
 \chapter{CONTEXTO DEL PROYECTO}
 
+\section{Conceptos Fundamentales del Dominio}
+
+Antes de abordar los aspectos técnicos de la solución, es fundamental establecer el vocabulario específico del dominio del mercado laboral. Esta sección define los conceptos clave que estructuran el problema: las ofertas laborales como fuente primaria de datos, las habilidades como unidades de análisis, su tipología (hard vs. soft skills), y el rol de las taxonomías en la estandarización del conocimiento ocupacional.
+
+\subsection{Ofertas Laborales y Avisos de Empleo}
+
+Una oferta laboral (job posting) es un anuncio público de una vacante que especifica título del cargo, descripción de funciones, requisitos de formación, habilidades técnicas requeridas y condiciones del puesto \cite{rubio2025}. Las ofertas publicadas en portales de empleo constituyen una fuente de datos de alta frecuencia sobre demanda laboral, permitiendo capturar tendencias emergentes con granularidad temporal superior a encuestas tradicionales \cite{cardenas2015, rubio2025}. Sin embargo, representan únicamente ``demanda revelada'', excluyendo vacantes cubiertas por redes internas \cite{aguilera2018}. Los portales digitales (elempleo.com, computrabajo.com, LinkedIn) operan como observatorios del mercado laboral LATAM, proveyendo texto no estructurado procesable mediante NLP.
+
+\subsection{Habilidades, Competencias y Skills}
+
+El término skill (habilidad) se define como la unidad básica de conocimiento, capacidad técnica o destreza requerida para un rol laboral \cite{kavargyris2025}. Para este trabajo, se adopta la definición operacional de skill como cualquier mención textual en ofertas que describa capacidades requeridas: lenguajes (``Python''), metodologías (``Scrum''), herramientas (``Docker''), conceptos técnicos (``microservicios'') o competencias transversales (``trabajo en equipo'') \cite{nguyen2024}. Las skills operan como proxy de demanda laboral: frecuencia refleja intensidad de demanda, co-ocurrencia revela ecosistemas tecnológicos \cite{lukauskas2023}.
+
+\subsection{Tipología de Habilidades: Hard Skills vs. Soft Skills}
+
+Hard Skills (habilidades técnicas) son capacidades específicas, medibles y enseñables mediante educación formal, caracterizadas por ser específicas del rol, tener evaluación objetiva y experimentar evolución rápida \cite{rubio2025}. Ejemplos IT: lenguajes (Python, Java), frameworks (React, Django), cloud (AWS, Azure), bases de datos (PostgreSQL, MongoDB), metodologías (Agile, DevOps), herramientas (Docker, Kubernetes).
+
+Soft Skills (habilidades transversales) son capacidades relacionales e interpersonales transversales a dominios con evaluación subjetiva y relevancia estable \cite{aguilera2018}: liderazgo, comunicación, trabajo en equipo, resolución de problemas, adaptabilidad.
+
+Para NLP automatizado, las hard skills presentan ventaja por expresión léxica consistente (``Docker'' con variantes limitadas), mientras soft skills exhiben alta variabilidad lingüística (``trabajo en equipo'' = ``colaboración'', ``espíritu colaborativo'', ``teamwork'') \cite{martinez2024}.
+
+\subsection{Alcance del Proyecto: Hard IT Skills}
+
+Este trabajo se enfoca exclusivamente en hard skills IT por tres razones: (1) Nomenclaturas estandarizadas globalmente facilitan extracción automatizada con alta precisión vs. ambigüedad semántica de soft skills \cite{nguyen2024}; (2) Trazabilidad a taxonomías ESCO (13k+ skills) y O*NET (233 skills subset) proveen vocabularios controlados exhaustivos \cite{kavargyris2025, rubio2025}; (3) Identificación de tecnologías emergentes provee inteligencia accionable para actualización curricular \cite{echeverria2022}.
+
+El sistema identifica: lenguajes (Python, Java, Rust), frameworks (Django, React, Spring Boot), bases de datos (PostgreSQL, MongoDB), cloud (AWS, Azure, GCP), DevOps (Docker, Kubernetes, Terraform), metodologías (Scrum, Agile, CI/CD) y dominios especializados (ML, Data Science, Blockchain). Soft skills se excluyen.
+
+\subsection{Taxonomías de Habilidades y Ocupaciones}
+
+Una taxonomía de habilidades es un sistema jerárquico que organiza skills en categorías, establece relaciones semánticas y provee identificadores únicos. Cumplen tres funciones: (1) Estandarización: unifican variantes léxicas (``JS'' → ``JavaScript'' en ESCO) \cite{kavargyris2025}; (2) Comparabilidad internacional: ESCO es multilingüe (27 idiomas UE), facilitando análisis transnacionales \cite{kavas2024}; (3) Mapeo de relaciones: conectan skills con ocupaciones y sectores económicos.
+
+Limitación: actualización lenta vs. cambio tecnológico. ESCO v1.1.0 (2021) excluye tecnologías post-2022: ``ChatGPT'', ``LangChain'', ``Tailwind CSS'', ``dbt'', ``Terraform'' \cite{rubio2025}, generando ``skills emergentes'' sin representación en vocabularios controlados.
+
+El proyecto usa ESCO como taxonomía primaria y O*NET subset (233 skills alta demanda) como complemento \cite{rubio2025}. Estrategia dual PRE-ESCO (skills emergentes) + POST-ESCO (comparabilidad internacional) balancea innovación tecnológica y rigor taxonómico.
+
 \section{Antecedentes Conceptuales}
 
 Para comprender el diseño y la justificación de la solución desarrollada, es necesario fundamentar el proyecto en una serie de conceptos clave provenientes de la ingeniería de sistemas, la ciencia de datos y, fundamentalmente, del Procesamiento de Lenguaje Natural (NLP). Estos conceptos no actúan de forma aislada, sino que se articulan en un flujo metodológico que va desde la adquisición de datos brutos hasta la generación de conocimiento estructurado sobre el mercado laboral.

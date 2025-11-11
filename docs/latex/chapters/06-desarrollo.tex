@@ -805,6 +805,24 @@ Como extensión, se implementó módulo de análisis temporal rastreando evoluci
 
 El tracking identificó 5 clusters persistentes con crecimiento sostenido: Python/Data Science (45 → 180 jobs/trimestre, +300\%), Project Management (35 → 120, +243\%), Cloud/DevOps (15 → 95, +533\% impulsado por Kubernetes/Terraform), SQL/Databases (60-80 estable), y JavaScript/Frontend (50 → 85, +70\%). Adicionalmente, 3 clusters emergentes aparecieron post-2022: AI/ML Tools (ChatGPT, LangChain), Infrastructure as Code (Terraform, CDK), y Modern Frontend (Next.js, Tailwind CSS). El sistema generó visualizaciones (heatmaps, line charts) permitiendo identificar patrones de adopción tecnológica.
 
+\subsection{Experimentación de Hiperparámetros y Trade-off Interpretabilidad vs. Métricas}
+
+La optimización de UMAP+HDBSCAN requirió balancear métricas cuantitativas de calidad de clustering (Silhouette Score, Davies-Bouldin Index) con interpretabilidad práctica de los clusters resultantes para análisis del mercado laboral. Este balance no es trivial: configuraciones que maximizan métricas matemáticas frecuentemente producen clusterings inútiles para análisis humano, revelando una tensión fundamental entre optimización algorítmica y utilidad práctica.
+
+Se realizaron 150+ experimentos variando hiperparámetros UMAP (\texttt{n\_neighbors} $\in$ \{5, 10, 15, 20, 30, 50\}, \texttt{min\_dist} $\in$ \{0.0, 0.1, 0.2, 0.3\}) y HDBSCAN (\texttt{min\_cluster\_size} $\in$ \{3, 5, 8, 10, 15, 20\}, \texttt{min\_samples} $\in$ \{1, 2, 3, 5\}). Los experimentos documentaron el fenómeno del ``clustering cliff'': configuraciones con \texttt{min\_cluster\_size} $\leq$ 6 generaron 100-300 clusters con métricas excelentes (Silhouette $>$ 0.6, Davies-Bouldin $<$ 0.8) pero imposibles de interpretar manualmente; configuraciones con \texttt{min\_cluster\_size} $\geq$ 15 colapsaron a 2-10 clusters genéricos con baja utilidad analítica. El documento de pruebas (Capítulo 13) detalla la evaluación exhaustiva de configuraciones.
+
+\textbf{Caso ilustrativo del problema (Experimento 8 vs. Experimento 15)}:
+
+El experimento 8 con hiperparámetros finos (\texttt{n\_neighbors=5}, \texttt{min\_cluster\_size=3}) produjo 305 clusters con Silhouette Score = 0.618 (excelente según literatura), Davies-Bouldin = 0.742 (óptimo), y solo 2.4\% ruido. Sin embargo, la inspección manual reveló que los 305 clusters eran ininterpretables: ``Python+Flask'' formó un cluster separado de ``Python+Django'', ``JavaScript+React'' separado de ``JavaScript+Vue'', fragmentando artificialmente tecnologías relacionadas. Nombrar, categorizar y analizar 305 clusters excede la capacidad de procesamiento humano.
+
+En contraste, el experimento 15 con hiperparámetros medios (\texttt{n\_neighbors=15}, \texttt{min\_cluster\_size=12}) generó 50 clusters con Silhouette Score = 0.348 (inferior al experimento 8), Davies-Bouldin = 1.156 (peor), pero 98\% de clusters (49/50) semánticamente coherentes e interpretables. Los clusters agruparon familias tecnológicas completas: ``Backend Python'' (Flask, Django, FastAPI, Celery), ``Frontend JavaScript'' (React, Vue, Angular, TypeScript), ``DevOps'' (Docker, Kubernetes, Jenkins, GitLab CI). Esta granularidad permitió análisis sistemático de 50 perfiles vs. imposibilidad de manejar 305.
+
+\textbf{Sistema de scoring cuantitativo para balancear criterios}:
+
+Se implementó función de scoring multi-criterio ponderando: granularidad (40\% del score, penalizando $<$30 o $>$200 clusters), Silhouette Score (30\%, recompensando $>$0.3), porcentaje de ruido (20\%, penalizando $>$25\%), e interpretabilidad manual (10\%, evaluada mediante inspección de top-10 clusters por coherencia temática). Este sistema formalizó la decisión de \textbf{priorizar utilidad práctica sobre optimización matemática}, justificando académicamente la selección de configuraciones con métricas numéricas moderadas pero alta interpretabilidad.
+
+La configuración óptima seleccionada (\texttt{n\_neighbors=15}, \texttt{min\_cluster\_size=12}, \texttt{min\_samples=3}) representa el punto de equilibrio: genera 50-60 clusters interpretables por humanos, mantiene Silhouette $>$ 0.35 (aceptable), y limita ruido a 15-20\%. Esta decisión es consistente con investigaciones previas en clustering de dominios especializados, donde interpretabilidad del resultado es tan crítica como calidad métrica del agrupamiento. Los resultados cuantitativos de las configuraciones de clustering ejecutadas se presentan en el Capítulo 7 (Resultados).
+
 \subsection{Beneficios del Sistema de Clustering Implementado}
 
 La implementación del sistema de clustering no supervisado mediante UMAP + HDBSCAN proporciona múltiples beneficios para el observatorio de demanda laboral:

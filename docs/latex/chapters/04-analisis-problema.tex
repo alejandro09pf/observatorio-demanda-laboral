@@ -26,9 +26,7 @@ El observatorio debe implementar las siguientes capacidades funcionales, organiz
 
 \textbf{RF-6. Análisis no supervisado:} El observatorio debe aplicar técnicas de reducción de dimensionalidad (UMAP) y clustering basado en densidad (HDBSCAN) sobre los embeddings para descubrir automáticamente clústeres de habilidades relacionadas y perfiles emergentes, sin requerir etiquetado manual previo \cite{lukauskas2023}.
 
-\textbf{RF-7. Visualización y reportería:} El sistema debe generar visualizaciones interactivas (gráficos de dispersión 2D/3D, mapas de calor, grafos de co-ocurrencia) y reportes estructurados (PDF, CSV, JSON) que sinteticen la demanda laboral por país, portal, período temporal y clúster de habilidades.
-
-\textbf{RF-8. Trazabilidad y auditoría:} Cada etapa del pipeline debe registrar metadatos de procesamiento (timestamps, versiones de modelos, parámetros de configuración, métricas de calidad) en una base de datos relacional que permita la reproducibilidad de los análisis y la auditoría de resultados.
+\textbf{RF-7. Trazabilidad y auditoría:} Cada etapa del pipeline debe registrar metadatos de procesamiento (timestamps, versiones de modelos, parámetros de configuración, métricas de calidad) en una base de datos relacional que permita la reproducibilidad de los análisis y la auditoría de resultados.
 
 \subsection{Requerimientos no funcionales}
 
@@ -96,7 +94,7 @@ Las restricciones representan limitaciones inherentes al problema, al contexto d
 
 La especificación funcional describe el comportamiento de alto nivel del sistema mediante la definición de su arquitectura de pipeline y las interfaces entre módulos.
 
-\subsection{Arquitectura de pipeline de 8 etapas}
+\subsection{Arquitectura de pipeline de 7 etapas}
 
 El observatorio se estructura como un pipeline secuencial de transformación de datos, donde cada etapa consume la salida de la anterior y produce artefactos almacenados en PostgreSQL:
 
@@ -113,8 +111,6 @@ El observatorio se estructura como un pipeline secuencial de transformación de 
 \textbf{Etapa 6 - Embeddings:} Genera vectores. \textit{Entrada:} \texttt{esco\_\allowbreak preferred\_\allowbreak label}. \textit{Salida:} Tabla \texttt{skill\_\allowbreak embeddings} con campos \texttt{skill\_id}, \texttt{embedding\_\allowbreak vector} (pgvector[768]).
 
 \textbf{Etapa 7 - Clustering:} Reduce dimensionalidad y agrupa. \textit{Entrada:} \texttt{skill\_embeddings}. \textit{Salida:} Tabla \texttt{analysis\_\allowbreak results} con campos \texttt{job\_id}, \texttt{cluster\_id}, \texttt{umap\_x}, \texttt{umap\_y}, \texttt{cluster\_\allowbreak label}.
-
-\textbf{Etapa 8 - Visualización:} Genera reportes. \textit{Entrada:} \texttt{analysis\_results} + agregaciones. \textit{Salida:} Archivos PNG/PDF/CSV con gráficos, tablas y estadísticas descriptivas.
 
 \subsection{Interfaces críticas}
 
