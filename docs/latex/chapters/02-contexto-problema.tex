@@ -52,9 +52,9 @@ La solución se materializó a través de un sistema compuesto por módulos secu
 
 \textbf{Pipeline A (Tradicional):} Implementó un método de extracción basado en Reconocimiento de Entidades Nombradas (NER) utilizando un EntityRuler de spaCy, poblado con la taxonomía completa de ESCO, combinado con expresiones regulares para capturar un baseline de habilidades explícitas de alta precisión.
 
-\textbf{Pipeline B (Basado en LLMs):} Empleó Large Language Models (LLMs) como Llama 3 para realizar una extracción semántica, capaz de identificar no solo habilidades explícitas sino también de inferir competencias implícitas a partir del contexto de la vacante.
+\textbf{Pipeline B (Basado en LLMs):} Empleó Large Language Models (LLMs), evaluando comparativamente Gemma 3 4B, Llama 3, Phi-3, Mistral y Qwen, para realizar extracción semántica capaz de identificar no solo habilidades explícitas sino también de inferir competencias implícitas a partir del contexto de la vacante.
 
-Posteriormente, un módulo de mapeo de dos capas normalizó las habilidades extraídas por ambos pipelines contra la taxonomía ESCO. La primera capa realizó una coincidencia léxica (exacta y difusa), mientras que la segunda ejecutó una búsqueda de similitud semántica de alto rendimiento, utilizando embeddings multilingües (E5) y un índice FAISS pre-calculado. Finalmente, un módulo de análisis no supervisado aplicó una secuencia metodológica de embeddings, reducción de dimensionalidad con UMAP y agrupamiento con HDBSCAN para identificar clústeres de habilidades y perfiles emergentes.
+Posteriormente, un módulo de mapeo normalizó las habilidades extraídas por ambos pipelines contra la taxonomía ESCO mediante dos capas: coincidencia léxica exacta y fuzzy matching con threshold de similitud 0.85. Una tercera capa experimental de búsqueda semántica usando embeddings multilingües (E5) y FAISS se deshabilitó tras detectar falsos positivos en contexto técnico. Finalmente, un módulo de análisis no supervisado aplicó una secuencia metodológica de embeddings E5 (768D), reducción de dimensionalidad con UMAP (2D) y agrupamiento density-based con HDBSCAN para identificar familias semánticas de habilidades y perfiles emergentes.
 
 \section{Justificación de la solución}
 
@@ -62,7 +62,7 @@ La solución implementada se justificó como una alternativa superior y mejor ad
 
 Este diseño comparativo proveyó un marco para evaluar objetivamente el rendimiento de los LLMs, en lugar de depender únicamente de su capacidad ``black-box''.
 
-Técnicamente, el sistema representó un avance significativo en escalabilidad y eficiencia. La implementación de un índice FAISS para la búsqueda semántica de similitud permitió procesar grandes volúmenes de datos a una velocidad órdenes de magnitud superior a las búsquedas en bases de datos vectoriales convencionales, haciendo factible el análisis de todo el corpus recolectado.
+Técnicamente, el sistema representó un avance en escalabilidad mediante arquitectura modular que permitió procesar el corpus completo de 30,660 ofertas con Pipeline A en ~8.3 horas (0.97s/oferta), factible para ejecución overnight. El ESCO Matcher de dos capas (exact + fuzzy) procesó ~15,000 skills únicas en ~6.5 minutos aprovechando memoización. El sistema de clustering aplicó UMAP + HDBSCAN sobre embeddings E5 (768D) generados a ~850 skills/s en GPU, completando reducción dimensional y agrupamiento de 1,698 skills en <30 segundos.
 
 Adicionalmente, el sistema fue diseñado explícitamente para la realidad del español latinoamericano. Este enfoque abordó directamente una limitación crítica de trabajos de vanguardia en LLMs, los cuales se han desarrollado y validado casi exclusivamente sobre datasets en inglés, ignorando las particularidades lingüísticas (como el ``Spanglish'') del dominio tecnológico en la región.
 

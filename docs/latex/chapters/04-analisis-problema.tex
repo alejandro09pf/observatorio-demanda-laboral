@@ -17,10 +17,10 @@ El observatorio debe implementar las siguientes capacidades funcionales, organiz
 \textbf{RF-3. Extracción de habilidades:} El observatorio debe identificar y extraer menciones de habilidades técnicas, competencias y tecnologías presentes en las ofertas laborales mediante una arquitectura dual:
 \begin{itemize}
     \item Pipeline A: Extracción basada en Reconocimiento de Entidades Nombradas (NER) con spaCy y expresiones regulares pobladas con patrones de tecnologías conocidas.
-    \item Pipeline B: Extracción semántica mediante LLMs (Llama 3 o equivalente) capaz de inferir habilidades implícitas a partir del contexto de la vacante \cite{herandi2024, nguyen2024}.
+    \item Pipeline B: Extracción semántica mediante LLMs (Gemma 3 4B) capaz de inferir habilidades implícitas a partir del contexto de la vacante \cite{herandi2024, nguyen2024}.
 \end{itemize}
 
-\textbf{RF-4. Normalización semántica:} Las habilidades extraídas deben ser mapeadas a una taxonomía estandarizada (ESCO) mediante un proceso de dos capas: coincidencia léxica (exacta y difusa con similitud de cadenas) y búsqueda semántica basada en embeddings multilingües (E5) con índices FAISS para garantizar eficiencia computacional \cite{kavargyris2025}.
+\textbf{RF-4. Normalización semántica:} Las habilidades extraídas deben ser mapeadas a una taxonomía estandarizada (ESCO) mediante un proceso de dos capas: coincidencia léxica exacta y difusa con umbral de similitud de cadenas (fuzzywuzzy ratio $\geq$0.85). La capa de búsqueda semántica basada en embeddings multilingües (E5) con índices FAISS se deshabilitó tras pruebas que revelaron falsos positivos en contexto técnico.
 
 \textbf{RF-5. Representación vectorial:} El sistema debe generar embeddings semánticos de alta dimensionalidad (768D) para cada habilidad y cada oferta laboral, utilizando modelos multilingües pre-entrenados que capturen relaciones semánticas en español e inglés \cite{kavas2024}.
 
@@ -120,8 +120,7 @@ El observatorio se estructura como un pipeline secuencial de transformación de 
 
 \textbf{I-1. Interfaz Scraper-Database:} Los spiders de Scrapy utilizan un pipeline personalizado (\texttt{PostgreSQL\-Pipeline}) que serializa items a formato JSON y los inserta en \texttt{raw\_jobs} con manejo de duplicados por hash de URL.
 
-\textbf{I-2. Interfaz Extractor-ESCO:} El módulo \texttt{ESCOMatcher} expone métodos: \texttt{find\_exact\_match()}, \texttt{find\_fuzzy\_match()} y \linebreak
-\texttt{find\_semantic\_match()}. Este último consulta un índice FAISS pre-calculado sobre embeddings E5 de las 13,000+ etiquetas ESCO.
+\textbf{I-2. Interfaz Extractor-ESCO:} El módulo \texttt{ESCOMatcher} expone métodos: \texttt{find\_exact\_match()} y \texttt{find\_fuzzy\_match()}. El sistema implementa memoización mediante diccionario \texttt{skill\_text} $\to$ \texttt{esco\_uri} que evita remapear skills repetidas, reduciendo tiempo de procesamiento batch de ~6.5h a ~6.5min (60× aceleración).
 
 \textbf{I-3. Interfaz LLM-Processor:} El módulo \texttt{LLMHandler} abstrae llamadas a modelos locales (vía llama.cpp) o remotos (OpenAI API) mediante una interfaz unificada que recibe prompts estructurados y retorna respuestas en formato JSON validado con Pydantic.
 
