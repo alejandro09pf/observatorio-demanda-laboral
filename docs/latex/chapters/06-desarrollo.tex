@@ -288,6 +288,8 @@ En este escenario, un modelo trivial que nunca extraiga nada tendría Accuracy $
 
 Como TN depende arbitrariamente de cómo se defina el universo de candidatos, la métrica Accuracy $= \frac{TP + TN}{TP + TN + FP + FN}$ no tiene una interpretación consistente ni reproducible. Dos evaluaciones con diferente definición del universo de candidatos producirían valores de Accuracy radicalmente distintos para el mismo sistema.
 
+Por estas razones, se adoptaron las métricas estándar de Information Retrieval (Precision, Recall, F1-Score) que operan exclusivamente sobre los conjuntos de skills extraídas y anotadas, evitando la indefinición de True Negatives inherente al problema de extracción en universo abierto.
+
 \textbf{Cálculo de métricas mediante operaciones de conjuntos.} Para cada oferta laboral $j$, se definen:
 \begin{itemize}
     \item $G_j$: Conjunto de skills del gold standard para el job $j$ (después de normalización canónica)
