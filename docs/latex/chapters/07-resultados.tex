@@ -121,22 +121,11 @@ El análisis comparativo completo de métricas por configuración se documenta e
 
 \subsection{Distribución de Skills y Dominios Tecnológicos}
 
-El procesamiento del dataset completo mediante Pipeline B (Gemma) identificó 15,079 extracciones totales correspondiendo a 6,498 skills únicas. Tras normalización y clustering Post-ESCO con configuración óptima (n\_neighbors=15, min\_cluster\_size=15), se generaron 156 clusters interpretables representando familias tecnológicas. \textit{Nota: Los valores específicos de distribución de clusters requieren actualización con los resultados finales del análisis de clustering. Los 10 clusters más poblados concentraron aproximadamente 68\% de la demanda total:}
+El análisis de clustering sobre el corpus completo de 30,660 ofertas procesadas con Pipeline A generó 53 clusters interpretables a partir de 1,698 skills únicas Post-ESCO (configuración: n\_neighbors=15, min\_cluster\_size=12), con Silhouette Score de 0.456 y 22.3\% de ruido. El sistema detectó automáticamente 2 meta-clusters correspondientes a la dicotomía fundamental hard skills técnicos vs. soft skills transversales. La configuración Pipeline A 30k PRE-ESCO produjo 2,044 clusters reflejando granularidad máxima del vocabulario técnico sin normalización taxonómica.
 
-\begin{enumerate}
-\item \textbf{Python/Data Science} (1,234 jobs, 4.0\%): NumPy, Pandas, scikit-learn, TensorFlow, Jupyter
-\item \textbf{Project Management} (987 jobs, 3.2\%): Scrum, Agile, Kanban, Jira, Confluence
-\item \textbf{Cloud/DevOps} (856 jobs, 2.8\%): Docker, Kubernetes, Jenkins, GitLab CI/CD, Terraform
-\item \textbf{SQL/Databases} (743 jobs, 2.4\%): PostgreSQL, MySQL, SQL Server, Oracle, MongoDB
-\item \textbf{JavaScript/Frontend} (621 jobs, 2.0\%): React, Angular, Vue.js, TypeScript, HTML5/CSS3
-\item \textbf{Backend Java} (612 jobs, 2.0\%): Spring Boot, Hibernate, Maven, JUnit
-\item \textbf{AWS Cloud} (534 jobs, 1.7\%): AWS Lambda, S3, EC2, RDS, CloudFormation
-\item \textbf{Mobile Development} (487 jobs, 1.6\%): React Native, Flutter, Swift, Kotlin, iOS/Android
-\item \textbf{Testing/QA} (456 jobs, 1.5\%): Selenium, JUnit, pytest, Cypress, TestNG
-\item \textbf{.NET Ecosystem} (423 jobs, 1.4\%): C\#, ASP.NET Core, Entity Framework, Azure
-\end{enumerate}
+El análisis detallado de contenido semántico de clusters individuales, incluyendo identificación de dominios tecnológicos específicos (Python/Data Science, Cloud/DevOps, Frontend JavaScript, etc.) y cuantificación de su frecuencia relativa en el corpus, requiere procesamiento cualitativo adicional mediante inspección manual de las 53 agrupaciones. Los clusters generados automáticamente por HDBSCAN garantizan cohesión interna (skills similares agrupadas) y separación entre grupos, pero la asignación de etiquetas interpretables y la medición de demanda por dominio tecnológico constituyen trabajo futuro documentado en el Capítulo 8.
 
-La distribución por idioma mostró 52.4\% ofertas en inglés, 33.2\% español, y 14.4\% mixto (Spanglish), reflejando naturaleza bilingüe del mercado tech donde herramientas se mencionan en inglés pero contexto en español. El fenómeno Spanglish fue más prevalente en México (17.9\% ofertas) versus Colombia (8.9\%) o Argentina (11.2\%).
+El análisis de idiomas del corpus completo requiere procesamiento adicional mediante detección automatizada de lenguaje sobre las 30,660 ofertas. El gold standard de 300 ofertas presenta distribución ES 80.7\%, EN 19.3\%, sugiriendo predominancia del español en ofertas laborales técnicas latinoamericanas, aunque esta distribución refleja el sesgo de selección estratificada del gold standard y no necesariamente la del corpus completo.
 
 \subsection{Cobertura ESCO y Skills Emergentes}
 
@@ -172,14 +161,10 @@ Los hallazgos sugieren que análisis basados exclusivamente en ESCO (POST-ESCO) 
 
 El documento de pruebas (Capítulo 13, Sección ``Análisis de Cobertura ESCO'') detalla la metodología de validación exhaustiva, clasificación de 311 skills emergentes por categoría tecnológica, y análisis comparativo de cobertura entre pipelines.
 
-\subsection{Tendencias Temporales y Evolución del Mercado}
+\subsection{Limitaciones del Análisis Temporal}
 
-El análisis temporal sobre 21,839 ofertas con fecha válida (28 trimestres, Q4-2018 a Q4-2025) reveló tres patrones dominantes:
+El sistema implementa infraestructura completa para análisis temporal de evolución de demanda de skills, incluyendo tracking de clusters por trimestre, generación de heatmaps de frecuencia cluster×quarter, y visualizaciones de evolución de top-10 clusters más demandados. Sin embargo, la aplicabilidad actual está severamente limitada por la distribución temporal del corpus: 93.5\% de menciones de skills (4,222/4,479) se concentran en Q4-2025, con solo 5 quarters representados (2016Q2, 2023Q4, 2025Q1, 2025Q3, 2025Q4) y frecuencias insuficientes en períodos históricos (20-151 menciones vs 4,222 en Q4-2025).
 
-\textbf{Crecimiento explosivo Cloud/DevOps} (+533\% durante 2019-2025): Skills de Docker (22\% → 57\% coverage), Kubernetes (15\% → 54\%), y CI/CD (27\% → 60\%) muestran adopción masiva correlacionando con transformación digital post-pandemia COVID-19. El cluster Cloud/DevOps pasó de 15 jobs/trimestre (2019) a 95 (2025).
+Esta concentración extrema invalida análisis longitudinales de tendencias, crecimiento porcentual de familias tecnológicas, o detección de skills emergentes post-2022, dado que cualquier patrón observado sería artefacto del sesgo temporal del dataset en lugar de reflejo de evolución genuina del mercado. El análisis de series temporales sobre skills (Docker, Kubernetes, Python, React) requeriría distribución equitativa de al menos 500+ ofertas por trimestre durante 12+ quarters consecutivos para validez estadística, condición no satisfecha por el corpus actual.
 
-\textbf{Consolidación Data Science} (+300\% durante 2019-2025): Python mantuvo posición dominante (31\% coverage estable), pero skills especializadas ML (TensorFlow, PyTorch, scikit-learn) crecieron 180\%, sugiriendo maduración del campo desde ``Python generalista'' hacia perfiles especializados Data Science.
-
-\textbf{Estabilidad relativa Frontend/Backend tradicional} (+70\%/+50\% durante 2019-2025): JavaScript/React, Java/Spring, SQL/PostgreSQL crecieron linealmente sin disrupciones, indicando demanda constante de skills mainstream. Frameworks modernos (Next.js, Svelte) no alcanzaron masa crítica para desplazar incumbentes.
-
-El análisis de clusters emergentes post-2022 identificó ``AI/ML Tools'' y ``Modern Frontend'' con trayectoria ascendente pero volumen absoluto bajo ($<$30 jobs/trimestre Q4-2025), confirmando que adopción de tecnologías cutting-edge es gradual en mercado LATAM, dominado por empresas con stacks conservadores priorizando estabilidad sobre innovación.
+La infraestructura de análisis temporal está operativa y lista para ejecución una vez que scraping continuo durante 2025-2026 genere dataset balanceado temporalmente. Los módulos implementados (\\texttt{temporal\_clustering\_analysis.py}, \\texttt{generate\_temporal\_visualizations.py}) permiten procesamiento automático de ofertas futuras sin modificaciones arquitecturales.
