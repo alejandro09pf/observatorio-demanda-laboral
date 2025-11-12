@@ -1,25 +1,25 @@
 \chapter{CONCLUSIONES Y TRABAJO FUTURO}
 
-Este trabajo diseñó, implementó y validó un sistema completo de observatorio de demanda laboral para América Latina, comparando tres enfoques de extracción de habilidades técnicas: métodos basados en reglas y reconocimiento de entidades nombradas (Pipeline A), métodos estadísticos con TF-IDF y n-gramas (Pipeline A.1), y modelos de lenguaje grandes (Pipeline B). La evaluación rigurosa sobre un \textit{gold standard} de 7,848 anotaciones manuales demostró la superioridad de Pipeline B, validando las hipótesis de investigación planteadas y estableciendo métricas cuantitativas para la comparación de enfoques de extracción de habilidades en ofertas laborales.
+Este trabajo diseñó, implementó y validó un sistema completo de observatorio de demanda laboral para América Latina, comparando tres enfoques de extracción de habilidades técnicas: métodos basados en reglas y reconocimiento de entidades nombradas (Pipeline A), métodos estadísticos con TF-IDF y n-gramas (Pipeline A.1), y modelos de lenguaje grandes (Pipeline B). La evaluación rigurosa sobre un \textit{gold standard} de 7,848 anotaciones manuales demostró la superioridad de Pipeline B, estableciendo métricas cuantitativas para la comparación de enfoques de extracción de habilidades en ofertas laborales.
 
-\section{Validación de Hipótesis}
+\section{Hallazgos Principales}
 
-\subsection{H1: Superioridad de Modelos de Lenguaje Grandes}
+\subsection{Superioridad de Modelos de Lenguaje Grandes}
 
-La primera hipótesis planteaba que los modelos de lenguaje grandes (LLMs) superarían a métodos tradicionales basados en reglas y reconocimiento de entidades nombradas. Los resultados experimentales presentados en el Capítulo 7 validan esta hipótesis de manera concluyente:
+Los resultados experimentales presentados en el Capítulo 7 demuestran de manera concluyente que los modelos de lenguaje grandes (LLMs) superan a métodos tradicionales basados en reglas y reconocimiento de entidades nombradas:
 
 \begin{itemize}
-    \item Pipeline B alcanzó un F1-Score post-ESCO de \textbf{84.26\%}, superando en 12.11 puntos porcentuales a Pipeline A (72.15\%)
-    \item La mejora relativa del \textbf{16.8\%} en F1-Score demuestra una ventaja sustancial
-    \item En términos de precisión, Pipeline B obtuvo \textbf{89.25\%} vs 66.28\% de Pipeline A, una mejora relativa del 34.6\%
-    \item Incluso en evaluación pre-ESCO (extracción pura), Pipeline B alcanzó F1=46.23\% vs 22.70\% de Pipeline A, más del doble de rendimiento
+    \item Pipeline B alcanzó un F1-Score post-ESCO de \textbf{84.26\%}, superando en 11.73 puntos porcentuales a Pipeline A (72.53\%)
+    \item La mejora relativa del \textbf{16.2\%} en F1-Score demuestra una ventaja sustancial
+    \item En términos de precisión, Pipeline B obtuvo \textbf{89.25\%} vs 65.50\% de Pipeline A, una mejora relativa del 36.3\%
+    \item Incluso en evaluación pre-ESCO (extracción pura), Pipeline B alcanzó F1=46.23\% vs 24.98\% de Pipeline A, casi el doble de rendimiento
 \end{itemize}
 
-Esta superioridad se mantiene consistentemente en todas las métricas evaluadas, validando que los modelos de lenguaje grandes capturan habilidades técnicas con mayor precisión y exhaustividad que métodos sintácticos tradicionales.
+Esta superioridad se mantiene consistentemente en todas las métricas evaluadas, demostrando que los modelos de lenguaje grandes capturan habilidades técnicas con mayor precisión y exhaustividad que métodos sintácticos tradicionales.
 
-\subsection{H2: Detección de Habilidades Emergentes}
+\subsection{Detección de Habilidades Emergentes}
 
-La segunda hipótesis postulaba que los LLMs detectarían habilidades emergentes ausentes en taxonomías estáticas como ESCO. Los resultados confirman esta capacidad:
+Los resultados confirman que los LLMs detectan habilidades emergentes ausentes en taxonomías estáticas como ESCO:
 
 \begin{itemize}
     \item El \textbf{59.5\%} de habilidades extraídas por Pipeline B no tienen equivalente en ESCO v1.1.0
@@ -30,9 +30,9 @@ La segunda hipótesis postulaba que los LLMs detectarían habilidades emergentes
 
 Esto confirma la limitación inherente de taxonomías estáticas que se actualizan cada 2-3 años, mientras el mercado tecnológico evoluciona en ciclos de 6-12 meses. Los LLMs, al no estar restringidos a vocabulario fijo, capturan esta evolución dinámica.
 
-\subsection{H3: Inferencia de Habilidades Implícitas}
+\subsection{Inferencia de Habilidades Implícitas}
 
-La tercera hipótesis planteaba que los LLMs podrían inferir habilidades implícitas de las responsabilidades descritas en ofertas laborales. Los resultados validan esta capacidad:
+Los resultados demuestran que los LLMs infieren habilidades implícitas de las responsabilidades descritas en ofertas laborales:
 
 \begin{itemize}
     \item Pipeline B identificó habilidades blandas con \textbf{131\%} de cobertura sobre el \textit{gold standard}
@@ -61,7 +61,7 @@ Este trabajo aporta contribuciones en cuatro dimensiones:
 \begin{itemize}
     \item \textbf{Sistema completo end-to-end} operativo que integra scraping, limpieza, extracción, mapeo a taxonomías, generación de embeddings y clustering semántico
     \item \textbf{ESCO Matcher de 3 capas} optimizado con exact matching, fuzzy matching (threshold 0.92), y detección de habilidades emergentes
-    \item \textbf{Pipeline A optimizado} mediante 7 experimentos iterativos que mejoraron F1 de 42\% a 81\%
+    \item \textbf{Pipeline A optimizado} mediante 7 experimentos iterativos que mejoraron F1 post-ESCO de 23.45\% a 72.53\% (49 puntos porcentuales)
     \item \textbf{Clustering semántico} UMAP+HDBSCAN de más de 30,000 habilidades en 53 clusters coherentes
     \item \textbf{Código open-source} completo con más de 83,000 líneas de documentación y código
 \end{itemize}
@@ -69,7 +69,7 @@ Este trabajo aporta contribuciones en cuatro dimensiones:
 \subsection{Contribuciones Empíricas}
 
 \begin{itemize}
-    \item \textbf{Demostración cuantitativa} de superioridad de LLMs: +16.8\% F1 versus métodos tradicionales
+    \item \textbf{Demostración cuantitativa} de superioridad de LLMs: +16.2\% mejora relativa en F1 versus métodos tradicionales
     \item \textbf{Detección de 59.5\%} de habilidades emergentes ausentes en taxonomías oficiales
     \item \textbf{Validación de inferencia implícita}: +31\% de habilidades blandas sobre anotación humana explícita
     \item \textbf{Identificación de limitaciones ESCO}: sesgo europeo, granularidad inconsistente, desactualización, ausencia de contexto latinoamericano
@@ -110,7 +110,7 @@ La honestidad académica requiere reconocer las limitaciones del trabajo realiza
 
 \begin{itemize}
     \item \textbf{Anotador único}: Posible sesgo en anotaciones manuales, mitigado parcialmente con re-anotación del 10\% de la muestra
-    \item \textbf{Pipeline A.1 descartado}: F1=48\% insuficiente para producción, aunque útil como baseline académico
+    \item \textbf{Pipeline A.1 descartado}: F1=11.69\% (pre-ESCO) insuficiente para producción, aunque útil como baseline académico
     \item \textbf{Análisis temporal}: Documentado conceptualmente pero no ejecutado completamente por limitaciones de tiempo
     \item \textbf{Meta-clustering}: Implementado pero con métricas subóptimas (Silhouette=0.27), requiere refinamiento
 \end{itemize}
@@ -122,7 +122,7 @@ El desarrollo de este sistema reveló \textit{insights} valiosos aplicables a pr
 \subsection{Lecciones Técnicas}
 
 \begin{itemize}
-    \item \textbf{La iteración sistemática funciona}: Pipeline A mejoró 38 puntos porcentuales de F1 en 7 experimentos controlados
+    \item \textbf{La iteración sistemática funciona}: Pipeline A mejoró de F1=23.45\% inicial a 72.53\% final (49 puntos porcentuales) y Recall de 30\% a 81.25\% en 7 experimentos controlados
     \item \textbf{La evaluación dual es esencial}: Separar extracción pura (pre-ESCO) de normalización (post-ESCO) permite identificar fortalezas y debilidades específicas de cada pipeline
     \item \textbf{LLMs pequeños son suficientes}: Modelos de 4B parámetros (Gemma 3 4B) compiten con alternativas más grandes sin requerir infraestructura costosa
     \item \textbf{ESCO es útil pero limitado}: Excelente para normalización post-extracción, insuficiente como única fuente de cobertura para tecnologías modernas
@@ -194,7 +194,7 @@ La democratización de estas tecnologías mediante código open-source y el uso 
 
 El sistema desarrollado procesa actualmente 30,660 ofertas laborales de tres países latinoamericanos, pero la arquitectura diseñada es escalable a millones de ofertas y decenas de países. La integración de scraping distribuido, procesamiento batch, clustering semántico y análisis temporal constituye una plataforma completa para monitoreo continuo del mercado laboral tecnológico.
 
-Finalmente, la validación cuantitativa de las tres hipótesis de investigación, la identificación honesta de limitaciones, y la documentación exhaustiva del sistema (81,000 líneas) establecen un precedente metodológico para futuros trabajos en extracción de información de ofertas laborales mediante inteligencia artificial. Este proyecto demuestra que la combinación rigurosa de métodos tradicionales de NLP, modelos de lenguaje grandes, y evaluación sistemática con \textit{gold standard} produce sistemas robustos, interpretables y de alto rendimiento aplicables a problemas reales del mercado laboral latinoamericano.
+Finalmente, la demostración cuantitativa de superioridad de LLMs, la identificación honesta de limitaciones, y la documentación exhaustiva del sistema (más de 106,000 líneas de código y documentación) establecen un precedente metodológico para futuros trabajos en extracción de información de ofertas laborales mediante inteligencia artificial. Este proyecto demuestra que la combinación rigurosa de métodos tradicionales de NLP, modelos de lenguaje grandes, y evaluación sistemática con \textit{gold standard} produce sistemas robustos, interpretables y de alto rendimiento aplicables a problemas reales del mercado laboral latinoamericano.
 
 \section{Análisis de Impacto del Proyecto}
 
