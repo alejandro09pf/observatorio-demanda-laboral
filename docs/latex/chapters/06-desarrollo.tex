@@ -262,13 +262,9 @@ Para garantizar la calidad de las extracciones del Pipeline A, se implementaron 
 
 Estos mecanismos de control de calidad mejoraron la precisión de las extracciones mediante filtrado progresivo, especialmente efectivo al combinar con mapeo ESCO que consolida variantes ortográficas y elimina ruido residual.
 
-\subsubsection{Resultados de la Implementación}
+\subsubsection{Evaluación del Pipeline A}
 
-La evaluación del Pipeline A sobre el gold standard de 300 ofertas laborales produjo los siguientes resultados:
-
-\subsubsection{Metodología de Evaluación y Selección de Métricas}
-
-La evaluación de los pipelines de extracción se realizó mediante comparación contra el gold standard de 300 ofertas manualmente anotadas, utilizando las métricas estándar de Information Retrieval: Precision, Recall y F1-Score.
+La evaluación del Pipeline A se realizó mediante comparación contra el gold standard de 300 ofertas laborales manualmente anotadas (100 por país: Colombia, México, Argentina), utilizando las métricas estándar de Information Retrieval: Precision, Recall y F1-Score.
 
 \textbf{Justificación de métricas.} No se utilizó Accuracy debido a las siguientes razones fundamentales:
 
@@ -320,6 +316,8 @@ Donde $|S|$ denota la cardinalidad del conjunto $S$, $\cap$ es la intersección,
 \end{itemize}
 
 Esta evaluación dual permite cuantificar el trade-off entre flexibilidad (captura de tecnologías emergentes) versus estandarización (alineación con taxonomías oficiales), documentando el impacto del mapeo ESCO en la performance medida de cada pipeline.
+
+\textbf{Resultados obtenidos.} La evaluación del Pipeline A sobre las 300 ofertas del gold standard produjo las siguientes métricas:
 
 \textbf{Métricas de rendimiento Pre-ESCO}:
 \begin{itemize}
