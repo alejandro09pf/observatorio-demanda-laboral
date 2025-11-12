@@ -734,66 +734,19 @@ La configuración óptima seleccionada (\texttt{n\_neighbors=15}, \texttt{min\_c
 
 \subsection{Beneficios del Sistema de Clustering Implementado}
 
-La implementación del sistema de clustering no supervisado mediante UMAP + HDBSCAN proporciona múltiples beneficios para el observatorio de demanda laboral:
+La implementación del sistema de clustering no supervisado mediante UMAP + HDBSCAN proporciona múltiples beneficios analíticos, operativos y metodológicos para el observatorio de demanda laboral, respondiendo directamente a los objetivos centrales del proyecto.
 
-\textbf{Beneficios analíticos}:
+\textbf{Capacidades analíticas fundamentales}. El sistema habilita descubrimiento automático de perfiles tecnológicos emergentes sin requerir categorías predefinidas, permitiendo que los datos revelen naturalmente nuevas combinaciones de habilidades demandadas por el mercado. La granularidad adaptativa de HDBSCAN captura tanto familias tecnológicas amplias (JavaScript/React ecosystem con 40-60 skills relacionadas, Python/Data Science con frameworks especializados) como especializaciones de nicho (DevOps tools específicas, librerías de ML), produciendo clústeres de tamaños variables (5-70 skills) según densidad semántica real. La detección automática de outliers identifica skills atípicas o errores de extracción como ruido (12-25\% del dataset según configuración Pre/Post-ESCO), actuando como mecanismo de filtrado de calidad sin supervisión manual. Adicionalmente, los dendrogramas de HDBSCAN revelan jerarquías multinivel de perfiles, permitiendo análisis tanto a nivel macro (Backend vs Frontend vs DevOps) como granular (Backend Java vs Backend Node.js, distinguiendo ecosistemas tecnológicos específicos).
 
-\begin{itemize}
-    \item \textbf{Descubrimiento automático de perfiles emergentes}: No requiere categorías predefinidas, permitiendo que los datos revelen naturalmente nuevas combinaciones de habilidades demandadas
-        \begin{itemize}
-            \item Ejemplo: Identificación del perfil ``AI/ML Engineer'' como cluster emergente post-2022
-        \end{itemize}
-    \item \textbf{Granularidad adaptativa}: HDBSCAN permite clústeres de tamaños variables, capturando tanto familias tecnológicas amplias (JavaScript/React ecosystem, Python/Data Science) como especializaciones de nicho
-    \item \textbf{Detección de outliers}: Skills atípicas o errores de extracción se identifican automáticamente como ruido (12-25\% del dataset dependiendo de configuración Pre/Post-ESCO)
-    \item \textbf{Jerarquía multinivel}: Dendrogramas de HDBSCAN revelan familias de roles (Backend $\rightarrow$ Backend Java vs. Backend Node.js)
-\end{itemize}
+\textbf{Ventajas para visualización e interpretabilidad}. UMAP preserva tanto relaciones locales (React posicionado cerca de Vue/Angular por similitud de propósito) como estructura global (Frontend separado espacialmente de DevOps/Infrastructure), permitiendo que visualizaciones 2D capturen fielmente la topología semántica de las 768 dimensiones originales de los embeddings. Esta reducción dimensional mantiene interpretabilidad intuitiva: clusters visualmente cohesivos corresponden a familias tecnológicas coherentes verificables mediante inspección manual. Las proyecciones son completamente reproducibles mediante fijación de \texttt{random\_state}, garantizando que visualizaciones y análisis sean consistentes entre ejecuciones y comparables a través del tiempo, propiedad crítica para documentación científica y auditoría de resultados.
 
-\textbf{Beneficios para visualización}:
+\textbf{Infraestructura para análisis temporal (limitaciones actuales)}. El sistema implementa módulo de tracking temporal capaz de rastrear evolución de clústeres entre períodos, generando heatmaps de frecuencia por cluster×quarter y gráficos de evolución de demanda. Sin embargo, la aplicabilidad actual está limitada por la distribución temporal del corpus: 93.5\% de menciones (4,222/4,479) se concentran en Q4-2025, con solo 5 quarters representados (2016Q2, 2023Q4, 2025Q1, 2025Q3, 2025Q4) y frecuencias insuficientes en períodos históricos (20-151 menciones vs 4,222 en Q4-2025). Esta concentración impide análisis longitudinal robusto de tendencias tecnológicas, obsolescencia de frameworks, o crecimiento de nuevas tecnologías. La infraestructura está preparada para análisis temporal riguroso cuando el observatorio acumule datos distribuidos equitativamente a través de múltiples años mediante scraping continuo.
 
-\begin{itemize}
-    \item \textbf{Reducción dimensional preservando estructura}: UMAP mantiene relaciones locales (React cerca de Angular) y globales (Frontend separado de DevOps)
-    \item \textbf{Interpretabilidad}: Proyecciones 2D permiten visualización intuitiva de 768 dimensiones originales
-    \item \textbf{Reproducibilidad}: Proyecciones deterministas con \texttt{random\_state} fijo garantizan consistencia entre ejecuciones
-\end{itemize}
+\textbf{Eficiencia operacional y escalabilidad}. La complejidad algorítmica O(n log n) de UMAP permite procesar corpus de producción (30,660 ofertas generando 1,314 skills con frecuencia mínima) en aproximadamente 5 segundos de proyección UMAP más tiempo adicional de clustering HDBSCAN, totalizando menos de 30 segundos para pipeline completo en CPU consumer (Apple Silicon M4). El sistema no requiere supervisión humana para generación de clusters, eliminando el costo de anotación manual que requeriría 400-500 horas de trabajo especializado para categorizar 30,660 ofertas. La arquitectura soporta actualización incremental: agregar nuevas ofertas al corpus solo requiere re-ejecutar el pipeline de clustering sobre el dataset expandido, sin necesidad de reentrenar modelos o ajustar categorías manualmente.
 
-\textbf{Beneficios para análisis temporal}:
+\textbf{Alineación con objetivos del observatorio}. El sistema de clustering responde directamente a los tres objetivos centrales del proyecto. Primero, caracteriza automáticamente la demanda laboral tecnológica mediante identificación de 34-53 familias semánticas de skills (según pipeline y configuración), proporcionando taxonomía emergente de perfiles demandados en LATAM que refleja la estructura real del mercado sin imposición de categorías preconcebidas. Segundo, analiza composición de perfiles tecnológicos al agrupar ecosistemas coherentes (JavaScript/React frontend, Python/Data Science analytics, Cloud/DevOps infrastructure, SQL/Databases backend), facilitando comprensión de qué combinaciones de habilidades se demandan conjuntamente. Tercero, detecta skills emergentes no presentes en taxonomías oficiales: 87.4\% de skills extraídas por Pipeline A no mapean a ESCO v1.1.0, capturándose en clusters Pre-ESCO frameworks modernos (Next.js, Tailwind CSS, Bun, Deno) y herramientas recientes (Terraform, Kubernetes, GitOps), señalando tecnologías que están ganando tracción en el mercado pero aún no están formalizadas en estándares europeos.
 
-\begin{itemize}
-    \item \textbf{Tracking de evolución de clústeres}: Permite rastrear crecimiento/decline de familias tecnológicas
-        \begin{itemize}
-            \item Ejemplo: Cloud/DevOps creció +533\% durante 2019-2025
-        \end{itemize}
-    \item \textbf{Identificación de tecnologías emergentes}: Clústeres nuevos post-2022 señalan tendencias del mercado
-        \begin{itemize}
-            \item Ejemplo: Cluster ``Modern Frontend'' (Next.js, Tailwind CSS) aparece en Q1-2023
-        \end{itemize}
-    \item \textbf{Detección de obsolescencia}: Clústeres en decline indican tecnologías perdiendo relevancia
-        \begin{itemize}
-            \item Ejemplo: Cluster ``.NET Framework'' decrece -40\% mientras ``.NET Core'' crece +120\%
-        \end{itemize}
-\end{itemize}
-
-\textbf{Beneficios operativos}:
-
-\begin{itemize}
-    \item \textbf{Escalabilidad}: Complejidad O(n log n) de UMAP permite procesar millones de puntos
-    \item \textbf{Eficiencia computacional}: Clustering de 3,200 skills en $<$30 segundos (CPU)
-    \item \textbf{Sin supervisión humana}: No requiere anotación manual de categorías (ahorro de costos)
-    \item \textbf{Actualización incremental}: Fácil re-clustering al agregar nuevas ofertas al corpus
-\end{itemize}
-
-\textbf{Impacto en objetivos del observatorio}:
-
-El sistema de clustering responde directamente a los siguientes objetivos del proyecto:
-
-\begin{enumerate}
-    \item \textbf{Caracterizar la demanda laboral tecnológica}: El sistema de clustering identifica automáticamente familias semánticas de skills (34-53 clusters dependiendo de pipeline/configuración), proporcionando taxonomía emergente de perfiles tecnológicos demandados en LATAM
-    \item \textbf{Analizar composición de perfiles}: Los top clusters identifican ecosistemas tecnológicos coherentes (JavaScript/React, Python/Data Science, Cloud/DevOps, SQL/Databases)
-    \item \textbf{Detectar skills emergentes}: 87.4\% de skills extraídas no mapean a ESCO, capturándose en clusters Pre-ESCO (frameworks modernos: Next.js, Tailwind CSS, Bun; herramientas: Terraform, Kubernetes)
-    \item \textbf{Infraestructura para análisis temporal}: Sistema preparado para tracking longitudinal de evolución tecnológica cuando se disponga de datos distribuidos temporalmente
-\end{enumerate}
-
-Esta arquitectura de clustering no supervisado permite que el observatorio evolucione orgánicamente con el mercado laboral, sin requerir actualización manual de categorías predefinidas que rápidamente quedarían obsoletas en el dinámico sector tecnológico.
+Esta arquitectura de clustering no supervisado permite que el observatorio evolucione orgánicamente con el mercado laboral, sin requerir actualización manual de categorías predefinidas que rápidamente quedarían obsoletas en el dinámico sector tecnológico latinoamericano.
 
 \section{Creación del Gold Standard y Sistema de Evaluación}
 
