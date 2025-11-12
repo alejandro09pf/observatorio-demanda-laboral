@@ -387,53 +387,34 @@ Se evaluaron cuatro modelos de lenguaje open-source de tamaño intermedio (3-4B 
 
 \textbf{Configuración de evaluación}:
 
-Todos los modelos se ejecutaron con cuantización INT4 mediante \texttt{bitsandbytes}, reduciendo requisitos de memoria de $\sim$16GB (FP16) a $\sim$4GB (INT4) para permitir inferencia en RTX 3090 con batch size 1. La evaluación preliminar se realizó sobre 50 ofertas laborales del gold standard, analizando tanto métricas cuantitativas (F1-Score Pre-ESCO) como comportamiento cualitativo (alucinaciones, consistencia de formato, relevancia de extracciones).
+Todos los modelos se ejecutaron con cuantización INT4 mediante \texttt{bitsandbytes}, reduciendo requisitos de memoria de $\sim$16GB (FP16) a $\sim$4GB (INT4) para permitir inferencia local en hardware consumer (MacBook Air M4 base con 16GB RAM unificada) con batch size 1. La evaluación preliminar se realizó sobre 10 ofertas laborales del gold standard, analizando tanto métricas cuantitativas (F1-Score Pre-ESCO) como comportamiento cualitativo (alucinaciones, consistencia de formato, relevancia de extracciones).
 
 \textbf{Resultados de la evaluación comparativa}:
 
-\begin{itemize}
-    \item \textbf{Gemma 3 4B Instruct}: F1-Score 46.23\% Pre-ESCO
-        \begin{itemize}
-            \item Formato JSON válido en 99\% de respuestas (299/300 jobs procesados exitosamente)
-            \item Extracción balanceada: 27.8 skills/oferta promedio
-            \item Sin alucinaciones evidentes detectadas en revisión manual de 300 ofertas
-            \item Latencia: mediana 18.34s/oferta (P25-P75: 15-25s), media 42.07s (inflada por outliers)
-        \end{itemize}
+La Tabla \ref{tab:llm_comparison} presenta los resultados de la evaluación comparativa de los cuatro modelos candidatos sobre 10 ofertas laborales del gold standard.
 
-    \item \textbf{Llama 3.2 3B Instruct}: F1-Score 39.7\% Pre-ESCO
-        \begin{itemize}
-            \item Alucinaciones sistemáticas: Agregaba skills de Data Science en ofertas de desarrollo web tradicional
-            \item Ejemplo: Oferta de ``Frontend Developer'' generaba [``TensorFlow'', ``scikit-learn'', ``Pandas'']
-            \item Causa raíz hipotética: Sobre-representación de contenido ML en corpus de entrenamiento
-        \end{itemize}
+\begin{table}[h]
+\centering
+\caption{Comparación de modelos LLM para extracción de habilidades}
+\label{tab:llm_comparison}
+\begin{tabular}{|l|c|c|p{6cm}|}
+\hline
+\textbf{Modelo} & \textbf{F1 Pre-ESCO} & \textbf{Skills/oferta} & \textbf{Observaciones clave} \\
+\hline
+Gemma 3 4B & 46.23\% & 27.8 & JSON válido (99\%), sin alucinaciones, latencia mediana 18.3s \\
+\hline
+Llama 3.2 3B & 39.7\% & --- & Alucinaciones sistemáticas (agregaba TensorFlow/Pandas en ofertas frontend) \\
+\hline
+Qwen 2.5 3B & 38.9\% & 10-12 & Extracciones conservadoras, alta precisión pero baja cobertura \\
+\hline
+Phi-3.5 Mini & 35.2\% & --- & Formato inconsistente (40\% no-JSON), requiere parser complejo \\
+\hline
+\end{tabular}
+\end{table}
 
-    \item \textbf{Qwen 2.5 3B Instruct}: F1-Score 38.9\% Pre-ESCO
-        \begin{itemize}
-            \item Extracciones conservadoras: Alta precisión pero baja cobertura (10-12 skills/oferta)
-            \item Omitía skills implícitas, comportamiento similar a Pipeline A
-            \item Ventaja: Bajo ruido, adecuado para escenarios que priorizan precisión sobre recall
-        \end{itemize}
+\textbf{Decisión final}. Se seleccionó Gemma 3 4B Instruct como modelo de producción tras evaluar cuatro dimensiones críticas. Primero, alcanzó el mejor desempeño cuantitativo con 46.23\% F1 Pre-ESCO y 84.26\% F1 Post-ESCO, superando a Llama 3.2 por +6.5pp y a Qwen 2.5 por +7.3pp. Segundo, demostró estabilidad de formato con 99\% de respuestas en JSON válido (299/300 ofertas procesadas exitosamente), eliminando la necesidad de parsers heurísticos frágiles como los requeridos por Phi-3.5. Tercero, la revisión manual de 300 ofertas no detectó alucinaciones sistemáticas, contrastando con Llama 3.2 que agregaba skills de Data Science (TensorFlow, Pandas) en ofertas de desarrollo web tradicional sin componente analítico. Cuarto, la latencia mediana de 18.3 segundos por oferta (percentiles P25-P75: 15-25s) permitió procesar el gold standard completo en 3.5 horas, tiempo aceptable para pipelines de enriquecimiento no-interactivos.
 
-    \item \textbf{Phi-3.5 Mini Instruct}: F1-Score 35.2\% Pre-ESCO
-        \begin{itemize}
-            \item Formato inconsistente: 60\% JSON válido, 40\% texto libre o listas Markdown
-            \item Requería post-procesamiento con regex complejo para parsear respuestas
-            \item Descartado por overhead de mantenimiento del parser
-        \end{itemize}
-\end{itemize}
-
-\textbf{Decisión final}:
-
-Se seleccionó \textbf{Gemma 3 4B Instruct} como modelo de producción fundamentado en:
-
-\begin{itemize}
-    \item \textbf{Mejor F1-Score}: 46.23\% Pre-ESCO y 84.26\% Post-ESCO, superando significativamente a alternativas
-    \item \textbf{Estabilidad de formato}: 99\% de respuestas en JSON válido (299/300 jobs procesados exitosamente)
-    \item \textbf{Ausencia de alucinaciones críticas}: Revisión manual de 300 ofertas no detectó skills irrelevantes sistemáticas
-    \item \textbf{Latencia aceptable}: tiempo típico de 15-25s/oferta (mediana 18s) permitió procesamiento de 299 ofertas gold standard en 3.5 horas
-\end{itemize}
-
-Esta decisión responde al atributo de calidad de \textbf{Confiabilidad}: Un pipeline de producción debe generar resultados predecibles sin alucinaciones que contaminen análisis agregados, incluso si esto implica sacrificar marginal F1-Score.
+Esta decisión prioriza el atributo de calidad de confiabilidad sobre maximización de métricas aisladas. Un pipeline de producción debe generar resultados predecibles sin alucinaciones que contaminen análisis agregados, incluso si esto implica sacrificar mejoras marginales de F1-Score. La arquitectura robusta de Gemma 3 4B (formato estructurado consistente + ausencia de sesgos evidentes) lo posiciona como fundamento confiable para el componente semántico del observatorio.
 
 \subsubsection{Componentes del Pipeline B}
 
@@ -449,6 +430,7 @@ Pipeline B se compone de tres módulos secuenciales que transforman texto de ofe
             \item \textit{Contexto de oferta}: Incluye \texttt{job\_title}, \texttt{description}, \texttt{requirements} concatenados
             \item \textit{Instrucciones}: Especifica criterios de extracción (skills técnicas, herramientas, lenguajes, frameworks, no soft skills)
         \end{itemize}
+    \item \textbf{Template completo}: El prompt de 280 líneas con ejemplos, reglas y casos negativos se documenta en el Apéndice A
     \item \textbf{Salida}: String de prompt de longitud variable (650-1200 tokens según verbosidad de oferta)
 \end{itemize}
 

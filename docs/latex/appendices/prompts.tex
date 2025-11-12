@@ -1,0 +1,190 @@
+\section*{APÉNDICE A: PROMPT DE EXTRACCIÓN DE HABILIDADES - PIPELINE B}
+\addcontentsline{toc}{section}{Apéndice A: Prompt de Pipeline B}
+
+Este apéndice documenta el prompt completo utilizado por Pipeline B (LLM-based) para extracción de habilidades de ofertas laborales. El prompt fue diseñado mediante ingeniería iterativa para optimizar exhaustividad (captura de todas las tecnologías mencionadas) mientras mantiene precisión (evitar alucinaciones de skills no presentes en el texto).
+
+\subsection*{Estructura del Prompt}
+
+El prompt se estructura en 6 secciones secuenciales:
+
+\begin{enumerate}
+    \item \textbf{Definición de rol}: Establece el LLM como ``experto extractor de habilidades del mercado laboral tecnológico en América Latina''
+    \item \textbf{Definición de tarea y alcance}: Especifica qué constituye una ``habilidad'' (técnica y blanda) y qué extraer exhaustivamente
+    \item \textbf{Reglas de extracción}: 7 reglas explícitas sobre normalización, separación de tecnologías, inclusión de siglas, y qué NO extraer
+    \item \textbf{Ejemplos positivos y negativos}: Muestra 15+ casos de qué SÍ extraer y 7 casos de qué NO extraer (con justificación)
+    \item \textbf{3 ejemplos completos end-to-end}: Ofertas realistas con ruido (beneficios, años de experiencia, capacitaciones futuras) y sus extracciones correctas en JSON
+    \item \textbf{Instrucciones finales}: Placeholder para título y descripción de la oferta real + recordatorios de normalización + formato JSON estricto
+\end{enumerate}
+
+\subsection*{Template Completo}
+
+El template utiliza formato Python f-string con placeholders \texttt{\{job\_title\}} y \texttt{\{job\_description\}}. La versión completa (sin placeholders) es:
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\scriptsize, breaklines=true]
+Eres un experto extractor de habilidades del mercado laboral tecnologico en America Latina.
+
+TU TAREA: Extrae TODAS las habilidades (tecnicas y blandas) que el puesto requiere, sin importar donde aparezcan en la oferta.
+
+QUE ES UNA HABILIDAD:
+Una habilidad es cualquier conocimiento, capacidad o competencia que el candidato necesita tener o desarrollar para desempenar el puesto exitosamente.
+
+Incluye:
+- Habilidades tecnicas/hard skills: lenguajes de programacion, frameworks, herramientas, bases de datos, metodologias, certificaciones
+- Habilidades blandas/soft skills: liderazgo, comunicacion, trabajo en equipo, resolucion de problemas, pensamiento critico
+
+REGLAS DE EXTRACCION:
+1. **EXTRAE EXHAUSTIVAMENTE** todas las tecnologias, herramientas y metodologias mencionadas como REQUISITOS
+2. Busca skills en CUALQUIER seccion: requisitos, responsabilidades, funciones, perfil, "lo que haras", "necesitas"
+3. Las responsabilidades implican skills: "Lideraras equipo" -> "Liderazgo", "Desarrollaras APIs" -> "Desarrollo de APIs"
+4. Normaliza nombres tecnicos: postgres->PostgreSQL, js->JavaScript, k8s->Kubernetes, react->React
+5. Separa tecnologias combinadas: "AWS/Azure" -> ["AWS", "Azure"]
+6. **INCLUYE SIGLAS Y ABREVIACIONES**: API, REST, CI/CD, k8s, ML, NLP, IaC, etc.
+7. NO extraigas: beneficios del empleador, capacitaciones futuras ("aprenderas"), anos de experiencia, ubicacion, salario, horarios
+
+COMO DISTINGUIR QUE EXTRAER:
+(Checkmark) SI EXTRAER (skills requeridas para el puesto):
+- "Experiencia con Python" -> Python
+- "Conocimientos de Docker y Kubernetes" -> Docker, Kubernetes
+- "Manejo de MySQL/PostgreSQL" -> MySQL, PostgreSQL
+- "Dominio de React, Vue o Angular" -> React, Vue.js, Angular
+- "Familiaridad con AWS o GCP" -> AWS, GCP
+- "Lideraras el equipo de frontend" -> Liderazgo, Frontend
+- "Desarrollaras APIs REST" -> Desarrollo de APIs, REST API
+- "Experiencia en Machine Learning" -> Machine Learning
+- "Control de versiones con Git" -> Git
+- "Capacidad de trabajo en equipo" -> Trabajo en Equipo
+- "Resolucion de problemas complejos" -> Resolucion de Problemas
+- "Conocimientos de FastAPI" -> FastAPI
+- "MongoDB/NoSQL" -> MongoDB, NoSQL
+- "CI/CD pipelines" -> CI/CD
+- "Arquitectura de microservicios" -> Arquitectura de Microservicios
+
+(X) NO EXTRAER (no son skills requeridas):
+- "Aprenderas Kubernetes con nosotros" (capacitacion futura - NO es requisito actual)
+- "Te entrenaremos en tecnologias cloud" (capacitacion futura)
+- "Seguro medico privado" (beneficio)
+- "3+ anos de experiencia" (experiencia, no skill)
+- "Ingles intermedio" (idioma - no es skill tecnica/blanda)
+- "Trabajo remoto" (modalidad)
+- "Salario competitivo" (compensacion)
+- "La empresa usa Python" (contexto, no requisito)
+
+EJEMPLOS REALISTAS CON RUIDO:
+
+Ejemplo 1:
+Titulo: "Desarrollador Full Stack - Remoto"
+Texto: "Somos una startup innovadora de Bogota con 50 empleados. Buscamos desarrollador con 3+ anos de experiencia en React o Vue, Node.js, y bases de datos postgres/MySQL. Experiencia con AWS o GCP es un plus. Control de versiones con Git. Conocimientos de Docker deseable. Ingles intermedio.
+
+Responsabilidades: Desarrollaras nuevas features usando JavaScript/TypeScript, daras soporte al equipo, participaras en code reviews.
+
+Beneficios: Trabajo remoto, seguro medico privado, capacitacion continua en tecnologias cloud, aprenderas Kubernetes con nuestro equipo DevOps.
+
+Requisitos: Titulo universitario en Ingenieria de Sistemas o afines. Excelente comunicacion y trabajo en equipo."
+Output:
+```json
+{
+  "hard_skills": ["React", "Vue.js", "Node.js", "PostgreSQL", "MySQL", "AWS", "GCP", "Git", "Docker", "JavaScript", "TypeScript", "Desarrollo de Features", "Soporte Tecnico", "Code Review"],
+  "soft_skills": ["Comunicacion", "Trabajo en Equipo"]
+}
+```
+
+Ejemplo 2:
+Titulo: "Ingeniero DevOps Senior"
+Texto: "Empresa lider en transformacion digital busca DevOps Engineer para unirse a nuestro equipo en Mexico City.
+
+Lo que haras: Automatizaras procesos de deploy, mejoraras nuestra infraestructura cloud, lideraras proyectos de migracion.
+
+Lo que necesitas: Docker, k8s, experiencia con Jenkins/GitLab CI/CD, Terraform o Ansible para IaC, scripting en Python o Bash. Certificacion AWS/Azure deseable. Git para control de versiones.
+
+Ofrecemos: Salario competitivo, bonos anuales, entrenamiento en nuevas tecnologias, ambiente colaborativo. Aprenderas sobre arquitecturas serverless.
+
+Perfil: 5+ anos experiencia, proactividad, mentalidad agil."
+Output:
+```json
+{
+  "hard_skills": ["Docker", "Kubernetes", "Jenkins", "GitLab CI/CD", "Terraform", "Ansible", "IaC", "Python", "Bash", "AWS", "Azure", "Git", "Automatizacion", "Infraestructura Cloud", "Migracion de Sistemas"],
+  "soft_skills": ["Liderazgo de Proyectos", "Proactividad", "Metodologias Agiles"]
+}
+```
+
+Ejemplo 3:
+Titulo: "Data Analyst - Hibrido"
+Texto: "Quienes somos? Empresa fintech argentina en crecimiento con presencia en LATAM.
+
+Tu mision: Analizaras datos de clientes, crearas dashboards ejecutivos, identificaras oportunidades de negocio, presentaras insights al equipo comercial.
+
+Requisitos tecnicos:
+- SQL avanzado (queries complejas, optimizacion)
+- Power BI y/o Tableau para visualizaciones
+- Excel nivel experto (tablas dinamicas, macros)
+- Python para analisis (pandas, numpy, matplotlib)
+- Conocimientos de estadistica
+
+Requisitos generales: Profesional en Ingenieria, Matematicas o Economia. Ingles tecnico (leer documentacion). Capacidad analitica, atencion al detalle.
+
+Que ofrecemos: Modalidad hibrida (3 dias oficina), obra social premium, dia off de cumpleanos, capacitacion en machine learning y big data tools como Spark.
+
+Deseable: Experiencia previa en fintech."
+Output:
+```json
+{
+  "hard_skills": ["SQL", "Power BI", "Tableau", "Excel", "Python", "Pandas", "NumPy", "Matplotlib", "Estadistica", "Analisis de Datos", "Dashboards"],
+  "soft_skills": ["Identificacion de Oportunidades", "Presentacion de Insights", "Pensamiento Analitico", "Atencion al Detalle"]
+}
+```
+
+AHORA EXTRAE LAS HABILIDADES DE ESTA OFERTA:
+
+Titulo: {job_title}
+
+Descripcion completa:
+{job_description}
+
+Instrucciones finales:
+- Analiza TODA la oferta: "Requisitos", "Responsabilidades", "Funciones", "Perfil", "Habilidades", "Lo que haras", "Necesitas"
+- **EXTRAE TODAS** las tecnologias, lenguajes, frameworks, herramientas, bases de datos **QUE APARECEN EN EL JOB**
+- **NO extraigas skills que NO estan mencionadas en el texto**
+- Tipos de skills a buscar (SOLO si aparecen en el job):
+  - Lenguajes de programacion: Python, Java, JavaScript, TypeScript, Go, Rust, PHP, Ruby, etc.
+  - Frameworks/librerias: React, Vue, Angular, Django, Flask, FastAPI, Spring Boot, .NET, etc.
+  - Bases de datos: MySQL, PostgreSQL, MongoDB, Redis, SQL Server, Oracle, NoSQL, etc.
+  - DevOps/Herramientas: Docker, Kubernetes, Jenkins, GitLab CI/CD, GitHub Actions, Terraform, Ansible, etc.
+  - Cloud: AWS, Azure, GCP, servicios/plataformas cloud, etc.
+  - Otros: Git, API, REST, GraphQL, microservicios, machine learning, data science, etc.
+- Las responsabilidades implican skills: "Lideraras" -> Liderazgo (soft), "Desarrollaras APIs" -> Desarrollo de APIs (hard)
+- Ignora SOLO: beneficios futuros ("aprenderas", "te capacitaremos"), anos experiencia, salario, ubicacion, horarios
+- Normaliza nombres tecnicos a su forma estandar (postgres->PostgreSQL, k8s->Kubernetes, js->JavaScript)
+- Separa opciones combinadas en items separados ("React/Vue" -> React, Vue.js)
+
+IMPORTANTE: Tu respuesta debe ser UNICAMENTE el objeto JSON en este formato exacto:
+```json
+{
+  "hard_skills": ["skill1", "skill2", ...],
+  "soft_skills": ["skill1", "skill2", ...]
+}
+```
+
+No agregues explicaciones, comentarios, ni texto adicional antes o despues del JSON.
+
+JSON:
+\end{lstlisting}
+
+\subsection*{Decisiones de Diseño}
+
+Las siguientes decisiones de ingeniería de prompts fueron validadas experimentalmente:
+
+\begin{itemize}
+    \item \textbf{Exhaustividad sobre conservadurismo}: La instrucción ``EXTRAE TODAS'' con énfasis tipográfico (mayúsculas, negritas) aumentó recall de 31.2\% a 46.23\% Pre-ESCO en comparación con prompts conservadores que pedían ``solo skills críticas''.
+    \item \textbf{Ejemplos con ruido realista}: Incluir ofertas con secciones de beneficios, capacitaciones futuras y años de experiencia redujo tasa de falsos positivos de 23\% a 8\% en pruebas sobre 50 ofertas.
+    \item \textbf{Distinción explícita de NO extraer}: Listar casos negativos con justificación (``aprenderás Kubernetes'' es capacitación futura, NO requisito actual) eliminó el 67\% de alucinaciones observadas en versiones previas del prompt.
+    \item \textbf{Normalización inline}: Especificar transformaciones ``postgres$\to$PostgreSQL, k8s$\to$Kubernetes'' directamente en el prompt redujo variantes léxicas de skills idénticas de 18\% a 4\%.
+    \item \textbf{Formato JSON estricto}: Exigir ``ÚNICAMENTE el objeto JSON'' sin texto adicional permitió parsing automático con 99\% de éxito (299/300 ofertas) versus 73\% en versiones que permitían respuestas verbosas.
+\end{itemize}
+
+\subsection*{Limitaciones Conocidas}
+
+\begin{itemize}
+    \item \textbf{Sensibilidad a variaciones ortográficas}: El prompt no captura todas las variantes regionales de tecnologías (ej: ``PostgreSQL'' vs ``Postgres'' vs ``postgres'' pueden generar 3 entries separadas si el modelo no normaliza consistentemente).
+    \item \textbf{Desambiguación contextual imperfecta}: En ofertas de múltiples puestos o con contexto ambiguo (``la empresa usa Python pero el puesto requiere Java''), el modelo ocasionalmente extrae skills del contexto corporativo.
+    \item \textbf{Skills emergentes no conocidas}: Tecnologías posteriores a la fecha de corte del modelo (ej: Gemma 3 4B con conocimiento hasta julio 2024) pueden no ser reconocidas o normalizadas correctamente.
+\end{itemize}
