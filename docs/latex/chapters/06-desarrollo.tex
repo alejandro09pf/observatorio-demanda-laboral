@@ -536,66 +536,17 @@ El procesamiento de Pipeline B sigue una secuencia de 6 pasos principales, con m
 
 \subsubsection{Resultados de la Implementación}
 
-La evaluación de Pipeline B sobre el gold standard de 300 ofertas laborales produjo los siguientes resultados:
+La evaluación de Pipeline B sobre el gold standard de 300 ofertas laborales reveló un perfil de desempeño complementario a Pipeline A. El pipeline procesó exitosamente 299/300 ofertas (99.7\%), extrayendo en promedio 27.8 skills por oferta versus 50.3 de Pipeline A. Las métricas Pre-ESCO fueron F1-Score 46.23\%, Precision 40.89\%, Recall 53.08\%; tras mapeo ESCO mejoraron drásticamente a F1 84.26\% (+38.03pp), Precision 89.25\% (+48.36pp), Recall 79.81\% (+26.73pp).
 
-\textbf{Métricas de rendimiento Pre-ESCO}:
-\begin{itemize}
-    \item \textbf{F1-Score}: 46.23\%
-    \item \textbf{Precision}: 40.89\%
-    \item \textbf{Recall}: 53.08\%
-    \item \textbf{Skills promedio/oferta}: 27.8 (vs. 50.3 de Pipeline A)
-\end{itemize}
+\textbf{Comparativa con Pipeline A}. La evaluación head-to-head sobre el mismo gold standard cuantificó trade-offs claros entre ambos pipelines. Pipeline B supera en precision Post-ESCO con 89.25\% versus 65.50\% de Pipeline A (+23.75pp), reflejando menor ruido en extracciones gracias a comprensión contextual del LLM. El F1 Post-ESCO también favorece a Pipeline B con 84.26\% versus 72.53\% (+11.73pp). Sin embargo, Pipeline A mantiene ligera ventaja en recall Post-ESCO con 81.25\% versus 79.81\% (-1.44pp para Pipeline B) y extrae 1.8× más skills por oferta (50.3 vs 27.8), capturando mayor volumen de tecnologías de long-tail y emergentes. El costo de esta mayor calidad es latencia: Pipeline B requiere mediana de 17.66 segundos por oferta versus 0.97s de Pipeline A (18× más lento), con media de 45.17s inflada por outliers de hasta 254 segundos en ofertas extremadamente extensas.
 
-\textbf{Métricas de rendimiento Post-ESCO} (después de mapeo a taxonomía):
-\begin{itemize}
-    \item \textbf{F1-Score}: 84.26\% (+38.03pp vs. Pre-ESCO)
-    \item \textbf{Precision}: 89.25\% (+48.36pp vs. Pre-ESCO)
-    \item \textbf{Recall}: 79.81\% (+26.73pp vs. Pre-ESCO)
-    \item \textbf{Skills detectadas}: 299/300 ofertas procesadas exitosamente (99.7\%)
-\end{itemize}
+\textbf{Análisis de complementariedad}. Los resultados validan que ambos pipelines cumplen roles diferenciados en la arquitectura del observatorio. Pipeline A maximiza cobertura volumétrica y velocidad, permitiendo procesamiento del corpus completo (30,660 ofertas) en menos de 10 horas con captura exhaustiva de skills emergentes no presentes en ESCO. Pipeline B maximiza relevancia contextual y precision, extrayendo skills más alineadas con taxonomía estándar pero con costo computacional 18-47× superior que lo limita a aplicación selectiva. La arquitectura dual permite balancear estos trade-offs según el escenario de uso: Pipeline A como baseline de producción para análisis agregados, Pipeline B como enriquecimiento semántico para estudios cualitativos profundos sobre subconjuntos estratégicos.
 
-\textbf{Comparativa Pipeline A vs. Pipeline B}:
+\textbf{Capacidades validadas del pipeline}. El análisis cualitativo sobre 299 ofertas confirmó cinco capacidades diferenciadas de Pipeline B. Primero, extracción de skills implícitas alcanzó cobertura de 126\% respecto a anotación manual en soft skills, infiriendo competencias no mencionadas explícitamente (``liderarás equipo'' $\to$ ``Liderazgo''). Segundo, la alta precision (89.25\%) indica desambiguación contextual efectiva, distinguiendo tecnologías de homónimos según contexto de oferta. Tercero, genera skills en formato estándar consistente con ESCO sin requerir normalización manual posterior. Cuarto, 59.5\% de skills extraídas son tecnologías modernas no presentes en ESCO v1.1.0, demostrando capacidad de capturar vocabulario emergente del mercado. Quinto, la cuantización Q4 mediante \texttt{bitsandbytes} permite inferencia local con 4-6GB VRAM sin dependencia de APIs comerciales, reduciendo requisitos de memoria de $\sim$16GB (FP16) a $\sim$4GB.
 
-\begin{itemize}
-    \item \textbf{Precision Post-ESCO}: Pipeline B 89.25\% vs. Pipeline A 65.50\% (+23.75pp)
-    \item \textbf{Recall Post-ESCO}: Pipeline B 79.81\% vs. Pipeline A 81.25\% (-1.44pp)
-    \item \textbf{F1 Post-ESCO}: Pipeline B 84.26\% vs. Pipeline A 72.53\% (+11.73pp)
-    \item \textbf{Latencia (mediana)}: Pipeline B 17.66s vs. Pipeline A 0.97s (18× más lento para casos típicos)
-    \item \textbf{Latencia (media)}: Pipeline B 45.17s vs. Pipeline A 0.97s (47× más lento considerando outliers)
-    \item \textbf{Cobertura de skills}: Pipeline B 27.8/oferta vs. Pipeline A 50.3/oferta (-44.7\%)
-    \item \textbf{Match ESCO}: Pipeline B extrae menos skills pero más alineadas con taxonomía estándar
-\end{itemize}
+\textbf{Limitaciones identificadas del pipeline}. Cinco limitaciones técnicas restringen la aplicabilidad de Pipeline B a escala completa. La latencia variable de 18-47× superior a Pipeline A (mediana 17.66s vs 0.97s) con outliers hasta 254 segundos hace inviable el procesamiento de corpus completo: 30,660 ofertas requerirían 385 horas (16 días) con tiempo promedio versus 8.3 horas de Pipeline A. La cobertura volumétrica reducida (27.8 vs 50.3 skills/oferta, -44.7\%) limita detección de tecnologías de nicho. El recall Post-ESCO ligeramente inferior (79.81\% vs 81.25\%, -1.44pp) indica que el LLM ocasionalmente omite skills explícitas capturadas por regex. La dependencia de GPU con 4-6GB VRAM hace la solución no portable a entornos CPU-only. Finalmente, la variabilidad de latencia según longitud de oferta (correlación 0.73 entre tokens y segundos de inferencia) dificulta planificación de recursos en producción.
 
-\textbf{Análisis de trade-offs}:
-
-\begin{itemize}
-    \item \textbf{Ventaja de Pipeline B}: Mayor precision (89.25\% vs 65.50\%) con skills más relevantes y alineadas con taxonomía estándar
-    \item \textbf{Ventaja de Pipeline A}: Mayor recall (81.25\% vs 79.81\%) y volumen bruto (50.3 vs. 27.8 skills/oferta), capturando skills emergentes
-    \item \textbf{Complementariedad}: Pipeline A maximiza cobertura de long-tail y emergentes; Pipeline B maximiza calidad y relevancia contextual
-    \item \textbf{Trade-off latencia/calidad}: Pipeline B requiere 18-47× más tiempo pero mejora F1 en +11.73pp y precision en +23.75pp
-\end{itemize}
-
-\textbf{Capacidades validadas}:
-
-\begin{itemize}
-    \item[$\checkmark$] \textbf{Extracción de skills implícitas}: Cobertura de soft skills de 126\% respecto a anotación manual
-    \item[$\checkmark$] \textbf{Desambiguación contextual}: Alta precision (89.25\%) indica comprensión contextual efectiva
-    \item[$\checkmark$] \textbf{Normalización automática}: Genera skills en formato estándar consistente con ESCO
-    \item[$\checkmark$] \textbf{Emergent skills}: 59.5\% de skills extraídas son tecnologías modernas no presentes en ESCO v1.1.0
-    \item[$\checkmark$] \textbf{Ejecución local}: Cuantización Q4 permite inferencia sin dependencia de APIs comerciales (4-6GB VRAM)
-\end{itemize}
-
-\textbf{Limitaciones identificadas}:
-
-\begin{itemize}
-    \item[$\times$] \textbf{Latencia variable}: 18-47× más lento que Pipeline A (mediana 17.66s vs. 0.97s), outliers hasta 254s
-    \item[$\times$] \textbf{Cobertura reducida}: Extrae 1.8× menos skills que Pipeline A (27.8 vs. 50.3 promedio)
-    \item[$\times$] \textbf{Escalabilidad limitada para corpus completo}: 30,660 ofertas requeriría 385 horas (16 días) con tiempo promedio
-    \item[$\times$] \textbf{Recall ligeramente inferior}: 79.81\% vs. 81.25\% de Pipeline A (-1.44pp)
-    \item[$\times$] \textbf{Dependencia de GPU}: Requiere GPU con 4-6GB VRAM para cuantización Q4; no viable en CPUs
-\end{itemize}
-
-Estos resultados validaron la arquitectura dual del observatorio: Pipeline A proporciona baseline de alta cobertura para procesamiento del 100\% del corpus (30,660 ofertas en $<$10 horas), mientras Pipeline B se aplicó experimentalmente sobre el gold standard (299 ofertas en 3.5 horas) para evaluar su viabilidad como método de enriquecimiento selectivo. La comparación demostró trade-offs claros: Pipeline B mejora precision (+23.75pp) y F1 (+11.73pp), pero requiere 18-47× más tiempo y reduce cobertura volumétrica (-44.7\% skills/oferta).
+Estos resultados validaron la arquitectura dual del observatorio: Pipeline A proporciona baseline de alta cobertura para procesamiento del 100\% del corpus, mientras Pipeline B se aplicó experimentalmente sobre el gold standard para evaluar su viabilidad como método de enriquecimiento selectivo en escenarios que priorizan calidad sobre velocidad.
 
 \subsection{Pipeline A.1 (TF-IDF) y Regex-Only Baseline}
 
@@ -636,7 +587,7 @@ El sistema de mapeo a ESCO cumple tres funciones principales:
         \end{itemize}
     \item \textbf{Identificación de skills emergentes}: Detectar habilidades sin match en ESCO como señal de tecnologías nuevas
         \begin{itemize}
-            \item Ejemplo: ``ChatGPT'', ``Tailwind CSS'', ``Terraform'' no presentes en ESCO v1.1.0 (2016-2017)
+            \item Ejemplo: ``ChatGPT'', ``Tailwind CSS'', ``Terraform'' no presentes en ESCO v1.1.0 (publicada 2022)
         \end{itemize}
 \end{enumerate}
 
@@ -739,9 +690,9 @@ Esta arquitectura responde a los siguientes atributos de calidad del sistema:
 
 \subsection{Generación de Embeddings y Reducción UMAP}
 
-El modelo \path{intfloat/multilingual-e5-base} transformó skills a vectores de 768 dimensiones capturando similitud semántica. Se seleccionó por: (1) soporte multilingüe (español/inglés), (2) tamaño intermedio (278M params) balanceando expresividad vs costo, y (3) performance en STS benchmarks. El proceso operó en dos modos: Pre-ESCO embebió texto normalizado (~3,200 embeddings únicos), Post-ESCO embebió preferred labels ESCO (~2,100 embeddings consolidados). Se aplicó prefixing ``query:'' según especificaciones E5. La generación batch procesó skills en lotes de 128 documentos alcanzando ~850 skills/s en RTX 3090. Los embeddings se normalizaron a vectores unitarios y almacenaron en archivos \texttt{.npy} (Pre-ESCO 19MB, Post-ESCO 13MB) para reutilización.
+El modelo \path{intfloat/multilingual-e5-base} transformó skills a vectores de 768 dimensiones capturando similitud semántica. Se seleccionó por: (1) soporte multilingüe (español/inglés), (2) tamaño intermedio (278M params) balanceando expresividad vs costo, y (3) performance en STS benchmarks. El proceso operó en dos modos: Pre-ESCO embebió texto normalizado de 6,413 skills extraídas, aplicando filtro de frecuencia mínima que redujo el corpus a 1,314 embeddings con suficiente densidad para clustering; Post-ESCO embebió preferred labels ESCO resultando en 289 embeddings consolidados para gold standard de 300 ofertas. Se aplicó prefixing ``query:'' según especificaciones E5. La generación batch procesó skills en lotes de 256 documentos en hardware consumer (MacBook Air M4 base con 16GB RAM unificada). Los embeddings se normalizaron a vectores unitarios y almacenaron en base de datos PostgreSQL con extensión pgvector para consultas de similitud eficientes.
 
-UMAP (Uniform Manifold Approximation and Projection) redujo embeddings de 768D a 2D para visualización y clustering. Se seleccionó sobre t-SNE/PCA por: (1) preservación de estructura local y global, (2) escalabilidad $O(n \log n)$, y (3) reproducibilidad determinista. La configuración involucró: \texttt{n\_neighbors} (balance local/global), \texttt{min\_dist=0.1} (separación mínima), \texttt{n\_components=2}, y \texttt{metric=``cosine''}. El grid search sobre \texttt{n\_neighbors} $\in \{5, 10, 15, 20, 30\}$ determinó que \textbf{\texttt{n\_neighbors=15}} ofrecía mejor balance: preservó agrupaciones semánticas coherentes (React/Vue/Angular separados pero cercanos) mientras mantuvo separación entre dominios mayores (Frontend/Backend/DevOps no-sobrelapados). La proyección UMAP de 3,200 skills tomó ~18s en CPU.
+UMAP (Uniform Manifold Approximation and Projection) redujo embeddings de 768D a 2D para visualización y clustering. Se seleccionó sobre t-SNE/PCA por: (1) preservación de estructura local y global, (2) escalabilidad $O(n \log n)$, y (3) reproducibilidad determinista. La configuración involucró: \texttt{n\_neighbors} (balance local/global), \texttt{min\_dist=0.1} (separación mínima), \texttt{n\_components=2}, y \texttt{metric=``cosine''}. El grid search sobre \texttt{n\_neighbors} $\in \{5, 10, 12, 15, 20, 30\}$ determinó que \textbf{\texttt{n\_neighbors=15}} ofrecía mejor balance: preservó agrupaciones semánticas coherentes (React/Vue/Angular separados pero cercanos) mientras mantuvo separación entre dominios mayores (Frontend/Backend/DevOps no-sobrelapados). La proyección UMAP de 1,314 skills tomó aproximadamente 5 segundos en CPU (Apple Silicon M4).
 
 \subsection{Clustering HDBSCAN y Optimización}
 
@@ -749,13 +700,13 @@ HDBSCAN (Hierarchical Density-Based Spatial Clustering) identificó clusters sob
 
 El grid search sobre \texttt{min\_cluster\_size} $\in \{5, 7, 10, 12, 15, 20\}$ evaluó: (1) número de clusters (ideal 50-200), (2) porcentaje de ruido ($<$25\%), (3) Silhouette Score ($>$0.4 para datos Post-ESCO), y (4) interpretabilidad manual. Los experimentos revelaron trade-off: configuraciones bajas (5-7) generaban 100+ clusters muy específicos con alta fragmentación y Silhouette ~0.35-0.40; configuraciones altas (15-20) producían pocos clusters gruesos (~10-20) con Silhouette ~0.55-0.65 pero pérdida de granularidad útil.
 
-El análisis comparativo identificó \textbf{UMAP n\_neighbors=15 + HDBSCAN min\_cluster\_size=12} como configuración óptima balanceando granularidad vs coherencia. Esta configuración operó sobre el gold standard de 300 ofertas, generando clustering diferenciado por pipeline: Pipeline A Post-ESCO produjo 53 clusters sobre 1,698 skills únicas consolidadas (22.3\% ruido, Silhouette=0.456), Pipeline B Post-ESCO generó 50 clusters sobre 1,937 skills (16.5\% ruido, Silhouette=0.348). La inspección manual confirmó coherencia semántica en top clusters: JavaScript/React ecosystem, Python/Data Science, Project Management, Cloud/DevOps (AWS/GCP), SQL/Databases.
+El análisis comparativo identificó \textbf{UMAP n\_neighbors=15 + HDBSCAN min\_cluster\_size=12} como configuración óptima balanceando granularidad vs coherencia. Esta configuración operó sobre el gold standard de 300 ofertas, generando clustering diferenciado por pipeline: Pipeline A 300 Post-ESCO produjo 7 clusters sobre 289 skills únicas consolidadas (16.3\% ruido, Silhouette=0.398), Pipeline B 300 Post-ESCO generó 50 clusters sobre 1,618 skills (16.5\% ruido, Silhouette=0.348). Adicionalmente, el corpus completo de Pipeline A (30k ofertas) generó 53 clusters sobre 1,698 skills únicas ESCO (22.3\% ruido, Silhouette=0.456), demostrando escalabilidad del sistema a corpus de producción. La inspección manual confirmó coherencia semántica en top clusters: JavaScript/React ecosystem, Python/Data Science, Project Management, Cloud/DevOps (AWS/GCP), SQL/Databases.
 
 \subsection{Comparación Pre-ESCO vs Post-ESCO}
 
-El clustering se ejecutó en dos escenarios evaluando impacto del mapeo ESCO. \textbf{Pre-ESCO} operó sobre texto normalizado de skills sin consolidación: Pipeline A 300 generó 38 clusters sobre 1,314 skills (Silhouette=0.447, 25.2\% ruido), Pipeline B 300 produjo 34 clusters sobre 1,766 skills (Silhouette=0.234, 12.8\% ruido). La alta fragmentación se debe a variantes ortográficas formando micro-clusters separados: ``docker'', ``Docker'', ``docker-compose'' aparecen como puntos distintos en el espacio de embeddings, diluyendo densidad de clusters. El beneficio de Pre-ESCO es que captura skills emergentes sin mapeo ESCO (``ChatGPT'', ``Tailwind CSS'', ``Bun'') preservándolas en el análisis.
+El clustering se ejecutó en dos escenarios evaluando impacto del mapeo ESCO. \textbf{Pre-ESCO} operó sobre texto normalizado de skills sin consolidación: Pipeline A 300 generó 38 clusters sobre 1,314 skills (Silhouette=0.447, 25.7\% ruido), Pipeline B 300 produjo 34 clusters sobre 1,540 skills (Silhouette=0.234, 12.8\% ruido). La alta fragmentación se debe a variantes ortográficas formando micro-clusters separados: ``docker'', ``Docker'', ``docker-compose'' aparecen como puntos distintos en el espacio de embeddings, diluyendo densidad de clusters. El beneficio de Pre-ESCO es que captura skills emergentes sin mapeo ESCO (``ChatGPT'', ``Tailwind CSS'', ``Bun'') preservándolas en el análisis.
 
-\textbf{Post-ESCO} procesó URIs ESCO consolidados: Pipeline A 300 generó 7 clusters sobre 289 skills (Silhouette=0.398, 16.3\% ruido), Pipeline B 300 produjo 50 clusters sobre 1,937 skills (Silhouette=0.348, 16.5\% ruido). La consolidación colapsa variantes ortográficas en puntos únicos fortaleciendo densidad de clusters, pero la baja cobertura ESCO (12.6\% Pipeline A, ~25\% Pipeline B) significa pérdida significativa de información: 87.4\% de skills emergentes desaparecen del análisis Post-ESCO. Los top clusters mostraron composición interpretable: JavaScript ecosystem, Python/Data Science, Cloud/DevOps, SQL/Databases. Se implementó análisis híbrido: clustering Post-ESCO para métricas cuantitativas sobre skills estandarizadas, complementado con análisis Pre-ESCO para tecnologías emergentes ausentes en taxonomía ESCO.
+\textbf{Post-ESCO} procesó URIs ESCO consolidados: Pipeline A 300 generó 7 clusters sobre 289 skills (Silhouette=0.398, 16.3\% ruido), Pipeline B 300 produjo 50 clusters sobre 1,618 skills (Silhouette=0.348, 16.5\% ruido). La consolidación colapsa variantes ortográficas en puntos únicos fortaleciendo densidad de clusters, pero la baja cobertura ESCO (12.6\% Pipeline A, ~25\% Pipeline B) significa pérdida significativa de información: 87.4\% de skills emergentes desaparecen del análisis Post-ESCO. Los top clusters mostraron composición interpretable: JavaScript ecosystem, Python/Data Science, Cloud/DevOps, SQL/Databases. Se implementó análisis híbrido: clustering Post-ESCO para métricas cuantitativas sobre skills estandarizadas, complementado con análisis Pre-ESCO para tecnologías emergentes ausentes en taxonomía ESCO.
 
 \subsection{Análisis Temporal}
 
@@ -767,13 +718,13 @@ El módulo implementado permite análisis temporal mediante: (1) agrupación de 
 
 La optimización de UMAP+HDBSCAN requirió balancear métricas cuantitativas de calidad de clustering (Silhouette Score, Davies-Bouldin Index) con interpretabilidad práctica de los clusters resultantes para análisis del mercado laboral. Este balance no es trivial: configuraciones que maximizan métricas matemáticas frecuentemente producen clusterings inútiles para análisis humano, revelando una tensión fundamental entre optimización algorítmica y utilidad práctica.
 
-Se realizaron 150+ experimentos variando hiperparámetros UMAP (\texttt{n\_neighbors} $\in$ \{5, 10, 15, 20, 30, 50\}, \texttt{min\_dist} $\in$ \{0.0, 0.1, 0.2, 0.3\}) y HDBSCAN (\texttt{min\_cluster\_size} $\in$ \{3, 5, 8, 10, 15, 20\}, \texttt{min\_samples} $\in$ \{1, 2, 3, 5\}). Los experimentos documentaron el fenómeno del ``clustering cliff'': configuraciones con \texttt{min\_cluster\_size} $\leq$ 6 generaron 100-300 clusters con métricas excelentes (Silhouette $>$ 0.6, Davies-Bouldin $<$ 0.8) pero imposibles de interpretar manualmente; configuraciones con \texttt{min\_cluster\_size} $\geq$ 15 colapsaron a 2-10 clusters genéricos con baja utilidad analítica. El documento de pruebas (Capítulo 13) detalla la evaluación exhaustiva de configuraciones.
+Se realizaron 70+ experimentos documentados variando hiperparámetros UMAP (\texttt{n\_neighbors} $\in$ \{5, 10, 12, 15, 20, 30\}, \texttt{min\_dist} $\in$ \{0.05, 0.08, 0.1, 0.2\}) y HDBSCAN (\texttt{min\_cluster\_size} $\in$ \{2, 3, 4, 5, 8, 10, 12, 15, 20\}, \texttt{min\_samples} $\in$ \{1, 2, 3, 4, 5\}). Los experimentos documentaron el fenómeno del ``clustering cliff'': configuraciones con \texttt{min\_cluster\_size} $\leq$ 6 generaron 100-300 clusters con métricas excelentes (Silhouette $>$ 0.6, Davies-Bouldin $<$ 0.5) pero imposibles de interpretar manualmente; configuraciones con \texttt{min\_cluster\_size} $\geq$ 15 colapsaron a 2-10 clusters genéricos con baja utilidad analítica. El documento de pruebas (Capítulo 13) detalla la evaluación exhaustiva de configuraciones.
 
 \textbf{Caso ilustrativo del problema (Experimento 8 vs. Experimento 15)}:
 
-El experimento 8 con hiperparámetros finos (\texttt{n\_neighbors=5}, \texttt{min\_cluster\_size=3}) produjo 305 clusters con Silhouette Score = 0.618 (excelente según literatura), Davies-Bouldin = 0.742 (óptimo), y solo 2.4\% ruido. Sin embargo, la inspección manual reveló que los 305 clusters eran ininterpretables: ``Python+Flask'' formó un cluster separado de ``Python+Django'', ``JavaScript+React'' separado de ``JavaScript+Vue'', fragmentando artificialmente tecnologías relacionadas. Nombrar, categorizar y analizar 305 clusters excede la capacidad de procesamiento humano.
+El experimento 8 con hiperparámetros finos (\texttt{n\_neighbors=5}, \texttt{min\_cluster\_size=3}) produjo 305 clusters con Silhouette Score = 0.618 (excelente según literatura), Davies-Bouldin = 0.439 (óptimo), y 16.2\% ruido. Sin embargo, la inspección manual reveló que los 305 clusters eran ininterpretables: ``Python+Flask'' formó un cluster separado de ``Python+Django'', ``JavaScript+React'' separado de ``JavaScript+Vue'', fragmentando artificialmente tecnologías relacionadas. Nombrar, categorizar y analizar 305 clusters excede la capacidad de procesamiento humano.
 
-En contraste, el experimento 15 con hiperparámetros medios (\texttt{n\_neighbors=15}, \texttt{min\_cluster\_size=12}) generó 50 clusters con Silhouette Score = 0.348 (inferior al experimento 8), Davies-Bouldin = 1.156 (peor), pero 98\% de clusters (49/50) semánticamente coherentes e interpretables. Los clusters agruparon familias tecnológicas completas: ``Backend Python'' (Flask, Django, FastAPI, Celery), ``Frontend JavaScript'' (React, Vue, Angular, TypeScript), ``DevOps'' (Docker, Kubernetes, Jenkins, GitLab CI). Esta granularidad permitió análisis sistemático de 50 perfiles vs. imposibilidad de manejar 305.
+En contraste, el experimento 15 con hiperparámetros medios (\texttt{n\_neighbors=15}, \texttt{min\_cluster\_size=12}) generó 50 clusters con Silhouette Score = 0.348 (inferior al experimento 8), Davies-Bouldin = 0.687 (mayor pero aceptable), y 16.5\% ruido, pero 98\% de clusters (49/50) semánticamente coherentes e interpretables. Los clusters agruparon familias tecnológicas completas: ``Backend Python'' (Flask, Django, FastAPI, Celery), ``Frontend JavaScript'' (React, Vue, Angular, TypeScript), ``DevOps'' (Docker, Kubernetes, Jenkins, GitLab CI). Esta granularidad permitió análisis sistemático de 50 perfiles vs. imposibilidad de manejar 305.
 
 \textbf{Sistema de scoring cuantitativo para balancear criterios}:
 
