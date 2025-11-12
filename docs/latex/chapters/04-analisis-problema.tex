@@ -10,7 +10,7 @@ Los requerimientos del sistema se organizan en tres categorías: funcionales, no
 
 El observatorio debe implementar las siguientes capacidades funcionales, organizadas según las etapas del pipeline de procesamiento:
 
-\textbf{RF-1. Adquisición de datos:} El sistema debe ser capaz de recolectar automáticamente ofertas laborales de al menos 10 portales de empleo distribuidos en Colombia, México y Argentina, mediante técnicas de web scraping que respeten las políticas de robots.txt y los límites de tasa de peticiones de cada sitio \cite{orozco2019webscraping}. La arquitectura debe soportar tanto páginas estáticas (parsing HTML directo) como dinámicas (ejecución de JavaScript mediante headless browsers), permitiendo capturar campos estructurados como título, descripción, requisitos, ubicación, salario y portal de origen.
+\textbf{RF-1. Adquisición de datos:} El sistema debe ser capaz de recolectar automáticamente ofertas laborales de al menos 6 portales de empleo distribuidos en Colombia, México y Argentina, mediante técnicas de web scraping que respeten las políticas de robots.txt y los límites de tasa de peticiones de cada sitio \cite{orozco2019webscraping}. La arquitectura debe soportar tanto páginas estáticas (parsing HTML directo) como dinámicas (ejecución de JavaScript mediante headless browsers), permitiendo capturar campos estructurados como título, descripción, requisitos, ubicación, salario y portal de origen.
 
 \textbf{RF-2. Normalización y limpieza:} El sistema debe preprocesar el texto extraído mediante técnicas de NLP, incluyendo tokenización, lematización, eliminación de caracteres especiales y normalización de codificación (UTF-8), adaptadas específicamente al español latinoamericano y al uso técnico del lenguaje en ofertas de empleo \cite{echeverria2022}.
 
@@ -70,7 +70,7 @@ Las restricciones representan limitaciones inherentes al problema, al contexto d
 
 \textbf{C-3. Recursos computacionales:} El entrenamiento y ejecución de LLMs requiere capacidad de cómputo significativa (GPU con al menos 8GB VRAM para modelos de 7B parámetros). El proyecto se limita a modelos open-source ejecutables localmente o APIs de terceros con presupuesto acotado.
 
-\textbf{C-4. Latencia de APIs:} Las llamadas a LLMs externos (OpenAI, Anthropic) introducen latencia y costos variables. El diseño debe balancear calidad de resultados con viabilidad económica y tiempos de procesamiento.
+\textbf{C-4. Latencia de procesamiento LLM:} El procesamiento de ofertas con LLMs ejecutados localmente introduce latencia significativa (40-45 segundos/oferta) comparado con métodos tradicionales. Alternativamente, las llamadas a APIs de LLMs comerciales (OpenAI, Anthropic) reducirían latencia pero introducirían costos variables y dependencias externas. El diseño debe balancear calidad de resultados con viabilidad técnica y tiempos de procesamiento.
 
 \subsection{Restricciones de datos}
 
