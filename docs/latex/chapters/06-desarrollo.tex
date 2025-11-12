@@ -105,7 +105,7 @@ La decisión de combinar NER y Regex se fundamentó en las limitaciones compleme
 
 \textbf{Ventajas del enfoque combinado}:
 \begin{itemize}
-    \item \textbf{Cobertura}: NER captura ~30\% de skills adicionales no detectadas por Regex (menciones contextuales)
+    \item \textbf{Cobertura}: NER incrementa recall Post-ESCO de 73.08\% (Regex solo) a 81.25\% (Pipeline A combinado), capturando +8.17pp de skills adicionales mediante menciones contextuales
     \item \textbf{Precisión}: Regex garantiza detección de tecnologías con nomenclatura estructurada (100\% precision en patrones bien definidos)
     \item \textbf{Robustez}: Redundancia permite validación cruzada (skills detectadas por ambos métodos tienen mayor confianza)
     \item \textbf{Escalabilidad}: Latencia combinada de 0.97s/oferta permite procesamiento masivo del corpus
@@ -116,7 +116,7 @@ Esta arquitectura dual responde a los siguientes atributos de calidad del sistem
     \item \textbf{Precisión}: Regex solo proporciona baseline de alta precision (86.36\% Post-ESCO) para skills estandarizadas
     \item \textbf{Cobertura}: NER incrementa recall de 73.08\% (Regex solo) a 81.25\% (Pipeline A combinado, Post-ESCO)
     \item \textbf{Eficiencia}: Latencia de 0.97s/oferta es aproximadamente 18× más rápida que Pipeline B (mediana de 18s/oferta)
-    \item \textbf{Mantenibilidad}: Separación de componentes permite actualización independiente de patrones Regex sin reentrenar NER
+    \item \textbf{Mantenibilidad}: Separación de componentes permite actualización independiente de patrones Regex sin modificar EntityRuler (poblado con diccionario ESCO de 666 patrones)
 \end{itemize}
 
 \subsubsection{Componentes del Pipeline A}
