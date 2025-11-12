@@ -1,0 +1,117 @@
+\section*{APÉNDICE B: EJEMPLOS DE ANOTACIONES DEL GOLD STANDARD}
+\addcontentsline{toc}{section}{Apéndice B: Ejemplos de Anotaciones del Gold Standard}
+
+Este apéndice presenta 2 ejemplos representativos de anotaciones manuales del gold standard de 300 ofertas laborales, ilustrando el protocolo de anotación con formato atómico y la diversidad geográfica e idiomática del dataset.
+
+\subsection*{Protocolo de Anotación}
+
+Cada oferta laboral fue anotada siguiendo un protocolo estricto que requirió:
+
+\begin{enumerate}
+    \item \textbf{Lectura completa}: Análisis exhaustivo de título, descripción y sección de requisitos
+    \item \textbf{Verificación de validez}: Confirmación de que la oferta corresponde a un rol de desarrollo de software
+    \item \textbf{Formato atómico estricto}: Listado de términos individuales sin paréntesis, abreviaciones ni narrativas
+    \item \textbf{Clasificación binaria}: Separación explícita entre hard skills (tecnologías, herramientas, lenguajes, metodologías) y soft skills (comunicación, liderazgo, colaboración, resolución de problemas)
+    \item \textbf{Comentarios contextuales}: Nota breve identificando empresa, sector y tipo de rol para validación posterior
+\end{enumerate}
+
+El formato atómico prohibió construcciones como ``Python (pandas, numpy)'' o ``Conocimientos de AWS y Azure'', requiriendo en su lugar términos separados: ``Python'', ``Pandas'', ``NumPy'', ``AWS'', ``Azure''. Esta decisión metodológica simplificó la comparación automatizada con skills extraídas por Pipeline A y Pipeline B.
+
+\subsection*{Ejemplo 1: Developer Advocate (Argentina, Inglés, Backend, Senior)}
+
+\textbf{Job ID}: \texttt{44fc6c70-4887-4317-9349-80d96cb1160b}
+
+\textbf{Título}: Developer Advocate - Remote role
+
+\textbf{Metadata}: AR / en, Backend, Senior, 460 palabras
+
+\textbf{Descripción resumida}: Zyte (empresa de web scraping) busca Developer Advocate para actuar como puente entre tecnología y comunidad de desarrolladores. Rol combina trabajo técnico hands-on (code samples, herramientas Zyte API y Scrapy) con evangelización comunitaria (talks, demos, workshops, contenido educativo). Responsabilidades incluyen crear contenido técnico de alta calidad, engagement en plataformas sociales/foros, hablar en eventos de industria, escribir blog posts, identificar community advocates, y proveer feedback de comunidad a equipos internos. Requisitos: 3+ años experiencia en developer advocacy/relations/technical evangelism, comprensión sólida de web technologies/APIs/web scraping/data extraction, proficiencia en Python, excelentes habilidades de comunicación (escrita, verbal, presentación), experiencia demostrada en community engagement/content creation/technical writing, experiencia con public speaking.
+
+\textbf{Hard Skills anotadas}:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=none, numbers=none]
+Python
+Scrapy
+Web scraping
+REST API
+API
+Navegadores headless
+Git
+Documentacion tecnica
+\end{lstlisting}
+
+\textbf{Soft Skills anotadas}:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=none, numbers=none]
+Comunicacion
+Oratoria
+Presentaciones
+Creacion de contenido
+Escritura tecnica
+Automotivacion
+Organizacion
+Trabajo en equipo
+\end{lstlisting}
+
+\textbf{Comentarios}: Developer Advocate en Zyte (empresa de web scraping). Rol técnico combinado con evangelización y trabajo comunitario. Válido para gold standard.
+
+\subsection*{Ejemplo 2: IBM ACE Developer (Colombia, Español, QA, Mid)}
+
+\textbf{Job ID}: \texttt{4ded4226-c1fa-41f3-a75a-b804f6a01e24}
+
+\textbf{Título}: IBM ACE Developer
+
+\textbf{Metadata}: CO / es, QA, Mid, 460 palabras
+
+\textbf{Descripción resumida}: Imagemaker (Colombia) busca Ingeniero IBM ACE responsable del diseño, desarrollo y despliegue de flujos de integración que conecten sistemas críticos del negocio, garantizando interoperabilidad entre aplicaciones internas y externas. Trabajo bajo metodologías ágiles junto con equipos multidisciplinarios de desarrollo y operaciones, asegurando calidad, escalabilidad y seguridad de servicios implementados. Rol requiere sólida base técnica en IBM App Connect Enterprise (ACE) y experiencia práctica en integración de datos, automatización de procesos y creación de APIs REST. Responsabilidades clave: diseñar/desarrollar/mantener flujos de integración en IBM ACE, configurar conexiones a bases de datos (ODBC.ini, mqsisetdbparms), programar nodos compute usando ESQL o Java Compute Nodes, implementar/consumir servicios REST y APIs, ejecutar consultas SQL y pruebas funcionales con Postman, configurar certificados/llaves de seguridad (JKS), documentar desarrollos técnicos/funcionales, colaborar con equipos bajo enfoque ágil. Skills requeridas: experiencia comprobada IBM ACE v12/v11, dominio ESQL/Java, metodologías ágiles (Scrum/Kanban), configuración ODBC/JDBC, creación/consumo APIs REST, herramientas de prueba (Postman), despliegue en productivo, documentación técnica. Plus: Kafka, integraciones seguras (JKS, SSL), GitHub/Jenkins/CI-CD, cloud híbrido (AWS, Azure), proyectos retail/banca.
+
+\textbf{Hard Skills anotadas}:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=none, numbers=none]
+IBM App Connect Enterprise
+IBM ACE
+ESQL
+Java
+Java Compute Nodes
+REST API
+ODBC
+JDBC
+SQL
+Postman
+JKS
+Certificados SSL
+Scrum
+Kanban
+Kafka
+GitHub
+Jenkins
+CI/CD
+AWS
+Azure
+Cloud hibrido
+Integracion de sistemas
+Automatizacion de procesos
+DevOps
+Documentacion tecnica
+\end{lstlisting}
+
+\textbf{Soft Skills anotadas}:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=none, numbers=none]
+Trabajo en equipo
+Colaboracion
+Orientacion a resultados
+\end{lstlisting}
+
+\textbf{Comentarios}: IBM ACE Developer en Imagemaker (Colombia). Rol de integración de sistemas con IBM App Connect Enterprise. Válido.
+
+\subsection*{Observaciones Metodológicas}
+
+Los dos ejemplos ilustran características clave del protocolo de anotación:
+
+\begin{itemize}
+    \item \textbf{Variabilidad en número de skills}: Job \#1 (16 skills totales: 8 hard + 8 soft), Job \#46 (28 skills: 25 hard + 3 soft), reflejando que el número de skills anotadas depende de la especificidad y detalle de cada oferta, no de un target predefinido.
+    \item \textbf{Predominancia de hard skills}: Promedio 78.7\% hard skills vs 21.3\% soft skills en las 300 ofertas, consistente con el enfoque técnico de roles de desarrollo de software.
+    \item \textbf{Términos atómicos estrictos}: Ausencia de construcciones compuestas (``Python/Django'', ``AWS o Azure'') o paréntesis explicativos, garantizando comparabilidad directa con outputs de pipelines.
+    \item \textbf{Granularidad técnica}: Inclusión de términos específicos como ``Java Compute Nodes'', ``ODBC'', ``Navegadores headless'' en lugar de categorías genéricas como ``Desarrollo backend'' o ``Herramientas de integración''.
+    \item \textbf{Captura de soft skills contextuales}: Identificación de soft skills implícitas en descripción de responsabilidades (``colaborar con equipos multidisciplinarios'' $\to$ ``Colaboración'', ``deliver talks and demos'' $\to$ ``Oratoria'').
+    \item \textbf{Diversidad geográfica e idiomática}: Job \#1 (Argentina, inglés, sector fintech/web scraping) vs Job \#46 (Colombia, español, sector enterprise integration), ilustrando la representatividad del dataset.
+\end{itemize}
+
+El formato garantizó consistencia a lo largo de las 300 anotaciones, facilitando la evaluación automatizada de Pipeline A (NER+Regex) y Pipeline B (LLM) mediante comparación directa de conjuntos de términos.
