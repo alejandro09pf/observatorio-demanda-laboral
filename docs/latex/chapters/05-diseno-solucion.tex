@@ -220,7 +220,7 @@ Para maximizar el valor analítico de las emergent skills, se propone un proceso
 
 Las pruebas experimentales presentadas en la sección anterior proporcionaron evidencia empírica crítica que determinó las decisiones arquitectónicas del sistema. Los resultados demostraron que el enfoque dual NER+Regex alcanza precision de 78-95\% con latencias submilisegundos, que el matching con ESCO requiere expansión manual debido al bajo match rate inicial (12.6\%), y que los embeddings E5 presentan limitaciones para búsqueda semántica en vocabulario técnico especializado. Adicionalmente, las características del dominio -- procesamiento batch de ofertas laborales sin requisitos de tiempo real, corpus objetivo de 600,000 ofertas, y recursos limitados propios de un proyecto académico -- restringieron las opciones arquitectónicas viables.
 
-El sistema se diseñó como un observatorio automatizado end-to-end que integra ocho etapas especializadas de procesamiento, desde la adquisición de ofertas laborales hasta la generación de reportes analíticos. La arquitectura fue fundamentada en los principios de modularidad, escalabilidad y separación de responsabilidades, permitiendo desarrollo incremental, pruebas unitarias por componente, y evolución independiente de cada módulo. Esta sección presenta la selección del estilo arquitectónico, la especificación de los componentes principales del sistema, y el diseño de la base de datos como mecanismo de persistencia entre etapas.
+El sistema se diseñó como un observatorio automatizado end-to-end que integra siete etapas especializadas de procesamiento, desde la adquisición de ofertas laborales hasta la generación de visualizaciones analíticas. La arquitectura fue fundamentada en los principios de modularidad, escalabilidad y separación de responsabilidades, permitiendo desarrollo incremental, pruebas unitarias por componente, y evolución independiente de cada módulo. Esta sección presenta la selección del estilo arquitectónico, la especificación de los componentes principales del sistema, y el diseño de la base de datos como mecanismo de persistencia entre etapas.
 
 \subsection{Selección del Estilo Arquitectónico}
 
@@ -255,7 +255,7 @@ Si bien la arquitectura de pipeline lineal satisface los requisitos del proyecto
 
 Estas limitaciones fueron consideradas aceptables dado que el análisis de demanda laboral no requiere procesamiento en tiempo real, mientras que el volumen objetivo de 600,000 ofertas es procesable en 5 a 10 horas con el hardware disponible. Además, la simplicidad operativa reduce significativamente el tiempo de desarrollo, estimado en 3 a 4 meses comparado con 9 a 12 meses que requeriría una arquitectura de microservicios. La arquitectura permite evolución futura mediante refactorización incremental de módulos críticos a servicios independientes si los requisitos de volumen o latencia lo justifican posteriormente.
 
-El sistema implementa un \textbf{pipeline secuencial de 8 etapas}:
+El sistema implementa un \textbf{pipeline secuencial de 7 etapas}:
 
 \begin{enumerate}
     \item \textbf{Scraping (Scrapy + Selenium)}: Recolección automatizada de ofertas desde portales web
@@ -264,8 +264,7 @@ El sistema implementa un \textbf{pipeline secuencial de 8 etapas}:
     \item \textbf{Embedding (E5 Multilingual)}: Generación de representaciones vectoriales 768D
     \item \textbf{Dimension Reduction (UMAP)}: Proyección a 2-3 dimensiones visualizables
     \item \textbf{Clustering (HDBSCAN)}: Agrupamiento no supervisado de habilidades
-    \item \textbf{Visualization}: Generación de gráficos estáticos (matplotlib/seaborn)
-    \item \textbf{Reporting}: Exportación de resultados (PDF/PNG/CSV/JSON)
+    \item \textbf{Visualization y Exportación}: Generación de gráficos estáticos (matplotlib/seaborn) y exportación de resultados (PNG/CSV/JSON)
 \end{enumerate}
 
 Cada etapa opera de forma autónoma, lee datos de la etapa anterior desde PostgreSQL, ejecuta su transformación especializada, y persiste resultados para la siguiente etapa. La orquestación se gestiona mediante un CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler).
@@ -273,7 +272,7 @@ Cada etapa opera de forma autónoma, lee datos de la etapa anterior desde Postgr
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{diagrams/pipeline_arquitectura.png}
-\caption{Arquitectura Modular del Observatorio - Pipeline de 8 Etapas}
+\caption{Arquitectura Modular del Observatorio - Pipeline de 7 Etapas}
 \label{fig:arquitectura-completa}
 \end{figure}
 
@@ -281,7 +280,7 @@ La Figura \ref{fig:arquitectura-completa} presenta la vista modular completa del
 
 \subsection{Componentes del Sistema}
 
-En la Figura \ref{fig:arquitectura-completa} se presenta una vista de alto nivel de los componentes principales del sistema. Dicha arquitectura ha sido diseñada considerando principios de modularidad y separación de responsabilidades, permitiendo la trazabilidad completa de las transformaciones de datos. Las ocho etapas del pipeline se agrupan en cinco componentes funcionales que se describen a continuación.
+En la Figura \ref{fig:arquitectura-completa} se presenta una vista de alto nivel de los componentes principales del sistema. Dicha arquitectura ha sido diseñada considerando principios de modularidad y separación de responsabilidades, permitiendo la trazabilidad completa de las transformaciones de datos. Las siete etapas del pipeline se agrupan en cinco componentes funcionales que se describen a continuación.
 
 El primer componente corresponde al \textbf{servicio de web scraping}, el cual administra la recolección automatizada de ofertas laborales desde seis portales de empleo en Colombia, México y Argentina (Computrabajo, Bumeran, ElEmpleo, InfoJobs, OCC Mundial, ZonaJobs). Este servicio fue implementado utilizando Scrapy 2.11 como framework asíncrono base, complementado con Selenium 4.15 para el manejo de contenido dinámico JavaScript. La deduplicación de ofertas se realiza mediante hashing SHA-256, almacenando las ofertas únicas en la tabla raw\_jobs con metadatos de origen, país y timestamps.
 
@@ -291,7 +290,7 @@ El tercer componente es el \textbf{servicio de procesamiento con LLM}, diseñado
 
 El cuarto componente es el \textbf{servicio de generación de embeddings}, el cual transforma las habilidades en representaciones vectoriales densas de 768 dimensiones mediante el modelo intfloat/multilingual-e5-base. Genera embeddings por lotes (batch\_size=32, latencia $<$100ms/batch en GPU) con normalización L2, almacenando en la tabla skill\_embeddings con soporte pgvector. La construcción de índice FAISS permite 30,147 queries/segundo, superando 25x la velocidad de pgvector nativo.
 
-El quinto componente es el \textbf{servicio de análisis, visualización y reportes}, responsable del descubrimiento de patrones emergentes mediante técnicas no supervisadas. Integra reducción dimensional con UMAP (768D $\rightarrow$ 2-3D), clustering jerárquico con HDBSCAN (identificación automática de clústeres y detección de ruido), generación de visualizaciones con matplotlib/seaborn (scatter plots, heatmaps, distribuciones), y exportación multi-formato (PDF con ReportLab, PNG, CSV, JSON). Los resultados se persisten en analysis\_results con parámetros y resultados en formato JSONB.
+El quinto componente es el \textbf{servicio de análisis y visualización}, responsable del descubrimiento de patrones emergentes mediante técnicas no supervisadas. Integra reducción dimensional con UMAP (768D $\rightarrow$ 2-3D), clustering jerárquico con HDBSCAN (identificación automática de clústeres y detección de ruido), generación de visualizaciones estáticas con matplotlib/seaborn (scatter plots UMAP, heatmaps temporales, gráficos de evolución de clusters), y exportación de datos en formatos estructurados (PNG, CSV, JSON). Los resultados se persisten en analysis\_results con parámetros y resultados en formato JSONB.
 
 \subsection{Diseño de la Base de Datos}
 
