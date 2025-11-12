@@ -319,59 +319,42 @@ Donde $|S|$ denota la cardinalidad del conjunto $S$, $\cap$ es la intersección,
 
 Esta evaluación dual permite cuantificar el trade-off entre flexibilidad (captura de tecnologías emergentes) versus estandarización (alineación con taxonomías oficiales), documentando el impacto del mapeo ESCO en la performance medida de cada pipeline.
 
-\textbf{Resultados obtenidos.} La evaluación del Pipeline A sobre las 300 ofertas del gold standard produjo las siguientes métricas:
+\textbf{Resultados obtenidos.} La evaluación del Pipeline A sobre las 300 ofertas del gold standard produjo las siguientes métricas. El pipeline extrae en promedio 50.3 skills por oferta, con una cobertura ESCO del 12.6\% (87.4\% son skills emergentes no presentes en ESCO v1.1.0).
 
-\textbf{Métricas de rendimiento Pre-ESCO}:
+\textbf{Métricas de rendimiento}:
 \begin{itemize}
-    \item \textbf{F1-Score}: 24.98\%
-    \item \textbf{Precision}: 22.54\%
-    \item \textbf{Recall}: 28.00\%
-    \item \textbf{Skills promedio/oferta}: 50.3
+    \item \textbf{Pre-ESCO}: F1-Score 24.98\%, Precision 22.54\%, Recall 28.00\%
+    \item \textbf{Post-ESCO}: F1-Score 72.53\% (+47.55pp), Precision 65.50\% (+42.96pp), Recall 81.25\% (+53.25pp)
 \end{itemize}
 
-\textbf{Métricas de rendimiento Post-ESCO} (después de mapeo a taxonomía):
-\begin{itemize}
-    \item \textbf{F1-Score}: 72.53\% (+47.55pp)
-    \item \textbf{Precision}: 65.50\% (+42.96pp)
-    \item \textbf{Recall}: 81.25\% (+53.25pp)
-    \item \textbf{Cobertura ESCO}: 12.6\% de skills extraídas mapearon a taxonomía (matcher implementado de 2 capas)
-\end{itemize}
+El mapeo a taxonomía ESCO mejora drásticamente todas las métricas, particularmente recall (+53.25pp), lo que valida la efectividad del matcher de dos capas (exacto + difuso) para normalizar variantes léxicas.
 
 \textbf{Comparativa con variantes del pipeline}:
 \begin{itemize}
-    \item \textbf{Regex-Only}: F1 Pre-ESCO 18.07\%, F1 Post-ESCO 79.17\%
-        \begin{itemize}
-            \item Ventaja: +6.64pp mejor F1 Post-ESCO que Pipeline A completo
-            \item Desventaja: -6.91pp peor F1 Pre-ESCO, menor cobertura de variantes contextuales
-        \end{itemize}
-    \item \textbf{Pipeline A (NER+Regex)}: F1 Pre-ESCO 24.98\%, F1 Post-ESCO 72.53\%
-        \begin{itemize}
-            \item Ventaja: +6.91pp mejor F1 Pre-ESCO, captura menciones contextuales
-            \item Desventaja: -6.64pp peor F1 Post-ESCO, NER introduce ruido
-        \end{itemize}
+    \item \textbf{Regex-Only}: Mayor F1 Post-ESCO (79.17\%, +6.64pp) pero menor F1 Pre-ESCO (18.07\%, -6.91pp). Ventaja en precisión post-normalización, desventaja en cobertura de variantes contextuales.
+    \item \textbf{Pipeline A (NER+Regex)}: Mejor F1 Pre-ESCO (24.98\%, +6.91pp) pero menor F1 Post-ESCO (72.53\%, -6.64pp). El NER captura menciones contextuales pero introduce ruido que reduce precision post-mapeo.
 \end{itemize}
 
-\textbf{Análisis de contribución de cada componente}:
+\textbf{Contribución de cada componente}:
 \begin{itemize}
-    \item \textbf{Regex solo}: Detecta 35.2 skills/oferta promedio (70\% del total)
-    \item \textbf{NER adicional}: Aporta 15.1 skills/oferta promedio (30\% del total)
-    \item \textbf{Overlap}: 12\% de skills detectadas por ambos métodos (validación cruzada)
+    \item \textbf{Regex}: Detecta 35.2 skills/oferta promedio (70\% del total)
+    \item \textbf{NER}: Aporta 15.1 skills/oferta adicionales (30\% del total)
+    \item \textbf{Overlap}: 12\% de skills detectadas por ambos métodos, validando la consistencia
 \end{itemize}
 
-\textbf{Capacidades validadas}:
+\textbf{Capacidades validadas del pipeline}:
 \begin{itemize}
-    \item[$\checkmark$] Cobertura de skills estandarizadas: 12.6\% de skills extraídas mapearon a ESCO (matcher implementado)
-    \item[$\checkmark$] Velocidad de procesamiento: 3× más rápido que NER solo, 43× más rápido que Pipeline B
-    \item[$\checkmark$] Reproducibilidad: Resultados 100\% deterministas (sin aleatoriedad)
-    \item[$\checkmark$] Escalabilidad: Latencia lineal O(n) permite procesamiento de corpus completo en $<$10 horas
+    \item \textbf{Velocidad}: Procesamiento 43× más rápido que Pipeline B, permitiendo aplicación a corpus completo
+    \item \textbf{Reproducibilidad}: Resultados 100\% deterministas (sin aleatoriedad)
+    \item \textbf{Escalabilidad}: Latencia lineal O(n), corpus completo procesable en menos de 10 horas
 \end{itemize}
 
-\textbf{Limitaciones identificadas}:
+\textbf{Limitaciones identificadas del pipeline}:
 \begin{itemize}
-    \item[$\times$] Baja precision Pre-ESCO (22.54\%): Alto ruido en extracciones crudas, requiere filtrado con ESCO
-    \item[$\times$] Cobertura ESCO limitada (12.6\%): 87.4\% de skills extraídas son emergentes no presentes en ESCO v1.1.0
-    \item[$\times$] Fragmentación léxica: Skills compuestas (``machine learning'') a veces detectadas como tokens separados
-    \item[$\times$] Sensibilidad a ruido HTML: Ofertas mal limpiadas generan falsos positivos
+    \item \textbf{Baja precision Pre-ESCO} (22.54\%): Alto ruido en extracciones crudas, requiere filtrado con ESCO para uso práctico
+    \item \textbf{Cobertura ESCO limitada}: 87.4\% de skills extraídas no mapean a taxonomía oficial, reflejando vocabulario emergente del mercado
+    \item \textbf{Fragmentación léxica}: Skills compuestas (``machine learning'') a veces detectadas como tokens separados
+    \item \textbf{Sensibilidad a ruido HTML}: Ofertas mal limpiadas generan falsos positivos en extracción
 \end{itemize}
 
 Estos resultados validaron la viabilidad del Pipeline A como baseline de alta cobertura para procesamiento del 100\% del corpus, complementado con Pipeline B para enriquecimiento semántico de un subconjunto estratégico. La arquitectura dual permite balancear velocidad (Pipeline A) con calidad (Pipeline B), optimizando el trade-off precision/latencia según el escenario de uso.
@@ -384,32 +367,11 @@ La arquitectura de Pipeline B se diseñó con dos objetivos complementarios al P
 
 \subsubsection{Justificación del Enfoque LLM}
 
-La decisión de implementar un pipeline basado en LLMs se fundamentó en las limitaciones identificadas de Pipeline A que requerían comprensión semántica profunda:
+La decisión de implementar un pipeline basado en LLMs se fundamentó en cuatro limitaciones estructurales de Pipeline A que requerían comprensión semántica profunda. Primero, Pipeline A solo detecta skills mencionadas explícitamente mediante patrones léxicos, sin capacidad de inferir ``Git'' cuando una oferta solicita ``experiencia con control de versiones''. Segundo, fragmenta skills compuestas al detectar ``machine'' y ``learning'' como tokens separados en lugar de ``Machine Learning'' como concepto único. Tercero, carece de desambiguación contextual, procesando ``Python'' como tecnología incluso en ofertas de zoológicos que requieren conocimiento del reptil. Cuarto, no captura sinónimos contextuales como la equivalencia entre ``backend development'' y ``server-side programming''.
 
-\textbf{Limitaciones de Pipeline A que Pipeline B aborda}:
-\begin{itemize}
-    \item \textbf{Skills implícitas no detectables}: Pipeline A requiere menciones explícitas; no puede inferir ``Git'' de ``experiencia con control de versiones''
-    \item \textbf{Fragmentación de skills compuestas}: Detecta ``machine'' y ``learning'' por separado en lugar de ``Machine Learning'' como concepto único
-    \item \textbf{Falta de desambiguación contextual}: No distingue ``Java'' lenguaje de ``Java'' isla según contexto laboral
-    \item \textbf{Sinónimos contextuales}: No captura que ``backend development'' implica habilidades en ``server-side programming''
-\end{itemize}
+El enfoque LLM resuelve estas limitaciones mediante tres capacidades clave. La comprensión contextual permite interpretar ofertas considerando la semántica completa del texto en lugar de aplicar patrones sintácticos aislados, lo que habilita inferir ``Docker'' de ``experiencia en contenedorización'' sin requerir match textual directo. La desambiguación semántica utiliza el contexto de la oferta para distinguir tecnologías de homónimos (``Python'' + ``Django'' identifica lenguaje de programación; ``Python'' + ``zoo'' identifica animal). Más importante, los LLMs son capaces de identificar skills emergentes que aún no están codificadas en diccionarios estáticos: tecnologías recientes como ``Claude Code'', ``Cursor IDE'' o ``v0.dev'' son detectables por modelos pre-entrenados con conocimiento actualizado, mientras que Pipeline A requeriría actualización manual de sus expresiones regulares. Esta capacidad de capturar vocabulario emergente del mercado laboral representa la ventaja diferencial más significativa del enfoque LLM.
 
-\textbf{Ventajas del enfoque LLM para extracción de skills}:
-\begin{itemize}
-    \item \textbf{Comprensión contextual}: Interpreta texto considerando semántica completa de la oración, no solo patrones sintácticos
-    \item \textbf{Inferencia de skills implícitas}: Puede deducir ``Docker'' de ``experiencia en contenedorización'' sin match textual directo
-    \item \textbf{Desambiguación semántica}: Resuelve ambigüedades usando contexto de oferta (``Python'' + ``Django'' → lenguaje; ``Python'' + ``zoo'' → animal)
-    \item \textbf{Normalización automática}: Genera skills en formato estándar incluso cuando texto original usa terminología coloquial
-\end{itemize}
-
-Esta arquitectura dual responde a los siguientes atributos de calidad del sistema:
-
-\begin{itemize}
-    \item \textbf{Precision}: LLMs (Gemma 3 4B) alcanzan 84.26\% F1 Post-ESCO, vs. 72.53\% de Pipeline A (+11.73pp mejora)
-    \item \textbf{Cobertura semántica}: Captura skills implícitas que Pipeline A omite (promedio 27.8 skills/oferta con mayor relevancia contextual)
-    \item \textbf{Costo-Efectividad}: Aplicación selectiva (gold standard experimental) balancea calidad vs. latencia
-    \item \textbf{Escalabilidad}: Cuantización Q4 permite inferencia en GPUs consumer (4-6GB VRAM), evitando dependencia de APIs comerciales
-\end{itemize}
+Los resultados cuantitativos validan esta arquitectura dual. Pipeline B con Gemma 3 4B alcanza 84.26\% F1 Post-ESCO versus 72.53\% de Pipeline A (+11.73pp mejora), extrayendo en promedio 27.8 skills por oferta con mayor relevancia contextual. Sin embargo, el costo computacional es significativamente superior: la mediana de latencia es 18.3 segundos por oferta (percentiles P25-P75: 15-25s), con media de 42.1 segundos inflada por ofertas extensas que contienen múltiples páginas de requisitos. La cuantización INT4 mediante \texttt{bitsandbytes} reduce requisitos de memoria de $\sim$16GB (FP16) a $\sim$4GB (INT4), permitiendo inferencia en GPUs consumer sin dependencia de APIs comerciales. Este balance entre calidad (+11.73pp F1) y latencia (18× más lento que Pipeline A) justifica la aplicación selectiva de Pipeline B a subconjuntos estratégicos del corpus que requieren análisis semántico profundo.
 
 \subsubsection{Selección del Modelo}
 
