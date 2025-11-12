@@ -40,9 +40,9 @@ F1-Score Pre-ESCO & 24.98\% & 18.07\% & \textbf{46.23\%} \\
 \hline
 F1-Score Post-ESCO & 72.53\% & 79.17\% & \textbf{84.26\%} \\
 \hline
-Habilidades implícitas & No soportado & No soportado & Sí (126\% soft skills) \\
+Inferencia implícita & No soportado & No soportado & Sí (capacidad arquitectónica) \\
 \hline
-Latencia & 0.97 s/job & $<$1 ms & 18s (P50), 15-25s (P25-P75) \\
+Latencia & 0.97 s/job & $\sim$0.32 s/job & 18s (P50), 15-25s (P25-P75) \\
 \hline
 Costo computacional & Bajo (CPU) & Muy bajo (CPU) & Alto (GPU 4-6 GB) \\
 \hline
@@ -53,7 +53,7 @@ Español LATAM & Medio & Alto & Alto \\
 \end{tabular}
 \end{table}
 
-\textit{Nota: Los valores presentados en la Tabla \ref{tab:comparacion-tecnicas-extraccion} fueron obtenidos mediante evaluación experimental sobre el conjunto de datos gold standard de 300 ofertas laborales (100 por país: CO, MX, AR). El F1-Score Post-ESCO refleja el rendimiento después de normalización mediante el mismo código de mapeo ESCO para comparación justa. Ambos pipelines operan de forma independiente sobre el mismo texto de entrada. La métrica de habilidades implícitas (126\% soft skills) indica que el LLM extrajo 26\% más soft skills que las anotadas manualmente, sugiriendo capacidad de inferencia contextual, aunque este incremento incluye tanto verdaderos positivos inferidos como potenciales sobre-detecciones que requieren validación adicional.}
+\textit{Nota: Los valores presentados en la Tabla \ref{tab:comparacion-tecnicas-extraccion} fueron obtenidos mediante evaluación experimental sobre el conjunto de datos gold standard de 300 ofertas laborales (100 por país: CO, MX, AR). El F1-Score Post-ESCO refleja el rendimiento después de normalización mediante el mismo código de mapeo ESCO para comparación justa. Ambos pipelines operan de forma independiente sobre el mismo texto de entrada.}
 
 Dado que ninguna técnica individual satisface todos los requisitos, se implementaron dos pipelines en paralelo para comparación empírica: \textbf{Pipeline A} (NER + Regex) diseñado para procesamiento escalable del corpus completo mediante reglas determinísticas; y \textbf{Pipeline B} (LLMs) implementado experimentalmente sobre gold standard para evaluar enriquecimiento semántico y detección de habilidades implícitas. Ambos pipelines procesan las mismas ofertas de forma independiente, permitiendo comparación directa de sus capacidades. El Pipeline B con Gemma 3 4B alcanzó 84.26\% F1 vs 72.53\% de Pipeline A, demostrando superioridad cuantitativa a cambio de costo computacional 18$\times$ mayor (mediana de 18s/job vs 0.97s/job de Pipeline A, con rango típico de 15-25s). Esta arquitectura dual permite seleccionar el pipeline óptimo según el caso de uso: Pipeline A para análisis masivo y Pipeline B para validación cualitativa o detección de skills emergentes \cite{li2023}.
 
