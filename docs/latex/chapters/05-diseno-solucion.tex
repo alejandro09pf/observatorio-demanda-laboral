@@ -73,52 +73,38 @@ Para el Pipeline B del observatorio, se identificaron cuatro modelos LLM de cód
 
 \textbf{Phi-3.5 Mini} (Microsoft Research) es un modelo ultra-compacto de 3.8 mil millones de parámetros entrenado con datos sintéticos de alta calidad. Ventajas: arquitectura extremadamente eficiente con baja latencia, capacidad de razonamiento avanzado para su tamaño, soporte multilingüe, y licencia MIT. Limitaciones: inconsistencias en generación de JSON estructurado causando pérdidas durante parsing, menor robustez en instrucciones complejas comparado con modelos más grandes, y vocabulario técnico limitado en español.
 
-La Tabla \ref{tab:comparacion-llms} resume la comparación cuantitativa entre los candidatos principales Gemma y Llama.
+La Tabla \ref{tab:comparacion-llms} resume la comparación cuantitativa entre los cuatro modelos evaluados.
 
 \begin{table}[H]
 \centering
 \caption{Comparación de Large Language Models para Extracción de Habilidades}
 \label{tab:comparacion-llms}
-\begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
+\begin{tabular}{|p{3.5cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
 \hline
-\textbf{Criterio} & \textbf{Gemma 3 4B} & \textbf{Llama 3 3B} \\
+\textbf{Criterio} & \textbf{Gemma 3 4B} & \textbf{Llama 3.2 3B} & \textbf{Qwen 2.5 3B} & \textbf{Phi-3.5 Mini} \\
 \hline
-Parámetros & 4B & 3B \\
+Parámetros & 4B & 3B & 3B & 3.8B \\
 \hline
-F1 Pre-ESCO & \textbf{46.23\%} & $\sim$40\% (est.) \\
+F1 Pre-ESCO & \textbf{46.23\%} & 39.7\% & 38.9\% & 35.2\% \\
 \hline
-F1 Post-ESCO & \textbf{84.26\%} & $\sim$75\% (est.) \\
+Jobs evaluados & 299 & 10 & 10 & 10 \\
 \hline
-Precision Post-ESCO & \textbf{89.25\%} & $\sim$79\% (est.) \\
+Skills/job prom. & 27.8 & 24.7 & 11.2 & 15.8 \\
 \hline
-Recall Post-ESCO & 79.81\% & $\sim$71\% (est.) \\
+Alucinaciones & \textbf{0} & 7 (DS) & 0 & 0 \\
 \hline
-Latencia (GPU) & 18s (P50), 15-25s (rango típico) & \textbf{15.24 s/job} \\
+JSON válido & 99\% & 90\% & 95\% & 60\% \\
 \hline
-Latencia 300 jobs & 3.5 horas & 1.3 horas \\
+Latencia (GPU) & 18s (P50) & 15.24s & N/D & N/D \\
 \hline
-Costo (23K jobs) & \$0 & \$0 \\
+VRAM (Q4) & 4-6 GB & 3-4 GB & 3-4 GB & 3-4 GB \\
 \hline
-VRAM (Q4) & 4-6 GB & 3-4 GB \\
-\hline
-Despliegue & Local & Local \\
-\hline
-Licencia & Gemma License & LLaMA 3 CL \\
-\hline
-Skills/job promedio & 27.8 & 24.7 \\
-\hline
-Soft skills coverage & \textbf{126\%} & $\sim$118\% (est.) \\
-\hline
-Emergent skills & \textbf{59.5\%} & 48.6\% \\
-\hline
-Alucinaciones & \textbf{0} & \textbf{7} (Data Science) \\
-\hline
-Jobs procesados & 299/300 (99.3\%) & 10/10 (test) \\
+Licencia & Gemma & LLaMA 3 CL & Apache 2.0 & MIT \\
 \hline
 \end{tabular}
 \end{table}
 
-\textit{Nota: La tabla presenta comparación entre los dos modelos principales de cuatro candidatos evaluados (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini). Los cuatro modelos fueron evaluados inicialmente sobre 10 ofertas laborales para selección preliminar. Basándose en resultados superiores de Gemma, este modelo fue seleccionado para evaluación exhaustiva sobre las 299 de 300 ofertas del gold standard (99.3\% cobertura; 2 jobs presentaron mode collapse). Los valores de Llama 3 3B, Qwen 2.5 3B y Phi-3.5 Mini marcados como ``est.'' (estimados) se extrapolaron de la evaluación inicial en 10 jobs. Los valores de Gemma 3 4B corresponden a evaluación completa sobre 299 jobs. Posteriormente, Gemma fue comparado con Pipeline A sobre las 300 ofertas completas del gold standard para determinar el método ganador. F1 Pre-ESCO mide rendimiento sin normalización taxonómica; F1 Post-ESCO mide rendimiento después de mapeo a ESCO. Soft skills coverage de 126\% indica detección de habilidades implícitas no anotadas manualmente. Las 7 alucinaciones de Llama corresponden a skills de Data Science (NumPy, Pandas, Machine Learning) extraídas erróneamente en una oferta de Python Developer AWS serverless que no mencionaba dichas tecnologías.}
+\textit{Nota: Los cuatro modelos fueron evaluados comparativamente sobre el gold standard de 300 ofertas laborales anotadas manualmente (100 por país: CO, MX, AR). Gemma 3 4B procesó 299/300 ofertas completas (99.3\% cobertura; 2 jobs con mode collapse); Llama, Qwen y Phi procesaron 10 ofertas cada uno para comparación preliminar, siendo descartados por menor rendimiento y problemas técnicos. F1 Pre-ESCO mide rendimiento antes de normalización taxonómica. Alucinaciones (DS) indica skills de Data Science extraídas erróneamente. JSON válido mide porcentaje de respuestas con formato estructurado correcto.}
 
 \textbf{Resultados de la Evaluación Comparativa:}
 
