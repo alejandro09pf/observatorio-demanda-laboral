@@ -121,9 +121,30 @@ El análisis comparativo completo de métricas por configuración se documenta e
 
 \subsection{Distribución de Skills y Dominios Tecnológicos}
 
-El análisis de clustering sobre el corpus completo de 30,660 ofertas procesadas con Pipeline A generó 53 clusters interpretables a partir de 1,698 skills únicas Post-ESCO (configuración: n\_neighbors=15, min\_cluster\_size=12), con Silhouette Score de 0.456 y 22.3\% de ruido. El sistema implementó clustering jerárquico de dos niveles: 53 fine-clusters representando familias tecnológicas específicas, y 4 meta-clusters agrupando clusters relacionados (META-0: conceptos generales, META-1: skills especializadas, META-2: tecnologías core, UNCLUSTERED: frameworks específicos). La configuración Pipeline A 30k PRE-ESCO produjo 2,044 clusters reflejando granularidad máxima del vocabulario técnico sin normalización taxonómica.
+El sistema de clustering se ejecutó sobre 8 configuraciones de producción representando los tres pipelines de extracción (Manual annotations, Pipeline A, Pipeline B), dos escenarios ESCO (PRE, POST), y dos escalas de dataset (300 jobs gold standard, 30,660 jobs corpus completo). La Tabla~\ref{tab:clustering_configs} resume métricas de las configuraciones finales optimizadas:
 
-El análisis cualitativo manual de los 50 clusters más significativos (exp15: n\_neighbors=15, min\_cluster\_size=15) identificó 14 categorías temáticas dominantes en el mercado laboral tecnológico latinoamericano. Los 15 clusters más demandados concentran 68\% de la demanda total:
+\begin{table}[h]
+\centering
+\caption{Configuraciones de clustering en producción (8 datasets)}
+\label{tab:clustering_configs}
+\small
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Configuración} & \textbf{Clusters} & \textbf{Skills} & \textbf{Silhouette} & \textbf{Ruido\%} & \textbf{Meta} \\
+\hline
+Manual 300 PRE & 61 & 1,914 & 0.456 & 38.1\% & - \\
+Manual 300 POST & 2 & 236 & 0.418 & 87.9\% & - \\
+Pipeline A 300 PRE & 38 & 1,314 & 0.447 & 40.5\% & - \\
+Pipeline A 300 POST & 7 & 289 & 0.398 & 28.9\% & 2 \\
+Pipeline B 300 PRE & 34 & 1,540 & 0.234 & 63.2\% & - \\
+\textbf{Pipeline B 300 POST} & \textbf{50} & \textbf{1,618} & \textbf{0.348} & \textbf{47.2\%} & \textbf{3} \\
+Pipeline A 30k PRE & 2,044 & 98,829 & 0.361 & 52.1\% & - \\
+Pipeline A 30k POST & 53 & 1,698 & 0.456 & 37.3\% & 2 \\
+\hline
+\end{tabular}
+\end{table}
+
+El análisis cualitativo exhaustivo se realizó sobre la configuración \textbf{Pipeline B 300 POST} (exp15: n\_neighbors=15, min\_cluster\_size=12) que balanceó óptimamente interpretabilidad (50 clusters manejables para inspección manual) con calidad métrica (Silhouette 0.348, ratio 38.7:1). Esta configuración generó 50 clusters fine-grained con estructura meta-clustering jerárquica de 3 niveles (META-0: conceptos generales, META-1: skills especializadas, META-2: tecnologías core) más 15 clusters UNCLUSTERED representando frameworks altamente específicos. El análisis identificó 14 categorías temáticas dominantes en el mercado laboral tecnológico latinoamericano. Los 15 clusters más demandados concentran 68\% de la demanda total:
 
 \begin{enumerate}
 \item \textbf{Databases} (916 menciones): MySQL, PostgreSQL, SQL, MongoDB, NoSQL --- cluster de máxima demanda reflejando centralidad de bases de datos en perfiles backend
