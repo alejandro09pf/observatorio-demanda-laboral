@@ -75,7 +75,7 @@ El orquestador implementó ocho etapas modulares ejecutadas secuencialmente: (1)
 
 El corpus se recolectó mediante scraping especializado por portal: \texttt{requests} + \texttt{Beautiful\-Soup4} para HTML estático, \texttt{selenium} para contenido JavaScript dinámico. Se implementaron estrategias anti-bloqueo: delays aleatorios 2-5s, rotación de User-Agent, y respeto de \texttt{robots.txt}. El scraping completo recolectó 56,555 ofertas brutas, procesadas durante ~72 horas distribuidas en 15 días (~150-200 ofertas/hora).
 
-El pipeline de limpieza aplicó cinco pasos: normalización de texto, remoción de HTML residual, detección de idioma mediante \texttt{langdetect} (español 33.2\%, inglés 52.4\%, Spanglish 14.4\%), deduplicación mediante fuzzy matching de título+descripción (3,414 duplicados) y exact match por \texttt{content\_hash} SHA-256 (461 duplicados), y validación de calidad descartando ofertas con contenido insuficiente ($<$100 caracteres). Del total de 56,555 ofertas scrapeadas, se descartaron 25,895 (45.79\%): 3,875 duplicados detectados (6.85\%) y 22,020 ofertas con calidad insuficiente (38.94\%). El resultado fue un dataset de 30,660 ofertas usables (54.21\% del total scrapeado) con texto normalizado, idioma identificado, y metadata completa. La distribución temporal cubrió 7 años (2018-10-12 a 2025-10-31) con 71.23\% de ofertas fechadas, permitiendo análisis trimestral.
+El pipeline de limpieza aplicó cinco pasos: normalización de texto, eliminación de HTML residual, detección de idioma mediante \texttt{langdetect} (español 33.2\%, inglés 52.4\%, Spanglish 14.4\%), deduplicación mediante fuzzy matching de título+descripción (3,414 duplicados) y exact match por \texttt{content\_hash} SHA-256 (461 duplicados), y validación de calidad descartando ofertas con contenido insuficiente ($<$100 caracteres). Del total de 56,555 ofertas scrapeadas, se descartaron 25,895 (45.79\%): 3,875 duplicados detectados (6.85\%) y 22,020 ofertas con calidad insuficiente (38.94\%). El resultado fue un dataset de 30,660 ofertas usables (54.21\% del total scrapeado) con texto normalizado, idioma identificado, y metadata completa. La distribución temporal cubrió 7 años (2018-10-12 a 2025-10-31) con 71.23\% de ofertas fechadas, permitiendo análisis trimestral.
 
 \section{Implementación de Sistemas de Extracción de Habilidades}
 
@@ -178,7 +178,7 @@ La integración de NER y Regex opera mediante el siguiente flujo secuencial:
         \end{itemize}
     \item \textbf{Deduplicación}: Se eliminan duplicados mediante normalización textual
         \begin{itemize}
-            \item Normalización: Lowercase, remoción de acentos, eliminación de puntuación
+            \item Normalización: Lowercase, eliminación de acentos, eliminación de puntuación
             \item Criterio: Skills con texto normalizado idéntico se consideran duplicadas
             \item Prioridad: Si detectada por ambos métodos, se marca como \texttt{extraction\_method=``Both''} con mayor confianza
         \end{itemize}
@@ -513,7 +513,7 @@ Pipeline B se compone de tres módulos secuenciales que transforman texto de ofe
         \begin{itemize}
             \item \textit{Parser JSON primario}: Intenta \texttt{json.loads()} sobre respuesta completa
             \item \textit{Fallback regex}: Si falla, busca patrones \texttt{\textbackslash[.*?\textbackslash]} o \texttt{\textbackslash{.*?\textbackslash}} y extrae listas
-            \item \textit{Normalización}: Lowercase, remoción de acentos, eliminación de duplicados, filtrado de strings vacíos
+            \item \textit{Normalización}: Lowercase, eliminación de acentos, eliminación de duplicados, filtrado de strings vacíos
             \item \textit{Validación}: Descarta skills de longitud $<$2 caracteres o $>$100 caracteres (probable ruido)
         \end{itemize}
     \item \textbf{Manejo de errores}: Si parsing falla completamente, registra oferta en \texttt{failed\_\allowbreak extractions} con flag \texttt{parse\_success=False}
@@ -729,7 +729,7 @@ La taxonomía se cargó desde \texttt{esco\_skills} con campos: \texttt{skill\_u
 
 \subsection{Layer 1 y 2: Matching Exacto y Fuzzy}
 
-Layer 1 implementó matching exacto case-insensitive contra labels bilingües. La normalización unificada aplicó: lowercase, remoción de acentos (\texttt{unicodedata.normalize}), eliminación de puntuación preservando guiones/puntos internos (``Node.js''), y colapso de espacios. El lookup directo en \texttt{exact\_index} alcanzó 35-40\% de cobertura en Pipeline A y 40-45\% en Pipeline B, reflejando que LLMs generan ortografía más estandarizada.
+Layer 1 implementó matching exacto case-insensitive contra labels bilingües. La normalización unificada aplicó: lowercase, eliminación de acentos (\texttt{unicodedata.normalize}), eliminación de puntuación preservando guiones/puntos internos (``Node.js''), y colapso de espacios. El lookup directo en \texttt{exact\_index} alcanzó 35-40\% de cobertura en Pipeline A y 40-45\% en Pipeline B, reflejando que LLMs generan ortografía más estandarizada.
 
 Layer 2 aplicó fuzzy matching usando \texttt{fuzzywuzzy} con distancia de Levenshtein. La implementación inicial con \texttt{fuzz.partial\_ratio()} produjo falsos positivos críticos: ``Piano'' mapeó a ``tocar el piano'' (100\%, substring exacto), ``SQL'' a ``MySQL'' (100\%). Se reemplazó por \texttt{fuzz.ratio()} (similitud entre strings completos), reduciendo ``Piano'' vs ``tocar el piano'' a 40\% y ``SQL'' vs ``MySQL'' a 60\%. El umbral se configuró empíricamente en 0.92 tras evaluar 200 matches manuales: 0.85 generaba falsos positivos (``Java'' → ``JavaScript''), mientras 0.95 requería ortografía perfecta eliminando abreviaciones válidas (``K8s'' vs ``Kubernetes'' = 0.93).
 
