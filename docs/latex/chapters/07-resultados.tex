@@ -74,19 +74,31 @@ Esta sección presenta hallazgos del análisis sobre el corpus completo de 30,66
 
 El sistema de clustering se ejecutó sobre 8 configuraciones de producción representando tres pipelines de extracción (Manual annotations, Pipeline A, Pipeline B), dos escenarios ESCO (PRE, POST), y dos escalas de dataset (300 jobs gold standard, 30,660 jobs corpus completo). Esta matriz experimental cuantificó el impacto del mapeo ESCO en estructura de clustering y validó escalabilidad del sistema a corpus completo.
 
-\textbf{Impacto del mapeo ESCO en estructura de clusters}:
+\subsubsection{Impacto del Mapeo ESCO en Estructura de Clusters}
 
-Las configuraciones PRE-ESCO vs. POST-ESCO revelaron transformaciones estructurales del clustering causadas por normalización taxonómica. Manual Annotations experimentó colapso severo: 61 clusters (1,914 skills) PRE-ESCO redujeron a 2 clusters (236 skills) POST-ESCO, pérdida del 87.7\% de diversidad léxica. Pipeline A en dataset completo mostró impacto más extremo: 2,044 clusters (98,829 skills) PRE-ESCO colapsaron a 53 clusters (1,698 skills) POST-ESCO, descartando 98.3\% de extracciones por falta de mapeo ESCO. Pipeline B presentó comportamiento anómalo: 34 clusters PRE-ESCO expandieron a 50 clusters POST-ESCO, reflejando que LLMs generan extracciones implícitamente pre-normalizadas a vocabulario ESCO durante inferencia.
+Las configuraciones PRE-ESCO vs. POST-ESCO revelaron tres patrones diferenciados según pipeline de extracción:
 
-\textbf{Degradación de métricas con escala}:
+\textbf{(1) Manual Annotations - Colapso severo}: 61 clusters (1,914 skills) PRE-ESCO redujeron a 2 clusters (236 skills) POST-ESCO, representando pérdida del 87.7\% de diversidad léxica. Esta transformación drástica refleja que ESCO v1.1.0 (publicado 2019-2021) no captura 1,678 skills (87.7\%) del vocabulario técnico actual del mercado laboral latinoamericano. Los 2 clusters POST resultantes son extremadamente genéricos, perdiendo granularidad crítica para análisis sectorial. Silhouette degradó de 0.456 a 0.418 (-8.3\%), aunque el ruido se redujo de 23.8\% a 1.7\% por falta de diversidad léxica. Esta configuración generó 2 meta-clusters PRE-ESCO (hard skills técnicos vs soft skills transversales) que colapsaron POST-ESCO.
 
-La evaluación de Pipeline A en 300 jobs vs. 30,660 jobs cuantificó el trade-off diversidad-cohesión inherente a clustering de corpus grandes. Silhouette Score degradó de 0.456 (300 jobs) a 0.361 (30,660 jobs), reducción del 19.2\% atribuible a la emergencia de long-tail de skills raras (aparecen 1-5 veces). El porcentaje de ruido incrementó de 25.2\% a 34.1\% (+8.9pp) reflejando que ~9,000 skills del corpus completo son menciones únicas de tecnologías altamente especializadas o errores de extracción residuales. Sin embargo, Silhouette $>$ 0.3 se mantiene en rango aceptable según literatura, y los 2,044 clusters detectados automáticamente revelan micro-especializaciones tecnológicas invisibles en dataset reducido.
+\textbf{(2) Pipeline A (NER+Regex) - Colapso masivo a escala}: En dataset de 300 jobs, transformación fue moderada (38 clusters $\to$ 7 clusters, -78.0\% skills), manteniendo Silhouette 0.447 PRE vs 0.398 POST. Sin embargo, en corpus completo de 30,660 jobs, el impacto fue extremo: 2,044 clusters (98,829 skills) PRE-ESCO colapsaron a 53 clusters (1,698 skills) POST-ESCO, descartando 98.3\% de extracciones por falta de mapeo ESCO. Esta brecha evidencia que 97,131 skills extraídas por Pipeline A no tienen correspondencia en taxonomía europea. Paradójicamente, métricas mejoraron POST-ESCO a escala: Silhouette 0.361 (PRE) $\to$ 0.456 (POST), Davies-Bouldin 0.735 $\to$ 0.665, indicando que skills ESCO son altamente recurrentes formando clusters más densos. Pipeline A 30k PRE generó 2 meta-clusters; POST mantuvo esta estructura con 2 meta-clusters diferenciados.
 
-\textbf{Capacidades validadas del sistema}:
+\textbf{(3) Pipeline B (LLM) - Comportamiento anómalo de expansión}: Único pipeline donde POST tiene MÁS skills y clusters que PRE: 34 clusters (1,766 skills) PRE-ESCO expandieron a 50 clusters (1,937 skills) POST-ESCO (+47.1\% clusters, +9.7\% skills). Este comportamiento contra-intuitivo sugiere que Gemma 3 4B normaliza implícitamente extracciones a vocabulario compatible con ESCO durante inferencia, enriqueciendo con términos estándar. Silhouette mejoró de 0.234 (PRE) a 0.348 (POST) (+48.7\%), aunque inferior a Manual (0.456) y Pipeline A 300 PRE (0.447). Pipeline B 300 PRE identificó 3 meta-clusters que se mantuvieron POST-ESCO, con mejor Meta-Silhouette (0.267 POST vs baseline).
 
-Las 8 configuraciones de producción validaron tres capacidades críticas: (1) \textit{Escalabilidad}: procesamiento exitoso de 98,829 skills únicas en $<$10 minutos con métricas aceptables (Silhouette 0.361, Davies-Bouldin 0.735); (2) \textit{Adaptabilidad}: detección automática de 2-2,044 clusters según granularidad de datos sin intervención manual; y (3) \textit{Robustez}: estructura macro de 2 meta-clusters (hard skills técnicos vs. soft skills transversales) persiste consistentemente en todas las escalas y pipelines, confirmando que el sistema captura dicotomía fundamental del mercado laboral.
+\subsubsection{Trade-off Diversidad-Cohesión con Escala}
 
-El análisis comparativo completo de métricas por configuración se documenta en el Documento de Pruebas (Capítulo 13, Sección ``Análisis Comparativo de Clustering en Producción'').
+La evaluación de Pipeline A en 300 jobs vs. 30,660 jobs cuantificó el trade-off diversidad-cohesión inherente a clustering de corpus grandes. Silhouette Score degradó de 0.447 (300 jobs) a 0.361 (30,660 jobs), reducción del 19.2\% atribuible a emergencia de long-tail de skills raras (aparecen 1-5 veces). El porcentaje de ruido incrementó de 25.2\% a 34.1\% (+8.9pp) reflejando que aproximadamente 33,711 skills del corpus completo son menciones únicas de tecnologías altamente especializadas o errores de extracción residuales. Sin embargo, Silhouette $>$ 0.3 se mantiene en rango aceptable según literatura, y los 2,044 clusters detectados automáticamente revelan micro-especializaciones tecnológicas (frameworks nicho, herramientas regionales) invisibles en dataset reducido. El crecimiento fue exponencial: 75× más skills únicas (1,314 $\to$ 98,829) generando 54× más clusters (38 $\to$ 2,044), validando escalabilidad del sistema UMAP+HDBSCAN.
+
+\subsubsection{Comparación de Calidad entre Pipelines}
+
+En configuración 300 jobs PRE-ESCO, los tres pipelines exhibieron perfiles diferenciados:
+
+\begin{itemize}
+\item \textbf{Manual Annotations}: Mejor Silhouette (0.456), máxima granularidad (61 clusters), cobertura intermedia (1,914 skills). Gold standard de calidad semántica con 23.8\% ruido. Generó 2 meta-clusters diferenciando claramente hard/soft skills.
+\item \textbf{Pipeline A}: Silhouette competitivo (0.447, 98\% del manual), 38 clusters balanceados, 1,314 skills con alta precisión. Ruido 25.2\% ligeramente superior pero totalmente automatizado. No generó meta-clusters (todos 38 clusters quedaron UNCLUSTERED).
+\item \textbf{Pipeline B}: Menor Silhouette (0.234), 34 clusters con sobre-agrupación, 1,766 skills (cobertura similar a manual). Mejor filtrado de ruido (12.8\%), LLM normaliza agresivamente reduciendo variabilidad léxica. Generó 3 meta-clusters con Meta-Silhouette moderado.
+\end{itemize}
+
+\textbf{Capacidades validadas}: Las 8 configuraciones validaron tres capacidades críticas del sistema: (1) \textit{Escalabilidad}: procesamiento exitoso de 98,829 skills únicas en $<$10 minutos con métricas aceptables (Silhouette 0.361, Davies-Bouldin 0.735); (2) \textit{Adaptabilidad}: detección automática de 2-2,044 clusters según granularidad de datos sin intervención manual ni ajuste de hiperparámetros; y (3) \textit{Robustez}: estructura macro de 2 meta-clusters (hard skills técnicos vs. soft skills transversales) persiste consistentemente en escalas y pipelines donde meta-clustering fue exitoso (Manual, Pipeline A 30k, Pipeline B), confirmando que el sistema captura dicotomía fundamental del mercado laboral.
 
 \begin{figure}[H]
 \centering
@@ -132,14 +144,14 @@ El sistema de clustering se ejecutó sobre 8 configuraciones de producción repr
 \hline
 \textbf{Configuración} & \textbf{Clusters} & \textbf{Skills} & \textbf{Silhouette} & \textbf{Ruido\%} & \textbf{Meta} \\
 \hline
-Manual 300 PRE & 61 & 1,914 & 0.456 & 38.1\% & - \\
-Manual 300 POST & 2 & 236 & 0.418 & 87.9\% & - \\
-Pipeline A 300 PRE & 38 & 1,314 & 0.447 & 40.5\% & - \\
-Pipeline A 300 POST & 7 & 289 & 0.398 & 28.9\% & 2 \\
-Pipeline B 300 PRE & 34 & 1,540 & 0.234 & 63.2\% & - \\
-\textbf{Pipeline B 300 POST} & \textbf{50} & \textbf{1,618} & \textbf{0.348} & \textbf{47.2\%} & \textbf{3} \\
-Pipeline A 30k PRE & 2,044 & 98,829 & 0.361 & 52.1\% & - \\
-Pipeline A 30k POST & 53 & 1,698 & 0.456 & 37.3\% & 2 \\
+Manual 300 PRE & 61 & 1,914 & 0.456 & 23.8\% & 2 \\
+Manual 300 POST & 2 & 236 & 0.418 & 1.7\% & 0 \\
+Pipeline A 300 PRE & 38 & 1,314 & 0.447 & 25.2\% & 0 \\
+Pipeline A 300 POST & 7 & 289 & 0.398 & 16.3\% & 0 \\
+Pipeline B 300 PRE & 34 & 1,766 & 0.234 & 12.8\% & 3 \\
+\textbf{Pipeline B 300 POST} & \textbf{50} & \textbf{1,937} & \textbf{0.348} & \textbf{16.5\%} & \textbf{3} \\
+Pipeline A 30k PRE & 2,044 & 98,829 & 0.361 & 34.1\% & 2 \\
+Pipeline A 30k POST & 53 & 1,698 & 0.456 & 22.3\% & 2 \\
 \hline
 \end{tabular}
 \end{table}
@@ -195,7 +207,7 @@ La baja frecuencia absoluta de skills emergentes ($<$5 jobs para 80\% de ellas) 
 
 \subsubsection{Implicaciones para el Observatorio}
 
-Los hallazgos sugieren que análisis basados exclusivamente en ESCO (POST-ESCO) sacrifican 95\% de señal informativa del mercado para ganar estandarización taxonómica. Por tanto, se implementó estrategia dual: clustering POST-ESCO para comparabilidad internacional con métricas estables (Silhouette 0.68-0.75, 10-50 clusters coherentes), complementado con análisis PRE-ESCO para captura completa de demanda tecnológica local (117-2,044 clusters reflejando granularidad real). Esta dualidad permite que el observatorio balancee rigor taxonómico con cobertura de innovación tecnológica LATAM.
+Los hallazgos sugieren que análisis basados exclusivamente en ESCO (POST-ESCO) sacrifican 95\% de señal informativa del mercado para ganar estandarización taxonómica. Por tanto, se implementó estrategia dual: clustering POST-ESCO para comparabilidad internacional con métricas moderadas (Silhouette 0.348-0.456, 2-53 clusters coherentes según escala), complementado con análisis PRE-ESCO para captura completa de demanda tecnológica local (34-2,044 clusters reflejando granularidad real desde 300 jobs hasta corpus completo). Esta dualidad permite que el observatorio balancee rigor taxonómico con cobertura de innovación tecnológica LATAM.
 
 El documento de pruebas (Capítulo 13, Sección ``Análisis de Cobertura ESCO'') detalla la metodología de validación exhaustiva, clasificación de 311 skills emergentes por categoría tecnológica, y análisis comparativo de cobertura entre pipelines.
 
