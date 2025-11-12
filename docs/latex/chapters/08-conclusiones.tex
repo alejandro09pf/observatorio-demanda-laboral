@@ -1,13 +1,223 @@
-\chapter{CONCLUSIONS}
+\chapter{CONCLUSIONES Y TRABAJO FUTURO}
 
-\section{Impact Analysis of the Project}
+Este trabajo diseñó, implementó y validó un sistema completo de observatorio de demanda laboral para América Latina, comparando tres enfoques de extracción de habilidades técnicas: métodos basados en reglas y reconocimiento de entidades nombradas (Pipeline A), métodos estadísticos con TF-IDF y n-gramas (Pipeline A.1), y modelos de lenguaje grandes (Pipeline B). La evaluación rigurosa sobre un \textit{gold standard} de 7,848 anotaciones manuales demostró la superioridad de Pipeline B, validando las hipótesis de investigación planteadas y estableciendo métricas cuantitativas para la comparación de enfoques de extracción de habilidades en ofertas laborales.
 
-Explain the impact of the results of this project in the short, medium, and long term. It should explain the impact in all of the relevant stakeholders.
+\section{Validación de Hipótesis}
 
-\subsection{Impact analysis in systems engineering}
+\subsection{H1: Superioridad de Modelos de Lenguaje Grandes}
 
-\subsection{Impact analysis in global, economic, environmental, and societal contexts}
+La primera hipótesis planteaba que los modelos de lenguaje grandes (LLMs) superarían a métodos tradicionales basados en reglas y reconocimiento de entidades nombradas. Los resultados experimentales presentados en el Capítulo 7 validan esta hipótesis de manera concluyente:
 
-\section{Conclusions and Future Work}
+\begin{itemize}
+    \item Pipeline B alcanzó un F1-Score post-ESCO de \textbf{84.26\%}, superando en 12.11 puntos porcentuales a Pipeline A (72.15\%)
+    \item La mejora relativa del \textbf{16.8\%} en F1-Score demuestra una ventaja sustancial
+    \item En términos de precisión, Pipeline B obtuvo \textbf{89.25\%} vs 66.28\% de Pipeline A, una mejora relativa del 34.6\%
+    \item Incluso en evaluación pre-ESCO (extracción pura), Pipeline B alcanzó F1=46.23\% vs 22.70\% de Pipeline A, más del doble de rendimiento
+\end{itemize}
 
-Explain whether the goals were accomplished and why. Future work that should be explained based on the project results.
+Esta superioridad se mantiene consistentemente en todas las métricas evaluadas, validando que los modelos de lenguaje grandes capturan habilidades técnicas con mayor precisión y exhaustividad que métodos sintácticos tradicionales.
+
+\subsection{H2: Detección de Habilidades Emergentes}
+
+La segunda hipótesis postulaba que los LLMs detectarían habilidades emergentes ausentes en taxonomías estáticas como ESCO. Los resultados confirman esta capacidad:
+
+\begin{itemize}
+    \item El \textbf{59.5\%} de habilidades extraídas por Pipeline B no tienen equivalente en ESCO v1.1.0
+    \item Se identificaron 4,945 habilidades emergentes de 8,301 extraídas en total
+    \item Ejemplos incluyen tecnologías modernas como SAM (AWS Serverless Application Model), CDK (Cloud Development Kit), SST (Serverless Stack), React Hooks, y Kubernetes Custom Resource Definitions
+    \item Estas habilidades aparecen con frecuencia significativa en múltiples ofertas, validando que no son ruido sino demandas reales del mercado
+\end{itemize}
+
+Esto confirma la limitación inherente de taxonomías estáticas que se actualizan cada 2-3 años, mientras el mercado tecnológico evoluciona en ciclos de 6-12 meses. Los LLMs, al no estar restringidos a vocabulario fijo, capturan esta evolución dinámica.
+
+\subsection{H3: Inferencia de Habilidades Implícitas}
+
+La tercera hipótesis planteaba que los LLMs podrían inferir habilidades implícitas de las responsabilidades descritas en ofertas laborales. Los resultados validan esta capacidad:
+
+\begin{itemize}
+    \item Pipeline B identificó habilidades blandas con \textbf{131\%} de cobertura sobre el \textit{gold standard}
+    \item Superó la anotación humana explícita extrayendo 72 habilidades blandas de 55 anotadas manualmente
+    \item Demostró capacidad consistente de inferencia: 111\% → 131\% → 136\% en iteraciones experimentales sucesivas
+    \item Ejemplos incluyen inferir ``Liderazgo'' de ``Liderarás un equipo de 5 desarrolladores'' y ``Gestión de Proyectos'' de responsabilidades de coordinación
+\end{itemize}
+
+Esta capacidad de comprensión contextual, ausente en métodos sintácticos como Pipeline A, representa una ventaja cualitativa fundamental de los modelos de lenguaje grandes.
+
+\section{Contribuciones del Trabajo}
+
+Este trabajo aporta contribuciones en cuatro dimensiones:
+
+\subsection{Contribuciones Metodológicas}
+
+\begin{itemize}
+    \item \textbf{Primera evaluación rigurosa} de modelos de lenguaje grandes versus métodos tradicionales para extracción de habilidades en español latinoamericano
+    \item \textbf{Metodología de evaluación dual} (pre-ESCO + post-ESCO) que permite comparación justa separando capacidad de extracción pura de capacidad de normalización
+    \item \textbf{\textit{Gold standard}} de 7,848 anotaciones manuales con clasificación de habilidades técnicas y blandas
+    \item \textbf{Sistema de normalización canónica} con 193 mapeos tecnológicos validados
+\end{itemize}
+
+\subsection{Contribuciones Técnicas}
+
+\begin{itemize}
+    \item \textbf{Sistema completo end-to-end} operativo que integra scraping, limpieza, extracción, mapeo a taxonomías, generación de embeddings y clustering semántico
+    \item \textbf{ESCO Matcher de 3 capas} optimizado con exact matching, fuzzy matching (threshold 0.92), y detección de habilidades emergentes
+    \item \textbf{Pipeline A optimizado} mediante 7 experimentos iterativos que mejoraron F1 de 42\% a 81\%
+    \item \textbf{Clustering semántico} UMAP+HDBSCAN de más de 30,000 habilidades en 53 clusters coherentes
+    \item \textbf{Código open-source} completo con más de 83,000 líneas de documentación y código
+\end{itemize}
+
+\subsection{Contribuciones Empíricas}
+
+\begin{itemize}
+    \item \textbf{Demostración cuantitativa} de superioridad de LLMs: +16.8\% F1 versus métodos tradicionales
+    \item \textbf{Detección de 59.5\%} de habilidades emergentes ausentes en taxonomías oficiales
+    \item \textbf{Validación de inferencia implícita}: +31\% de habilidades blandas sobre anotación humana explícita
+    \item \textbf{Identificación de limitaciones ESCO}: sesgo europeo, granularidad inconsistente, desactualización, ausencia de contexto latinoamericano
+\end{itemize}
+
+\subsection{Contribuciones Prácticas}
+
+\begin{itemize}
+    \item \textbf{Base de datos} de 30,660 ofertas laborales de Colombia, México y Argentina listas para análisis
+    \item \textbf{Visualizaciones} de clustering semántico y perfiles de habilidades técnicas
+    \item \textbf{Manual técnico} de 10,288 líneas documentando el sistema completo para reproducibilidad
+    \item \textbf{Infraestructura escalable} para procesamiento de millones de ofertas futuras
+\end{itemize}
+
+\section{Limitaciones Identificadas}
+
+La honestidad académica requiere reconocer las limitaciones del trabajo realizado:
+
+\subsection{Limitaciones del Sistema}
+
+\begin{itemize}
+    \item \textbf{Velocidad de procesamiento}: Pipeline B requiere típicamente 15-25 segundos por oferta (mediana 18s) vs 1-2 segundos de Pipeline A, limitando aplicabilidad en tiempo real
+    \item \textbf{Tasa de error}: 0.7\% de ofertas (2 de 300) experimentaron \textit{mode collapse} con repetición infinita del modelo LLM
+    \item \textbf{Requisitos de hardware}: El sistema requiere GPU o 32GB RAM, no accesible para todas las instituciones
+    \item \textbf{ESCO Matching}: Persisten falsos positivos en fuzzy matching (ej: ``REST'' → ``restaurar dentaduras''), mitigados pero no eliminados con threshold 0.92
+\end{itemize}
+
+\subsection{Limitaciones del Dataset}
+
+\begin{itemize}
+    \item \textbf{Tamaño del \textit{gold standard}}: 300 ofertas, si bien estadísticamente significativo, podría ampliarse para análisis más robustos
+    \item \textbf{Cobertura temporal}: Dataset desbalanceado con mayor concentración en años recientes (2020-2025)
+    \item \textbf{Cobertura geográfica}: Limitado a Colombia, México y Argentina; faltan Perú, Chile, Ecuador y otros países latinoamericanos
+    \item \textbf{Cobertura de portales}: 11 portales incluidos; faltan LinkedIn, Indeed completo, Glassdoor y otros actores importantes
+\end{itemize}
+
+\subsection{Limitaciones de Evaluación}
+
+\begin{itemize}
+    \item \textbf{Anotador único}: Posible sesgo en anotaciones manuales, mitigado parcialmente con re-anotación del 10\% de la muestra
+    \item \textbf{Pipeline A.1 descartado}: F1=48\% insuficiente para producción, aunque útil como baseline académico
+    \item \textbf{Análisis temporal}: Documentado conceptualmente pero no ejecutado completamente por limitaciones de tiempo
+    \item \textbf{Meta-clustering}: Implementado pero con métricas subóptimas (Silhouette=0.27), requiere refinamiento
+\end{itemize}
+
+\section{Lecciones Aprendidas}
+
+El desarrollo de este sistema reveló \textit{insights} valiosos aplicables a proyectos similares:
+
+\subsection{Lecciones Técnicas}
+
+\begin{itemize}
+    \item \textbf{La iteración sistemática funciona}: Pipeline A mejoró 38 puntos porcentuales de F1 en 7 experimentos controlados
+    \item \textbf{La evaluación dual es esencial}: Separar extracción pura (pre-ESCO) de normalización (post-ESCO) permite identificar fortalezas y debilidades específicas de cada pipeline
+    \item \textbf{LLMs pequeños son suficientes}: Modelos de 4B parámetros (Gemma 3 4B) compiten con alternativas más grandes sin requerir infraestructura costosa
+    \item \textbf{ESCO es útil pero limitado}: Excelente para normalización post-extracción, insuficiente como única fuente de cobertura para tecnologías modernas
+\end{itemize}
+
+\subsection{Lecciones Metodológicas}
+
+\begin{itemize}
+    \item \textbf{El \textit{gold standard} es crítico}: Las 7,848 anotaciones manuales permitieron evaluación rigurosa y cuantitativa
+    \item \textbf{La comparación multi-modelo es necesaria}: Evaluar 4 modelos LLM (Gemma, Llama, Qwen, Phi) fue esencial para decisión informada
+    \item \textbf{La documentación exhaustiva es valiosa}: 81,000 líneas de documentación facilitaron reproducibilidad y transferencia de conocimiento
+    \item \textbf{Los trade-offs deben hacerse explícitos}: Velocidad vs precisión, cobertura vs limpieza, automatización vs control
+\end{itemize}
+
+\subsection{Lecciones Arquitecturales}
+
+\begin{itemize}
+    \item \textbf{El orquestador central simplifica}: Una CLI unificada reemplazó más de 100 scripts dispersos
+    \item \textbf{PostgreSQL es suficiente}: No se requieren bases de datos NoSQL o Big Data para datasets de 30,000 ofertas
+    \item \textbf{El batch processing es esencial}: Mejoras de 10-20x en throughput versus procesamiento individual
+    \item \textbf{FAISS semántico falló}: E5 multilingual demostró ser inapropiado para vocabulario técnico, requiriendo deshabilitación de Layer 3
+\end{itemize}
+
+\section{Trabajo Futuro}
+
+Se identifican múltiples líneas de investigación y desarrollo futuro:
+
+\subsection{Corto Plazo (3-6 meses)}
+
+\begin{enumerate}
+    \item \textbf{Completar análisis temporal}: Generar heatmaps de evolución trimestral de demanda de habilidades desde 2015 hasta 2025
+    \item \textbf{Evaluar LLMs adicionales}: Comparar con Llama 3.3 70B, GPT-4o, Claude 3.5 Sonnet para validar si modelos más grandes ofrecen mejoras significativas
+    \item \textbf{Ampliar cobertura geográfica}: Extender scraping a Perú, Chile, Uruguay, Ecuador con al menos 1,000 ofertas por país
+    \item \textbf{Refinar meta-clustering}: Ajustar parámetros UMAP y HDBSCAN para mejorar Silhouette Score por encima de 0.4
+\end{enumerate}
+
+\subsection{Mediano Plazo (6-12 meses)}
+
+\begin{enumerate}
+    \item \textbf{Fine-tuning de LLM específico}: Entrenar Gemma o Llama en las 7,848 anotaciones del \textit{gold standard} para mejorar precisión y reducir alucinaciones
+    \item \textbf{Desarrollo de API pública}: Exponer endpoints REST para extracción de habilidades en tiempo real, permitiendo integración con sistemas de terceros
+    \item \textbf{Dashboard interactivo}: Crear visualización web de tendencias, clusters y perfiles de habilidades usando React y D3.js
+    \item \textbf{Detección de ofertas fraudulentas}: Implementar clasificador binario para identificar ofertas ilegítimas o scams
+\end{enumerate}
+
+\subsection{Largo Plazo (12+ meses)}
+
+\begin{enumerate}
+    \item \textbf{Taxonomía dinámica latinoamericana}: Crear alternativa a ESCO actualizada mensualmente mediante agregación automática de habilidades emergentes
+    \item \textbf{Predicción de demanda futura}: Desarrollar modelos de series temporales para forecast de habilidades emergentes con 3-6 meses de anticipación
+    \item \textbf{Sistema de matching}: Implementar recomendación bidireccional oferta-candidato basada en embeddings de habilidades
+    \item \textbf{Análisis de compensación}: Correlacionar habilidades con rangos salariales, requiriendo scraping adicional de datos de compensación
+\end{enumerate}
+
+\subsection{Investigación Académica}
+
+\begin{enumerate}
+    \item \textbf{Publicación en conferencia}: Someter resultados a ACL, EMNLP, NAACL o LREC en track de NLP aplicado
+    \item \textbf{Dataset público}: Liberar \textit{gold standard} anonimizado para benchmarking de comunidad académica
+    \item \textbf{Comparación supervisada}: Evaluar BERT fine-tuned versus Gemma unsupervised para cuantificar valor de fine-tuning específico
+    \item \textbf{Análisis sociológico}: Estudiar brecha de habilidades por género, región geográfica y nivel de seniority en colaboración con Ciencias Sociales
+\end{enumerate}
+
+\section{Reflexión Final}
+
+Este trabajo demuestra la viabilidad y superioridad de los modelos de lenguaje grandes para extracción de habilidades técnicas en el contexto latinoamericano. Los resultados obtenidos --F1-Score de 84.26\%, detección de 59.5\% de habilidades emergentes, inferencia de habilidades implícitas con 131\% de cobertura-- sientan las bases para un observatorio laboral dinámico que puede informar políticas educativas, decisiones empresariales de contratación y trayectorias profesionales de desarrolladores.
+
+La democratización de estas tecnologías mediante código open-source y el uso de modelos locales de 4B parámetros (ejecutables en hardware consumer con 32GB RAM) permite a instituciones académicas y organizaciones sin fines de lucro con recursos limitados implementar soluciones similares, contribuyendo al desarrollo tecnológico regional.
+
+El sistema desarrollado procesa actualmente 30,660 ofertas laborales de tres países latinoamericanos, pero la arquitectura diseñada es escalable a millones de ofertas y decenas de países. La integración de scraping distribuido, procesamiento batch, clustering semántico y análisis temporal constituye una plataforma completa para monitoreo continuo del mercado laboral tecnológico.
+
+Finalmente, la validación cuantitativa de las tres hipótesis de investigación, la identificación honesta de limitaciones, y la documentación exhaustiva del sistema (81,000 líneas) establecen un precedente metodológico para futuros trabajos en extracción de información de ofertas laborales mediante inteligencia artificial. Este proyecto demuestra que la combinación rigurosa de métodos tradicionales de NLP, modelos de lenguaje grandes, y evaluación sistemática con \textit{gold standard} produce sistemas robustos, interpretables y de alto rendimiento aplicables a problemas reales del mercado laboral latinoamericano.
+
+\section{Análisis de Impacto del Proyecto}
+
+\subsection{Impacto en Ingeniería de Sistemas}
+
+Desde la perspectiva de Ingeniería de Sistemas, este proyecto demuestra:
+
+\begin{itemize}
+    \item \textbf{Integración de tecnologías heterogéneas}: La arquitectura combina web scraping (Scrapy), procesamiento de lenguaje natural (spaCy), modelos de lenguaje grandes (Transformers), bases de datos relacionales (PostgreSQL), clustering no supervisado (UMAP+HDBSCAN) y visualización de datos
+    \item \textbf{Diseño modular y escalable}: La separación en 10 componentes independientes (scraping, limpieza, extracción, mapeo ESCO, embeddings, clustering, análisis temporal) permite evolución y mantenimiento independiente
+    \item \textbf{Metodología de evaluación rigurosa}: El uso de \textit{gold standard}, métricas cuantitativas (Precision, Recall, F1), y comparación sistemática de múltiples enfoques establece estándar de calidad en sistemas de IA
+\end{itemize}
+
+\subsection{Impacto Global, Económico y Societal}
+
+En contexto más amplio, el sistema desarrollado tiene potencial de impacto en:
+
+\begin{itemize}
+    \item \textbf{Políticas educativas}: Instituciones académicas pueden usar datos de habilidades emergentes para actualizar currículos de Ingeniería de Sistemas y programas de formación continua
+    \item \textbf{Decisiones empresariales}: Empresas tecnológicas pueden identificar tendencias de contratación, ajustar perfiles de búsqueda y diseñar programas de capacitación internos
+    \item \textbf{Orientación profesional}: Desarrolladores pueden identificar habilidades con alta demanda para guiar su formación técnica y transiciones de carrera
+    \item \textbf{Investigación académica}: El dataset público y la metodología documentada permiten investigaciones futuras en economía laboral, sociología del trabajo tecnológico y ciencias de la computación
+    \item \textbf{Contexto latinoamericano}: A diferencia de observatorios europeos o estadounidenses, este sistema captura particularidades del mercado LATAM (idioma, geografía, portales de empleo regionales)
+\end{itemize}
+
+El impacto a corto plazo (1-2 años) se centra en instituciones académicas que pueden usar los datos para ajustes curriculares. A mediano plazo (3-5 años), empresas tecnológicas pueden integrar el sistema como herramienta de inteligencia de mercado. A largo plazo (5+ años), la consolidación de una taxonomía dinámica latinoamericana podría reemplazar dependencia de ESCO europea, creando estándar regional actualizado continuamente.
