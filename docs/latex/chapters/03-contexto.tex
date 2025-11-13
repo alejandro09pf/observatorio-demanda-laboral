@@ -22,13 +22,13 @@ Para NLP automatizado, las hard skills presentan ventaja por expresión léxica 
 
 \subsection{Alcance del Proyecto: Hard IT Skills}
 
-Este trabajo se enfoca exclusivamente en hard skills IT por tres razones: (1) Nomenclaturas estandarizadas globalmente facilitan extracción automatizada con alta precisión vs. ambigüedad semántica de soft skills \cite{nguyen2024}; (2) Trazabilidad a taxonomías ESCO (13k+ skills) y O*NET (233 skills subset) proveen vocabularios controlados exhaustivos \cite{kavargyris2025, rubio2025}; (3) Identificación de tecnologías emergentes provee inteligencia accionable para actualización curricular \cite{echeverria2022}.
+Este trabajo se enfoca exclusivamente en hard skills IT por tres razones. Primero, las nomenclaturas estandarizadas globalmente facilitan extracción automatizada con alta precisión versus la ambigüedad semántica de soft skills \cite{nguyen2024}. Segundo, la trazabilidad a taxonomías ESCO (13k+ skills) y O*NET (233 skills subset) provee vocabularios controlados exhaustivos \cite{kavargyris2025, rubio2025}. Tercero, la identificación de tecnologías emergentes provee inteligencia accionable para actualización curricular \cite{echeverria2022}.
 
 El sistema identifica: lenguajes (Python, Java, Rust), frameworks (Django, React, Spring Boot), bases de datos (PostgreSQL, MongoDB), cloud (AWS, Azure, GCP), DevOps (Docker, Kubernetes, Terraform), metodologías (Scrum, Agile, CI/CD) y dominios especializados (ML, Data Science, Blockchain). Soft skills se excluyen.
 
 \subsection{Taxonomías de Habilidades y Ocupaciones}
 
-Una taxonomía de habilidades es un sistema jerárquico que organiza skills en categorías, establece relaciones semánticas y provee identificadores únicos. Cumplen tres funciones: (1) Estandarización: unifican variantes léxicas (``JS'' → ``JavaScript'' en ESCO) \cite{kavargyris2025}; (2) Comparabilidad internacional: ESCO es multilingüe (27 idiomas UE), facilitando análisis transnacionales \cite{kavas2024}; (3) Mapeo de relaciones: conectan skills con ocupaciones y sectores económicos.
+Una taxonomía de habilidades es un sistema jerárquico que organiza skills en categorías, establece relaciones semánticas y provee identificadores únicos. Cumplen tres funciones principales. Primero, la estandarización mediante la unificación de variantes léxicas (``JS'' → ``JavaScript'' en ESCO) \cite{kavargyris2025}. Segundo, la comparabilidad internacional ya que ESCO es multilingüe (27 idiomas UE), facilitando análisis transnacionales \cite{kavas2024}. Tercero, el mapeo de relaciones al conectar skills con ocupaciones y sectores económicos.
 
 Limitación: actualización lenta vs. cambio tecnológico. ESCO v1.1.0 (2021) excluye tecnologías post-2022: ``ChatGPT'', ``LangChain'', ``Tailwind CSS'', ``dbt'', ``Terraform'' \cite{rubio2025}, generando ``skills emergentes'' sin representación en vocabularios controlados.
 
@@ -82,7 +82,7 @@ Para asegurar la comparabilidad y estandarización de resultados, el sistema int
 
 El desafío de extraer, analizar y comprender la demanda de habilidades a partir de ofertas de empleo en línea ha sido abordado desde múltiples frentes en la literatura académica y aplicada. Si bien el objetivo es común ---traducir texto en conocimiento accionable sobre el mercado laboral---, las aproximaciones metodológicas varían significativamente en complejidad, escalabilidad y profundidad semántica.
 
-Para posicionar adecuadamente la contribución de este proyecto, fue necesario realizar un análisis crítico de las soluciones existentes a nivel global, agrupadas en tres grandes líneas de trabajo: (1) enfoques regionales en América Latina basados en análisis léxico y reglas manuales; (2) la frontera de la extracción con Large Language Models (LLMs) mediante prompting y fine-tuning; y (3) pipelines semánticos con descubrimiento no supervisado mediante embeddings y clustering.
+Para posicionar adecuadamente la contribución de este proyecto, fue necesario realizar un análisis crítico de las soluciones existentes a nivel global, agrupadas en tres grandes líneas de trabajo: primero, enfoques regionales en América Latina basados en análisis léxico y reglas manuales; segundo, la frontera de la extracción con Large Language Models (LLMs) mediante prompting y fine-tuning; y tercero, pipelines semánticos con descubrimiento no supervisado mediante embeddings y clustering.
 
 El siguiente análisis demostrará que ninguna de estas líneas, de forma aislada, resolvía los desafíos metodológicos, geográficos y lingüísticos del mercado laboral tecnológico en América Latina. Esta fragmentación justificó la necesidad de una solución sintética y adaptada.
 
@@ -139,11 +139,11 @@ El sistema fue evaluado sobre 200 ofertas reales de InfoJobs (100 de Italia y 10
 \hline
 \textbf{Componente} & \textbf{Métrica} & \textbf{Italia} & \textbf{España} \\
 \hline
-\multirow{2}{*}{LLM Llama-3 8B (CoT)} & Precisión{\fontfamily{pcr}\selectfont @}5 & 0.32 & 0.28 \\
+\multirow{2}{*}{LLM Llama-3 8B (CoT)} & Precisión@5 & 0.32 & 0.28 \\
 \cline{2-4}
- & Recall{\fontfamily{pcr}\selectfont @}5 & 0.76 & 0.72 \\
+ & Recall@5 & 0.76 & 0.72 \\
 \hline
-Embeddings E5-large & Recall{\fontfamily{pcr}\selectfont @}10 & 0.88 & 0.92 \\
+Embeddings E5-large & Recall@10 & 0.88 & 0.92 \\
 \hline
 \end{tabular}
 \end{table}
