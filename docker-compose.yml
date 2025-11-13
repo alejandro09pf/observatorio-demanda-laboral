@@ -25,13 +25,18 @@ services:
     depends_on:
       - postgres
       - redis
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgresql://labor_user:123456@postgres:5432/labor_observatory
       - REDIS_URL=redis://redis:6379
+      - DB_HOST=postgres
+      - DB_PORT=5432
     volumes:
       - ./data:/app/data
       - ./outputs:/app/outputs
       - ./logs:/app/logs
+      - ./config:/app/config
 
 volumes:
   postgres_data:
