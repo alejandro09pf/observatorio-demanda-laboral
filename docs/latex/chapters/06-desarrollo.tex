@@ -6,76 +6,15 @@ El sistema se implementó sobre PostgreSQL 15.3, seleccionado por su robustez en
 
 Para optimizar consultas sobre 30,660 ofertas, se implementaron índices compuestos: B-tree en \texttt{(job\_id,\allowbreak\ extraction\_\allowbreak method)}, GIN en \texttt{skill\_text}, y B-tree en \texttt{posted\_date}. Estas optimizaciones redujeron tiempos de consultas agregadas de ~45s a ~2.3s.
 
-\subsection{Configuración de PostgreSQL para Procesamiento Batch}
-
-La configuración de PostgreSQL se optimizó específicamente para procesamiento batch de grandes volúmenes de datos, priorizando throughput sobre latencia de consultas individuales.
-
-\textbf{Configuración de memoria}:
-
-\begin{verbatim}
-# postgresql.conf
-
-# Memoria compartida (25% de RAM disponible en servidor)
-shared_buffers = 4GB
-
-# Memoria por operación de sort/hash
-work_mem = 256MB
-
-# Memoria para operaciones de mantenimiento (VACUUM, CREATE INDEX)
-maintenance_work_mem = 1GB
-
-# Estimación de cache del sistema operativo
-effective_cache_size = 12GB
-\end{verbatim}
-
-\textbf{Índices implementados}:
-
-Se crearon índices especializados para optimizar consultas frecuentes:
-
-\begin{itemize}
-    \item \textbf{Índice B-tree compuesto} en \texttt{extracted\_skills(job\_id, extraction\_method)}:
-        \begin{itemize}
-            \item Optimiza queries filtrando por oferta y método simultáneamente
-            \item Usado en comparaciones Pipeline A vs. Pipeline B
-        \end{itemize}
-    \item \textbf{Índice GIN} en \texttt{extracted\_skills(skill\_text)}:
-        \begin{itemize}
-            \item Optimiza búsquedas de texto completo (full-text search)
-            \item Usado para encontrar todas las ofertas que mencionan una skill específica
-        \end{itemize}
-    \item \textbf{Índice B-tree} en \texttt{raw\_jobs(posted\_date)}:
-        \begin{itemize}
-            \item Optimiza queries de análisis temporal por rangos de fechas
-            \item Usado en análisis trimestral de tendencias
-        \end{itemize}
-    \item \textbf{Índice IVFFlat} en \texttt{skill\_embeddings(embedding)}:
-        \begin{itemize}
-            \item Optimiza búsquedas de similitud coseno (k-NN)
-            \item Configuración: 100 listas (particiones), probes=10
-            \item Aceleración: 3× más rápido que sequential scan
-        \end{itemize}
-\end{itemize}
-
-\textbf{Resultados de las optimizaciones}:
-
-\begin{itemize}
-    \item \textbf{Consultas agregadas}: Reducción de \textasciitilde45s a \textasciitilde2.3s (19.5× mejora)
-        \begin{itemize}
-            \item Ejemplo: Conteo de skills por país y trimestre
-        \end{itemize}
-    \item \textbf{Inserciones batch}: 5,000 registros/segundo (vs. 800 registros/s sin optimización)
-    \item \textbf{Búsquedas k-NN}: Latencia de 180ms para top-10 similares (vs. 540ms sequential scan)
-\end{itemize}
-
-Esta configuración permitió que el procesamiento del corpus completo de 30,660 ofertas completara en ~6.2 horas (incluyendo todas las etapas: extracción, mapeo ESCO, embeddings, clustering).
+La configuración de PostgreSQL se optimizó específicamente para procesamiento batch de grandes volúmenes de datos, priorizando throughput sobre latencia de consultas individuales. Se configuró memoria compartida de 4GB, memoria de trabajo de 256MB, y cache efectivo de 12GB según mejores prácticas para servidores orientados a procesamiento analítico. Se implementaron índices especializados tipo B-tree para comparaciones entre pipelines, GIN para búsquedas de texto completo, e IVFFlat para búsquedas de similitud vectorial. Las optimizaciones lograron reducir consultas agregadas de 45 segundos a 2.3 segundos e incrementar inserciones batch a 5,000 registros por segundo. Esta configuración permitió que el procesamiento del corpus completo de 30,660 ofertas completara en aproximadamente 6.2 horas, incluyendo todas las etapas del pipeline. La especificación completa de parámetros, índices y micro-benchmarks se documenta en el Apéndice E.
 
 \subsection{Orquestación del Pipeline}
 
-El orquestador implementó ocho etapas modulares ejecutadas secuencialmente: (1) Scraping de 8 portales (computrabajo, bumeran, OCC Mundial, ElEmpleo, HiringCafé, indeed, magneto y zonajobs); (2) Limpieza y normalización; (3) Extracción Pipeline A; (4) Extracción Pipeline B; (5) Mapeo ESCO; (6) Generación de embeddings; (7) Clustering UMAP+HDBSCAN; y (8) Análisis temporal. Esta arquitectura lineal se seleccionó sobre frameworks complejos (Airflow, Prefect) por simplicidad de depuración y capacidad de reejecutar etapas individuales. Cada script registra progreso en logs estructurados (\texttt{outputs/logs/}) con timestamps, registros procesados, y métricas de performance.
+El orquestador implementó ocho etapas modulares ejecutadas secuencialmente: scraping de ocho portales en tres países, limpieza y normalización, extracción mediante Pipeline A, extracción mediante Pipeline B, mapeo a taxonomía ESCO, generación de embeddings, clustering con UMAP y HDBSCAN, y análisis temporal. Esta arquitectura lineal se seleccionó sobre frameworks más complejos por su simplicidad de depuración y capacidad de reejecutar etapas individuales. Cada script registra progreso en logs estructurados con timestamps y métricas de performance.
 
-El corpus se recolectó mediante scraping especializado por portal adaptado a tres arquitecturas: (1) \texttt{requests} directo a endpoints JSON/API que exponen datos estructurados (más eficiente, menor latencia), (2) \texttt{requests} + \texttt{BeautifulSoup4} para HTML estático, y (3) \texttt{selenium} para contenido JavaScript dinámico renderizado client-side. Se implementaron estrategias anti-bloqueo: delays aleatorios 2-5s, rotación de User-Agent, y respeto de \texttt{robots.txt}. El scraping completo recolectó 56,555 ofertas brutas, procesadas durante ~72 horas distribuidas en 15 días (~150-200 ofertas/hora).
+El corpus se recolectó mediante scraping especializado por portal, adaptado a tres arquitecturas según las características de cada sitio: acceso directo a endpoints JSON/API para portales que exponen datos estructurados, combinación de \texttt{requests} con \texttt{BeautifulSoup4} para contenido HTML estático, y \texttt{selenium} para contenido JavaScript dinámico renderizado client-side. Se implementaron estrategias anti-bloqueo mediante delays aleatorios, rotación de User-Agent, y respeto de archivos \texttt{robots.txt}. El scraping completo recolectó 56,555 ofertas brutas durante aproximadamente 72 horas distribuidas en 15 días.
 
-El pipeline de limpieza aplicó cinco pasos: normalización de texto, eliminación de HTML residual, detección de idioma mediante \texttt{langdetect} (español 33.2\%, inglés 52.4\%, Spanglish 14.4\%), deduplicación mediante fuzzy matching de título+descripción (3,414 duplicados) y exact match por \texttt{content\_hash} SHA-256 (461 duplicados), y validación de calidad descartando ofertas con contenido insuficiente ($<$100 caracteres). Del total de 56,555 ofertas scrapeadas, se descartaron 25,895 (45.79\%): 3,875 duplicados detectados (6.85\%) y 22,020 ofertas con calidad insuficiente (38.94\%). El resultado fue un dataset de 30,660 ofertas usables (54.21\% del total scrapeado) con texto normalizado, idioma identificado, y metadata completa. La distribución temporal cubrió 7 años (2018-10-12 a 2025-10-31) con 71.23\% de ofertas fechadas, permitiendo análisis trimestral.
+El pipeline de limpieza aplicó normalización de texto, eliminación de HTML residual, detección de idioma mediante \texttt{langdetect}, deduplicación mediante fuzzy matching y hash SHA-256, y validación de calidad descartando ofertas con contenido insuficiente. Del total scrapeado, se descartaron 25,895 ofertas por duplicación o calidad insuficiente, resultando en un dataset de 30,660 ofertas usables con texto normalizado, idioma identificado y metadata completa, cubriendo siete años de publicaciones laborales.
 
 \section{Implementación de Sistemas de Extracción de Habilidades}
 
@@ -83,66 +22,45 @@ Se implementaron cuatro aproximaciones metodológicas para extracción automáti
 
 \subsection{Pipeline A: NER y Expresiones Regulares}
 
-Pipeline A constituye el método base de extracción de habilidades del observatorio, diseñado para identificar menciones explícitas de tecnologías en el texto de las ofertas laborales. Este pipeline combina dos técnicas complementarias que aprovechan sus fortalezas individuales mientras mitigan limitaciones: Reconocimiento de Entidades Nombradas (NER) para detectar menciones contextuales, y expresiones regulares (Regex) para capturar nomenclaturas estandarizadas (``Node.js'', ``CI/CD'', ``REST API''). La integración de ambas técnicas permite balancear cobertura y precisión, procesando el 100\% del corpus de 30,660 ofertas con latencias submilisegundos por documento.
+Pipeline A constituye el método base de extracción de habilidades del observatorio, diseñado para identificar menciones explícitas de tecnologías mediante la combinación de Reconocimiento de Entidades Nombradas (NER) para detectar menciones contextuales y expresiones regulares (Regex) para capturar nomenclaturas estandarizadas. Esta arquitectura dual resuelve limitaciones complementarias: mientras NER con spaCy 3.5 y EntityRuler de 666 patrones ESCO captura tecnologías modernas en contexto pero falla con acrónimos técnicos, Regex con 548 patrones compilados en 18 categorías garantiza detección de nomenclaturas estructuradas pero omite menciones contextuales. La integración alcanza recall Post-ESCO de 81.25\% versus 73.08\% de Regex solo, procesando ofertas con latencia de 0.97 segundos, aproximadamente 18 veces más rápida que Pipeline B.
 
-\subsubsection{Justificación del Enfoque Dual NER + Regex}
+El flujo de procesamiento ejecuta ambas técnicas en paralelo sobre el mismo texto, combina resultados por unión, deduplica mediante normalización textual, y aplica diccionario canónico de 200 equivalencias que reduce 6,498 skills únicas a 3,200 formas estandarizadas. El control de calidad implementa filtrado multi-etapa: limpieza de HTML residual y validación de encoding en pre-procesamiento, aplicación de listas de stopwords NER y técnicos genéricos en post-extracción para eliminar falsos positivos, y validación cruzada mediante overlap NER-Regex que asigna mayor confianza a skills detectadas por ambos métodos. El pipeline logra cobertura de 98.7\% del corpus con promedio de 50.3 skills por oferta, de las cuales 12.6\% mapean a taxonomía ESCO mientras 87.4\% representan tecnologías emergentes sin estandarización oficial.
 
-La decisión de combinar NER y Regex se fundamentó en las limitaciones complementarias de cada técnica individual:
+La evaluación sobre gold standard de 300 ofertas laborales manualmente anotadas utilizó métricas de Information Retrieval debido a que la extracción de skills constituye un problema de multi-label retrieval en universo abierto donde la indefinición de True Negatives hace que Accuracy sea engañosa. Las métricas Pre-ESCO alcanzaron F1-Score 24.98\% con precision 22.54\% y recall 28.00\%, reflejando alto ruido en extracciones crudas. El mapeo a taxonomía ESCO mejoró drásticamente todas las métricas a F1-Score 72.53\%, precision 65.50\%, y recall 81.25\%, validando la efectividad del matcher de dos capas para normalizar variantes léxicas. La comparación con variante Regex-Only reveló que NER aporta 30\% de detecciones adicionales mediante menciones contextuales, aunque introduce ruido que reduce precision post-mapeo. Estos resultados validaron Pipeline A como baseline de alta cobertura para procesamiento del corpus completo en aproximadamente 8.3 horas, complementado estratégicamente con Pipeline B para enriquecimiento semántico de subconjuntos específicos donde se requiere mayor precisión contextual. La especificación técnica completa de Pipeline A, incluyendo arquitectura de componentes, patrones regex por categoría, flujo de integración detallado, estrategias de control de calidad, y evaluación exhaustiva con análisis estadístico completo, se documenta en el Apéndice F.
 
-\textbf{Limitaciones de NER solo}:
-\begin{itemize}
-    \item Baja cobertura de tecnologías modernas no presentes en corpus de entrenamiento (Next.js, Tailwind CSS, Terraform)
-    \item Dificultad con acrónimos técnicos (``CI/CD'', ``REST API'', ``MLOps'')
-    \item Sensibilidad a variaciones ortográficas no vistas durante entrenamiento
-\end{itemize}
+\subsection{Pipeline B: Modelos de Lenguaje Grandes}
 
-\textbf{Limitaciones de Regex solo}:
-\begin{itemize}
-    \item Omisión de menciones contextuales no-literales (``experiencia en desarrollo backend'' sin mencionar tecnologías específicas)
-    \item Fragilidad ante variaciones de formato inesperadas
-    \item Requiere mantenimiento manual para actualizar patrones
-\end{itemize}
+Pipeline B constituye el método de enriquecimiento del observatorio, diseñado para complementar Pipeline A mediante extracción semánticamente consciente de habilidades implícitas, sinónimos contextuales, y competencias inferidas que no aparecen explícitamente mencionadas en el texto. Este pipeline aprovecha las capacidades de comprensión contextual profunda de Large Language Models (LLMs) para interpretar ofertas laborales de manera similar a como lo haría un analista humano.
 
-\textbf{Ventajas del enfoque combinado}:
-\begin{itemize}
-    \item \textbf{Cobertura}: NER incrementa recall Post-ESCO de 73.08\% (Regex solo) a 81.25\% (Pipeline A combinado), capturando +8.17pp de skills adicionales mediante menciones contextuales
-    \item \textbf{Precisión}: Regex garantiza detección de tecnologías con nomenclatura estructurada (100\% precision en patrones bien definidos)
-    \item \textbf{Robustez}: Redundancia permite validación cruzada (skills detectadas por ambos métodos tienen mayor confianza)
-    \item \textbf{Escalabilidad}: Latencia combinada de 0.97s/oferta permite procesamiento masivo del corpus
-\end{itemize}
+La arquitectura de Pipeline B se diseñó con dos objetivos complementarios al Pipeline A: (1) aumentar la cobertura de skills implícitas que expresiones regulares no pueden capturar (``experiencia con cloud'' → [``AWS'', ``Azure'', ``GCP'']), y (2) mejorar la precisión mediante comprensión de contexto que reduce falsos positivos (distinguir ``Python'' lenguaje vs. ``Python'' serpiente según contexto de oferta). Sin embargo, dado el mayor costo computacional de LLMs (típicamente 15-25s/oferta vs. 0.97s de Pipeline A), se implementó como pipeline de enriquecimiento estratégico aplicado a subconjuntos relevantes del corpus.
 
-Esta arquitectura dual responde a los siguientes atributos de calidad del sistema:
-\begin{itemize}
-    \item \textbf{Precisión}: Regex solo proporciona baseline de alta precision (86.36\% Post-ESCO) para skills estandarizadas
-    \item \textbf{Cobertura}: NER incrementa recall de 73.08\% (Regex solo) a 81.25\% (Pipeline A combinado, Post-ESCO)
-    \item \textbf{Eficiencia}: Latencia de 0.97s/oferta es aproximadamente 18× más rápida que Pipeline B (mediana de 18s/oferta)
-    \item \textbf{Mantenibilidad}: Separación de componentes permite actualización independiente de patrones Regex sin modificar EntityRuler (poblado con diccionario ESCO de 666 patrones)
-\end{itemize}
+\subsubsection{Justificación del Enfoque LLM}
 
-\subsubsection{Componentes del Pipeline A}
+La decisión de implementar un pipeline basado en LLMs se fundamentó en cuatro limitaciones estructurales de Pipeline A que requerían comprensión semántica profunda. Primero, Pipeline A solo detecta skills mencionadas explícitamente mediante patrones léxicos, sin capacidad de inferir ``Git'' cuando una oferta solicita ``experiencia con control de versiones''. Segundo, fragmenta skills compuestas al detectar ``machine'' y ``learning'' como tokens separados en lugar de ``Machine Learning'' como concepto único. Tercero, carece de desambiguación contextual, procesando ``Python'' como tecnología incluso en ofertas de zoológicos que requieren conocimiento del reptil. Cuarto, no captura sinónimos contextuales como la equivalencia entre ``backend development'' y ``server-side programming''.
 
-El Pipeline A se compone de tres componentes principales que operan secuencialmente:
+El enfoque LLM resuelve estas limitaciones mediante tres capacidades clave. La comprensión contextual permite interpretar ofertas considerando la semántica completa del texto en lugar de aplicar patrones sintácticos aislados, lo que habilita inferir ``Docker'' de ``experiencia en contenedorización'' sin requerir match textual directo. La desambiguación semántica utiliza el contexto de la oferta para distinguir tecnologías de homónimos (``Python'' + ``Django'' identifica lenguaje de programación; ``Python'' + ``zoo'' identifica animal). Más importante, los LLMs son capaces de identificar skills emergentes que aún no están codificadas en diccionarios estáticos: tecnologías recientes como ``Claude Code'', ``Cursor IDE'' o ``v0.dev'' son detectables por modelos pre-entrenados con conocimiento actualizado, mientras que Pipeline A requeriría actualización manual de sus expresiones regulares. Esta capacidad de capturar vocabulario emergente del mercado laboral representa la ventaja diferencial más significativa del enfoque LLM.
 
-\textbf{1. Componente NER (Reconocimiento de Entidades Nombradas)}:
-\begin{itemize}
-    \item \textbf{Framework}: spaCy 3.5 con modelo \texttt{es\_core\_news\_lg}
-    \item \textbf{EntityRuler}: Poblado con 666 patrones de la taxonomía ESCO para reconocimiento directo de habilidades técnicas
-    \item \textbf{Configuración}: Modelo pre-entrenado base sin fine-tuning adicional
-    \item \textbf{Latencia}: 0.65s por oferta
-\end{itemize}
+Los resultados cuantitativos validan esta arquitectura dual. Pipeline B con Gemma 3 4B alcanza 84.26\% F1 Post-ESCO versus 72.53\% de Pipeline A (+11.73pp mejora), extrayendo en promedio 27.8 skills por oferta con mayor relevancia contextual. Sin embargo, el costo computacional es significativamente superior: la mediana de latencia es 18.3 segundos por oferta (percentiles P25-P75: 15-25s), con media de 42.1 segundos inflada por ofertas extensas que contienen múltiples páginas de requisitos. La cuantización INT4 mediante \texttt{bitsandbytes} reduce requisitos de memoria de $\sim$16GB (FP16) a $\sim$4GB (INT4), permitiendo inferencia en GPUs consumer sin dependencia de APIs comerciales. Este balance entre calidad (+11.73pp F1) y latencia (18× más lento que Pipeline A) justifica la aplicación selectiva de Pipeline B a subconjuntos estratégicos del corpus que requieren análisis semántico profundo.
 
-\textbf{2. Componente Regex (Expresiones Regulares)}:
-\begin{itemize}
-    \item \textbf{Patrones}: Aproximadamente 548 expresiones regulares compiladas organizadas en 18 categorías, incluyendo:
-        \begin{itemize}
-            \item Categorías base (247 patrones): Lenguajes (20), Frameworks (38), Bases de datos (15), Cloud (15), DevOps (18), Control de versiones (6), Data Science (18), Web technologies (18), Domain-specific (.NET, Build tools, Cloud services: 99)
-            \item Patrones contextualizados en español (9): ``experiencia en'', ``conocimiento de'', ``desarrollo con''
-            \item Skills técnicas O*NET + ESCO (276): Taxonomías externas para ampliar cobertura
-            \item Patrones de bullet points (2): Captura de listas separadas por símbolos
-        \end{itemize}
-    \item \textbf{Características}: Word boundaries (\texttt{\textbackslash b}), case-insensitive matching, captura de grupos contextuales
-    \item \textbf{Latencia}: 0.32s por oferta
-\end{itemize}
+\subsubsection{Selección del Modelo}
+
+Se evaluaron cuatro modelos de lenguaje open-source de tamaño intermedio que cumplían los requisitos de ejecución local con cuantización INT4: Gemma 3 4B Instruct de Google DeepMind, Llama 3.2 3B Instruct de Meta AI, Qwen 2.5 3B Instruct de Alibaba Cloud, y Phi-3.5 Mini Instruct de Microsoft Research. Todos los modelos se ejecutaron con cuantización INT4 mediante \texttt{bitsandbytes}, reduciendo requisitos de memoria de aproximadamente 16GB a 4GB para permitir inferencia local en hardware consumer. La evaluación preliminar sobre 10 ofertas laborales del gold standard analizó tanto métricas cuantitativas como comportamiento cualitativo considerando alucinaciones, consistencia de formato, y relevancia de extracciones.
+
+Gemma 3 4B Instruct fue seleccionado como modelo final por su desempeño superior: alcanzó 46.23\% F1 Pre-ESCO extrayendo promedio de 27.8 skills por oferta, generó JSON válido en 99\% de casos sin alucinaciones sistemáticas, y exhibió latencia mediana de 18.3 segundos por oferta. Los modelos alternativos presentaron limitaciones significativas: Llama 3.2 3B mostró alucinaciones sistemáticas agregando tecnologías irrelevantes, Qwen 2.5 3B generó salidas no estructuradas en 40\% de casos requiriendo parsing manual, y Phi-3.5 Mini tuvo baja cobertura con solo 12.4 skills por oferta. El balance entre calidad de extracción, estabilidad de formato, y ausencia de alucinaciones justificó la selección de Gemma 3 4B como motor de Pipeline B, a pesar de su mayor latencia comparado con alternativas menos confiables.
+
+\subsubsection{Arquitectura del Sistema}
+
+La arquitectura de Pipeline B implementa procesamiento asíncrono con Gemma 3 4B cuantizado INT4 mediante \texttt{bitsandbytes}, permitiendo inferencia local con 4GB de memoria GPU. El flujo ejecuta prompt engineering estructurado que instruye al modelo a extraer skills técnicas en formato JSON, incluyendo tanto menciones explícitas como inferencias contextuales basadas en descripciones de responsabilidades. El sistema implementa validación de salida mediante Pydantic para garantizar schemas consistentes, retry logic con backoff exponencial para manejar fallos transitorios, y logging exhaustivo de latencias y tokens procesados para monitoreo de performance. El procesamiento batch aplica batch size de 1 oferta por inferencia debido a restricciones de memoria, resultando en throughput de aproximadamente 150-200 ofertas por hora en hardware consumer. La especificación técnica completa de Pipeline B, incluyendo arquitectura de componentes, diseño de prompts, estrategias de validación, manejo de errores, y evaluación exhaustiva, se documenta en el Apéndice F.
+
+\subsection{Pipelines Alternativos Evaluados}
+
+Pipeline A.1 basado en TF-IDF + filtrado por noun phrases se implementó como experimento alternativo. Utilizó \texttt{scikit-learn.\allowbreak Tfidf\allowbreak Vectorizer} (\texttt{ngram\_range=(1,3)}, \texttt{max\_\allowbreak features=10000}) extrayendo top-50 n-gramas por oferta, filtrados por part-of-speech con spaCy. Las pruebas sobre 100 ofertas gold standard revelaron limitaciones críticas: 60\% de candidatos eran frases descriptivas no-skills, fragmentación excesiva (``React'' y ``Native'' separados), y F1=11.69\%. Pipeline A.1 se descartó por performance inadecuado versus Pipeline A.
+
+La configuración Regex-Only reutilizó los 548 patrones de Pipeline A eliminando NER, estableciendo baseline determinístico. Sobre el gold standard de 300 ofertas alcanzó F1 Post-ESCO de 79.17\% con precision 86.36\% y recall 73.08\%, procesando en menos de 1ms por oferta. Extrajo promedio de 35.2 skills por oferta versus 50.3 del pipeline combinado, confirmando que NER contribuye aproximadamente 30\% de detecciones adicionales. Los resultados validaron que regex solo proporciona precision superior pero menor recall Pre-ESCO al omitir menciones contextuales que NER captura.
+
+\section{Implementación del Sistema de Mapeo a Taxonomía ESCO}
+
+El mapeo de habilidades a taxonomía ESCO constituye una etapa crítica del observatorio, responsable de normalizar las extracciones de Pipeline A y Pipeline B a un vocabulario controlado estándar. Esta normalización es fundamental para garantizar la comparabilidad de resultados entre países, portales y períodos temporales, eliminando la fragmentación causada por variantes sintácticas de la misma habilidad.
 
 \textbf{3. Componente de Integración y Normalización}:
 \begin{itemize}

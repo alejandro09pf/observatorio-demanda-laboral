@@ -1,0 +1,137 @@
+\section*{APÉNDICE D: DIAGRAMAS DE ARQUITECTURA DEL SISTEMA}
+\addcontentsline{toc}{section}{Apéndice D: Diagramas de Arquitectura}
+
+Este apéndice presenta la documentación visual completa de la arquitectura del observatorio de demanda laboral. Los diagramas ilustran la estructura modular del sistema, el flujo de datos entre componentes, las tecnologías específicas utilizadas en cada capa de procesamiento, y el flujo metodológico que integra las fases de CRISP-DM con las etapas del pipeline de software.
+
+\subsection*{D.1. Flujo Metodológico: Integración de CRISP-DM con Pipeline de 7 Etapas}
+
+La Figura \ref{fig:flujo-metodologico-anexo} presenta una vista integrada del flujo metodológico completo del proyecto, combinando las seis fases de CRISP-DM (Cross-Industry Standard Process for Data Mining) con las siete etapas del pipeline de software y los ciclos iterativos de refinamiento. El diagrama ilustra cómo cada fase de CRISP-DM se tradujo en actividades concretas de desarrollo de software, y cómo los resultados de la fase de Evaluación retroalimentaron la fase de Modelado para generar versiones mejoradas de los pipelines de extracción.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\textwidth]{diagrams/DiagramaMetodologia.png}
+\caption{Flujo Metodológico del Proyecto: Integración de CRISP-DM con Pipeline de 7 Etapas}
+\label{fig:flujo-metodologico-anexo}
+\end{figure}
+
+El flujo metodológico integró las siguientes fases principales:
+
+\begin{enumerate}
+    \item \textbf{Business Understanding (Entendimiento del Negocio)}: Análisis del problema de demanda laboral tecnológica en América Latina, definición de objetivos medibles, y establecimiento de criterios de éxito del observatorio.
+    \item \textbf{Data Understanding (Entendimiento de Datos)}: Caracterización de portales de empleo, análisis de heterogeneidad de formatos, identificación de retos lingüísticos (Spanglish), y construcción de gold standard de 300 ofertas anotadas manualmente.
+    \item \textbf{Data Preparation (Preparación de Datos)}: Desarrollo iterativo de módulos de scraping, limpieza, normalización y deduplicación con inspección manual y verificación de calidad.
+    \item \textbf{Modeling (Modelado)}: Diseño dual de Pipeline A (NER+Regex) y Pipeline B (LLM) con experimentación continua y ajustes basados en análisis de errores sobre gold standard.
+    \item \textbf{Evaluation (Evaluación)}: Validación mediante métricas cuantitativas (Precision, Recall, F1-Score Pre/Post-ESCO), verificación cualitativa, y análisis de robustez operativa.
+    \item \textbf{Deployment (Despliegue)}: Integración de módulos en herramienta CLI con programación automática, documentación técnica completa, y validación en entorno operativo real.
+\end{enumerate}
+
+Los ciclos iterativos entre las fases de Modelado y Evaluación permitieron mejora incremental del sistema, refinando parámetros de NER, patrones regex, prompts de LLM, y configuraciones de clustering hasta alcanzar los niveles de rendimiento objetivo documentados en el capítulo de resultados.
+
+\subsection*{D.2. Arquitectura Modular del Observatorio - Pipeline de 7 Etapas}
+
+La Figura \ref{fig:arquitectura-completa-anexo} presenta la vista modular completa del pipeline, detallando tecnologías específicas, funciones, entradas/salidas y mecanismos de almacenamiento por módulo. Cada módulo puede ejecutarse independientemente con fines de desarrollo y pruebas unitarias.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{diagrams/pipeline_arquitectura.png}
+\caption{Arquitectura Modular del Observatorio - Pipeline de 7 Etapas con Tecnologías Específicas}
+\label{fig:arquitectura-completa-anexo}
+\end{figure}
+
+El sistema implementa un pipeline secuencial de 7 etapas donde cada componente opera de forma autónoma, lee datos de la etapa anterior desde PostgreSQL, ejecuta su transformación especializada, y persiste resultados para la siguiente etapa:
+
+\begin{enumerate}
+    \item \textbf{Scraping (Scrapy + Selenium)}: Recolección automatizada de ofertas desde 9 portales web en 3 países (CO, MX, AR) con manejo de contenido estático y dinámico JavaScript.
+    \item \textbf{Extraction (NER + Regex)}: Identificación de habilidades explícitas mediante 548 patrones regex organizados en 18 categorías técnicas y reconocimiento de entidades nombradas con spaCy.
+    \item \textbf{LLM Processing (Gemma 3 4B)}: Enriquecimiento semántico e inferencia de habilidades implícitas mediante modelo de lenguaje de 4B parámetros con prompt engineering específico para español latinoamericano.
+    \item \textbf{ESCO Matching}: Normalización de habilidades contra taxonomía ESCO extendida (14,215 skills) mediante matching de dos capas: exacto (SQL ILIKE) y difuso (fuzzywuzzy $\geq$0.85).
+    \item \textbf{Embedding (E5 Multilingual)}: Generación de representaciones vectoriales densas de 768 dimensiones con modelo multilingüe pre-entrenado.
+    \item \textbf{Dimension Reduction (UMAP)}: Proyección no lineal de 768D a 2-3D preservando estructura local y global para visualización y clustering.
+    \item \textbf{Clustering (HDBSCAN)}: Agrupamiento jerárquico basado en densidad sin especificar número de clusters, con identificación automática de ruido.
+\end{enumerate}
+
+La orquestación se gestiona mediante un CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler).
+
+\subsection*{D.3. Diagrama de Flujo de Transformación de Datos}
+
+La Figura \ref{fig:flujo-transformacion-anexo} ilustra el flujo detallado de transformaciones que sufren los datos desde la recolección inicial hasta la generación de visualizaciones finales, mostrando las estructuras de datos intermedias y los puntos de persistencia en PostgreSQL.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{diagrams/flujo_transformacion.png}
+\caption{Flujo de Transformación de Datos a través del Pipeline Completo}
+\label{fig:flujo-transformacion-anexo}
+\end{figure}
+
+El flujo de datos atraviesa las siguientes transformaciones principales:
+
+\begin{itemize}
+    \item \textbf{raw\_jobs $\to$ cleaned\_jobs}: Normalización de encoding UTF-8, eliminación de HTML residual, detección de idioma (español/inglés/Spanglish), deduplicación SHA-256.
+    \item \textbf{cleaned\_jobs $\to$ extracted\_skills}: Aplicación de Pipeline A (NER+Regex) con extracción de 27.6 skills promedio por oferta, 87.4\% emergent skills sin match ESCO.
+    \item \textbf{cleaned\_jobs $\to$ enhanced\_skills}: Aplicación de Pipeline B (LLM) con prompt de 170 líneas, detección de hard skills (78.7\%) y soft skills (21.3\%).
+    \item \textbf{extracted/enhanced\_skills $\to$ matched\_skills}: Normalización contra ESCO mediante 2 capas (exact + fuzzy), match rate 12.6\% baseline, 25\% con matcher mejorado.
+    \item \textbf{matched\_skills $\to$ skill\_embeddings}: Vectorización con E5 Multilingual (768D), normalización L2, indexación FAISS para búsqueda rápida.
+    \item \textbf{skill\_embeddings $\to$ umap\_projections}: Reducción dimensional con parámetros n\_neighbors=15, min\_dist=0.1, metric='cosine'.
+    \item \textbf{umap\_projections $\to$ clusters}: Clustering HDBSCAN con min\_cluster\_size=12, min\_samples=3, identificación de 50 clusters principales.
+\end{itemize}
+
+\subsection*{D.4. Comparación de Estilos Arquitectónicos}
+
+Durante la fase de diseño se evaluaron tres estilos arquitectónicos para el observatorio: microservicios, arquitectura orientada a eventos, y arquitectura de pipeline lineal. La Tabla \ref{tab:arch-comparison-anexo} presenta la comparación según criterios relevantes para el contexto académico y operativo del proyecto.
+
+\begin{table}[H]
+\centering
+\caption{Comparación de Estilos Arquitectónicos Evaluados}
+\label{tab:arch-comparison-anexo}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Criterio} & \textbf{Microservicios} & \textbf{Event-Driven} & \textbf{Pipeline Lineal} \\
+\hline
+Complejidad & Alta & Media-alta & Baja \\
+\hline
+Escalabilidad horizontal & Excelente & Excelente & Limitada \\
+\hline
+Trazabilidad & Media & Media & Excelente \\
+\hline
+Debugging & Difícil & Medio & Fácil \\
+\hline
+Overhead operativo & Alto & Medio & Bajo \\
+\hline
+Time to market & Lento & Medio & Rápido \\
+\hline
+Requisitos infraestructura & K8s/Docker Swarm & Message broker & Servidor único \\
+\hline
+Tolerancia a fallos & Excelente & Buena & Media \\
+\hline
+Equipo requerido & 5+ devs & 3-4 devs & 2 devs \\
+\hline
+\end{tabular}
+\end{table}
+
+Se seleccionó arquitectura de pipeline lineal fundamentado en cuatro razones principales:
+
+\begin{enumerate}
+    \item \textbf{Simplicidad operativa}: Proyecto académico con equipo de 2 desarrolladores y recursos computacionales limitados (1 servidor, sin infraestructura Kubernetes/Docker Swarm).
+    \item \textbf{Trazabilidad completa}: Flujo unidireccional de datos permite debugging determinístico y auditoría de transformaciones etapa por etapa.
+    \item \textbf{Velocidad de desarrollo}: Implementación de microservicios requiere 3-4x más tiempo en configuración de comunicación inter-servicios, service discovery, y manejo de fallos distribuidos.
+    \item \textbf{Naturaleza batch del dominio}: El análisis de demanda laboral no requiere procesamiento en tiempo real (latencias de horas/días son aceptables), eliminando ventajas principales de arquitecturas asíncronas.
+\end{enumerate}
+
+\subsection*{D.5. Limitaciones de la Arquitectura de Pipeline Lineal}
+
+Es importante reconocer las limitaciones inherentes de la arquitectura seleccionada:
+
+\begin{itemize}
+    \item \textbf{Procesamiento secuencial sincrónico}: Impide aprovechamiento de paralelismo entre etapas, resultando en latencias acumulativas estimadas de 30-60 segundos por oferta para el pipeline completo cuando se incluye procesamiento con LLM.
+    \item \textbf{Escalabilidad horizontal limitada}: La naturaleza monolítica del orquestador requeriría migración a arquitectura de microservicios si el volumen superara las 100,000 ofertas mensuales.
+    \item \textbf{Ausencia de tolerancia a fallos distribuidos}: El fallo de una etapa detiene el pipeline completo, aunque esta limitación se mitiga mediante persistencia intermedia en PostgreSQL y capacidad de reinicio desde checkpoints.
+\end{itemize}
+
+Estas limitaciones fueron consideradas aceptables dado que:
+
+\begin{itemize}
+    \item El análisis de demanda laboral no requiere procesamiento en tiempo real.
+    \item El volumen objetivo de 600,000 ofertas es procesable en 5-10 horas con el hardware disponible.
+    \item La simplicidad operativa reduce significativamente el tiempo de desarrollo: 3-4 meses comparado con 9-12 meses que requeriría una arquitectura de microservicios.
+    \item La arquitectura permite evolución futura mediante refactorización incremental de módulos críticos a servicios independientes si los requisitos de volumen o latencia lo justifican posteriormente.
+\end{itemize}
