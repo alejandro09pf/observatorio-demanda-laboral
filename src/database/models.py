@@ -40,9 +40,22 @@ class RawJob(Base):
     enhanced_skills = relationship("EnhancedSkill", back_populates="job")
     gold_standard_annotations = relationship("GoldStandardAnnotation", back_populates="job")
 
+class CleanedJob(Base):
+    __tablename__ = 'cleaned_jobs'
+
+    job_id = Column(UUID(as_uuid=True), ForeignKey('raw_jobs.job_id', ondelete='CASCADE'), primary_key=True)
+    title_cleaned = Column(Text)
+    description_cleaned = Column(Text)
+    requirements_cleaned = Column(Text)
+    combined_text = Column(Text, nullable=False)
+    cleaning_method = Column(String(50), default='html_strip')
+    cleaned_at = Column(DateTime, server_default=func.now())
+    combined_word_count = Column(Integer)
+    combined_char_count = Column(Integer)
+
 class ExtractedSkill(Base):
     __tablename__ = 'extracted_skills'
-    
+
     extraction_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     job_id = Column(UUID(as_uuid=True), ForeignKey('raw_jobs.job_id'))
     skill_text = Column(Text, nullable=False)
@@ -54,7 +67,7 @@ class ExtractedSkill(Base):
     span_end = Column(Integer)
     esco_uri = Column(Text)
     extracted_at = Column(DateTime, server_default=func.now())
-    
+
     # Relationships
     job = relationship("RawJob", back_populates="extracted_skills")
 

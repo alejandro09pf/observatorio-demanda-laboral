@@ -1,0 +1,41 @@
+# Dockerfile for Celery Workers
+# Event-Driven distributed task processing
+
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libpq-dev \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Download spaCy model for NER (needed for extraction tasks)
+RUN python -m spacy download es_core_news_lg
+
+# Copy source code
+COPY src/ ./src/
+COPY config/ ./config/
+COPY data/ ./data/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/outputs
+
+# Set Python path
+ENV PYTHONPATH=/app/src:/app
+
+# Set environment variables
+ENV CELERY_BROKER_URL=redis://redis:6379/0
+ENV CELERY_RESULT_BACKEND=redis://redis:6379/1
+
+# Default command: Start Celery worker
+# Can be overridden in docker-compose.yml
+CMD ["celery", "-A", "tasks.celery_app", "worker", "--loglevel=info", "--concurrency=4"]

@@ -4,7 +4,7 @@ Para comprender el diseño y la justificación de la solución desarrollada, es 
 
 \section{Web Scraping y Adquisición de Datos}
 
-El punto de partida del observatorio es la recolección de datos a gran escala desde fuentes web públicas. Esta tarea se realiza mediante \textbf{Web Scraping}, una técnica de extracción automatizada de información desde el código HTML de las páginas web \parencite{orozco2019webscraping}. En el contexto del mercado laboral, esta técnica ha demostrado ser fundamental para obtener datos de alta frecuencia y granularidad directamente de los portales de empleo, superando las limitaciones de las encuestas y los reportes institucionales, que suelen ser retrospectivos y de baja periodicidad \parencite{cardenas2015, rubio2024}.
+El punto de partida del observatorio es la recolección de datos a gran escala desde fuentes web públicas. Esta tarea se realiza mediante \textbf{Web Scraping}, una técnica de extracción automatizada de información desde el código HTML de las páginas web \parencite{orozco2019webscraping}. En el contexto del mercado laboral, esta técnica ha demostrado ser fundamental para obtener datos de alta frecuencia y granularidad directamente de los portales de empleo, superando las limitaciones de las encuestas y los reportes institucionales, que suelen ser retrospectivos y de baja periodicidad \parencite{cardenas2015, rubio2025}.
 
 \subsection{Conceptos clave del web scraping}
 
@@ -40,7 +40,7 @@ El preprocesamiento es fundamental para estandarizar y limpiar los datos textual
 \begin{itemize}
     \item \textbf{Tokenización}: Segmentación del texto en unidades mínimas o ``tokens'' (generalmente palabras o signos de puntuación) \parencite{nguyen2024}. Este proceso transforma cadenas de texto continuo en secuencias discretas procesables computacionalmente.
 
-    \item \textbf{Lematización}: Reducción de las palabras a su forma base o raíz gramatical (lema), permitiendo agrupar variaciones morfológicas de un mismo término. Por ejemplo, ``programar'', ``programando'' y ``programado'' se unifican bajo el lema ``programar'' \parencite{echeverria2022}. Este paso es crucial para estandarizar el vocabulario y reducir la dispersión de los datos antes del análisis.
+    \item \textbf{Lematización}: Reducción de las palabras a su forma base o raíz gramatical (lema), permitiendo agrupar variaciones morfológicas de un mismo término. Por ejemplo, ``programar'', ``programando'' y ``programado'' se unifican bajo el lema ``programar'' \parencite{vasquezrodriguez2024}. Este paso es crucial para estandarizar el vocabulario y reducir la dispersión de los datos antes del análisis.
 \end{itemize}
 
 \subsection{Extracción de habilidades con NER y Regex}
@@ -95,7 +95,7 @@ La propiedad fundamental de estos embeddings es que la distancia entre dos vecto
 
 \subsection{Embeddings Multilingües}
 
-Dado que las ofertas laborales en América Latina a menudo contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de \textbf{Embeddings Multilingües}, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \parencite{echeverria2022, kavas2024}.
+Dado que las ofertas laborales en América Latina a menudo contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de \textbf{Embeddings Multilingües}, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \parencite{kavas2024}.
 
 Modelos populares incluyen:
 
@@ -144,4 +144,4 @@ ISCO es un estándar internacional mantenido por la Organización Internacional 
 
 \subsection{Integración con O*NET}
 
-Para el contexto de habilidades tecnológicas generales, también se toma como referencia \textbf{O*NET}, un portal de empleo financiado por el Departamento de Trabajo de EE. UU. que reporta habilidades de alta demanda en el mercado laboral estadounidense \parencite{rubio2024}.
+Para el contexto de habilidades tecnológicas generales, también se toma como referencia \textbf{O*NET}, un portal de empleo financiado por el Departamento de Trabajo de EE. UU. que reporta habilidades de alta demanda en el mercado laboral estadounidense \parencite{rubio2025}.

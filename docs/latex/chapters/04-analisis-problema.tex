@@ -12,7 +12,7 @@ El observatorio debe implementar las siguientes capacidades funcionales, organiz
 
 \textbf{RF-1. Adquisición de datos:} El sistema debe ser capaz de recolectar automáticamente ofertas laborales de al menos 6 portales de empleo distribuidos en Colombia, México y Argentina, mediante técnicas de web scraping que respeten las políticas de robots.txt y los límites de tasa de peticiones de cada sitio \cite{orozco2019webscraping}. La arquitectura debe soportar tanto páginas estáticas (parsing HTML directo) como dinámicas (ejecución de JavaScript mediante headless browsers), permitiendo capturar campos estructurados como título, descripción, requisitos, ubicación, salario y portal de origen.
 
-\textbf{RF-2. Normalización y limpieza:} El sistema debe preprocesar el texto extraído mediante técnicas de NLP, incluyendo tokenización, lematización, eliminación de caracteres especiales y normalización de codificación (UTF-8), adaptadas específicamente al español latinoamericano y al uso técnico del lenguaje en ofertas de empleo \cite{echeverria2022}.
+\textbf{RF-2. Normalización y limpieza:} El sistema debe preprocesar el texto extraído mediante técnicas de NLP, incluyendo tokenización, lematización, eliminación de caracteres especiales y normalización de codificación (UTF-8), adaptadas específicamente al español latinoamericano y al uso técnico del lenguaje en ofertas de empleo \cite{rubio2025}.
 
 \textbf{RF-3. Extracción de habilidades:} El observatorio debe identificar y extraer menciones de habilidades técnicas, competencias y tecnologías presentes en las ofertas laborales mediante una arquitectura dual:
 \begin{itemize}

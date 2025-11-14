@@ -176,8 +176,8 @@ $$ LANGUAGE plpgsql;
 
 -- Function to get related skills
 CREATE OR REPLACE FUNCTION get_related_esco_skills(
-    skill_uri TEXT,
-    relation_type VARCHAR(50) DEFAULT 'related'
+    p_skill_uri TEXT,
+    p_relation_type VARCHAR(50) DEFAULT 'related'
 ) RETURNS TABLE(
     related_skill_uri TEXT,
     related_skill_name TEXT,
@@ -185,14 +185,14 @@ CREATE OR REPLACE FUNCTION get_related_esco_skills(
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         esr.target_skill_uri,
         es.preferred_label_es,
         esr.relation_type
     FROM esco_skill_relations esr
     JOIN esco_skills es ON esr.target_skill_uri = es.skill_uri
-    WHERE esr.source_skill_uri = skill_uri
-      AND (relation_type = 'all' OR esr.relation_type = relation_type)
+    WHERE esr.source_skill_uri = p_skill_uri
+      AND (p_relation_type = 'all' OR esr.relation_type = p_relation_type)
       AND es.is_active = TRUE
     ORDER BY es.preferred_label_es;
 END;
@@ -201,4 +201,4 @@ $$ LANGUAGE plpgsql;
 -- Grant permissions
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO labor_user;
 GRANT EXECUTE ON FUNCTION search_esco_skills(TEXT, VARCHAR, FLOAT) TO labor_user;
-GRANT EXECUTE ON FUNCTION get_related_esco_skills(TEXT, VARCHAR) TO labor_user;
+GRANT EXECUTE ON FUNCTION get_related_esco_skills(p_skill_uri TEXT, p_relation_type VARCHAR) TO labor_user;
