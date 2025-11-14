@@ -52,18 +52,9 @@ El sistema implementa un pipeline secuencial de 7 etapas donde cada componente o
 
 La orquestación se gestiona mediante un CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler).
 
-\subsection*{D.3. Diagrama de Flujo de Transformación de Datos}
+\subsection*{D.3. Flujo de Transformación de Datos}
 
-La Figura \ref{fig:flujo-transformacion-anexo} ilustra el flujo detallado de transformaciones que sufren los datos desde la recolección inicial hasta la generación de visualizaciones finales, mostrando las estructuras de datos intermedias y los puntos de persistencia en PostgreSQL.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.85\textwidth]{diagrams/flujo_transformacion.png}
-\caption{Flujo de Transformación de Datos a través del Pipeline Completo}
-\label{fig:flujo-transformacion-anexo}
-\end{figure}
-
-El flujo de datos atraviesa las siguientes transformaciones principales:
+El flujo de datos atraviesa las siguientes transformaciones principales desde la recolección inicial hasta la generación de visualizaciones finales, con estructuras de datos intermedias persistidas en PostgreSQL:
 
 \begin{itemize}
     \item \textbf{raw\_jobs $\to$ cleaned\_jobs}: Normalización de encoding UTF-8, eliminación de HTML residual, detección de idioma (español/inglés/Spanglish), deduplicación SHA-256.
