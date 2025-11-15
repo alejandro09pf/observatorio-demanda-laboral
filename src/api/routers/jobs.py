@@ -14,7 +14,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from api.dependencies import get_db
 from api.schemas.job import JobBase, JobDetail, JobListResponse, ExtractedSkillSchema
-from database.models import RawJob, ExtractedSkill
+from database.models import RawJob, ExtractedSkill, CleanedJob
+from sqlalchemy import text, exists
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ router = APIRouter()
 def get_jobs(
     country: Optional[str] = Query(None, description="Filter by country code (e.g., CO, MX, AR)"),
     portal: Optional[str] = Query(None, description="Filter by job portal"),
+    job_status: Optional[str] = Query(None, description="Filter by job status (raw, cleaned, golden)"),
     limit: int = Query(50, ge=1, le=100, description="Number of results to return"),
     offset: int = Query(0, ge=0, description="Number of results to skip"),
     search: Optional[str] = Query(None, description="Search in title or description"),
@@ -36,6 +38,7 @@ def get_jobs(
     Filters:
     - country: Country code (CO, MX, AR, etc.)
     - portal: Job portal (computrabajo, bumeran, indeed, etc.)
+    - job_status: Job processing status (raw, cleaned, golden)
     - search: Search text in title or description
     - limit: Results per page (1-100, default 50)
     - offset: Pagination offset (default 0)
@@ -44,7 +47,22 @@ def get_jobs(
         # Build base query
         query = db.query(RawJob)
 
-        # Apply filters
+        # Apply job_status filter
+        if job_status == "cleaned":
+            # Only jobs that exist in cleaned_jobs
+            query = query.filter(
+                exists().where(CleanedJob.job_id == RawJob.job_id)
+            )
+        elif job_status == "golden":
+            # Only jobs that have gold standard annotations
+            gold_job_ids_subquery = db.execute(
+                text("SELECT DISTINCT job_id FROM gold_standard_annotations")
+            ).fetchall()
+            gold_job_ids = [row[0] for row in gold_job_ids_subquery]
+            query = query.filter(RawJob.job_id.in_(gold_job_ids))
+        # If job_status is None or "raw", no additional filter (all jobs)
+
+        # Apply other filters
         if country:
             query = query.filter(RawJob.country == country.upper())
 

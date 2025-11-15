@@ -6,7 +6,8 @@
 ALTER TABLE enhanced_skills
 ADD COLUMN IF NOT EXISTS processing_time_seconds FLOAT,
 ADD COLUMN IF NOT EXISTS tokens_used INTEGER,
-ADD COLUMN IF NOT EXISTS esco_match_method VARCHAR(20);
+ADD COLUMN IF NOT EXISTS esco_match_method VARCHAR(20),
+ADD COLUMN IF NOT EXISTS llm_model VARCHAR(100);
 
 -- Add comments for documentation
 COMMENT ON COLUMN enhanced_skills.processing_time_seconds IS 'Time taken by LLM to process entire job (seconds). Same value for all skills from same job.';

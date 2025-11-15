@@ -12,6 +12,7 @@ export default function JobsPage() {
   // Filters
   const [country, setCountry] = useState<string>('');
   const [portal, setPortal] = useState<string>('');
+  const [jobStatus, setJobStatus] = useState<string>('');
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState(1);
   const pageSize = 20;
@@ -23,6 +24,7 @@ export default function JobsPage() {
         const result = await getJobs({
           country: country || undefined,
           portal: portal || undefined,
+          job_status: jobStatus || undefined,
           search: search || undefined,
           limit: pageSize,
           offset: (page - 1) * pageSize,
@@ -38,7 +40,7 @@ export default function JobsPage() {
     };
 
     fetchJobs();
-  }, [country, portal, search, page]);
+  }, [country, portal, jobStatus, search, page]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,69 +62,91 @@ export default function JobsPage() {
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtros</h2>
-        <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-              Buscar
-            </label>
-            <input
-              id="search"
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Título o descripción..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <form onSubmit={handleSearchSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+                Buscar
+              </label>
+              <input
+                id="search"
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Título o descripción..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
+                País
+              </label>
+              <select
+                id="country"
+                value={country}
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="AR">Argentina</option>
+                <option value="CO">Colombia</option>
+                <option value="MX">México</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="portal" className="block text-sm font-medium text-gray-700 mb-2">
+                Portal
+              </label>
+              <select
+                id="portal"
+                value={portal}
+                onChange={(e) => {
+                  setPortal(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="bumeran">Bumeran</option>
+                <option value="computrabajo">Computrabajo</option>
+                <option value="elempleo">El Empleo</option>
+                <option value="hiring_cafe">Hiring Café</option>
+                <option value="magneto">Magneto</option>
+                <option value="occmundial">OCC Mundial</option>
+                <option value="zonajobs">ZonaJobs</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="job-status" className="block text-sm font-medium text-gray-700 mb-2">
+                Estado
+              </label>
+              <select
+                id="job-status"
+                value={jobStatus}
+                onChange={(e) => {
+                  setJobStatus(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="raw">Sin limpiar (Raw)</option>
+                <option value="cleaned">Limpiados (30k)</option>
+                <option value="golden">Golden (300)</option>
+              </select>
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
-              País
-            </label>
-            <select
-              id="country"
-              value={country}
-              onChange={(e) => {
-                setCountry(e.target.value);
-                setPage(1);
-              }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Todos</option>
-              <option value="AR">Argentina</option>
-              <option value="CO">Colombia</option>
-              <option value="MX">México</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="portal" className="block text-sm font-medium text-gray-700 mb-2">
-              Portal
-            </label>
-            <select
-              id="portal"
-              value={portal}
-              onChange={(e) => {
-                setPortal(e.target.value);
-                setPage(1);
-              }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Todos</option>
-              <option value="bumeran">Bumeran</option>
-              <option value="computrabajo">Computrabajo</option>
-              <option value="elempleo">El Empleo</option>
-              <option value="hiring_cafe">Hiring Café</option>
-              <option value="magneto">Magneto</option>
-              <option value="occmundial">OCC Mundial</option>
-              <option value="zonajobs">ZonaJobs</option>
-            </select>
-          </div>
-
-          <div className="flex items-end">
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
             >
               Buscar
             </button>

@@ -24,9 +24,19 @@ Thumbs.db
 *.swp
 *.swo
 
-# Data (heavy files)
+# Data (heavy files) - DO NOT copy these to Docker images
 data/models/
 data/cache/
+data/backups/
+data/esco/
+data/embeddings/
+data/reports/
+data/processed/
+data/gold_standard/
+data/onet/
+data/test_results/
+data/threshold_tests/
+outputs/
 
 # Git
 .git/

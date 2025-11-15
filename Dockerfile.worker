@@ -24,7 +24,7 @@ RUN python -m spacy download es_core_news_lg
 # Copy source code
 COPY src/ ./src/
 COPY config/ ./config/
-COPY data/ ./data/
+# NOTE: data/ is mounted as volume in docker-compose.yml, not copied into image
 
 # Create necessary directories
 RUN mkdir -p /app/logs /app/outputs

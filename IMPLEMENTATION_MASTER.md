@@ -110,7 +110,101 @@
 
 ### **Patrón arquitectónico:** Event-Driven Architecture + Message Queue + Pub/Sub
 
-**IMPLEMENTACIÓN ACTUAL (2025-11-13):**
+**DESCRIPCIÓN TÉCNICA FORMAL:**
+
+La arquitectura implementada es una **Arquitectura Orientada a Eventos con Procesamiento Asíncrono Distribuido**, combinando tres patrones fundamentales de mensajería sobre Redis como broker central:
+
+1. **Producer-Consumer Pattern (Message Queue - PULL):**
+   - API publica tareas → Redis Queue → Workers consumen (Celery)
+   - Garantías de entrega con acknowledgements
+   - Reintentos automáticos y backoff exponencial
+   - Workers hacen PULL de tareas bajo demanda
+
+2. **Publish-Subscribe Pattern (Pub/Sub - PUSH):**
+   - Workers publican eventos → Redis Pub/Sub → Múltiples subscribers reaccionan
+   - Broadcasting sin garantías de entrega
+   - Comunicación asíncrona desacoplada
+   - Redis hace PUSH a todos los subscriptores
+
+3. **Scheduled Tasks Pattern (Cron Distribuido):**
+   - Celery Beat programa tareas → Redis Queue → Workers ejecutan
+   - Scraping nocturno automático (2 AM)
+   - Procesamiento periódico (cada 30 min)
+   - Clustering semanal (domingos 3 AM)
+
+**REDIS COMO BROKER CENTRAL (3 BASES DE DATOS):**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                REDIS (Puerto 6379)                      │
+├─────────────────────────────────────────────────────────┤
+│ DB 0: Celery Message Broker (Cola de tareas)          │
+│  • Almacena tareas pendientes en cola                  │
+│  • Workers hacen PULL (consume bajo demanda)           │
+│  • Garantías de entrega con ACK                        │
+│  • Serialización JSON                                  │
+│                                                         │
+│ DB 1: Celery Result Backend (Resultados)              │
+│  • Almacena resultados de tareas ejecutadas            │
+│  • TTL: 24 horas (result_expires=86400)               │
+│  • Permite consultar estado y progreso                 │
+│  • Tracking de task_id                                 │
+│                                                         │
+│ DB 2: EventBus Pub/Sub (Eventos en tiempo real)       │
+│  • Canal: "labor_observatory:jobs_scraped"             │
+│  • Canal: "labor_observatory:skills_extracted"         │
+│  • Canal: "labor_observatory:skills_enhanced"          │
+│  • Canal: "labor_observatory:clustering_completed"     │
+│  • Broadcasting PUSH a todos los subscribers           │
+└─────────────────────────────────────────────────────────┘
+```
+
+**FLUJO DE MENSAJERÍA COMPLETO:**
+
+```
+[Frontend] ──HTTP──> [API FastAPI]
+                         │
+                         │ 1. Publica tarea (task_id)
+                         ▼
+                   ┌───────────────┐
+                   │  Redis DB 0   │
+                   │ (Message Que) │
+                   └───────┬───────┘
+                           │
+                           │ 2. Workers consumen (PULL)
+                           ▼
+                  ┌─────────────────┐
+                  │ Celery Workers  │
+                  │   (4 workers)   │
+                  └────┬────────┬───┘
+                       │        │
+      3. Guarda result │        │ 4. Publica evento
+                       │        │
+              ┌────────▼──┐  ┌──▼─────────┐
+              │ Redis DB 1│  │ Redis DB 2 │
+              │ (Results) │  │  (Pub/Sub) │
+              └───────────┘  └──┬─────────┘
+                                │
+                                │ 5. Broadcast (PUSH)
+                                ▼
+                    ┌─────────────────────┐
+                    │  Event Subscribers  │
+                    │ (Auto-trigger next) │
+                    └─────────────────────┘
+```
+
+**VENTAJAS DE ESTA ARQUITECTURA:**
+
+- **Desacoplamiento**: API no espera a que terminen las tareas
+- **Escalabilidad horizontal**: `docker-compose up --scale celery_worker=N`
+- **Tolerancia a fallos**: Reintentos automáticos, task acknowledgements
+- **Event-driven**: Un evento dispara múltiples reacciones automáticas
+- **Observabilidad**: Flower dashboard para monitoring en tiempo real
+- **Automatización**: Celery Beat para tareas programadas sin intervención manual
+
+---
+
+**IMPLEMENTACIÓN ACTUAL (2025-11-14):**
 - ✅ Frontend Next.js (5 páginas completas)
 - ✅ Backend FastAPI (23+ endpoints REST)
 - ✅ PostgreSQL + pgvector (9 tablas, 56K+ jobs, 365K+ skills)
@@ -628,22 +722,68 @@ Si la defensa es en < 1 semana → **Opción B (Subprocess)** + documentar bien
 
 ---
 
-## 🐳 EMPAQUETADO DOCKER
+## 🐳 EMPAQUETADO DOCKER - ESTADO ACTUAL
 
-### **Estructura de servicios (8 containers):**
+### **Arquitectura de Contenedores (6 servicios activos + 2 opcionales):**
 
-| Servicio | Imagen | Puerto | Función | Dependencias |
-|----------|--------|--------|---------|--------------|
-| **postgres** | postgres:15 | 5433→5432 | Base de datos principal | - |
-| **redis** | redis:7-alpine | 6379 | Message broker + cache | - |
-| **api** | Custom (Dockerfile.api) | 8000 | REST API FastAPI | postgres, redis |
-| **frontend** | Custom (frontend/Dockerfile) | 3000 | React SPA (Next.js) | api |
-| **celery_worker** | Custom (Dockerfile.worker) | - | Procesamiento background (x2) | postgres, redis |
-| **celery_beat** | Custom (Dockerfile.worker) | - | Scheduler de tareas | redis |
-| **nginx** | nginx:alpine | 80, 443 | Reverse proxy | frontend, api |
-| **flower** | Custom (Dockerfile.worker) | 5555 | Monitor Celery (opcional) | redis |
+**SERVICIOS EN PRODUCCIÓN (✅ RUNNING):**
 
-### **docker-compose.yml** (estructura final)
+| Servicio | Imagen | Puerto | Estado | Función | Notas |
+|----------|--------|--------|--------|---------|-------|
+| **postgres** | postgres:15 | 5433→5432 | ✅ Up 5h | Base de datos + pgvector | 56K+ jobs, 365K+ skills |
+| **redis** | redis:7-alpine | 6379 | ✅ Up 5h | Message broker (3 DBs) | DB0: Queue, DB1: Results, DB2: Pub/Sub |
+| **api** | Custom (Dockerfile.api) | 8000 | ✅ Up 5h | REST API FastAPI | 23 endpoints, con hdbscan |
+| **frontend** | Custom (frontend/Dockerfile) | 3000 | ✅ Up 5h | Next.js 14 SPA | 5 páginas completas |
+| **celery_worker** | Custom (Dockerfile.worker) | - | ✅ Up 5h | Workers asíncronos | 9 tasks, con hdbscan+UMAP |
+| **celery_beat** | Custom (Dockerfile.worker) | - | ✅ Up 5h | Scheduler (cron) | 5 cron jobs configurados |
+
+**SERVICIOS OPCIONALES (Activar con Docker Compose Profiles):**
+
+| Servicio | Imagen | Puerto | Estado | Activación | Uso |
+|----------|--------|--------|--------|------------|-----|
+| **nginx** | nginx:alpine | 80 | ⚠️ Configurado | `--profile with-nginx` | Reverse proxy unificado |
+| **flower** | Custom (Dockerfile.worker) | 5555 | ⚠️ Configurado | `--profile with-monitoring` | Monitor de Celery en tiempo real |
+
+**COMANDOS DE DESPLIEGUE:**
+
+```bash
+# 1. Sistema base (6 servicios) - CONFIGURACIÓN ACTUAL
+docker-compose up -d
+
+# 2. Con reverse proxy nginx (puerto 80)
+docker-compose --profile with-nginx up -d
+
+# 3. Con monitoring Flower (puerto 5555)
+docker-compose --profile with-monitoring up -d
+
+# 4. Sistema completo (8 servicios: base + nginx + flower)
+docker-compose --profile with-nginx --profile with-monitoring up -d
+
+# 5. Escalar workers horizontalmente
+docker-compose up -d --scale celery_worker=4
+
+# 6. Reconstruir servicios con caché
+docker-compose build api celery_worker
+
+# 7. Reconstruir desde cero (sin caché)
+docker-compose build --no-cache api celery_worker celery_beat
+```
+
+**DISTRIBUCIÓN DE REDIS (3 bases de datos):**
+
+```
+Redis Container (Puerto 6379)
+├─ DB 0: Celery Message Broker
+│  └─ Colas: scraping_q, extraction_q, llm_q, clustering_q
+├─ DB 1: Celery Result Backend
+│  └─ Almacena task_id → result (TTL: 24h)
+└─ DB 2: EventBus Pub/Sub
+   └─ Canales: jobs_scraped, skills_extracted, skills_enhanced, clustering_completed
+```
+
+---
+
+### **docker-compose.yml - Configuración Real**
 
 ```yaml
 version: '3.8'

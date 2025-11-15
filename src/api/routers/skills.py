@@ -24,6 +24,8 @@ router = APIRouter()
 def get_top_skills(
     country: Optional[str] = Query(None, description="Filter by country code"),
     skill_type: Optional[str] = Query(None, description="Filter by skill type (hard, soft)"),
+    extraction_method: Optional[str] = Query(None, description="Filter by extraction method (ner, regex, pipeline_a, pipeline_b)"),
+    mapping_status: Optional[str] = Query(None, description="Filter by mapping status (esco_mapped, unmapped)"),
     limit: int = Query(20, ge=1, le=100, description="Number of top skills to return"),
     db: Session = Depends(get_db)
 ) -> TopSkillsResponse:
@@ -33,6 +35,8 @@ def get_top_skills(
     Args:
         country: Filter by country (CO, MX, AR, etc.)
         skill_type: Filter by skill type (hard, soft, all)
+        extraction_method: Filter by extraction method (ner, regex, pipeline_a, pipeline_b)
+        mapping_status: Filter by ESCO mapping status (esco_mapped, unmapped)
         limit: Number of top skills to return (1-100)
 
     Returns:
@@ -55,6 +59,26 @@ def get_top_skills(
         # Filter by skill type
         if skill_type and skill_type.lower() in ['hard', 'soft']:
             query = query.filter(ExtractedSkill.skill_type == skill_type.lower())
+
+        # Filter by extraction method
+        if extraction_method:
+            if extraction_method == "ner":
+                query = query.filter(ExtractedSkill.extraction_method == 'ner')
+            elif extraction_method == "regex":
+                query = query.filter(ExtractedSkill.extraction_method == 'regex')
+            elif extraction_method == "pipeline_a":
+                # Pipeline A includes both ner and regex
+                query = query.filter(ExtractedSkill.extraction_method.in_(['ner', 'regex']))
+            elif extraction_method == "pipeline_b":
+                # Pipeline B is LLM-based (from enhanced_skills table, but we check extraction_method patterns)
+                query = query.filter(ExtractedSkill.extraction_method.like('pipeline-%'))
+
+        # Filter by mapping status
+        if mapping_status:
+            if mapping_status == "esco_mapped":
+                query = query.filter(ExtractedSkill.esco_uri.isnot(None))
+            elif mapping_status == "unmapped":
+                query = query.filter(ExtractedSkill.esco_uri.is_(None))
 
         # Group by skill and order by count
         query = query.group_by(

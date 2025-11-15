@@ -1,14 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getStats, StatsResponse } from '@/lib/api';
+import { getStats, getFilteredStats, StatsResponse, FilteredStatsResponse } from '@/lib/api';
 import Link from 'next/link';
 
 export default function Dashboard() {
   const [stats, setStats] = useState<StatsResponse | null>(null);
+  const [filteredStats, setFilteredStats] = useState<FilteredStatsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Filters
+  const [countryFilter, setCountryFilter] = useState<string>('all');
+  const [jobStatusFilter, setJobStatusFilter] = useState<string>('all');
+  const [extractionMethodFilter, setExtractionMethodFilter] = useState<string>('all');
+  const [mappingStatusFilter, setMappingStatusFilter] = useState<string>('all');
+
+  // Fetch base stats (always)
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -24,6 +32,32 @@ export default function Dashboard() {
 
     fetchStats();
   }, []);
+
+  // Fetch filtered stats when filters change
+  useEffect(() => {
+    const fetchFilteredStats = async () => {
+      try {
+        const params: any = {};
+        if (countryFilter !== 'all') params.country = countryFilter;
+        if (jobStatusFilter !== 'all') params.job_status = jobStatusFilter;
+        if (extractionMethodFilter !== 'all') params.extraction_method = extractionMethodFilter;
+        if (mappingStatusFilter !== 'all') params.mapping_status = mappingStatusFilter;
+
+        const data = await getFilteredStats(params);
+        setFilteredStats(data);
+      } catch (err) {
+        console.error('Error fetching filtered stats:', err);
+      }
+    };
+
+    // Only fetch if at least one filter is active
+    if (countryFilter !== 'all' || jobStatusFilter !== 'all' ||
+        extractionMethodFilter !== 'all' || mappingStatusFilter !== 'all') {
+      fetchFilteredStats();
+    } else {
+      setFilteredStats(null);
+    }
+  }, [countryFilter, jobStatusFilter, extractionMethodFilter, mappingStatusFilter]);
 
   if (loading) {
     return (
@@ -53,49 +87,139 @@ export default function Dashboard() {
     );
   }
 
-  if (!stats) {
-    return null;
-  }
+  // Use filtered stats if available, otherwise use base stats
+  const displayJobsTotal = filteredStats?.jobs.total ?? stats.total_raw_jobs;
+  const displayCleanedJobs = filteredStats?.jobs.cleaned ?? stats.total_cleaned_jobs;
+  const displayJobsWithSkills = filteredStats?.jobs.with_skills ?? stats.total_jobs_with_skills;
+  const displaySkillsTotal = filteredStats?.skills.total ?? stats.total_skills;
+  const displaySkillsUnique = filteredStats?.skills.unique ?? stats.total_unique_skills;
+  const displayPipelineBGemma = filteredStats?.extraction_methods.pipeline_b_gemma ?? stats.extraction_methods?.pipeline_b_gemma;
+  const displayPipelineBJobs = filteredStats?.extraction_methods.pipeline_b_jobs ?? stats.extraction_methods?.pipeline_b_jobs;
+  const displayCountries = filteredStats?.countries ?? stats.countries;
+  const displayPortals = filteredStats?.portals ?? stats.portals;
+  const displayDateRange = filteredStats?.date_range ?? stats.date_range;
+
+  const hasActiveFilters = countryFilter !== 'all' || jobStatusFilter !== 'all' ||
+                           extractionMethodFilter !== 'all' || mappingStatusFilter !== 'all';
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Panel Principal</h1>
-        <p className="text-gray-600 mt-2">
-          Resumen de datos del mercado laboral y análisis
-        </p>
+    <div className="space-y-6">
+      {/* Header with Filters */}
+      <div className="flex items-start justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Panel Principal</h1>
+          <p className="text-gray-600 mt-2">
+            Resumen de datos del mercado laboral y análisis
+          </p>
+        </div>
+
+        {/* Compact Filters */}
+        <div className="flex flex-wrap gap-2 items-center">
+          <select
+            value={countryFilter}
+            onChange={(e) => setCountryFilter(e.target.value)}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">Todos los países</option>
+            {stats.countries?.map((country) => (
+              <option key={country} value={country}>{country}</option>
+            ))}
+          </select>
+
+          <select
+            value={jobStatusFilter}
+            onChange={(e) => setJobStatusFilter(e.target.value)}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="raw">Raw</option>
+            <option value="cleaned">Limpiados</option>
+            <option value="golden">Golden</option>
+          </select>
+
+          <select
+            value={extractionMethodFilter}
+            onChange={(e) => setExtractionMethodFilter(e.target.value)}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">Todos los métodos</option>
+            <option value="ner">NER</option>
+            <option value="regex">Regex</option>
+            <option value="pipeline_a">Pipeline A</option>
+            <option value="pipeline_b">Pipeline B</option>
+          </select>
+
+          <select
+            value={mappingStatusFilter}
+            onChange={(e) => setMappingStatusFilter(e.target.value)}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">Todos los mapeos</option>
+            <option value="esco_mapped">ESCO</option>
+            <option value="unmapped">Sin mapear</option>
+          </select>
+
+          {hasActiveFilters && (
+            <button
+              onClick={() => {
+                setCountryFilter('all');
+                setJobStatusFilter('all');
+                setExtractionMethodFilter('all');
+                setMappingStatusFilter('all');
+              }}
+              className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+              title="Limpiar filtros"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Filter Status Banner */}
+      {hasActiveFilters && (
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-3">
+          <p className="text-blue-800 text-sm font-medium">
+            Filtros activos - Mostrando datos filtrados
+          </p>
+        </div>
+      )}
 
       {/* Data Funnel Section */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Proceso de Datos</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          Proceso de Datos {hasActiveFilters && <span className="text-blue-600">(Filtrado)</span>}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-4xl font-bold text-blue-600">
-              {stats.total_raw_jobs?.toLocaleString() || '0'}
+              {displayJobsTotal?.toLocaleString() || '0'}
             </div>
-            <div className="text-sm text-gray-600 mt-2">Empleos Recolectados</div>
-            <div className="text-xs text-gray-500">Datos crudos del scraping</div>
-          </div>
-          <div className="text-center flex flex-col justify-center">
-            <div className="text-2xl text-gray-400 mb-2">→</div>
-            <div className="text-4xl font-bold text-green-600">
-              {stats.total_cleaned_jobs?.toLocaleString() || '0'}
+            <div className="text-sm text-gray-600 mt-2">
+              {hasActiveFilters ? 'Empleos (Filtrados)' : 'Empleos Recolectados'}
             </div>
-            <div className="text-sm text-gray-600 mt-2">Empleos Limpiados</div>
             <div className="text-xs text-gray-500">
-              {stats.total_raw_jobs ? ((stats.total_cleaned_jobs / stats.total_raw_jobs) * 100).toFixed(1) : '0'}% retenido
+              {!hasActiveFilters && 'Datos crudos del scraping'}
             </div>
           </div>
-          <div className="text-center flex flex-col justify-center">
-            <div className="text-2xl text-gray-400 mb-2">→</div>
+          <div className="text-center">
+            <div className="text-4xl font-bold text-green-600">
+              {displayCleanedJobs?.toLocaleString() || '0'}
+            </div>
+            <div className="text-sm text-gray-600 mt-2">
+              {hasActiveFilters ? 'Limpiados (Filtrados)' : 'Empleos Limpiados'}
+            </div>
+            <div className="text-xs text-gray-500">
+              {displayJobsTotal ? ((displayCleanedJobs / displayJobsTotal) * 100).toFixed(1) : '0'}% retenido
+            </div>
+          </div>
+          <div className="text-center">
             <div className="text-4xl font-bold text-purple-600">
-              {stats.total_jobs_with_skills?.toLocaleString() || '0'}
+              {displayJobsWithSkills?.toLocaleString() || '0'}
             </div>
             <div className="text-sm text-gray-600 mt-2">Con Habilidades</div>
             <div className="text-xs text-gray-500">
-              {stats.total_cleaned_jobs ? ((stats.total_jobs_with_skills / stats.total_cleaned_jobs) * 100).toFixed(1) : '0'}% procesado
+              {displayCleanedJobs ? ((displayJobsWithSkills / displayCleanedJobs) * 100).toFixed(1) : '0'}% procesado
             </div>
           </div>
         </div>
@@ -105,30 +229,59 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
           title="Habilidades Extraídas"
-          value={stats.total_skills?.toLocaleString() || '0'}
-          subtitle={`${stats.total_unique_skills?.toLocaleString() || '0'} únicas`}
+          value={displaySkillsTotal?.toLocaleString() || '0'}
+          subtitle={`${displaySkillsUnique?.toLocaleString() || '0'} únicas`}
           icon="🎯"
           link="/skills"
         />
         <KPICard
           title="Pipeline A (NER + Regex)"
-          value={stats.extraction_methods?.pipeline_a1?.toLocaleString() || '0'}
+          value={filteredStats?.extraction_methods.pipeline_a?.toLocaleString() || stats.extraction_methods?.pipeline_a1?.toLocaleString() || '0'}
           subtitle="Extracción basada en reglas"
           icon="📝"
         />
         <KPICard
           title="Pipeline B (Gemma LLM)"
-          value={stats.extraction_methods?.pipeline_b_gemma?.toLocaleString() || '0'}
-          subtitle={`En ${stats.extraction_methods?.pipeline_b_jobs?.toLocaleString() || '0'} empleos`}
+          value={displayPipelineBGemma?.toLocaleString() || '0'}
+          subtitle={`En ${displayPipelineBJobs?.toLocaleString() || '0'} empleos`}
           icon="🤖"
         />
         <KPICard
           title="Países Analizados"
-          value={stats.n_countries?.toString() || '0'}
-          subtitle={stats.countries?.join(', ') || 'N/A'}
+          value={displayCountries?.length.toString() || '0'}
+          subtitle={displayCountries?.join(', ') || 'N/A'}
           icon="🌎"
         />
       </div>
+
+      {/* Extraction Methods Breakdown (when filtered) */}
+      {filteredStats && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Desglose de Métodos de Extracción (Filtrado)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <div className="text-2xl font-bold text-blue-700">
+                {filteredStats.extraction_methods.ner.toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-600 mt-1">NER</div>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <div className="text-2xl font-bold text-green-700">
+                {filteredStats.extraction_methods.regex.toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-600 mt-1">Regex</div>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <div className="text-2xl font-bold text-purple-700">
+                {filteredStats.extraction_methods.pipeline_a.toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-600 mt-1">Pipeline A (Total)</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Date Range and Last Scraping */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -140,37 +293,39 @@ export default function Dashboard() {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Fecha Inicial:</span>
               <span className="font-semibold text-gray-900">
-                {stats.date_range?.start ? new Date(stats.date_range.start).toLocaleDateString('es-ES') : 'N/A'}
+                {displayDateRange?.start ? new Date(displayDateRange.start).toLocaleDateString('es-ES') : 'N/A'}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Fecha Final:</span>
               <span className="font-semibold text-gray-900">
-                {stats.date_range?.end ? new Date(stats.date_range.end).toLocaleDateString('es-ES') : 'N/A'}
+                {displayDateRange?.end ? new Date(displayDateRange.end).toLocaleDateString('es-ES') : 'N/A'}
               </span>
             </div>
-            <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-              <span className="text-gray-600">Último Scraping:</span>
-              <span className="font-semibold text-gray-900">
-                {stats.last_scraping ? new Date(stats.last_scraping).toLocaleString('es-ES') : 'N/A'}
-              </span>
-            </div>
+            {!hasActiveFilters && (
+              <div className="flex justify-between items-center pt-3 border-t border-gray-200">
+                <span className="text-gray-600">Último Scraping:</span>
+                <span className="font-semibold text-gray-900">
+                  {stats.last_scraping ? new Date(stats.last_scraping).toLocaleString('es-ES') : 'N/A'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Distribución por Países
+            Distribución por Países {hasActiveFilters && <span className="text-blue-600 text-sm">(Filtrado)</span>}
           </h3>
           <div className="space-y-3">
-            {stats.countries?.map((country) => (
+            {displayCountries?.map((country) => (
               <div key={country} className="flex items-center justify-between">
                 <span className="text-gray-700 font-medium">{country}</span>
                 <Link
                   href={`/jobs?country=${country}`}
                   className="text-blue-600 hover:text-blue-800 text-sm"
                 >
-                  Ver Empleos →
+                  Ver Empleos
                 </Link>
               </div>
             )) || <p className="text-gray-500">Sin datos</p>}
@@ -181,10 +336,10 @@ export default function Dashboard() {
       {/* Portals List */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Portales de Empleo Soportados
+          Portales de Empleo {hasActiveFilters ? '(Filtrado)' : 'Soportados'}
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-          {stats.portals?.map((portal) => (
+          {displayPortals?.map((portal) => (
             <div
               key={portal}
               className="flex items-center justify-center p-3 bg-gray-50 rounded-lg border border-gray-200"
@@ -200,7 +355,7 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-6 text-white">
         <h3 className="text-xl font-semibold mb-4">Acciones Rápidas</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Link
             href="/jobs"
             className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 transition"
@@ -219,6 +374,16 @@ export default function Dashboard() {
             <div className="font-semibold">Analizar Habilidades</div>
             <div className="text-sm text-blue-100 mt-1">
               Ver demanda de {stats.total_unique_skills?.toLocaleString() || '0'} habilidades
+            </div>
+          </Link>
+          <Link
+            href="/clusters"
+            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 transition"
+          >
+            <div className="text-2xl mb-2">🎯</div>
+            <div className="font-semibold">Ver Clusters</div>
+            <div className="text-sm text-blue-100 mt-1">
+              Explorar 8 configuraciones de clustering
             </div>
           </Link>
           <Link

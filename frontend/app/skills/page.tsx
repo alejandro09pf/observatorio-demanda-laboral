@@ -83,6 +83,8 @@ function TopSkillsTab() {
 
   const [country, setCountry] = useState<string>('');
   const [skillType, setSkillType] = useState<string>('');
+  const [extractionMethod, setExtractionMethod] = useState<string>('');
+  const [mappingStatus, setMappingStatus] = useState<string>('');
   const [limit, setLimit] = useState<number>(20);
 
   useEffect(() => {
@@ -92,6 +94,8 @@ function TopSkillsTab() {
         const result = await getTopSkills({
           country: country || undefined,
           skill_type: skillType as 'hard' | 'soft' | undefined,
+          extraction_method: extractionMethod || undefined,
+          mapping_status: mappingStatus || undefined,
           limit,
         });
         setData(result);
@@ -105,7 +109,7 @@ function TopSkillsTab() {
     };
 
     fetchTopSkills();
-  }, [country, skillType, limit]);
+  }, [country, skillType, extractionMethod, mappingStatus, limit]);
 
   if (loading) {
     return (
@@ -130,55 +134,93 @@ function TopSkillsTab() {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-6 border-b border-gray-200">
-        <div>
-          <label htmlFor="country-filter" className="block text-sm font-medium text-gray-700 mb-2">
-            País
-          </label>
-          <select
-            id="country-filter"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos</option>
-            <option value="AR">Argentina</option>
-            <option value="CO">Colombia</option>
-            <option value="MX">México</option>
-          </select>
+      <div className="space-y-4 pb-6 border-b border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="country-filter" className="block text-sm font-medium text-gray-700 mb-2">
+              País
+            </label>
+            <select
+              id="country-filter"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Todos</option>
+              <option value="AR">Argentina</option>
+              <option value="CO">Colombia</option>
+              <option value="MX">México</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="type-filter" className="block text-sm font-medium text-gray-700 mb-2">
+              Tipo
+            </label>
+            <select
+              id="type-filter"
+              value={skillType}
+              onChange={(e) => setSkillType(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Todos</option>
+              <option value="hard">Técnicas</option>
+              <option value="soft">Blandas</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="limit-filter" className="block text-sm font-medium text-gray-700 mb-2">
+              Límite
+            </label>
+            <select
+              id="limit-filter"
+              value={limit}
+              onChange={(e) => setLimit(Number(e.target.value))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="10">Top 10</option>
+              <option value="20">Top 20</option>
+              <option value="50">Top 50</option>
+              <option value="100">Top 100</option>
+            </select>
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="type-filter" className="block text-sm font-medium text-gray-700 mb-2">
-            Tipo
-          </label>
-          <select
-            id="type-filter"
-            value={skillType}
-            onChange={(e) => setSkillType(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos</option>
-            <option value="hard">Técnicas</option>
-            <option value="soft">Blandas</option>
-          </select>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="extraction-method-filter" className="block text-sm font-medium text-gray-700 mb-2">
+              Método de Extracción
+            </label>
+            <select
+              id="extraction-method-filter"
+              value={extractionMethod}
+              onChange={(e) => setExtractionMethod(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Todos</option>
+              <option value="ner">Solo NER</option>
+              <option value="regex">Solo Regex</option>
+              <option value="pipeline_a">Pipeline A (NER + Regex)</option>
+              <option value="pipeline_b">Pipeline B (LLM)</option>
+            </select>
+          </div>
 
-        <div>
-          <label htmlFor="limit-filter" className="block text-sm font-medium text-gray-700 mb-2">
-            Límite
-          </label>
-          <select
-            id="limit-filter"
-            value={limit}
-            onChange={(e) => setLimit(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="10">Top 10</option>
-            <option value="20">Top 20</option>
-            <option value="50">Top 50</option>
-            <option value="100">Top 100</option>
-          </select>
+          <div>
+            <label htmlFor="mapping-status-filter" className="block text-sm font-medium text-gray-700 mb-2">
+              Estado de Mapeo
+            </label>
+            <select
+              id="mapping-status-filter"
+              value={mappingStatus}
+              onChange={(e) => setMappingStatus(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Todos</option>
+              <option value="esco_mapped">Mapeado a ESCO</option>
+              <option value="unmapped">Sin mapear</option>
+            </select>
+          </div>
         </div>
       </div>
 

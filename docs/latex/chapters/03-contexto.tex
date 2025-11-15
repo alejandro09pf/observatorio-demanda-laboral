@@ -18,7 +18,7 @@ Hard Skills (habilidades técnicas) son capacidades específicas, medibles y ens
 
 Soft Skills (habilidades transversales) son capacidades relacionales e interpersonales transversales a dominios con evaluación subjetiva y relevancia estable \cite{aguilera2018}: liderazgo, comunicación, trabajo en equipo, resolución de problemas, adaptabilidad.
 
-Para NLP automatizado, las hard skills presentan ventaja por expresión léxica consistente (``Docker'' con variantes limitadas), mientras soft skills exhiben alta variabilidad lingüística (``trabajo en equipo'' = ``colaboración'', ``espíritu colaborativo'', ``teamwork'') \cite{martinez2024}.
+Para NLP automatizado, las hard skills presentan ventaja por expresión léxica consistente (``Docker'' con variantes limitadas), mientras soft skills exhiben alta variabilidad lingüística (``trabajo en equipo'' = ``colaboración'', ``espíritu colaborativo'', ``teamwork'').
 
 \subsection{Alcance del Proyecto: Hard IT Skills}
 
@@ -66,7 +66,7 @@ Existen diferentes modalidades de aplicación: zero-shot learning (sin ejemplos 
 
 Las habilidades extraídas deben representarse de forma que permita su análisis cuantitativo. Los Embeddings Semánticos son representaciones vectoriales en un espacio de alta dimensionalidad donde la distancia entre vectores refleja la similitud semántica entre textos \cite{kavas2024}. Esto permite capturar relaciones semánticas complejas, realizar búsquedas por similitud eficientemente y agrupar habilidades relacionadas.
 
-Dado que las ofertas laborales en América Latina contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de Embeddings Multilingües, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \cite{echeverria2022, kavas2024}. Modelos populares incluyen E5-large, Sentence Transformers basados en BERT y multilingual-e5-base.
+Dado que las ofertas laborales en América Latina contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de Embeddings Multilingües, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \cite{kavas2024}. Modelos populares incluyen E5-large, Sentence Transformers basados en BERT y multilingual-e5-base.
 
 \subsection{Análisis No Supervisado: UMAP y HDBSCAN}
 
@@ -96,7 +96,7 @@ Metodológicamente, implementó una tipología propia de habilidades y clasific�
 
 De forma análoga, Aguilera y Méndez (2018) para Argentina extrajeron datos de ZonaJobs y Bumeran mediante análisis de frecuencias y bigramas \cite{aguilera2018}. Para estandarizar el vocabulario informal, construyeron una lista de palabras clave semi-manual, limitando la escalabilidad y adaptabilidad a nuevas tecnologías.
 
-Para México, Martínez Sánchez (2024) combinó datos de encuestas oficiales con scraping, basándose en frecuencia de términos y tipología manual para segmentar habilidades \cite{martinez2024}.
+Para México, Martínez Sánchez (2024) combinó datos de encuestas oficiales con scraping, basándose en frecuencia de términos y tipología manual para segmentar habilidades \cite{campos2024}.
 
 Estos estudios regionales fueron cruciales para establecer la viabilidad de la recolección de datos, pero expusieron una brecha fundamental compartida: su dependencia de la correspondencia léxica explícita. Al basarse en frecuencias, n-gramas o listas predefinidas, estos sistemas eran metodológicamente frágiles ante la ambigüedad y variabilidad del lenguaje natural.
 
@@ -165,7 +165,7 @@ El análisis del contexto revela un panorama de investigación rico pero fragmen
 \hline
 \textbf{Enfoque} & \textbf{Ventajas} & \textbf{Limitaciones} & \textbf{Refs.} \\
 \hline
-Enfoques Regionales (Léxicos) & Validación de web scraping; Datos de alta frecuencia; Contexto local & Dependencia léxica; Escalabilidad limitada; No captura semántica & \cite{rubio2025, aguilera2018, martinez2024} \\
+Enfoques Regionales (Léxicos) & Validación de web scraping; Datos de alta frecuencia; Contexto local & Dependencia léxica; Escalabilidad limitada; No captura semántica & \cite{rubio2025, aguilera2018, campos2024} \\
 \hline
 LLMs Prompting & Flexibilidad; Sin entrenamiento; Captura contexto complejo & Inconsistencia de salida; Alucinaciones; F1 bajo (17-27\%) & \cite{nguyen2024} \\
 \hline
@@ -180,7 +180,7 @@ Herramientas de Estandarización & Open-source; Integración ESCO/ISCO; Fácil d
 
 Ante esta realidad, el sistema desarrollado en este proyecto no se posicionó como una alternativa incremental, sino como una síntesis estratégica que articuló las fortalezas de las distintas líneas de investigación para crear una solución metodológicamente superior y contextualmente relevante.
 
-El proyecto partió de los aprendizajes de los estudios regionales, adoptando su enfoque en la recolección de datos masivos a través de web scraping como fuente válida y de alta frecuencia para caracterizar el mercado \cite{aguilera2018, martinez2024, rubio2025}. Sin embargo, reemplazó conscientemente su análisis léxico, propenso a errores y de limitada profundidad, con la potencia semántica e inferencial de los Large Language Models (LLMs). Para ello, se inspiró en la investigación internacional de vanguardia, tanto en la exploración del prompting para manejar frases ambiguas \cite{nguyen2024}, como en la implementación de técnicas de fine-tuning para alcanzar un rendimiento de última generación \cite{herandi2024}.
+El proyecto partió de los aprendizajes de los estudios regionales, adoptando su enfoque en la recolección de datos masivos a través de web scraping como fuente válida y de alta frecuencia para caracterizar el mercado \cite{aguilera2018, campos2024, rubio2025}. Sin embargo, reemplazó conscientemente su análisis léxico, propenso a errores y de limitada profundidad, con la potencia semántica e inferencial de los Large Language Models (LLMs). Para ello, se inspiró en la investigación internacional de vanguardia, tanto en la exploración del prompting para manejar frases ambiguas \cite{nguyen2024}, como en la implementación de técnicas de fine-tuning para alcanzar un rendimiento de última generación \cite{herandi2024}.
 
 Además, la solución no se detuvo en la simple extracción de habilidades, sino que buscó estructurar el conocimiento descubierto. Para lograrlo, integró el robusto pipeline de análisis no supervisado validado empíricamente por Lukauskas et al. (2023) \cite{lukauskas2023}, combinando embeddings, UMAP y HDBSCAN para la identificación automática de clústeres de competencias.
 

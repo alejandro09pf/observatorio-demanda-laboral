@@ -211,6 +211,48 @@ export const getStatsSummary = async (): Promise<StatsResponse> => {
   return response.data;
 };
 
+export interface FilteredStatsResponse {
+  filters: {
+    country?: string;
+    job_status?: string;
+    extraction_method?: string;
+    mapping_status?: string;
+  };
+  jobs: {
+    total: number;
+    cleaned: number;
+    with_skills: number;
+  };
+  skills: {
+    total: number;
+    unique: number;
+  };
+  extraction_methods: {
+    ner: number;
+    regex: number;
+    pipeline_a: number;
+    pipeline_b_total: number;
+    pipeline_b_gemma: number;
+    pipeline_b_jobs: number;
+  };
+  countries: string[];
+  portals: string[];
+  date_range: {
+    start: string | null;
+    end: string | null;
+  };
+}
+
+export const getFilteredStats = async (params?: {
+  country?: string;
+  job_status?: string;
+  extraction_method?: string;
+  mapping_status?: string;
+}): Promise<FilteredStatsResponse> => {
+  const response = await api.get('/api/stats/filtered', { params });
+  return response.data;
+};
+
 // ============================================
 // JOBS ENDPOINTS
 // ============================================
@@ -218,6 +260,7 @@ export const getStatsSummary = async (): Promise<StatsResponse> => {
 export const getJobs = async (params?: {
   country?: string;
   portal?: string;
+  job_status?: string;  // raw, cleaned, golden
   search?: string;
   limit?: number;
   offset?: number;
@@ -246,6 +289,8 @@ export const getJobsByCountry = async (
 export const getTopSkills = async (params?: {
   country?: string;
   skill_type?: 'hard' | 'soft';
+  extraction_method?: string;  // ner, regex, pipeline_a, pipeline_b
+  mapping_status?: string;  // esco_mapped, unmapped
   limit?: number;
 }): Promise<TopSkillsResponse> => {
   const response = await api.get('/api/skills/top', { params });
@@ -293,11 +338,37 @@ export const getClusterById = async (
   return response.data;
 };
 
+export interface ClusterConfig {
+  name: string;
+  pipeline: string;      // manual, pipeline_a, pipeline_b
+  size: string;          // 300, 30k
+  esco_stage: string;    // pre, post
+  has_results: boolean;
+  has_metrics: boolean;
+  image_count: number;
+  images: string[];
+}
+
+export interface ClusterImage {
+  filename: string;
+  url: string;
+  size_kb: number;
+}
+
 export const getAvailableClusterConfigs = async (): Promise<{
   count: number;
-  configs: string[];
+  configs: ClusterConfig[];
 }> => {
   const response = await api.get('/api/clusters/configs/available');
+  return response.data;
+};
+
+export const getClusterImages = async (configName: string): Promise<{
+  config: string;
+  count: number;
+  images: ClusterImage[];
+}> => {
+  const response = await api.get(`/api/clusters/images/${configName}`);
   return response.data;
 };
 

@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code
 COPY src/ ./src/
 COPY config/ ./config/
-COPY outputs/ ./outputs/
+# NOTE: outputs/ is mounted as volume in docker-compose.yml, not copied into image
 
 # Set environment variables
 ENV PYTHONPATH=/app/src

@@ -1,19 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   getClusters,
   getAvailableClusterConfigs,
+  getClusterImages,
   ClusteringResponse,
+  ClusterConfig,
+  ClusterImage,
 } from '@/lib/api';
 
 export default function ClustersPage() {
   const [data, setData] = useState<ClusteringResponse | null>(null);
+  const [images, setImages] = useState<ClusterImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [availableConfigs, setAvailableConfigs] = useState<string[]>([]);
+  const [availableConfigs, setAvailableConfigs] = useState<ClusterConfig[]>([]);
   const [selectedConfig, setSelectedConfig] = useState<string>('');
+
+  // Filters
+  const [pipelineFilter, setPipelineFilter] = useState<string>('all');
+  const [sizeFilter, setSizeFilter] = useState<string>('all');
+  const [escoStageFilter, setEscoStageFilter] = useState<string>('all');
 
   // Fetch available configs on mount
   useEffect(() => {
@@ -23,7 +32,7 @@ export default function ClustersPage() {
         setAvailableConfigs(result.configs);
         // Set first config as default if available
         if (result.configs.length > 0) {
-          setSelectedConfig(result.configs[0]);
+          setSelectedConfig(result.configs[0].name);
         }
       } catch (err) {
         console.error('Error fetching configs:', err);
@@ -32,15 +41,50 @@ export default function ClustersPage() {
     fetchConfigs();
   }, []);
 
-  // Fetch clustering data when config changes
+  // Filtered configs based on selected filters
+  const filteredConfigs = useMemo(() => {
+    return availableConfigs.filter((config) => {
+      if (pipelineFilter !== 'all' && config.pipeline !== pipelineFilter) return false;
+      if (sizeFilter !== 'all' && config.size !== sizeFilter) return false;
+      if (escoStageFilter !== 'all' && config.esco_stage !== escoStageFilter) return false;
+      return true;
+    });
+  }, [availableConfigs, pipelineFilter, sizeFilter, escoStageFilter]);
+
+  // Auto-select first filtered config when filters change
+  useEffect(() => {
+    if (filteredConfigs.length > 0 && !filteredConfigs.find(c => c.name === selectedConfig)) {
+      setSelectedConfig(filteredConfigs[0].name);
+    }
+  }, [filteredConfigs, selectedConfig]);
+
+  // Get unique filter values from available configs
+  const pipelines = useMemo(() =>
+    [...new Set(availableConfigs.map(c => c.pipeline))].sort(),
+    [availableConfigs]
+  );
+  const sizes = useMemo(() =>
+    [...new Set(availableConfigs.map(c => c.size))].sort(),
+    [availableConfigs]
+  );
+  const escoStages = useMemo(() =>
+    [...new Set(availableConfigs.map(c => c.esco_stage))].sort(),
+    [availableConfigs]
+  );
+
+  // Fetch clustering data and images when config changes
   useEffect(() => {
     if (!selectedConfig) return;
 
-    const fetchClusters = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const result = await getClusters(selectedConfig);
-        setData(result);
+        const [clusterData, imageData] = await Promise.all([
+          getClusters(selectedConfig),
+          getClusterImages(selectedConfig),
+        ]);
+        setData(clusterData);
+        setImages(imageData.images);
         setError(null);
       } catch (err) {
         setError('Error al cargar clustering');
@@ -50,8 +94,21 @@ export default function ClustersPage() {
       }
     };
 
-    fetchClusters();
+    fetchData();
   }, [selectedConfig]);
+
+  // Get current config info
+  const currentConfig = availableConfigs.find(c => c.name === selectedConfig);
+
+  // Get friendly pipeline name
+  const getPipelineName = (pipeline: string) => {
+    switch (pipeline) {
+      case 'manual': return 'Manual (ONET)';
+      case 'pipeline_a': return 'Pipeline A (NER + Regex)';
+      case 'pipeline_b': return 'Pipeline B (LLM)';
+      default: return pipeline;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -59,30 +116,114 @@ export default function ClustersPage() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Clustering de Habilidades</h1>
         <p className="text-gray-600 mt-2">
-          Agrupación automática de habilidades similares
+          Agrupación automática de habilidades similares mediante UMAP + HDBSCAN
         </p>
       </div>
 
-      {/* Configuration Selector */}
-      {availableConfigs.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <label htmlFor="config-selector" className="block text-sm font-medium text-gray-700 mb-2">
-            Configuración de Clustering
-          </label>
-          <select
-            id="config-selector"
-            value={selectedConfig}
-            onChange={(e) => setSelectedConfig(e.target.value)}
-            className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {availableConfigs.map((config) => (
-              <option key={config} value={config}>
-                {config.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-              </option>
-            ))}
-          </select>
+      {/* Filters */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtros de Configuración</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Pipeline Filter */}
+          <div>
+            <label htmlFor="pipeline-filter" className="block text-sm font-medium text-gray-700 mb-1">
+              Pipeline de Extracción
+            </label>
+            <select
+              id="pipeline-filter"
+              value={pipelineFilter}
+              onChange={(e) => setPipelineFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">Todos</option>
+              {pipelines.map((pipeline) => (
+                <option key={pipeline} value={pipeline}>
+                  {getPipelineName(pipeline)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Size Filter */}
+          <div>
+            <label htmlFor="size-filter" className="block text-sm font-medium text-gray-700 mb-1">
+              Tamaño del Dataset
+            </label>
+            <select
+              id="size-filter"
+              value={sizeFilter}
+              onChange={(e) => setSizeFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">Todos</option>
+              {sizes.map((size) => (
+                <option key={size} value={size}>
+                  {size === '30k' ? '30,000 jobs' : `${size} jobs`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* ESCO Stage Filter */}
+          <div>
+            <label htmlFor="esco-filter" className="block text-sm font-medium text-gray-700 mb-1">
+              Etapa ESCO
+            </label>
+            <select
+              id="esco-filter"
+              value={escoStageFilter}
+              onChange={(e) => setEscoStageFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">Todas</option>
+              {escoStages.map((stage) => (
+                <option key={stage} value={stage}>
+                  {stage === 'pre' ? 'Pre-ESCO (original)' : 'Post-ESCO (normalizado)'}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Config Selector */}
+          <div>
+            <label htmlFor="config-selector" className="block text-sm font-medium text-gray-700 mb-1">
+              Configuración ({filteredConfigs.length})
+            </label>
+            <select
+              id="config-selector"
+              value={selectedConfig}
+              onChange={(e) => setSelectedConfig(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {filteredConfigs.map((config) => (
+                <option key={config.name} value={config.name}>
+                  {config.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      )}
+
+        {/* Current Config Info */}
+        {currentConfig && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex flex-wrap gap-3">
+              <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                {getPipelineName(currentConfig.pipeline)}
+              </span>
+              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                {currentConfig.size === '30k' ? '30,000 jobs' : `${currentConfig.size} jobs`}
+              </span>
+              <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                {currentConfig.esco_stage === 'pre' ? 'Pre-ESCO' : 'Post-ESCO'}
+              </span>
+              <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+                {currentConfig.image_count} imágenes
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Loading State */}
       {loading && (
@@ -105,6 +246,30 @@ export default function ClustersPage() {
       {/* Clustering Data */}
       {data && !loading && !error && (
         <>
+          {/* Images Gallery */}
+          {images.length > 0 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Visualizaciones ({images.length})
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {images.map((image) => (
+                  <div key={image.filename} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                    <img
+                      src={`http://localhost:8000${image.url}`}
+                      alt={image.filename}
+                      className="w-full h-auto"
+                    />
+                    <div className="p-3 bg-gray-50">
+                      <p className="text-sm font-medium text-gray-900 truncate">{image.filename}</p>
+                      <p className="text-xs text-gray-600">{image.size_kb.toFixed(0)} KB</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Metadata */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Información del Análisis</h2>
@@ -220,21 +385,23 @@ export default function ClustersPage() {
                     </div>
 
                     {/* All Skills (Expandable) */}
-                    <details className="mt-3">
-                      <summary className="text-sm text-blue-600 cursor-pointer hover:text-blue-800">
-                        Ver todas las habilidades ({cluster.all_skills.length})
-                      </summary>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {cluster.all_skills.map((skill, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </details>
+                    {cluster.all_skills && cluster.all_skills.length > 0 && (
+                      <details className="mt-3">
+                        <summary className="text-sm text-blue-600 cursor-pointer hover:text-blue-800">
+                          Ver todas las habilidades ({cluster.all_skills.length})
+                        </summary>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {cluster.all_skills.map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </details>
+                    )}
                   </div>
                 ))}
             </div>
