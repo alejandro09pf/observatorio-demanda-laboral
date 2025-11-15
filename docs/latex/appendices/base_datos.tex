@@ -1,24 +1,13 @@
-\section*{APÉNDICE E: DISEÑO DE BASE DE DATOS}
-\addcontentsline{toc}{section}{Apéndice E: Diseño de Base de Datos}
+\section*{APÉNDICE E: INFORMACIÓN ADICIONAL SOBRE BASE DE DATOS}
+\addcontentsline{toc}{section}{Apéndice E: Información Adicional sobre Base de Datos}
 
-Este apéndice documenta el diseño completo de la base de datos relacional del observatorio, incluyendo el esquema de tablas principales, las relaciones entre entidades, los índices optimizados para procesamiento batch, y la configuración de PostgreSQL para manejo de grandes volúmenes de datos.
+Este apéndice proporciona información complementaria sobre el diseño de la base de datos presentado en el Capítulo 5 (Figura \ref{fig:diagrama-er}). Se detallan las especificaciones completas de cada tabla, los índices optimizados para procesamiento batch, la configuración de PostgreSQL para manejo de grandes volúmenes de datos, y las estrategias de persistencia y trazabilidad implementadas.
 
-\subsection*{E.1. Diagrama Entidad-Relación}
+\subsection*{E.1. Especificación Detallada de Tablas}
 
-La Figura \ref{fig:diagrama-er-anexo} muestra las relaciones entre las seis tablas principales del sistema. Todas las tablas derivadas mantienen referencia mediante llave foránea hacia la tabla de ofertas laborales (raw\_jobs), garantizando trazabilidad completa desde cualquier resultado de análisis hasta la oferta original.
+El diagrama entidad-relación presentado en el Capítulo 5 muestra las seis tablas principales del sistema. Esta sección documenta la especificación completa de campos, tipos de datos, índices y volúmenes para cada tabla.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{diagrams/DiagramaER.png}
-\caption{Diagrama Entidad-Relación de la Base de Datos del Observatorio}
-\label{fig:diagrama-er-anexo}
-\end{figure}
-
-\subsection*{E.2. Esquema de Tablas Principales}
-
-La base de datos actúa como columna vertebral del sistema, implementando el patrón de persistencia de pipeline donde cada etapa escribe sus resultados en tablas especializadas. Se seleccionó PostgreSQL 15+ por su soporte JSON nativo (JSONB) para almacenar metadatos flexibles, extensión pgvector para vectores de alta dimensionalidad, robustez transaccional (ACID), capacidad de particionamiento para escalabilidad, y licencia libre (PostgreSQL License).
-
-\subsubsection*{E.2.1. Tabla raw\_jobs}
+\subsubsection*{E.1.1. Tabla raw\_jobs}
 
 Almacena ofertas laborales tal como fueron scrapeadas, sin procesamiento ni normalización.
 
@@ -51,7 +40,7 @@ Almacena ofertas laborales tal como fueron scrapeadas, sin procesamiento ni norm
 
 \textbf{Volumen actual}: 30,660 ofertas únicas (54.21\% del total scrapeado tras deduplicación y filtrado de calidad)
 
-\subsubsection*{E.2.2. Tabla extracted\_skills}
+\subsubsection*{E.1.2. Tabla extracted\_skills}
 
 Contiene habilidades identificadas por Pipeline A (NER + expresiones regulares).
 
@@ -75,7 +64,7 @@ Contiene habilidades identificadas por Pipeline A (NER + expresiones regulares).
 
 \textbf{Volumen estimado}: 8,268 skills extraídas de 300 ofertas del gold standard (27.6 skills/job promedio)
 
-\subsubsection*{E.2.3. Tabla enhanced\_skills}
+\subsubsection*{E.1.3. Tabla enhanced\_skills}
 
 Almacena el enriquecimiento semántico realizado por Pipeline B (LLM).
 
@@ -102,7 +91,7 @@ Almacena el enriquecimiento semántico realizado por Pipeline B (LLM).
 
 \textbf{Volumen estimado}: Datos de 299/300 jobs del gold standard procesados con Gemma 3 4B (99.3\% cobertura)
 
-\subsubsection*{E.2.4. Tabla skill\_embeddings}
+\subsubsection*{E.1.4. Tabla skill\_embeddings}
 
 Contiene las representaciones vectoriales de alta dimensionalidad generadas con E5 Multilingual.
 
@@ -130,7 +119,7 @@ Contiene las representaciones vectoriales de alta dimensionalidad generadas con 
     \item Trade-off: 100\% recall con exact search (IndexFlatIP en FAISS)
 \end{itemize}
 
-\subsubsection*{E.2.5. Tabla analysis\_results}
+\subsubsection*{E.1.5. Tabla analysis\_results}
 
 Almacena resultados de clustering y análisis de tendencias temporales.
 
@@ -167,7 +156,7 @@ Almacena resultados de clustering y análisis de tendencias temporales.
 }
 \end{verbatim}
 
-\subsubsection*{E.2.6. Tabla esco\_skills}
+\subsubsection*{E.1.6. Tabla esco\_skills}
 
 Tabla de referencia con la taxonomía ESCO completa extendida con habilidades de O*NET y agregadas manualmente.
 
@@ -199,11 +188,11 @@ Tabla de referencia con la taxonomía ESCO completa extendida con habilidades de
     \item \textbf{Total}: 14,215 skills en la taxonomía extendida
 \end{itemize}
 
-\subsection*{E.3. Configuración de PostgreSQL para Procesamiento Batch}
+\subsection*{E.2. Configuración de PostgreSQL para Procesamiento Batch}
 
 La configuración de PostgreSQL se optimizó específicamente para procesamiento batch de grandes volúmenes de datos, priorizando throughput sobre latencia de consultas individuales.
 
-\subsubsection*{E.3.1. Configuración de Memoria}
+\subsubsection*{E.2.1. Configuración de Memoria}
 
 \begin{verbatim}
 # postgresql.conf
@@ -221,7 +210,7 @@ maintenance_work_mem = 1GB
 effective_cache_size = 12GB
 \end{verbatim}
 
-\subsubsection*{E.3.2. Resultados de las Optimizaciones}
+\subsubsection*{E.2.2. Resultados de las Optimizaciones}
 
 Las optimizaciones de configuración e índices lograron las siguientes mejoras de performance:
 
@@ -246,7 +235,7 @@ Las optimizaciones de configuración e índices lograron las siguientes mejoras 
 
 Esta configuración permitió que el procesamiento del corpus completo de 30,660 ofertas completara en \textasciitilde6.2 horas (incluyendo todas las etapas: scraping, extracción, mapeo ESCO, embeddings, clustering).
 
-\subsection*{E.4. Estrategias de Persistencia y Trazabilidad}
+\subsection*{E.3. Estrategias de Persistencia y Trazabilidad}
 
 La base de datos implementa tres mecanismos fundamentales para garantizar reproducibilidad y trazabilidad:
 
