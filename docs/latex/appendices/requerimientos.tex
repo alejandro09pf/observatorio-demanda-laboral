@@ -1,0 +1,134 @@
+\section*{APÉNDICE C: REQUERIMIENTOS Y ESPECIFICACIÓN FUNCIONAL DEL SISTEMA}
+\addcontentsline{toc}{section}{Apéndice C: Requerimientos y Especificación Funcional}
+
+Este apéndice documenta de forma exhaustiva los requerimientos funcionales, no funcionales y de datos del observatorio de demanda laboral, así como las restricciones técnicas, de datos y metodológicas que delimitaron el alcance del proyecto. La especificación funcional detalla la arquitectura de pipeline de 7 etapas, las interfaces críticas entre módulos y los casos de uso principales del sistema.
+
+\subsection*{C.1. Requerimientos del Sistema}
+
+Los requerimientos del sistema se organizan en tres categorías: funcionales, no funcionales y de datos. Esta taxonomía permite abarcar tanto las capacidades operativas del observatorio como las propiedades de calidad que garantizan su viabilidad técnica y científica.
+
+\subsubsection*{C.1.1. Requerimientos Funcionales}
+
+El observatorio debe implementar las siguientes capacidades funcionales, organizadas según las etapas del pipeline de procesamiento:
+
+\textbf{RF-1. Adquisición de datos:} El sistema debe ser capaz de recolectar automáticamente ofertas laborales de al menos 6 portales de empleo distribuidos en Colombia, México y Argentina, mediante técnicas de web scraping que respeten las políticas de robots.txt y los límites de tasa de peticiones de cada sitio \cite{orozco2019webscraping}. La arquitectura debe soportar tanto páginas estáticas (parsing HTML directo) como dinámicas (ejecución de JavaScript mediante headless browsers), permitiendo capturar campos estructurados como título, descripción, requisitos, ubicación, salario y portal de origen.
+
+\textbf{RF-2. Normalización y limpieza:} El sistema debe preprocesar el texto extraído mediante técnicas de NLP, incluyendo tokenización, lematización, eliminación de caracteres especiales y normalización de codificación (UTF-8), adaptadas específicamente al español latinoamericano y al uso técnico del lenguaje en ofertas de empleo \cite{echeverria2022}.
+
+\textbf{RF-3. Extracción de habilidades:} El observatorio debe identificar y extraer menciones de habilidades técnicas, competencias y tecnologías presentes en las ofertas laborales mediante una arquitectura dual:
+\begin{itemize}
+    \item Pipeline A: Extracción basada en Reconocimiento de Entidades Nombradas (NER) con spaCy y expresiones regulares pobladas con patrones de tecnologías conocidas.
+    \item Pipeline B: Extracción semántica mediante LLMs (Gemma 3 4B) capaz de inferir habilidades implícitas a partir del contexto de la vacante \cite{herandi2024, nguyen2024}.
+\end{itemize}
+
+\textbf{RF-4. Normalización semántica:} Las habilidades extraídas deben ser mapeadas a una taxonomía estandarizada (ESCO) mediante un proceso de dos capas: coincidencia léxica exacta y difusa con umbral de similitud de cadenas (fuzzywuzzy ratio $\geq$0.85). La capa de búsqueda semántica basada en embeddings multilingües (E5) con índices FAISS se deshabilitó tras pruebas que revelaron falsos positivos en contexto técnico.
+
+\textbf{RF-5. Representación vectorial:} El sistema debe generar embeddings semánticos de alta dimensionalidad (768D) para cada habilidad y cada oferta laboral, utilizando modelos multilingües pre-entrenados que capturen relaciones semánticas en español e inglés \cite{kavas2024}.
+
+\textbf{RF-6. Análisis no supervisado:} El observatorio debe aplicar técnicas de reducción de dimensionalidad (UMAP) y clustering basado en densidad (HDBSCAN) sobre los embeddings para descubrir automáticamente clústeres de habilidades relacionadas y perfiles emergentes, sin requerir etiquetado manual previo \cite{lukauskas2023}.
+
+\textbf{RF-7. Trazabilidad y auditoría:} Cada etapa del pipeline debe registrar metadatos de procesamiento (timestamps, versiones de modelos, parámetros de configuración, métricas de calidad) en una base de datos relacional que permita la reproducibilidad de los análisis y la auditoría de resultados.
+
+\subsubsection*{C.1.2. Requerimientos No Funcionales}
+
+Los requerimientos no funcionales establecen las propiedades de calidad que el sistema debe satisfacer:
+
+\textbf{RNF-1. Escalabilidad:} El sistema debe ser capaz de procesar al menos 600,000 ofertas laborales en un período de 6 meses, manteniendo tiempos de respuesta razonables (extracción $<$ 30 seg/oferta, clustering completo $<$ 4 horas sobre dataset completo).
+
+\textbf{RNF-2. Portabilidad:} La arquitectura debe estar contenedorizada mediante Docker para garantizar despliegue consistente en diferentes entornos (desarrollo local, servidores de producción, servicios en la nube).
+
+\textbf{RNF-3. Mantenibilidad:} El código debe seguir estándares de calidad (PEP 8 para Python), contar con documentación técnica completa y estructurarse de manera modular para facilitar extensiones futuras (nuevos portales, nuevos países, nuevas técnicas de análisis).
+
+\textbf{RNF-4. Multilingüismo:} Todos los modelos de NLP y embeddings deben soportar eficazmente español, inglés y la mezcla de ambos (``Spanglish'') característica del vocabulario técnico en América Latina.
+
+\textbf{RNF-5. Reproducibilidad científica:} Los experimentos deben ser completamente reproducibles mediante el uso de semillas aleatorias fijas, versionado de modelos, registro de hiperparámetros y almacenamiento de datasets intermedios.
+
+\textbf{RNF-6. Eficiencia computacional:} La búsqueda semántica debe implementarse mediante índices FAISS optimizados que permitan consultas de similitud en tiempo sub-lineal respecto al tamaño del corpus de habilidades ESCO (13,000+ términos).
+
+\subsubsection*{C.1.3. Requerimientos de Datos}
+
+Los requerimientos de datos especifican las características cualitativas y cuantitativas de la información a recolectar:
+
+\textbf{RD-1. Cobertura geográfica:} El corpus debe incluir ofertas laborales de Colombia, México y Argentina, con representación de al menos 2 portales principales por país para mitigar sesgos de fuente única.
+
+\textbf{RD-2. Representatividad sectorial:} Aunque el observatorio se centra en habilidades tecnológicas, debe capturar ofertas de diversos sectores económicos (TI, finanzas, manufactura, salud, educación) para identificar la demanda transversal de competencias digitales.
+
+\textbf{RD-3. Volumen mínimo:} Para garantizar significancia estadística en el análisis de clustering, el sistema debe recolectar al menos 100,000 ofertas con contenido de calidad suficiente (descripción $>$ 100 caracteres, al menos 2 habilidades identificables).
+
+\textbf{RD-4. Calidad de texto:} Las ofertas deben pasar filtros de calidad que eliminen duplicados exactos, contenido corrupto, idiomas no soportados y descripciones excesivamente genéricas que no aporten información sobre habilidades.
+
+\textbf{RD-5. Metadatos temporales:} Cada oferta debe registrar fecha de publicación, fecha de recolección y fecha de expiración (si está disponible) para permitir análisis de evolución temporal de la demanda.
+
+\subsection*{C.2. Restricciones}
+
+Las restricciones representan limitaciones inherentes al problema, al contexto de operación o a las decisiones de alcance del proyecto.
+
+\subsubsection*{C.2.1. Restricciones Técnicas}
+
+\textbf{C-1. Límites de scraping:} Los portales de empleo implementan medidas anti-bot (CAPTCHAs, rate limiting, bloqueos por IP) que restringen la velocidad y volumen de recolección. El sistema debe respetar estas limitaciones mediante delays adaptativos, rotación de user-agents y estrategias de backoff exponencial.
+
+\textbf{C-2. Dinamismo del DOM:} La estructura HTML de los portales cambia frecuentemente sin previo aviso, lo que genera fragilidad en los selectores CSS/XPath. El sistema debe incluir monitoreo de fallos y mecanismos de alerta para intervención manual cuando los spiders dejan de funcionar.
+
+\textbf{C-3. Recursos computacionales:} El entrenamiento y ejecución de LLMs requiere capacidad de cómputo significativa (GPU con al menos 8GB VRAM para modelos de 7B parámetros). El proyecto se limita a modelos open-source ejecutables localmente o APIs de terceros con presupuesto acotado.
+
+\textbf{C-4. Latencia de procesamiento LLM:} El procesamiento de ofertas con LLMs ejecutados localmente introduce latencia significativa (40-45 segundos/oferta) comparado con métodos tradicionales. Alternativamente, las llamadas a APIs de LLMs comerciales (OpenAI, Anthropic) reducirían latencia pero introducirían costos variables y dependencias externas. El diseño debe balancear calidad de resultados con viabilidad técnica y tiempos de procesamiento.
+
+\subsubsection*{C.2.2. Restricciones de Datos}
+
+\textbf{C-5. Heterogeneidad de formatos:} No existe un estándar para la publicación de ofertas laborales. Los portales utilizan campos, nomenclaturas y niveles de detalle diferentes, lo que dificulta la normalización automática.
+
+\textbf{C-6. Incompletitud de información:} Muchas ofertas omiten información relevante (salario, requisitos detallados, tecnologías específicas), limitando la profundidad del análisis para ciertos campos.
+
+\textbf{C-7. Ruido lingüístico:} Las ofertas contienen errores ortográficos, abreviaciones no estándar, mezcla de idiomas y uso informal del lenguaje, lo que reduce la efectividad de técnicas de NLP basadas en corpus formales.
+
+\textbf{C-8. Volatilidad temporal:} Las ofertas se eliminan o modifican frecuentemente (típicamente tienen vigencia de 30-60 días), lo que requiere estrategias de recolección periódica y versionado de datos.
+
+\subsubsection*{C.2.3. Restricciones Metodológicas}
+
+\textbf{C-9. Ausencia de ground truth:} No existe un dataset etiquetado de referencia para habilidades en ofertas laborales en español latinoamericano, lo que dificulta la evaluación cuantitativa rigurosa de los modelos de extracción.
+
+\textbf{C-10. Subjetividad de ``habilidad'':} La definición de qué constituye una ``habilidad relevante'' es inherentemente subjetiva y dependiente del contexto (ejemplo: ¿``trabajo en equipo'' es una habilidad técnica o blanda? ¿``Microsoft Office'' debe segmentarse en Word/Excel/PowerPoint?).
+
+\textbf{C-11. Sesgo de fuente:} Los portales de empleo no representan el universo completo del mercado laboral. Excluyen ofertas publicadas en sitios corporativos directos, redes sociales, o canales informales, introduciendo sesgo de formalidad y tamaño de empresa.
+
+\subsection*{C.3. Especificación Funcional}
+
+La especificación funcional describe el comportamiento de alto nivel del sistema mediante la definición de su arquitectura de pipeline y las interfaces entre módulos.
+
+\subsubsection*{C.3.1. Arquitectura de Pipeline de 7 Etapas}
+
+El observatorio se estructura como un pipeline secuencial de transformación de datos, donde cada etapa consume la salida de la anterior y produce artefactos almacenados en PostgreSQL:
+
+\textbf{Etapa 1 - Scraping:} Recolecta HTML de portales mediante Scrapy + Selenium. \textit{Entrada:} URLs semilla y configuración de spiders. \textit{Salida:} Tabla \texttt{raw\_jobs} con campos \texttt{job\_id}, \texttt{portal}, \texttt{country}, \texttt{title}, \texttt{description}, \texttt{requirements}, \texttt{url}, \texttt{date\_published}, \texttt{date\_scraped}.
+
+\textbf{Etapa 2 - Normalización:} Limpia y estandariza texto. \textit{Entrada:} \texttt{raw\_jobs}. \textit{Salida:} Campos adicionales \texttt{description\_clean}, \texttt{requirements\_clean}, \texttt{combined\_text}.
+
+\textbf{Etapa 3 - Extracción (Pipeline A):} Aplica NER + Regex. \textit{Entrada:} \texttt{combined\_text}. \textit{Salida:} Tabla \texttt{extracted\_skills} con campos \texttt{job\_id}, \texttt{skill\_text}, \texttt{extraction\_\allowbreak method}, \texttt{confidence\_\allowbreak score}.
+
+\textbf{Etapa 4 - Extracción (Pipeline B):} Aplica LLM. \textit{Entrada:} \texttt{combined\_text} + prompt engineering. \textit{Salida:} Tabla \texttt{enhanced\_skills} con campos \texttt{job\_id}, \texttt{skill\_text}, \texttt{implicit\_flag}, \texttt{llm\_\allowbreak confidence}, \texttt{esco\_\allowbreak suggestion}.
+
+\textbf{Etapa 5 - Mapeo ESCO:} Normaliza contra taxonomía. \textit{Entrada:} \texttt{extracted\_skills} + \texttt{enhanced\_skills}. \textit{Salida:} Campos adicionales \texttt{esco\_\allowbreak concept\_\allowbreak uri}, \texttt{esco\_\allowbreak preferred\_\allowbreak label}, \texttt{mapping\_\allowbreak method}.
+
+\textbf{Etapa 6 - Embeddings:} Genera vectores. \textit{Entrada:} \texttt{esco\_\allowbreak preferred\_\allowbreak label}. \textit{Salida:} Tabla \texttt{skill\_\allowbreak embeddings} con campos \texttt{skill\_id}, \texttt{embedding\_\allowbreak vector} (pgvector[768]).
+
+\textbf{Etapa 7 - Clustering:} Reduce dimensionalidad y agrupa. \textit{Entrada:} \texttt{skill\_embeddings}. \textit{Salida:} Tabla \texttt{analysis\_\allowbreak results} con campos \texttt{job\_id}, \texttt{cluster\_id}, \texttt{umap\_x}, \texttt{umap\_y}, \texttt{cluster\_\allowbreak label}.
+
+\subsubsection*{C.3.2. Interfaces Críticas}
+
+\textbf{I-1. Interfaz Scraper-Database:} Los spiders de Scrapy utilizan un pipeline personalizado (\texttt{PostgreSQL\-Pipeline}) que serializa items a formato JSON y los inserta en \texttt{raw\_jobs} con manejo de duplicados por hash de URL.
+
+\textbf{I-2. Interfaz Extractor-ESCO:} El módulo \texttt{ESCOMatcher} expone métodos: \texttt{find\_exact\_match()} y \texttt{find\_fuzzy\_match()}. El sistema implementa memoización mediante diccionario \texttt{skill\_text} $\to$ \texttt{esco\_uri} que evita remapear skills repetidas, reduciendo tiempo de procesamiento batch de ~6.5h a ~6.5min (60× aceleración).
+
+\textbf{I-3. Interfaz LLM-Processor:} El módulo \texttt{LLMHandler} abstrae llamadas a modelos locales (vía llama.cpp) o remotos (OpenAI API) mediante una interfaz unificada que recibe prompts estructurados y retorna respuestas en formato JSON validado con Pydantic.
+
+\textbf{I-4. Interfaz Orquestador-Pipeline:} El \texttt{MasterController} expone comandos CLI (vía Typer) que orquestan la ejecución secuencial de etapas, con control de estado persistente en base de datos para permitir reinicio tras fallos.
+
+\subsubsection*{C.3.3. Casos de Uso Principales}
+
+\textbf{CU-1. Recolección programada:} Un scheduler (APScheduler) ejecuta spiders periódicamente (ej: diariamente a las 2 AM) para mantener el corpus actualizado. El sistema registra métricas de cada ejecución (items capturados, errores, duración) y envía alertas si el volumen cae por debajo de umbrales históricos.
+
+\textbf{CU-2. Análisis temporal de demanda:} Un analista ejecuta \texttt{python scripts/\allowbreak temporal\_\allowbreak clustering\_\allowbreak analysis.py} para generar visualizaciones automáticas de evolución temporal de demanda de habilidades. El sistema produce: (1) heatmap de frecuencia por clúster y trimestre mostrando tendencias estacionales, (2) gráficos de línea con evolución de los top-10 clústeres más demandados, (3) reporte JSON con métricas de clustering (silhouette, Davies-Bouldin) y frecuencias agregadas por período, almacenados en \texttt{outputs/\allowbreak clustering/\allowbreak temporal/}.
+
+\textbf{CU-3. Validación de pipeline:} Un investigador ejecuta ambos pipelines (A y B) sobre un subset de 300 ofertas y compara resultados mediante métricas de solapamiento (Jaccard similarity) y análisis cualitativo de habilidades únicas identificadas por cada método.
+
+\textbf{CU-4. Extensibilidad a nuevos países:} El sistema está diseñado con arquitectura modular que facilita agregar nuevos países. Un desarrollador puede extender la cobertura geográfica mediante: (1) implementación de nuevo spider heredando de \texttt{BaseSpider} con selectores CSS específicos del portal objetivo (ej: \texttt{laborum.cl} para Chile), (2) actualización de lista de países soportados en \texttt{config/settings.py}, (3) ejecución del pipeline completo de procesamiento sin modificaciones adicionales. La arquitectura actual soporta 3 países (Colombia, México, Argentina) mediante 9 spiders distribuidos en portales regionales (\texttt{computrabajo}, \texttt{elempleo}, \texttt{bumeran}, \texttt{zonajobs}, \texttt{occmundial}, \texttt{magneto}, entre otros).

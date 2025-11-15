@@ -62,9 +62,9 @@ La columna $\Delta$ F1 cuantifica dependencia de cada pipeline en ESCO para perf
 
 Pipeline B (Gemma 3 4B) se identificó como solución óptima con F1=84.26\% Post-ESCO, balanceando Precision (89.25\%) y Recall (79.81\%). Las ventajas fueron múltiples: primero, outputs limpios sin ruido HTML/JS observado en Pipeline A; segundo, normalización implícita generando formas estándar que mapean eficientemente a ESCO; tercero, capacidad contextual detectando skills implícitas (``experiencia en arquitectura de microservicios'' → extrae ``Microservices'', ``Architecture''); y cuarto, ausencia de alucinaciones versus Llama/Phi. Las limitaciones también fueron relevantes: primero, costo computacional 42.3s/oferta versus 0.97s Pipeline A (43× más lento); segundo, performance Pre-ESCO moderado (F1=46.23\%) sugiriendo dependencia en mapeo ESCO para alcanzar alto F1; y tercero, requiere GPU para inferencia (4GB VRAM mínimo con cuantización INT4).
 
-\textbf{Pipeline A (NER+Regex)} ofreció alternativa viable para escenarios sin GPU con F1=72.53\% Post-ESCO, ejecutándose en CPU a 0.97s/oferta. Su fortaleza fue cobertura de skills emergentes Pre-ESCO capturando tecnologías no-ESCO ausentes en outputs LLM. Su debilidad principal fue baja cobertura ESCO: solo 11.1\% de skills extraídas mapearon a taxonomía (vs 11.3\% Gemma), indicando que 89\% permanecen sin estandarizar. La variante Regex-Only (F1=79.17\%, 0.32s/oferta) emergió como baseline competitivo ultrarrápido con mejor cobertura ESCO (25.7\%).
+Pipeline A (NER+Regex) ofreció alternativa viable para escenarios sin GPU con F1=72.53\% Post-ESCO, ejecutándose en CPU a 0.97s/oferta. Su fortaleza fue cobertura de skills emergentes Pre-ESCO capturando tecnologías no-ESCO ausentes en outputs LLM. Su debilidad principal fue baja cobertura ESCO: solo 11.1\% de skills extraídas mapearon a taxonomía (vs 11.3\% Gemma), indicando que 89\% permanecen sin estandarizar. La variante Regex-Only (F1=79.17\%, 0.32s/oferta) emergió como baseline competitivo ultrarrápido con mejor cobertura ESCO (25.7\%).
 
-El trade-off crítico fue \textbf{Flexibilidad vs Estandarización}: Pre-ESCO favorece Pipeline A capturando 40+ skills emergentes (``ChatGPT'', ``Tailwind CSS'', ``Terraform'') formando micro-clusters válidos en análisis temporal, mientras Post-ESCO favorece Gemma con 84\% F1 en vocabulario controlado. Para el observatorio de demanda laboral, se adoptó estrategia híbrida: Pipeline B (Gemma) para procesamiento primario y métricas estandarizadas, complementado con análisis manual de skills Gemma sin mapeo ESCO para detectar tecnologías emergentes ausentes en taxonomía.
+El trade-off crítico identificado fue flexibilidad versus estandarización: Pre-ESCO favorece Pipeline A capturando 40+ skills emergentes (``ChatGPT'', ``Tailwind CSS'', ``Terraform'') formando micro-clusters válidos en análisis temporal, mientras Post-ESCO favorece Gemma con 84\% F1 en vocabulario controlado. Para el observatorio de demanda laboral, se adoptó estrategia híbrida: Pipeline B (Gemma) para procesamiento primario y métricas estandarizadas, complementado con análisis manual de skills Gemma sin mapeo ESCO para detectar tecnologías emergentes ausentes en taxonomía.
 
 \section{Análisis del Mercado Laboral Tecnológico Latinoamericano}
 
@@ -78,11 +78,11 @@ El sistema de clustering se ejecutó sobre 8 configuraciones de producción repr
 
 Las configuraciones PRE-ESCO vs. POST-ESCO revelaron tres patrones diferenciados según pipeline de extracción:
 
-\textbf{(1) Manual Annotations - Colapso severo}: 61 clusters (1,914 skills) PRE-ESCO redujeron a 2 clusters (236 skills) POST-ESCO, representando pérdida del 87.7\% de diversidad léxica. Esta transformación drástica refleja que ESCO v1.1.0 (publicado 2019-2021) no captura 1,678 skills (87.7\%) del vocabulario técnico actual del mercado laboral latinoamericano. Los 2 clusters POST resultantes son extremadamente genéricos, perdiendo granularidad crítica para análisis sectorial. Silhouette degradó de 0.456 a 0.418 (-8.3\%), aunque el ruido se redujo de 23.8\% a 1.7\% por falta de diversidad léxica. Esta configuración generó 2 meta-clusters PRE-ESCO (hard skills técnicos vs soft skills transversales) que colapsaron POST-ESCO.
+Manual Annotations presentó colapso severo: 61 clusters (1,914 skills) PRE-ESCO redujeron a 2 clusters (236 skills) POST-ESCO, representando pérdida del 87.7\% de diversidad léxica. Esta transformación drástica refleja que ESCO v1.1.0 (publicado 2019-2021) no captura 1,678 skills (87.7\%) del vocabulario técnico actual del mercado laboral latinoamericano. Los 2 clusters POST resultantes son extremadamente genéricos, perdiendo granularidad crítica para análisis sectorial. Silhouette degradó de 0.456 a 0.418 (-8.3\%), aunque el ruido se redujo de 23.8\% a 1.7\% por falta de diversidad léxica. Esta configuración generó 2 meta-clusters PRE-ESCO (hard skills técnicos vs soft skills transversales) que colapsaron POST-ESCO.
 
-\textbf{(2) Pipeline A (NER+Regex) - Colapso masivo a escala}: En dataset de 300 jobs, transformación fue moderada (38 clusters $\to$ 7 clusters, -78.0\% skills), manteniendo Silhouette 0.447 PRE vs 0.398 POST. Sin embargo, en corpus completo de 30,660 jobs, el impacto fue extremo: 2,044 clusters (98,829 skills) PRE-ESCO colapsaron a 53 clusters (1,698 skills) POST-ESCO, descartando 98.3\% de extracciones por falta de mapeo ESCO. Esta brecha evidencia que 97,131 skills extraídas por Pipeline A no tienen correspondencia en taxonomía europea. Paradójicamente, métricas mejoraron POST-ESCO a escala: Silhouette 0.361 (PRE) $\to$ 0.456 (POST), Davies-Bouldin 0.735 $\to$ 0.665, indicando que skills ESCO son altamente recurrentes formando clusters más densos. Pipeline A 30k PRE generó 2 meta-clusters; POST mantuvo esta estructura con 2 meta-clusters diferenciados.
+Pipeline A (NER+Regex) experimentó colapso masivo a escala: En dataset de 300 jobs, transformación fue moderada (38 clusters $\to$ 7 clusters, -78.0\% skills), manteniendo Silhouette 0.447 PRE vs 0.398 POST. Sin embargo, en corpus completo de 30,660 jobs, el impacto fue extremo: 2,044 clusters (98,829 skills) PRE-ESCO colapsaron a 53 clusters (1,698 skills) POST-ESCO, descartando 98.3\% de extracciones por falta de mapeo ESCO. Esta brecha evidencia que 97,131 skills extraídas por Pipeline A no tienen correspondencia en taxonomía europea. Paradójicamente, métricas mejoraron POST-ESCO a escala: Silhouette 0.361 (PRE) $\to$ 0.456 (POST), Davies-Bouldin 0.735 $\to$ 0.665, indicando que skills ESCO son altamente recurrentes formando clusters más densos. Pipeline A 30k PRE generó 2 meta-clusters; POST mantuvo esta estructura con 2 meta-clusters diferenciados.
 
-\textbf{(3) Pipeline B (LLM) - Comportamiento anómalo de expansión}: Único pipeline donde POST tiene MÁS skills y clusters que PRE: 34 clusters (1,766 skills) PRE-ESCO expandieron a 50 clusters (1,937 skills) POST-ESCO (+47.1\% clusters, +9.7\% skills). Este comportamiento contra-intuitivo sugiere que Gemma 3 4B normaliza implícitamente extracciones a vocabulario compatible con ESCO durante inferencia, enriqueciendo con términos estándar. Silhouette mejoró de 0.234 (PRE) a 0.348 (POST) (+48.7\%), aunque inferior a Manual (0.456) y Pipeline A 300 PRE (0.447). Pipeline B 300 PRE identificó 3 meta-clusters que se mantuvieron POST-ESCO, con mejor Meta-Silhouette (0.267 POST vs baseline).
+Pipeline B (LLM) mostró comportamiento anómalo de expansión: Único pipeline donde POST tiene MÁS skills y clusters que PRE: 34 clusters (1,766 skills) PRE-ESCO expandieron a 50 clusters (1,937 skills) POST-ESCO (+47.1\% clusters, +9.7\% skills). Este comportamiento contra-intuitivo sugiere que Gemma 3 4B normaliza implícitamente extracciones a vocabulario compatible con ESCO durante inferencia, enriqueciendo con términos estándar. Silhouette mejoró de 0.234 (PRE) a 0.348 (POST) (+48.7\%), aunque inferior a Manual (0.456) y Pipeline A 300 PRE (0.447). Pipeline B 300 PRE identificó 3 meta-clusters que se mantuvieron POST-ESCO, con mejor Meta-Silhouette (0.267 POST vs baseline).
 
 \subsubsection{Trade-off Diversidad-Cohesión con Escala}
 
@@ -90,13 +90,7 @@ La evaluación de Pipeline A en 300 jobs vs. 30,660 jobs cuantificó el trade-of
 
 \subsubsection{Comparación de Calidad entre Pipelines}
 
-En configuración 300 jobs PRE-ESCO, los tres pipelines exhibieron perfiles diferenciados:
-
-\begin{itemize}
-\item \textbf{Manual Annotations}: Mejor Silhouette (0.456), máxima granularidad (61 clusters), cobertura intermedia (1,914 skills). Gold standard de calidad semántica con 23.8\% ruido. Generó 2 meta-clusters diferenciando claramente hard/soft skills.
-\item \textbf{Pipeline A}: Silhouette competitivo (0.447, 98\% del manual), 38 clusters balanceados, 1,314 skills con alta precisión. Ruido 25.2\% ligeramente superior pero totalmente automatizado. No generó meta-clusters (todos 38 clusters quedaron UNCLUSTERED).
-\item \textbf{Pipeline B}: Menor Silhouette (0.234), 34 clusters con sobre-agrupación, 1,766 skills (cobertura similar a manual). Mejor filtrado de ruido (12.8\%), LLM normaliza agresivamente reduciendo variabilidad léxica. Generó 3 meta-clusters con Meta-Silhouette moderado.
-\end{itemize}
+En configuración 300 jobs PRE-ESCO, los tres pipelines exhibieron perfiles diferenciados. Manual Annotations alcanzó mejor Silhouette (0.456) con máxima granularidad (61 clusters) y cobertura intermedia (1,914 skills), estableciendo gold standard de calidad semántica con 23.8\% ruido y generando 2 meta-clusters diferenciando claramente hard/soft skills. Pipeline A mostró Silhouette competitivo (0.447, 98\% del manual) con 38 clusters balanceados y 1,314 skills con alta precisión, presentando ruido 25.2\% ligeramente superior pero operación totalmente automatizada, sin generar meta-clusters (todos 38 clusters quedaron UNCLUSTERED). Pipeline B exhibió menor Silhouette (0.234) con 34 clusters con sobre-agrupación y 1,766 skills (cobertura similar a manual), logrando mejor filtrado de ruido (12.8\%) dado que el LLM normaliza agresivamente reduciendo variabilidad léxica, generando 3 meta-clusters con Meta-Silhouette moderado.
 
 Capacidades validadas: Las 8 configuraciones validaron tres capacidades críticas del sistema. En primer lugar, la escalabilidad mediante el procesamiento exitoso de 98,829 skills únicas en menos de 10 minutos con métricas aceptables (Silhouette 0.361, Davies-Bouldin 0.735). En segundo lugar, la adaptabilidad a través de la detección automática de 2-2,044 clusters según granularidad de datos sin intervención manual ni ajuste de hiperparámetros. En tercer lugar, la robustez evidenciada porque la estructura macro de 2 meta-clusters (hard skills técnicos vs. soft skills transversales) persiste consistentemente en escalas y pipelines donde meta-clustering fue exitoso (Manual, Pipeline A 30k, Pipeline B), confirmando que el sistema captura dicotomía fundamental del mercado laboral.
 
@@ -156,20 +150,9 @@ Pipeline A 30k POST & 53 & 1,698 & 0.456 & 22.3\% & 2 \\
 \end{tabular}
 \end{table}
 
-El análisis cualitativo exhaustivo se realizó sobre la configuración \textbf{Pipeline B 300 POST} (exp15: n\_neighbors=15, min\_cluster\_size=12) que balanceó óptimamente interpretabilidad (50 clusters manejables para inspección manual) con calidad métrica (Silhouette 0.348, ratio 38.7:1). Esta configuración generó 50 clusters fine-grained con estructura meta-clustering jerárquica de 3 niveles (META-0: conceptos generales, META-1: skills especializadas, META-2: tecnologías core) más 15 clusters UNCLUSTERED representando frameworks altamente específicos. El análisis identificó 14 categorías temáticas dominantes en el mercado laboral tecnológico latinoamericano. Los 15 clusters más demandados concentran 68\% de la demanda total:
+El análisis cualitativo exhaustivo se realizó sobre la configuración Pipeline B 300 POST (exp15: n\_neighbors=15, min\_cluster\_size=12) que balanceó óptimamente interpretabilidad (50 clusters manejables para inspección manual) con calidad métrica (Silhouette 0.348, ratio 38.7:1). Esta configuración generó 50 clusters fine-grained con estructura meta-clustering jerárquica de 3 niveles (META-0: conceptos generales, META-1: skills especializadas, META-2: tecnologías core) más 15 clusters UNCLUSTERED representando frameworks altamente específicos. El análisis identificó 14 categorías temáticas dominantes en el mercado laboral tecnológico latinoamericano, donde los 15 clusters más demandados concentran 68\% de la demanda total.
 
-\begin{enumerate}
-\item \textbf{Databases} (916 menciones): MySQL, PostgreSQL, SQL, MongoDB, NoSQL --- cluster de máxima demanda reflejando centralidad de bases de datos en perfiles backend
-\item \textbf{Programming Languages} (729 menciones): TypeScript, Python, Java, C\#, PHP --- lenguajes core con TypeScript liderando adopción moderna
-\item \textbf{DevOps \& CI/CD} (715 menciones): REST API, Ansible, Redis, FastAPI, GitLab CI/CD --- ecosistema DevOps crítico con 533 menciones cluster principal + 182 CI/CD específico
-\item \textbf{Backend Frameworks} (595 menciones): Docker, Kubernetes, Flask, Maven, Spring Boot --- herramientas containerización dominan desarrollo backend
-\item \textbf{Soft Skills} (410 menciones): Comunicación, Liderazgo, Innovación, Autonomía --- competencias transversales demandadas en todos los perfiles
-\item \textbf{Cloud \& Infrastructure} (395 menciones combinadas): GCP (240), Azure (155), IaC, S3, Firebase --- crecimiento de adopción cloud con GCP liderando
-\item \textbf{Git Ecosystem} (323 menciones): Git, GitHub Actions, GitHub --- control de versiones universal
-\item \textbf{Data \& Analytics} (275 menciones combinadas): Data Science, Data Modeling, Pipelines, Adaptabilidad --- perfiles especializados data en crecimiento
-\item \textbf{Agile Methodologies} (127 menciones): Agile, Scrum, Metodologías Ágiles --- metodología estándar industria
-\item \textbf{React Ecosystem} (91 menciones combinados): Node.js, Next.js, Vue.js, NestJS, React Native --- JavaScript fullstack dominante
-\end{enumerate}
+Databases (916 menciones) emergió como cluster de máxima demanda agrupando MySQL, PostgreSQL, SQL, MongoDB y NoSQL, reflejando la centralidad de bases de datos en perfiles backend. Programming Languages (729 menciones) consolidó lenguajes core como TypeScript, Python, Java, C\# y PHP, con TypeScript liderando la adopción moderna. DevOps \& CI/CD (715 menciones) integró ecosistema DevOps crítico incluyendo REST API, Ansible, Redis, FastAPI y GitLab CI/CD, con 533 menciones en cluster principal y 182 específicas de CI/CD. Backend Frameworks (595 menciones) agrupó herramientas de containerización dominantes como Docker, Kubernetes, Flask, Maven y Spring Boot. Soft Skills (410 menciones) concentró competencias transversales como Comunicación, Liderazgo, Innovación y Autonomía demandadas en todos los perfiles. Cloud \& Infrastructure (395 menciones combinadas) mostró crecimiento de adopción cloud con GCP (240 menciones) liderando sobre Azure (155), incluyendo IaC, S3 y Firebase. Git Ecosystem (323 menciones) consolidó control de versiones universal con Git, GitHub Actions y GitHub. Data \& Analytics (275 menciones combinadas) agrupó perfiles especializados en crecimiento incluyendo Data Science, Data Modeling, Pipelines y Adaptabilidad. Agile Methodologies (127 menciones) representó metodología estándar industria con Agile, Scrum y Metodologías Ágiles. React Ecosystem (91 menciones) consolidó stack JavaScript fullstack dominante incluyendo Node.js, Next.js, Vue.js, NestJS y React Native.
 
 El análisis categorizó los 50 clusters en 14 familias temáticas: Other/Mixed (23.3\%), APIs \& Architecture (18.6\%), Data \& Analytics (9.6\%), Cloud \& Infrastructure (10.0\%), Programming Languages (5.9\%), Databases (5.6\%), Backend Frameworks (4.9\%), Soft Skills (4.6\%), Frontend Frameworks (4.6\%), Testing \& QA (4.1\%), DevOps \& CI/CD (3.3\%), Methodologies (2.5\%), .NET Ecosystem (2.3\%), y Microsoft Tools (0.7\%). La categoría Other/Mixed, que incluye el Cluster 14 con 286 skills (17.7\% del total), agrupa conceptos generales de ingeniería de software que requieren subdivisión en análisis futuros (Microservicios, Control de Versiones, Prácticas de Desarrollo, Patrones de Diseño).
 
@@ -191,19 +174,33 @@ Para descartar la hipótesis de que skills sin mapeo son errores del matcher, se
 
 \subsubsection{Categorización de Skills Emergentes}
 
-El análisis identificó 47 skills técnicas con frecuencia $\geq$5 jobs extraídas por Pipeline B sin mapeo ESCO, categorizadas en cinco familias emergentes:
+El análisis identificó 47 skills técnicas con frecuencia $\geq$5 jobs extraídas por Pipeline B sin mapeo ESCO, categorizadas en cinco familias emergentes. La Tabla~\ref{tab:emerging_skills} presenta la distribución de skills emergentes por categoría tecnológica y nivel de adopción en el mercado LATAM.
 
-\textbf{(1) AI/ML Post-2022} (9 skills): ChatGPT (1 job), LLM (2), Generative AI (1), LangChain (2), Fine-tuning LLMs (1), AI Coding Assistants (1), Prompt Engineering (3), GPT-4 (1), Stable Diffusion (1). Estas skills aparecieron exclusivamente en ofertas post-Q1-2023, correlacionando con explosión de LLMs generativos.
+\begin{table}[htbp]
+\centering
+\caption{Skills emergentes sin mapeo ESCO por categoría tecnológica}
+\label{tab:emerging_skills}
+\small
+\begin{tabular}{|l|c|p{5.5cm}|p{3.5cm}|}
+\hline
+\textbf{Categoría} & \textbf{Skills} & \textbf{Tecnologías Principales} & \textbf{Nivel Adopción} \\
+\hline
+AI/ML Post-2022 & 9 & Prompt Engineering (3), LLM (2), LangChain (2), ChatGPT (1), GPT-4 (1) & Post-Q1-2023 únicamente \\
+\hline
+Infrastructure as Code & 6 & Terraform (71), Ansible (65), CloudFormation (3), Serverless (4) & Alta en LATAM \\
+\hline
+Frameworks JS Modernos & 12 & Next.js (9), Tailwind CSS (2), Zustand (1) & Adopción incipiente \\
+\hline
+Herramientas DevOps & 8 & Prometheus (6), Grafana (5), Helm (3) & Media para observabilidad \\
+\hline
+Data Engineering & 12 & Databricks (3), Snowflake (2) & Limitada, prefieren tradicionales \\
+\hline
+\end{tabular}
+\end{table}
 
-\textbf{(2) Infrastructure as Code Moderna} (6 skills): CDK (1), Pulumi (0), Terraform (71), CloudFormation (3), Ansible (65), Serverless Framework (4). Terraform y Ansible lideran adopción IaC en LATAM, superando a alternativas cloud-native.
+Las cinco categorías revelan patrones diferenciados de adopción tecnológica en LATAM. AI/ML Post-2022 presenta frecuencias muy bajas (1-3 menciones) apareciendo exclusivamente en ofertas post-Q1-2023, correlacionando con la explosión reciente de LLMs generativos. Infrastructure as Code muestra la mayor adopción con Terraform (71 menciones) y Ansible (65 menciones) liderando significativamente sobre alternativas cloud-native, indicando preferencia por herramientas open-source multiplataforma. Frameworks JavaScript Modernos exhibe adopción incipiente con Next.js (9 menciones) dominando frameworks SSR post-React, pero frecuencias globalmente bajas sugieren que el mercado LATAM mantiene stacks tradicionales. Herramientas DevOps muestra adopción media con Prometheus (6) y Grafana (5) establecidos para observabilidad, mientras tecnologías de service mesh (Istio, Linkerd) permanecen como nicho sin menciones. Data Engineering presenta adopción limitada (Databricks 3, Snowflake 2) sugiriendo que el mercado LATAM continúa utilizando herramientas tradicionales como Airflow y Spark en lugar de plataformas modernas de data lakehouse.
 
-\textbf{(3) Frameworks JavaScript Modernos} (12 skills): Next.js (9), Tailwind CSS (2), Vite (0), SvelteKit (0), Remix (0), Astro (0), Solid.js (0), tRPC (0), Prisma (0), Drizzle (0), Zustand (1), TanStack Query (0). Next.js domina frameworks SSR post-React, aunque frecuencias bajas sugieren adopción incipiente.
-
-\textbf{(4) Herramientas DevOps Específicas} (8 skills): ArgoCD (0), FluxCD (0), Helm (3), Prometheus (6), Grafana (5), Loki (0), Istio (0), Linkerd (0). Prometheus y Grafana establecidos para observabilidad, service mesh aún nicho.
-
-\textbf{(5) Data Engineering Moderno} (12 skills): dbt (0), Airbyte (0), Dagster (0), Prefect (0), Snowflake (2), Databricks (3), Delta Lake (0), Apache Iceberg (0), Great Expectations (0), dlt (0), Mage (0), Kestra (0). Adopción limitada sugiere que mercado LATAM usa herramientas tradicionales (Airflow, Spark).
-
-La baja frecuencia absoluta de skills emergentes ($<$5 jobs para 80\% de ellas) indica que mercado tech latinoamericano exhibe lag de 18-36 meses respecto a tendencias globales: tecnologías mainstream en Silicon Valley 2023 (Next.js, Tailwind, dbt) aparecen escasamente en LATAM 2024-2025.
+La baja frecuencia absoluta de skills emergentes (menos de 5 menciones para 80\% de ellas) indica que el mercado tech latinoamericano exhibe lag de 18-36 meses respecto a tendencias globales: tecnologías mainstream en Silicon Valley 2023 (Next.js, Tailwind, dbt) aparecen escasamente en LATAM 2024-2025, evidenciando adopción conservadora y ciclos de actualización tecnológica más lentos.
 
 \subsubsection{Implicaciones para el Observatorio}
 
@@ -216,5 +213,3 @@ El documento de pruebas (Capítulo 13, Sección ``Análisis de Cobertura ESCO'')
 El sistema implementa infraestructura completa para análisis temporal de evolución de demanda de skills, incluyendo tracking de clusters por trimestre, generación de heatmaps de frecuencia cluster×quarter, y visualizaciones de evolución de top-10 clusters más demandados. Sin embargo, la aplicabilidad actual está severamente limitada por la distribución temporal del corpus: 93.5\% de menciones de skills (4,222/4,479) se concentran en Q4-2025, con solo 5 quarters representados (2016Q2, 2023Q4, 2025Q1, 2025Q3, 2025Q4) y frecuencias insuficientes en períodos históricos (20-151 menciones vs 4,222 en Q4-2025).
 
 Esta concentración extrema invalida análisis longitudinales de tendencias, crecimiento porcentual de familias tecnológicas, o detección de skills emergentes post-2022, dado que cualquier patrón observado sería artefacto del sesgo temporal del dataset en lugar de reflejo de evolución genuina del mercado. El análisis de series temporales sobre skills (Docker, Kubernetes, Python, React) requeriría distribución equitativa de al menos 500+ ofertas por trimestre durante 12+ quarters consecutivos para validez estadística, condición no satisfecha por el corpus actual.
-
-La infraestructura de análisis temporal está operativa y lista para ejecución una vez que scraping continuo durante 2025-2026 genere dataset balanceado temporalmente. Los módulos implementados (\\texttt{temporal\_clustering\_analysis.py}, \\texttt{generate\_temporal\_visualizations.py}) permiten procesamiento automático de ofertas futuras sin modificaciones arquitecturales.

@@ -12,7 +12,7 @@ El caso de Colombia sirvió como una ilustración profunda de esta dinámica. El
 
 \subsection{Formulación del problema}
 
-A pesar de que el contexto del problema ---la creciente e insatisfecha demanda de habilidades tecnológicas--- estaba claramente identificado, los métodos existentes en la región para analizarlo presentaban limitaciones metodológicas significativas que impedían una comprensión profunda y ágil del fenómeno. Los estudios de referencia en los países seleccionados, si bien valiosos para establecer tendencias macro, se basaron en enfoques de análisis léxico y reglas manuales. En Colombia, el análisis se centró en un sistema de clasificación basado en la Clasificación Internacional Uniforme de Ocupaciones (CIUO), utilizando algoritmos de emparejamiento de texto con tokenización y métricas de similitud basadas en n-gramas \cite{rubio2025}. De forma análoga, en Argentina, los estudios se concentraron en técnicas de minería de texto con análisis de frecuencias y bigramas para identificar patrones en las ofertas del sector TI \cite{aguilera2018}. En México, el enfoque combinó datos de encuestas con scraping de portales, apoyándose en el análisis de frecuencia de términos y la creación de tipologías manuales para segmentar las habilidades \cite{campos2024}.
+A pesar de que el contexto del problema la creciente e insatisfecha demanda de habilidades tecnológicas estaba claramente identificado, los métodos existentes en la región para analizarlo presentaban limitaciones metodológicas significativas que impedían una comprensión profunda y ágil del fenómeno. Los estudios de referencia en los países seleccionados, si bien valiosos para establecer tendencias macro, se basaron en enfoques de análisis léxico y reglas manuales. En Colombia, el análisis se centró en un sistema de clasificación basado en la Clasificación Internacional Uniforme de Ocupaciones (CIUO), utilizando algoritmos de emparejamiento de texto con tokenización y métricas de similitud basadas en n-gramas \cite{rubio2025}. De forma análoga, en Argentina, los estudios se concentraron en técnicas de minería de texto con análisis de frecuencias y bigramas para identificar patrones en las ofertas del sector TI \cite{aguilera2018}. En México, el enfoque combinó datos de encuestas con scraping de portales, apoyándose en el análisis de frecuencia de términos y la creación de tipologías manuales para segmentar las habilidades \cite{campos2024}.
 
 La limitación fundamental compartida por estos enfoques es su dependencia de la correspondencia léxica explícita, lo que los hace incapaces de capturar la riqueza semántica del lenguaje. Estos métodos no podían detectar habilidades implícitas (aquellas que se infieren del contexto de un cargo pero no se mencionan directamente), gestionar la ambigüedad del lenguaje informal o el uso de anglicismos técnicos (``Spanglish''), ni identificar clústeres de competencias emergentes que aún no forman parte de taxonomías estandarizadas. La alta variabilidad en la redacción de las ofertas laborales, la falta de estructuras normalizadas y la rápida aparición de nuevas tecnologías hacían que estos sistemas fueran metodológicamente frágiles y requirieran un constante mantenimiento manual \cite{echeverria2022tecnica, lukauskas2023}.
 
@@ -40,7 +40,7 @@ Finalmente, el valor agregado del proyecto residió en su síntesis estratégica
 
 \section{Descripción del proyecto}
 
-El proyecto se concibió como un observatorio automatizado para capturar, normalizar y analizar avisos de empleo en Latinoamérica. Se integraron múltiples portales (CO, MX y AR), se diseñó una base de datos relacional con soporte vectorial, y se implementó un pipeline de extracción de habilidades (NER/regex/LLM) alineadas a ESCO, con generación de indicadores, visualizaciones y reportes. Operativamente, se planificó escalar hasta 600.000 avisos para la defensa, garantizando calidad, trazabilidad y reproducibilidad.
+El proyecto se concibió como un observatorio automatizado para capturar, normalizar y analizar avisos de empleo en Latinoamérica. Se integraron múltiples portales (CO, MX y AR), se diseñó una base de datos relacional con soporte vectorial, y se implementó un pipeline de extracción de habilidades (NER/regex/LLM) alineadas a ESCO, con generación de indicadores, visualizaciones y reportes. Operativamente, se planificó escalar hasta 70.000 avisos para la defensa, garantizando calidad, trazabilidad y reproducibilidad.
 
 \subsection{Objetivo general}
 
@@ -60,12 +60,18 @@ Desarrollar un sistema que permita procesar y segmentar la demanda de habilidade
 
 \subsection{Entregables, estándares y justificación}
 
+El desarrollo del observatorio se materializó en un conjunto estructurado de entregables alineados con estándares de ingeniería de software y buenas prácticas de la industria. La Tabla \ref{tab:entregables-estandares} presenta cada componente desarrollado, los estándares técnicos que guiaron su implementación, y la justificación que fundamenta su adhesión a dichos estándares.
+
 \begin{longtable}{|p{5cm}|p{5cm}|p{5cm}|}
+\caption{Entregables, Estándares y Justificación Técnica}
+\label{tab:entregables-estandares} \\
 \hline
 \textbf{Entregable} & \textbf{Estándares asociados} & \textbf{Justificación} \\
 \hline
 \endfirsthead
 
+\multicolumn{3}{c}%
+{\tablename\ \thetable\ -- \textit{Continuación de la página anterior}} \\
 \hline
 \textbf{Entregable} & \textbf{Estándares asociados} & \textbf{Justificación} \\
 \hline

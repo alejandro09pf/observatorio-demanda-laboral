@@ -1,0 +1,259 @@
+\section*{APÉNDICE E: DISEÑO DE BASE DE DATOS}
+\addcontentsline{toc}{section}{Apéndice E: Diseño de Base de Datos}
+
+Este apéndice documenta el diseño completo de la base de datos relacional del observatorio, incluyendo el esquema de tablas principales, las relaciones entre entidades, los índices optimizados para procesamiento batch, y la configuración de PostgreSQL para manejo de grandes volúmenes de datos.
+
+\subsection*{E.1. Diagrama Entidad-Relación}
+
+La Figura \ref{fig:diagrama-er-anexo} muestra las relaciones entre las seis tablas principales del sistema. Todas las tablas derivadas mantienen referencia mediante llave foránea hacia la tabla de ofertas laborales (raw\_jobs), garantizando trazabilidad completa desde cualquier resultado de análisis hasta la oferta original.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{diagrams/DiagramaER.png}
+\caption{Diagrama Entidad-Relación de la Base de Datos del Observatorio}
+\label{fig:diagrama-er-anexo}
+\end{figure}
+
+\subsection*{E.2. Esquema de Tablas Principales}
+
+La base de datos actúa como columna vertebral del sistema, implementando el patrón de persistencia de pipeline donde cada etapa escribe sus resultados en tablas especializadas. Se seleccionó PostgreSQL 15+ por su soporte JSON nativo (JSONB) para almacenar metadatos flexibles, extensión pgvector para vectores de alta dimensionalidad, robustez transaccional (ACID), capacidad de particionamiento para escalabilidad, y licencia libre (PostgreSQL License).
+
+\subsubsection*{E.2.1. Tabla raw\_jobs}
+
+Almacena ofertas laborales tal como fueron scrapeadas, sin procesamiento ni normalización.
+
+\textbf{Campos principales:}
+\begin{itemize}
+    \item \texttt{job\_id} (UUID, PK): Identificador único generado automáticamente
+    \item \texttt{portal} (VARCHAR(100)): Origen de la oferta (computrabajo, bumeran, elempleo, etc.)
+    \item \texttt{country} (CHAR(2)): Código de país ISO 3166-1 alpha-2 (CO, MX, AR)
+    \item \texttt{title} (TEXT): Título del cargo tal como aparece en el portal
+    \item \texttt{description} (TEXT): Descripción detallada del cargo (cruda, puede contener HTML)
+    \item \texttt{requirements} (TEXT): Sección de requisitos y habilidades requeridas
+    \item \texttt{company} (VARCHAR(255)): Nombre de la empresa empleadora
+    \item \texttt{salary\_raw} (TEXT): Rango salarial cuando está disponible (formato heterogéneo)
+    \item \texttt{contract\_type} (VARCHAR(100)): Tipo de contrato (tiempo completo, medio tiempo, freelance)
+    \item \texttt{remote\_type} (VARCHAR(50)): Modalidad (presencial, remoto, híbrido)
+    \item \texttt{url} (TEXT): URL original de la oferta en el portal
+    \item \texttt{posted\_date} (DATE): Fecha de publicación de la oferta (cuando disponible)
+    \item \texttt{scraped\_at} (TIMESTAMP): Timestamp de recolección por el spider
+    \item \texttt{content\_hash} (CHAR(64), UNIQUE): Hash SHA-256 para deduplicación
+    \item \texttt{processed} (BOOLEAN): Bandera de control de procesamiento
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{posted\_date} para análisis temporal
+    \item B-tree en \texttt{country} para filtrado por región
+    \item B-tree compuesto en \texttt{(country, posted\_date)} para queries frecuentes
+    \item UNIQUE en \texttt{content\_hash} para prevenir duplicados
+\end{itemize}
+
+\textbf{Volumen actual}: 30,660 ofertas únicas (54.21\% del total scrapeado tras deduplicación y filtrado de calidad)
+
+\subsubsection*{E.2.2. Tabla extracted\_skills}
+
+Contiene habilidades identificadas por Pipeline A (NER + expresiones regulares).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{skill\_id} (UUID, PK): Identificador único de la extracción
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs): Referencia a la oferta laboral
+    \item \texttt{skill\_text} (VARCHAR(255)): Texto de la habilidad extraída (crudo, sin normalizar)
+    \item \texttt{extraction\_method} (VARCHAR(20)): Método de extracción (``NER'', ``regex'', ``esco\_match'')
+    \item \texttt{confidence\_score} (DECIMAL(3,2)): Score de confianza (0.00-1.00)
+    \item \texttt{esco\_uri} (VARCHAR(255), FK $\to$ esco\_skills): Enlace a taxonomía ESCO (nullable)
+    \item \texttt{extracted\_at} (TIMESTAMP): Timestamp de procesamiento
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree compuesto en \texttt{(job\_id, extraction\_method)} para comparación de pipelines
+    \item GIN en \texttt{skill\_text} para full-text search
+    \item B-tree en \texttt{esco\_uri} para joins con taxonomía
+\end{itemize}
+
+\textbf{Volumen estimado}: 8,268 skills extraídas de 300 ofertas del gold standard (27.6 skills/job promedio)
+
+\subsubsection*{E.2.3. Tabla enhanced\_skills}
+
+Almacena el enriquecimiento semántico realizado por Pipeline B (LLM).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{enhanced\_skill\_id} (UUID, PK): Identificador único
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs): Referencia a la oferta laboral
+    \item \texttt{skill\_normalized} (VARCHAR(255)): Habilidad normalizada por el LLM
+    \item \texttt{skill\_type} (VARCHAR(20)): Tipo de habilidad (``hard\_skill'', ``soft\_skill'')
+    \item \texttt{is\_implicit} (BOOLEAN): Indica si la skill fue inferida implícitamente
+    \item \texttt{esco\_uri} (VARCHAR(255), FK $\to$ esco\_skills): URI del concepto ESCO (nullable)
+    \item \texttt{llm\_confidence} (DECIMAL(3,2)): Nivel de confianza del LLM (0.00-1.00)
+    \item \texttt{reasoning} (TEXT): Justificación del razonamiento del LLM
+    \item \texttt{llm\_model} (VARCHAR(100)): Modelo utilizado (``gemma-3-4b'', ``llama-3-3b'')
+    \item \texttt{processed\_at} (TIMESTAMP): Timestamp de procesamiento
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{job\_id} para joins frecuentes
+    \item B-tree en \texttt{skill\_type} para análisis segregado hard/soft
+    \item B-tree en \texttt{is\_implicit} para estudios de inferencia contextual
+\end{itemize}
+
+\textbf{Volumen estimado}: Datos de 299/300 jobs del gold standard procesados con Gemma 3 4B (99.3\% cobertura)
+
+\subsubsection*{E.2.4. Tabla skill\_embeddings}
+
+Contiene las representaciones vectoriales de alta dimensionalidad generadas con E5 Multilingual.
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{embedding\_id} (UUID, PK): Identificador único
+    \item \texttt{skill\_id} (UUID, FK $\to$ extracted\_skills o enhanced\_skills): Referencia a la skill
+    \item \texttt{skill\_text} (VARCHAR(255)): Texto de la habilidad (desnormalizado para performance)
+    \item \texttt{embedding\_vector} (VECTOR(768)): Vector de 768 dimensiones (pgvector)
+    \item \texttt{model\_name} (VARCHAR(100)): Modelo de embedding utilizado
+    \item \texttt{model\_version} (VARCHAR(50)): Versión del modelo
+    \item \texttt{generated\_at} (TIMESTAMP): Timestamp de generación
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item IVFFlat en \texttt{embedding\_vector} con parámetros \texttt{lists=100, probes=10} para búsqueda k-NN
+    \item B-tree en \texttt{skill\_text} para búsqueda exacta
+\end{itemize}
+
+\textbf{Performance de índice IVFFlat}:
+\begin{itemize}
+    \item Aceleración 3× más rápido que sequential scan
+    \item Latencia promedio: 180ms para top-10 similares vs. 540ms sin índice
+    \item Trade-off: 100\% recall con exact search (IndexFlatIP en FAISS)
+\end{itemize}
+
+\subsubsection*{E.2.5. Tabla analysis\_results}
+
+Almacena resultados de clustering y análisis de tendencias temporales.
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{analysis\_id} (UUID, PK): Identificador único del análisis
+    \item \texttt{analysis\_type} (VARCHAR(50)): Tipo de análisis (``clustering'', ``trends'', ``profile'')
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs): Referencia a la oferta (nullable para análisis agregados)
+    \item \texttt{country} (CHAR(2)): País del análisis (CO, MX, AR, o NULL para agregado)
+    \item \texttt{date\_range\_start} (DATE): Inicio del rango temporal analizado
+    \item \texttt{date\_range\_end} (DATE): Fin del rango temporal analizado
+    \item \texttt{config\_params} (JSONB): Parámetros de configuración del análisis (UMAP, HDBSCAN)
+    \item \texttt{cluster\_id} (INTEGER): ID del clúster asignado (-1 para ruido en HDBSCAN)
+    \item \texttt{umap\_x} (DECIMAL(10,6)): Coordenada X de la proyección UMAP
+    \item \texttt{umap\_y} (DECIMAL(10,6)): Coordenada Y de la proyección UMAP
+    \item \texttt{cluster\_label} (VARCHAR(255)): Etiqueta descriptiva del clúster
+    \item \texttt{results} (JSONB): Resultados estructurados (métricas, frecuencias, top skills)
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de creación del análisis
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{analysis\_type} para filtrado por tipo
+    \item B-tree compuesto en \texttt{(country, date\_range\_start, date\_range\_end)} para análisis temporal
+    \item GIN en \texttt{config\_params} para búsqueda en JSON
+    \item B-tree en \texttt{cluster\_id} para análisis por clúster
+\end{itemize}
+
+\textbf{Ejemplo de config\_params JSONB}:
+\begin{verbatim}
+{
+  "umap": {"n_neighbors": 15, "min_dist": 0.1, "metric": "cosine"},
+  "hdbscan": {"min_cluster_size": 12, "min_samples": 3, "method": "eom"}
+}
+\end{verbatim}
+
+\subsubsection*{E.2.6. Tabla esco\_skills}
+
+Tabla de referencia con la taxonomía ESCO completa extendida con habilidades de O*NET y agregadas manualmente.
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{esco\_uri} (VARCHAR(255), PK): URI del concepto ESCO (ej: \texttt{http://data.europa.eu/esco/skill/...})
+    \item \texttt{preferred\_label\_es} (VARCHAR(255)): Etiqueta preferida en español
+    \item \texttt{preferred\_label\_en} (VARCHAR(255)): Etiqueta preferida en inglés
+    \item \texttt{alt\_labels} (TEXT[]): Array de etiquetas alternativas (sinónimos, abreviaciones)
+    \item \texttt{skill\_type} (VARCHAR(50)): Tipo de habilidad (``knowledge'', ``skill'', ``competence'')
+    \item \texttt{description} (TEXT): Descripción detallada del concepto
+    \item \texttt{reusability\_level} (VARCHAR(50)): Nivel de reutilización (``transversal'', ``sector-specific'', ``occupation-specific'')
+    \item \texttt{source} (VARCHAR(50)): Fuente de la skill (``esco\_v1.1.0'', ``onet'', ``manual'')
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{preferred\_label\_es} para matching exacto español
+    \item B-tree en \texttt{preferred\_label\_en} para matching exacto inglés
+    \item GIN en \texttt{alt\_labels} para búsqueda en array de sinónimos
+    \item B-tree en \texttt{source} para análisis de cobertura por fuente
+\end{itemize}
+
+\textbf{Composición de la taxonomía}:
+\begin{itemize}
+    \item ESCO v1.1.0: 13,939 skills oficiales
+    \item O*NET Hot Technologies: 152 skills modernas (Terraform, Kubernetes, React, etc.)
+    \item Agregadas manualmente: 124 skills identificadas en análisis exploratorio
+    \item \textbf{Total}: 14,215 skills en la taxonomía extendida
+\end{itemize}
+
+\subsection*{E.3. Configuración de PostgreSQL para Procesamiento Batch}
+
+La configuración de PostgreSQL se optimizó específicamente para procesamiento batch de grandes volúmenes de datos, priorizando throughput sobre latencia de consultas individuales.
+
+\subsubsection*{E.3.1. Configuración de Memoria}
+
+\begin{verbatim}
+# postgresql.conf
+
+# Memoria compartida (25% de RAM disponible en servidor de 16GB)
+shared_buffers = 4GB
+
+# Memoria por operación de sort/hash
+work_mem = 256MB
+
+# Memoria para operaciones de mantenimiento (VACUUM, CREATE INDEX)
+maintenance_work_mem = 1GB
+
+# Estimación de cache del sistema operativo
+effective_cache_size = 12GB
+\end{verbatim}
+
+\subsubsection*{E.3.2. Resultados de las Optimizaciones}
+
+Las optimizaciones de configuración e índices lograron las siguientes mejoras de performance:
+
+\begin{itemize}
+    \item \textbf{Consultas agregadas}: Reducción de \textasciitilde45s a \textasciitilde2.3s (19.5× mejora)
+        \begin{itemize}
+            \item Ejemplo: Conteo de skills por país y trimestre sobre 30,660 ofertas
+        \end{itemize}
+    \item \textbf{Inserciones batch}: 5,000 registros/segundo (vs. 800 registros/s sin optimización)
+        \begin{itemize}
+            \item Bulk insert de skills extraídas con \texttt{COPY} y transacciones grandes
+        \end{itemize}
+    \item \textbf{Búsquedas k-NN}: Latencia de 180ms para top-10 similares (vs. 540ms sequential scan)
+        \begin{itemize}
+            \item Índice IVFFlat con 100 listas y 10 probes
+        \end{itemize}
+    \item \textbf{Matching ESCO}: Reducción de \textasciitilde6.5h a \textasciitilde6.5min (60× aceleración)
+        \begin{itemize}
+            \item Memoización mediante diccionario \texttt{skill\_text} $\to$ \texttt{esco\_uri} en memoria
+        \end{itemize}
+\end{itemize}
+
+Esta configuración permitió que el procesamiento del corpus completo de 30,660 ofertas completara en \textasciitilde6.2 horas (incluyendo todas las etapas: scraping, extracción, mapeo ESCO, embeddings, clustering).
+
+\subsection*{E.4. Estrategias de Persistencia y Trazabilidad}
+
+La base de datos implementa tres mecanismos fundamentales para garantizar reproducibilidad y trazabilidad:
+
+\begin{enumerate}
+    \item \textbf{Versionado de modelos}: Los campos \texttt{llm\_model}, \texttt{model\_name}, \texttt{model\_version} permiten identificar qué versión exacta de cada modelo generó cada resultado.
+    \item \textbf{Timestamps completos}: Todas las tablas incluyen campos \texttt{created\_at}, \texttt{processed\_at}, \texttt{extracted\_at} que registran cuándo se generó cada dato.
+    \item \textbf{Metadatos de configuración}: Los parámetros JSONB en \texttt{analysis\_results} almacenan la configuración exacta de UMAP y HDBSCAN utilizada en cada clustering, permitiendo reproducción exacta.
+\end{enumerate}
+
+Estas estrategias garantizan que cualquier resultado publicado en la tesis pueda ser auditado, reproducido y trazado hasta la oferta laboral original que lo generó.
