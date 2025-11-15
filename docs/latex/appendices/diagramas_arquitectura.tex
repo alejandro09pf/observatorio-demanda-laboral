@@ -1,56 +1,32 @@
-\section*{APÉNDICE D: DIAGRAMAS DE ARQUITECTURA DEL SISTEMA}
-\addcontentsline{toc}{section}{Apéndice D: Diagramas de Arquitectura}
+\section*{APÉNDICE D: INFORMACIÓN ADICIONAL SOBRE ARQUITECTURA Y METODOLOGÍA}
+\addcontentsline{toc}{section}{Apéndice D: Información Adicional sobre Arquitectura y Metodología}
 
-Este apéndice presenta la documentación visual completa de la arquitectura del observatorio de demanda laboral. Los diagramas ilustran la estructura modular del sistema, el flujo de datos entre componentes, las tecnologías específicas utilizadas en cada capa de procesamiento, y el flujo metodológico que integra las fases de CRISP-DM con las etapas del pipeline de software.
+Este apéndice proporciona información complementaria sobre los diagramas de arquitectura y metodología presentados en los capítulos 4 y 5 del documento principal. Se detallan las decisiones de diseño, comparaciones arquitectónicas, y el flujo de transformación de datos a través del pipeline.
 
-\subsection*{D.1. Flujo Metodológico: Integración de CRISP-DM con Pipeline de 7 Etapas}
+\subsection*{D.1. Detalles del Flujo Metodológico}
 
-La Figura \ref{fig:flujo-metodologico-anexo} presenta una vista integrada del flujo metodológico completo del proyecto, combinando las seis fases de CRISP-DM (Cross-Industry Standard Process for Data Mining) con las siete etapas del pipeline de software y los ciclos iterativos de refinamiento. El diagrama ilustra cómo cada fase de CRISP-DM se tradujo en actividades concretas de desarrollo de software, y cómo los resultados de la fase de Evaluación retroalimentaron la fase de Modelado para generar versiones mejoradas de los pipelines de extracción.
+El diagrama de flujo metodológico presentado en el Capítulo 4 (Figura \ref{fig:flujo-metodologico}) integra las seis fases de CRISP-DM con las siete etapas del pipeline de software. Los ciclos iterativos entre las fases de Modelado y Evaluación permitieron mejora incremental del sistema mediante:
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.90\textwidth]{diagrams/DiagramaMetodologia.png}
-\caption{Flujo Metodológico del Proyecto: Integración de CRISP-DM con Pipeline de 7 Etapas}
-\label{fig:flujo-metodologico-anexo}
-\end{figure}
+\begin{itemize}
+    \item \textbf{Refinamiento de parámetros NER}: Ajuste de umbrales de confianza, expansión del EntityRuler con patrones ESCO, y calibración de filtros de stopwords técnicas.
+    \item \textbf{Optimización de patrones regex}: Incremento de 47 a 548 patrones organizados en 18 categorías técnicas, incorporando variantes ortográficas y versiones numeradas.
+    \item \textbf{Evolución de prompts LLM}: Iteración de diseño de prompts desde versión inicial de 50 líneas hasta versión final de 170 líneas con ejemplos contextuales, manejo de Spanglish, y esquema JSON validado.
+    \item \textbf{Calibración de clustering}: Experimentación con 70+ configuraciones de HDBSCAN para determinar \texttt{min\_cluster\_size=12} y \texttt{min\_samples=3} óptimos.
+\end{itemize}
 
-El flujo metodológico integró las siguientes fases principales:
+\subsection*{D.2. Detalles del Pipeline de 7 Etapas}
 
-\begin{enumerate}
-    \item \textbf{Business Understanding (Entendimiento del Negocio)}: Análisis del problema de demanda laboral tecnológica en América Latina, definición de objetivos medibles, y establecimiento de criterios de éxito del observatorio.
-    \item \textbf{Data Understanding (Entendimiento de Datos)}: Caracterización de portales de empleo, análisis de heterogeneidad de formatos, identificación de retos lingüísticos (Spanglish), y construcción de gold standard de 300 ofertas anotadas manualmente.
-    \item \textbf{Data Preparation (Preparación de Datos)}: Desarrollo iterativo de módulos de scraping, limpieza, normalización y deduplicación con inspección manual y verificación de calidad.
-    \item \textbf{Modeling (Modelado)}: Diseño dual de Pipeline A (NER+Regex) y Pipeline B (LLM) con experimentación continua y ajustes basados en análisis de errores sobre gold standard.
-    \item \textbf{Evaluation (Evaluación)}: Validación mediante métricas cuantitativas (Precision, Recall, F1-Score Pre/Post-ESCO), verificación cualitativa, y análisis de robustez operativa.
-    \item \textbf{Deployment (Despliegue)}: Integración de módulos en herramienta CLI con programación automática, documentación técnica completa, y validación en entorno operativo real.
-\end{enumerate}
+El diagrama de arquitectura modular presentado en el Capítulo 5 (Figura \ref{fig:arquitectura-completa}) muestra el pipeline secuencial de 7 etapas. Información adicional sobre tecnologías específicas por módulo:
 
-Los ciclos iterativos entre las fases de Modelado y Evaluación permitieron mejora incremental del sistema, refinando parámetros de NER, patrones regex, prompts de LLM, y configuraciones de clustering hasta alcanzar los niveles de rendimiento objetivo documentados en el capítulo de resultados.
-
-\subsection*{D.2. Arquitectura Modular del Observatorio - Pipeline de 7 Etapas}
-
-La Figura \ref{fig:arquitectura-completa-anexo} presenta la vista modular completa del pipeline, detallando tecnologías específicas, funciones, entradas/salidas y mecanismos de almacenamiento por módulo. Cada módulo puede ejecutarse independientemente con fines de desarrollo y pruebas unitarias.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{diagrams/pipeline_arquitectura.png}
-\caption{Arquitectura Modular del Observatorio - Pipeline de 7 Etapas con Tecnologías Específicas}
-\label{fig:arquitectura-completa-anexo}
-\end{figure}
-
-El sistema implementa un pipeline secuencial de 7 etapas donde cada componente opera de forma autónoma, lee datos de la etapa anterior desde PostgreSQL, ejecuta su transformación especializada, y persiste resultados para la siguiente etapa:
-
-\begin{enumerate}
-    \item \textbf{Scraping (Scrapy + Selenium)}: Recolección automatizada de ofertas desde 9 portales web en 3 países (CO, MX, AR) con manejo de contenido estático y dinámico JavaScript.
-    \item \textbf{Extraction (NER + Regex)}: Identificación de habilidades explícitas mediante 548 patrones regex organizados en 18 categorías técnicas y reconocimiento de entidades nombradas con spaCy.
-    \item \textbf{LLM Processing (Gemma 3 4B)}: Enriquecimiento semántico e inferencia de habilidades implícitas mediante modelo de lenguaje de 4B parámetros con prompt engineering específico para español latinoamericano.
-    \item \textbf{ESCO Matching}: Normalización de habilidades contra taxonomía ESCO extendida (14,215 skills) mediante matching de dos capas: exacto (SQL ILIKE) y difuso (fuzzywuzzy $\geq$0.85).
-    \item \textbf{Embedding (E5 Multilingual)}: Generación de representaciones vectoriales densas de 768 dimensiones con modelo multilingüe pre-entrenado.
-    \item \textbf{Dimension Reduction (UMAP)}: Proyección no lineal de 768D a 2-3D preservando estructura local y global para visualización y clustering.
-    \item \textbf{Clustering (HDBSCAN)}: Agrupamiento jerárquico basado en densidad sin especificar número de clusters, con identificación automática de ruido.
-\end{enumerate}
-
-La orquestación se gestiona mediante un CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler).
+\begin{itemize}
+    \item \textbf{Scraping}: Framework Scrapy 2.11 con Selenium 4.15 para contenido dinámico, delays adaptativos (2-5s), rotación de user-agents, y backoff exponencial.
+    \item \textbf{Extraction}: spaCy \texttt{es\_core\_news\_lg} v3.7 con EntityRuler personalizado, 548 patrones regex en 18 categorías, latencia 50-80ms por documento.
+    \item \textbf{LLM Processing}: Gemma 3 4B con cuantización Q4 (4-6 GB VRAM), temperatura 0.3, max\_tokens 3072, latencia 18s (P50).
+    \item \textbf{ESCO Matching}: Taxonomía extendida 14,215 skills (13,939 ESCO v1.1.0 + 152 O*NET + 124 manuales), matching exact + fuzzy $\geq$0.85.
+    \item \textbf{Embedding}: Modelo \texttt{intfloat/multilingual-e5-base} (768D, 278M parámetros), batch\_size=32, latencia $<$100ms/batch.
+    \item \textbf{UMAP}: Parámetros \texttt{n\_neighbors=15}, \texttt{min\_dist=0.1}, \texttt{metric='cosine'}, reducción 768D $\rightarrow$ 2-3D.
+    \item \textbf{HDBSCAN}: Parámetros \texttt{min\_cluster\_size=12}, \texttt{min\_samples=3}, \texttt{cluster\_selection\_method='eom'}.
+\end{itemize}
 
 \subsection*{D.3. Flujo de Transformación de Datos}
 

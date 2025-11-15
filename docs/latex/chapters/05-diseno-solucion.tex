@@ -265,7 +265,14 @@ El sistema implementa un pipeline secuencial de 7 etapas:
     \item \textbf{Visualization y Exportación}: Generación de gráficos estáticos (matplotlib/seaborn) y exportación de resultados (PNG/CSV/JSON)
 \end{enumerate}
 
-Cada etapa opera de forma autónoma, lee datos de la etapa anterior desde PostgreSQL, ejecuta su transformación especializada, y persiste resultados para la siguiente etapa. La orquestación se gestiona mediante un CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler). El diagrama de arquitectura modular completo, detallando tecnologías específicas, funciones, entradas/salidas y mecanismos de almacenamiento por módulo, se presenta en el Apéndice D.
+Cada etapa opera de forma autónoma, lee datos de la etapa anterior desde PostgreSQL, ejecuta su transformación especializada, y persiste resultados para la siguiente etapa. La orquestación se gestiona mediante un CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{diagrams/pipeline_arquitectura.png}
+\caption{Arquitectura Modular del Observatorio - Pipeline de 7 Etapas con Tecnologías Específicas}
+\label{fig:arquitectura-completa}
+\end{figure}
 
 \subsection{Componentes del Sistema}
 
@@ -285,9 +292,14 @@ El quinto componente es el servicio de análisis y visualización, responsable d
 
 La base de datos actuó como columna vertebral del sistema, implementando el patrón de persistencia de pipeline donde cada etapa escribió sus resultados en tablas especializadas. Se seleccionó PostgreSQL 15+ por su soporte JSON nativo (JSONB) para almacenar metadatos flexibles, extensión pgvector para vectores de alta dimensionalidad, robustez transaccional (ACID), capacidad de particionamiento para escalabilidad, y licencia libre (PostgreSQL License).
 
-\textbf{Esquema de Tablas Principales:}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{diagrams/DiagramaER.png}
+\caption{Diagrama Entidad-Relación de la Base de Datos del Observatorio}
+\label{fig:diagrama-er}
+\end{figure}
 
-El esquema constó de seis tablas principales correspondientes a las etapas del pipeline descritas anteriormente:
+El esquema (Figura \ref{fig:diagrama-er}) constó de seis tablas principales correspondientes a las etapas del pipeline descritas anteriormente. Todas las tablas derivadas mantienen referencia mediante llave foránea hacia la tabla de ofertas laborales (raw\_jobs), garantizando trazabilidad completa desde cualquier resultado de análisis hasta la oferta original:
 
 raw\_jobs: Almacena ofertas tal como fueron scrapeadas. Campos clave: identificador UUID, portal de origen, código de país (CO/MX/AR), título, descripción, requisitos, hash SHA-256 para deduplicación, y bandera de procesamiento.
 
@@ -301,7 +313,7 @@ analysis\_results: Almacena resultados de clustering y análisis de tendencias. 
 
 esco\_skills: Tabla de referencia con la taxonomía ESCO completa. Contiene URI del concepto, etiquetas preferidas en español e inglés, etiquetas alternativas, tipo de habilidad, descripción, y nivel de reutilización. Almacena 14,215 habilidades (13,939 de ESCO v1.1.0, 152 de O*NET, y 124 agregadas manualmente).
 
-Todas las tablas derivadas mantienen referencia mediante llave foránea hacia la tabla de ofertas laborales (raw\_jobs), garantizando trazabilidad completa desde cualquier resultado de análisis hasta la oferta original. Las tablas de habilidades extraídas y enriquecidas mantienen referencia opcional hacia la taxonomía ESCO para efectos de normalización. El diagrama entidad-relación completo del esquema de base de datos se presenta en el Apéndice E.
+Las tablas de habilidades extraídas y enriquecidas mantienen referencia opcional hacia la taxonomía ESCO para efectos de normalización. La configuración detallada de PostgreSQL para procesamiento batch y las estrategias de optimización de índices se documentan en el Apéndice E.
 
 Habiendo especificado el estilo arquitectónico (pipeline lineal), los componentes del sistema (8 etapas especializadas), y el diseño de la base de datos (6 tablas principales con relaciones trazables), la siguiente sección presenta las decisiones tecnológicas concretas que materializaron esta arquitectura. La selección de herramientas y tecnologías se fundamentó en criterios de madurez, licencias permisivas, escalabilidad comprobada y reproducibilidad científica, asegurando que cada componente arquitectónico contara con una implementación robusta y bien documentada.
 
