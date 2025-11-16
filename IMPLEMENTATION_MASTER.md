@@ -1,5 +1,5 @@
 # 🏗️ OBSERVATORIO LABORAL - IMPLEMENTACIÓN COMPLETA
-## Arquitectura Event-Driven + Frontend React + Empaquetado Docker
+## Arquitectura de Microservicios Híbrida (REST + Event-Driven/Pub/Sub) + Frontend React + Docker
 
 ---
 
@@ -8,15 +8,15 @@
 **🎯 Objetivo:** Sistema completo con frontend React, API REST, procesamiento distribuido con Celery, y empaquetado Docker
 **⏱️ Tiempo estimado:** 4-6 días (34-45 horas)
 **📊 Progreso actual:** 100% ✅ SISTEMA COMPLETO Y OPERATIVO
-**📅 Última actualización:** 2025-11-14
+**📅 Última actualización:** 2025-11-15
 
 **🎯 ESTADO ACTUAL (Noviembre 2025):**
 - ✅ **Frontend Next.js 16**: 5 páginas completas (Dashboard, Jobs, Skills, Clusters, Admin)
 - ✅ **Backend FastAPI**: 23+ endpoints REST funcionando
 - ✅ **PostgreSQL + pgvector**: 9 tablas, 56K+ jobs, 365K+ skills
 - ✅ **Redis**: Configurado y funcionando como message broker
-- ✅ **nginx**: Configurado (activable con profile)
-- ✅ **Docker Compose**: 6 servicios funcionando (db, redis, api, frontend, celery_worker, nginx)
+- ✅ **nginx**: Configurado Y ACTIVO como API Gateway (puerto 80)
+- ✅ **Docker Compose**: 7 servicios funcionando (postgres, redis, api, frontend, celery_worker, celery_beat, nginx)
 - ✅ **Celery Workers**: 9 tasks implementadas CON ALGORITMOS REALES (Simple Worker Pool)
   - Worker 1 (Scraping): 2 tasks ✅ FUNCIONANDO
   - Worker 2 (Extraction): 3 tasks ✅ NER+Regex+ESCO
@@ -70,7 +70,7 @@
 | **Frontend React/Next.js** | ✅ 100% | 🔴 CRÍTICO | ✅ COMPLETADO |
 | **Celery Tasks Integration** | ✅ 90% | 🔴 CRÍTICO | ✅ IMPLEMENTADO |
 | **Docker Compose completo** | ✅ 100% | 🟡 IMPORTANTE | ✅ COMPLETADO |
-| **nginx reverse proxy** | ✅ 100% | 🟢 OPCIONAL | ✅ CONFIGURADO |
+| **nginx API Gateway** | ✅ 100% | 🔴 CRÍTICO | ✅ ACTIVO |
 | **Dockerfiles específicos** | ✅ 100% | 🟡 IMPORTANTE | ✅ COMPLETADO |
 | **Migrar Scheduler a Celery** | ⚠️ 0% | 🟢 OPCIONAL | 3-4 horas |
 | **Testing + Ajustes** | ✅ 80% | 🟡 IMPORTANTE | ✅ FUNCIONAL |
@@ -108,11 +108,23 @@
 
 ## 🏛️ ARQUITECTURA FINAL
 
-### **Patrón arquitectónico:** Event-Driven Architecture + Message Queue + Pub/Sub
+### **Patrón arquitectónico:** Arquitectura de Microservicios Híbrida
 
 **DESCRIPCIÓN TÉCNICA FORMAL:**
 
-La arquitectura implementada es una **Arquitectura Orientada a Eventos con Procesamiento Asíncrono Distribuido**, combinando tres patrones fundamentales de mensajería sobre Redis como broker central:
+La arquitectura implementada es una **Arquitectura de Microservicios Híbrida** que combina dos estilos de comunicación complementarios:
+
+**1. Request/Response (HTTP REST) - Comunicación Síncrona:**
+   - Frontend → API (via nginx) → PostgreSQL
+   - Para consultas rápidas que requieren respuesta inmediata
+   - Ejemplos: GET /api/stats, GET /api/jobs, GET /api/skills/top
+   - Tiempo de respuesta: <200ms
+
+**2. Event-Driven con Pub/Sub - Comunicación Asíncrona:**
+   - API → Redis (Message Broker) → Celery Workers → PostgreSQL
+   - Para procesamiento pesado que no bloquea al usuario
+   - Ejemplos: Scraping, extracción batch, clustering
+   - Patrón Publisher-Subscriber con tres sub-patrones sobre Redis:
 
 1. **Producer-Consumer Pattern (Message Queue - PULL):**
    - API publica tareas → Redis Queue → Workers consumen (Celery)
@@ -204,14 +216,14 @@ La arquitectura implementada es una **Arquitectura Orientada a Eventos con Proce
 
 ---
 
-**IMPLEMENTACIÓN ACTUAL (2025-11-14):**
+**IMPLEMENTACIÓN ACTUAL (2025-11-15):**
 - ✅ Frontend Next.js (5 páginas completas)
 - ✅ Backend FastAPI (23+ endpoints REST)
-- ✅ PostgreSQL + pgvector (9 tablas, 56K+ jobs, 365K+ skills)
+- ✅ PostgreSQL + pgvector (9 tablas, 56K+ jobs, 367K+ skills)
 - ✅ Redis (funcionando como message broker + result backend)
-- ✅ nginx (configurado, activable con --profile with-nginx)
+- ✅ **nginx ACTIVO como API Gateway** (puerto 80 - punto de entrada único)
 - ✅ Celery Workers (9 tasks en Simple Worker Pool)
-- ✅ Event-Driven Architecture (scraping, extraction, enhancement, clustering async)
+- ✅ **Arquitectura Híbrida**: REST (síncrono) + Event-Driven/Pub/Sub (asíncrono)
 - ✅ Redis Pub/Sub auto-triggering (4 eventos, event listeners activos)
 - ✅ Celery Beat scheduling (5 cron jobs configurados y funcionando)
 - ✅ Flower monitoring (configurado, activar con --profile with-monitoring)
@@ -219,16 +231,16 @@ La arquitectura implementada es una **Arquitectura Orientada a Eventos con Proce
 
 ```
 ═══════════════════════════════════════════════════════════════════════════════
-███ OBSERVATORIO LABORAL - ARQUITECTURA EVENT-DRIVEN ███
-███ Message Queue + Distributed Processing + Pub/Sub ███
+███ OBSERVATORIO LABORAL - ARQUITECTURA DE MICROSERVICIOS HÍBRIDA ███
+███ REST (Síncrono) + Event-Driven/Pub/Sub (Asíncrono) ███
 ═══════════════════════════════════════════════════════════════════════════════
 
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    CAPA 1: EDGE LAYER (Reverse Proxy)                    │
 │                                                                           │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │              🌐 NGINX Reverse Proxy (Puerto 80)                  │   │
-│  │              ✅ YA CONFIGURADO (activar con profile)             │   │
+│  │              🌐 NGINX API Gateway (Puerto 80)                    │   │
+│  │              ✅ ACTIVO - Punto de Entrada Único                  │   │
 │  │                                                                  │   │
 │  │   Rutas:                                                         │   │
 │  │   GET /           → Frontend (Next.js SPA en puerto 3000)        │   │
@@ -236,7 +248,7 @@ La arquitectura implementada es una **Arquitectura Orientada a Eventos con Proce
 │  │   GET /flower/*   → Celery Monitor (puerto 5555, opcional)       │   │
 │  │                                                                  │   │
 │  │   Beneficios:                                                    │   │
-│  │   • Punto de entrada único                                       │   │
+│  │   • Punto de entrada único (API Gateway Pattern)                 │   │
 │  │   • Load balancing (múltiples APIs si escala)                    │   │
 │  │   • SSL termination (HTTPS ready)                                │   │
 │  │   • Compresión gzip                                              │   │
@@ -456,31 +468,42 @@ La arquitectura implementada es una **Arquitectura Orientada a Eventos con Proce
 ┌──────────────────────┬─────────────┬────────────┬──────────────────────────┐
 │     COMPONENTE       │   PUERTO    │   ESTADO   │      TECNOLOGÍA          │
 ├──────────────────────┼─────────────┼────────────┼──────────────────────────┤
-│ nginx                │ 80          │ ✅ CONFIG  │ nginx:alpine             │
-│ Frontend             │ 3000        │ ✅ HECHO   │ Next.js 16 + TypeScript  │
-│ API                  │ 8000        │ ✅ HECHO   │ FastAPI + Uvicorn        │
-│ PostgreSQL           │ 5432 (5433) │ ✅ HECHO   │ PostgreSQL 15 + pgvector │
-│ Redis                │ 6379        │ ✅ CONFIG  │ Redis 7 Alpine           │
-│ Celery Workers       │ -           │ ✅ HECHO   │ Celery 5.3+ (9 tasks)    │
-│ Celery Beat          │ -           │ ⚠️  OPC    │ Celery Beat (scheduler)  │
+│ nginx (API Gateway)  │ 80          │ ✅ ACTIVO  │ nginx:alpine             │
+│ Frontend             │ 3000        │ ✅ ACTIVO  │ Next.js 14 + TypeScript  │
+│ API                  │ 8000        │ ✅ ACTIVO  │ FastAPI + Uvicorn        │
+│ PostgreSQL           │ 5432 (5433) │ ✅ ACTIVO  │ PostgreSQL 15 + pgvector │
+│ Redis                │ 6379        │ ✅ ACTIVO  │ Redis 7 Alpine           │
+│ Celery Workers       │ -           │ ✅ ACTIVO  │ Celery 5.3+ (9 tasks)    │
+│ Celery Beat          │ -           │ ✅ ACTIVO  │ Celery Beat (scheduler)  │
 │ Flower (opcional)    │ 5555        │ ⚠️  OPC    │ Flower 2.0+              │
 └──────────────────────┴─────────────┴────────────┴──────────────────────────┘
 
-Total servicios: 8 containers (7 implementados, 1 opcional)
+Total servicios: 8 containers (7 activos por defecto, 1 opcional)
 ```
 
-### **Flujos de Datos - Arquitectura Event-Driven:**
+### **Flujos de Datos - Arquitectura Híbrida:**
 
-#### **FLUJO 1: Consulta Síncrona (REST API) - ✅ IMPLEMENTADO**
+#### **FLUJO 1: Consulta Síncrona (Request/Response con REST) - ✅ IMPLEMENTADO**
+**Patrón:** HTTP REST - Comunicación Síncrona
+**Uso:** Consultas rápidas (<200ms)
+
 ```
 Usuario → nginx (puerto 80) → Frontend (React)
        → GET /api/stats
-       → FastAPI → PostgreSQL
+       → nginx → FastAPI → PostgreSQL
        → JSON respuesta (< 200ms)
        → React renderiza dashboard
 ```
 
-#### **FLUJO 2: Scraping Event-Driven - ✅ IMPLEMENTADO (sin Pub/Sub auto-trigger)
+**Ejemplos de endpoints REST:**
+- GET /api/stats → Estadísticas del sistema
+- GET /api/jobs?country=CO&limit=50 → Lista de empleos
+- GET /api/skills/top → Skills más demandadas
+- GET /api/clusters → Resultados de clustering
+
+#### **FLUJO 2: Procesamiento Asíncrono (Event-Driven/Pub/Sub) - ✅ IMPLEMENTADO**
+**Patrón:** Event-Driven con Pub/Sub
+**Uso:** Procesamiento pesado (minutos)
 ```
 Usuario clicks "Iniciar Scraping"
    │
@@ -724,7 +747,7 @@ Si la defensa es en < 1 semana → **Opción B (Subprocess)** + documentar bien
 
 ## 🐳 EMPAQUETADO DOCKER - ESTADO ACTUAL
 
-### **Arquitectura de Contenedores (6 servicios activos + 2 opcionales):**
+### **Arquitectura de Contenedores (7 servicios activos + 1 opcional):**
 
 **SERVICIOS EN PRODUCCIÓN (✅ RUNNING):**
 
@@ -741,23 +764,16 @@ Si la defensa es en < 1 semana → **Opción B (Subprocess)** + documentar bien
 
 | Servicio | Imagen | Puerto | Estado | Activación | Uso |
 |----------|--------|--------|--------|------------|-----|
-| **nginx** | nginx:alpine | 80 | ⚠️ Configurado | `--profile with-nginx` | Reverse proxy unificado |
 | **flower** | Custom (Dockerfile.worker) | 5555 | ⚠️ Configurado | `--profile with-monitoring` | Monitor de Celery en tiempo real |
 
 **COMANDOS DE DESPLIEGUE:**
 
 ```bash
-# 1. Sistema base (6 servicios) - CONFIGURACIÓN ACTUAL
+# 1. Sistema completo (7 servicios) - CONFIGURACIÓN ACTUAL
 docker-compose up -d
 
-# 2. Con reverse proxy nginx (puerto 80)
-docker-compose --profile with-nginx up -d
-
-# 3. Con monitoring Flower (puerto 5555)
+# 2. Con monitoring Flower (8 servicios: base + flower)
 docker-compose --profile with-monitoring up -d
-
-# 4. Sistema completo (8 servicios: base + nginx + flower)
-docker-compose --profile with-nginx --profile with-monitoring up -d
 
 # 5. Escalar workers horizontalmente
 docker-compose up -d --scale celery_worker=4
@@ -1895,9 +1911,10 @@ def run_spider_task(self: Task, spider: str, country: str, limit: int, max_pages
 - Creación de documento IMPLEMENTATION_MASTER.md
 
 **[2024-11-13 15:30] - [PLANNING] - ✅ DONE**
-- Definición de arquitectura completa (4 capas)
-- Especificación de 8 servicios Docker
+- Definición de arquitectura completa (5 capas)
+- Especificación de 7 servicios Docker activos + 1 opcional
 - Plan de implementación en 5 fases (34-45 horas estimadas)
+- Arquitectura: Microservicios Híbrida (REST + Event-Driven/Pub/Sub)
 
 **Razón:** Necesario para tener roadmap claro antes de implementar.
 
@@ -2069,7 +2086,7 @@ def run_spider_task(self: Task, spider: str, country: str, limit: int, max_pages
   - **redis:7-alpine**: Cache y message broker con healthcheck
   - **api**: Backend FastAPI con depends_on conditions
   - **frontend**: Next.js con build args
-  - **nginx** (opcional, profile-based): Reverse proxy en puerto 80
+  - **nginx** (ACTIVO por defecto): API Gateway en puerto 80
 - Configurado networks: `labor_network` con bridge driver
 - Volúmenes persistentes: postgres_data, redis_data
 - Mapeado de volúmenes para desarrollo:
@@ -2229,13 +2246,13 @@ def run_spider_task(self: Task, spider: str, country: str, limit: int, max_pages
 **[2025-11-13 12:13] - [FASE 2.2 DOCKER COMPLETE] - ✅ DONE**
 
 **Resumen completo:**
-- ✅ Docker Compose con 4 servicios funcionando
+- ✅ Docker Compose con 7 servicios funcionando (nginx ACTIVO por defecto)
 - ✅ Healthchecks y dependencies configurados
 - ✅ API respondiendo correctamente con datos reales
 - ✅ Frontend servido correctamente
 - ✅ Base de datos con backup reciente (511MB)
 - ✅ Volúmenes persistentes configurados
-- ✅ nginx (opcional) listo con perfil `with-nginx`
+- ✅ nginx ACTIVO como API Gateway (puerto 80)
 - ✅ Documentación en README_DOCKER.md
 
 **Archivos creados/modificados:**
@@ -2389,19 +2406,25 @@ docker-compose exec frontend env | grep NEXT_PUBLIC_API_URL
 ### **Pregunta 1: ¿Qué arquitectura implementaste?**
 
 **Respuesta:**
-> "Implementé una **arquitectura orientada a eventos (Event-Driven Architecture) con cola de tareas distribuida**.
+> "Implementé una **Arquitectura de Microservicios Híbrida** que combina dos patrones de comunicación complementarios:
+>
+> **Request/Response (REST)** para operaciones síncronas y **Event-Driven con Pub/Sub** para procesamiento asíncrono.
 >
 > El sistema se divide en **4 capas**:
 >
-> 1. **Capa de Presentación**: SPA en React (Next.js) que consume una API REST, servida mediante nginx como reverse proxy.
+> 1. **Capa Edge (API Gateway)**: nginx como punto de entrada único que enruta requests a frontend o API según la ruta.
 >
-> 2. **Capa de Aplicación**: API REST con FastAPI que maneja requests HTTP síncronos (consultas, filtros) y encola tareas asíncronas de procesamiento pesado.
+> 2. **Capa de Presentación**: SPA en Next.js que consume la API REST mediante HTTP.
 >
-> 3. **Capa de Procesamiento**: Workers de Celery que ejecutan tareas en background (scraping, extracción de skills, clustering). Utilizo Redis como message broker para desacoplar la API de los workers.
+> 3. **Capa de Aplicación**: FastAPI que implementa dos patrones:
+>    - **REST** para consultas rápidas (<200ms): GET /api/stats, GET /api/jobs
+>    - **Pub/Sub** para tareas pesadas: encola a Redis → Workers procesan
 >
-> 4. **Capa de Datos**: PostgreSQL con extensión pgvector para almacenamiento relacional y vectorial.
+> 4. **Capa de Procesamiento**: Workers de Celery que consumen tareas de Redis (scraping, extracción, clustering).
 >
-> Todo está empaquetado con Docker Compose (8 servicios), permitiendo despliegue reproducible con un solo comando."
+> 5. **Capa de Datos**: PostgreSQL con pgvector para datos relacionales y embeddings vectoriales.
+>
+> **¿Por qué híbrida?** El 30% de las operaciones son consultas rápidas (REST) y el 70% son procesamiento pesado (Event-Driven/Pub/Sub). Todo empaquetado en 7 microservicios Docker."
 
 ### **Pregunta 2: ¿Por qué elegiste esta arquitectura?**
 
@@ -2410,15 +2433,16 @@ docker-compose exec frontend env | grep NEXT_PUBLIC_API_URL
 >
 > **Opción 1 - Monolito tradicional**: Todo en un proceso. Descartada porque el scraping (operación larga) bloquearía las consultas del usuario.
 >
-> **Opción 2 - Microservicios puros**: Servicios completamente independientes con API Gateway, service discovery, etc. Descartada porque es overkill para el volumen actual de datos (miles de ofertas, no millones) y agrega complejidad operacional innecesaria.
+> **Opción 2 - Microservicios con solo REST**: Todos los servicios se comunican por HTTP. Descartada porque las tareas pesadas (scraping, clustering) bloquearían la API durante minutos.
 >
-> **Opción 3 - Event-Driven con Task Queue** ✅: Seleccionada porque:
-> - Separa operaciones síncronas (API) de asíncronas (procesamiento)
-> - Escala horizontalmente (agregar workers sin cambiar código)
-> - Mantiene simplicidad operacional (no requiere Kubernetes)
-> - Permite procesamiento distribuido sin bloquear la interfaz
+> **Opción 3 - Microservicios Híbridos (REST + Event-Driven)** ✅: Seleccionada porque:
+> - **REST para consultas**: El usuario obtiene respuesta inmediata (<200ms) al consultar empleos o skills
+> - **Pub/Sub para procesamiento pesado**: El scraping y clustering corren en workers separados sin bloquear
+> - **Escalabilidad selectiva**: Puedo escalar workers (procesamiento) independientemente de la API (consultas)
+> - **Simplicidad operacional**: No requiero Kubernetes, solo Docker Compose
+> - **Desacoplamiento**: Si un worker cae, las consultas siguen funcionando
 >
-> Para el alcance de esta tesis (demostración de concepto + sistema funcional), esta arquitectura ofrece el mejor balance entre escalabilidad, simplicidad y capacidad de demostración."
+> **Dato clave:** El 70% de las operaciones del sistema son asíncronas (scraping, extracción batch). Usar solo REST sería ineficiente. Usar solo Event-Driven sería sobrecomplejo para consultas simples. La arquitectura híbrida es el balance óptimo."
 
 ### **Pregunta 3: ¿Cómo escala tu sistema?**
 
@@ -2635,6 +2659,6 @@ Después de cada fase, verificar:
 
 **FIN DEL DOCUMENTO MAESTRO**
 
-*Última actualización: 2024-11-13 15:30*
-*Versión: 1.0*
+*Última actualización: 2025-11-15*
+*Versión: 2.0 - Arquitectura actualizada a Microservicios Híbrida*
 *Status: READY TO START IMPLEMENTATION* 🚀
