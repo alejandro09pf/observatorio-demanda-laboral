@@ -71,6 +71,15 @@ Llama 3 3B (Meta AI) es la versión compacta de la familia LLaMA 3, entrenado so
 
 Qwen 2.5 3B (Alibaba Cloud) es parte de la familia Qwen (Qianwen) optimizada para multilingüismo con énfasis en idiomas asiáticos y europeos. Con 3 mil millones de parámetros, destaca por su arquitectura de atención eficiente. Ventajas: precisión superior en tareas de extracción estructurada, tokenización eficiente multilingüe, requisitos moderados de memoria (3-4 GB VRAM con Q4), y licencia Apache 2.0 permisiva. Limitaciones: conservadurismo excesivo con recall bajo en contextos ambiguos, menor cobertura de vocabulario técnico latinoamericano, y tendencia a omitir skills implícitas.
 
+La selección de estos cuatro modelos específicos se fundamentó en criterios técnicos y de disponibilidad de recursos. En primer lugar, se priorizaron modelos open-source dada la naturaleza académica del proyecto y la necesidad de reproducibilidad científica. En segundo lugar, se identificó a Llama 3 como referente base según los estudios del estado del arte analizados en el Capítulo 3, donde Herandi et al. (2024) demostraron la efectividad de LLMs fine-tuned para extracción de habilidades alcanzando F1-Score de 64.8\% sobre SkillSpan dataset \cite{herandi2024}, mientras que Kavas et al. (2024) validaron específicamente Llama-3 8B para contextos multilingües en Europa \cite{kavas2024}. Nguyen et al. (2024) documentaron que el prompting con LLMs, aunque flexible, requiere prompt engineering cuidadoso para tareas de extracción estructurada \cite{nguyen2024}. En tercer lugar, el rango de parámetros 3-4B se determinó mediante restricción de hardware disponible: un MacBook Air M4 base con 16 GB de memoria unificada permite ejecutar modelos de hasta 4.3B parámetros con cuantización Q4\_K\_M (4 bits por peso), requiriendo aproximadamente 2.4-2.8 GB de VRAM según la fórmula:
+
+\begin{equation}
+\text{VRAM} \approx \frac{\text{Parámetros} \times 4 \text{ bits}}{8 \text{ bits/byte}} + \text{overhead KV-cache}
+\end{equation}
+
+donde el overhead del KV-cache representa típicamente 15-20\% adicional. Modelos de 7B+ parámetros excederían los 5 GB de VRAM con cuantización Q4, comprometiendo estabilidad del sistema operativo durante inferencia. Adicionalmente, se consultaron rankings especializados: Hugging Face Open LLM Leaderboard (filtrado por modelos con evaluaciones en español) y LMArena (comparativa de modelos open-source en español) para identificar candidatos con desempeño reportado en tareas de NLP multilingüe.
+
+
 Phi-3.5 Mini (Microsoft Research) es un modelo ultra-compacto de 3.8 mil millones de parámetros entrenado con datos sintéticos de alta calidad. Ventajas: arquitectura extremadamente eficiente con baja latencia, capacidad de razonamiento avanzado para su tamaño, soporte multilingüe, y licencia MIT. Limitaciones: inconsistencias en generación de JSON estructurado causando pérdidas durante parsing, menor robustez en instrucciones complejas comparado con modelos más grandes, y vocabulario técnico limitado en español.
 
 La Tabla \ref{tab:comparacion-llms} resume la comparación cuantitativa entre los cuatro modelos evaluados.
@@ -168,7 +177,7 @@ Los fundamentos teóricos presentados en la sección anterior establecieron las 
 
 \subsection{Conjunto de Datos}
 
-El dataset del observatorio se compone de ofertas laborales tecnológicas recolectadas mediante web scraping de seis portales principales en tres países: Computrabajo, Bumeran y ElEmpleo (Colombia); Computrabajo, Bumeran, InfoJobs y OCC Mundial (México); y Computrabajo, Bumeran y ZonaJobs (Argentina). El corpus final contiene 30,660 ofertas laborales únicas distribuidas como: México 17,835 (58.16\%), Colombia 9,479 (30.91\%), y Argentina 3,346 (10.93\%). Las ofertas abarcan el período de octubre 2018 a octubre 2025 (7 años de datos históricos), con 71.23\% de cobertura temporal (21,839 jobs con posted\_date válido). El trimestre más reciente (Q4 2025) representa 69\% del dataset total, reflejando la naturaleza dinámica del mercado laboral tecnológico.
+El dataset del observatorio se compone de ofertas laborales tecnológicas recolectadas mediante web scraping de 8 portales principales en los países de Colmbia México y Argentina. El corpus final contiene 30,660 ofertas laborales únicas distribuidas como: México 17,835 (58.16\%), Colombia 9,479 (30.91\%), y Argentina 3,346 (10.93\%). Las ofertas abarcan el período de octubre 2018 a octubre 2025 (7 años de datos históricos), con 71.23\% de cobertura temporal (21,839 jobs con posted\_date válido). El trimestre más reciente (Q4 2025) representa 69\% del dataset total, reflejando la naturaleza dinámica del mercado laboral tecnológico.
 
 Cada oferta contiene los siguientes campos estructurados: \texttt{job\_id} (UUID único), \texttt{portal} (origen de la oferta), \texttt{country} (CO/MX/AR), \texttt{title} (título del cargo), \texttt{company} (empresa), \texttt{description} (descripción detallada del cargo), \texttt{requirements} (requisitos y habilidades), \texttt{salary\_raw} (rango salarial cuando disponible), \texttt{contract\_type} (tipo de contrato), \texttt{remote\_type} (modalidad presencial/remota/híbrida), \texttt{posted\_date} (fecha de publicación), y \texttt{content\_hash} (hash SHA-256 para deduplicación).
 
@@ -294,7 +303,7 @@ La base de datos actuó como columna vertebral del sistema, implementando el pat
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{diagrams/DiagramaER.png}
+\includegraphics[width=0.55\textwidth]{diagrams/DiagramaER.png}
 \caption{Diagrama Entidad-Relación de la Base de Datos del Observatorio}
 \label{fig:diagrama-er}
 \end{figure}
