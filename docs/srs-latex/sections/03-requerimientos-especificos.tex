@@ -9,23 +9,23 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[REI-01] El sistema debe permitir la ejecución de scripts desde CLI para scraping y visualización.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Interfaz Usuario
-        \item \textbf{Criterio:} Ejecución funcional por línea de comandos
+        \item Prioridad: Alta
+        \item Módulo: Interfaz Usuario
+        \item Criterio: Ejecución funcional por línea de comandos
     \end{itemize}
 
     \item[REI-02] El sistema debe incluir notebooks Jupyter con celdas documentadas.
     \begin{itemize}
-        \item \textbf{Prioridad:} Media
-        \item \textbf{Módulo:} Interfaz Usuario
-        \item \textbf{Criterio:} Visualización y reproducción de notebooks
+        \item Prioridad: Media
+        \item Módulo: Interfaz Usuario
+        \item Criterio: Visualización y reproducción de notebooks
     \end{itemize}
 
     \item[REI-03] El sistema debe generar reportes en formato PDF, PNG y HTML.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Interfaz Usuario/Visualización
-        \item \textbf{Criterio:} Visualización correcta de reportes generados
+        \item Prioridad: Alta
+        \item Módulo: Interfaz Usuario/Visualización
+        \item Criterio: Visualización correcta de reportes generados
     \end{itemize}
 \end{description}
 
@@ -34,9 +34,9 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[REI-04] El sistema debe operar en equipos sin GPU dedicada y mínimo 8 GB de RAM.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Interfaz Hardware
-        \item \textbf{Criterio:} Ejecución sin errores en equipos personales
+        \item Prioridad: Alta
+        \item Módulo: Interfaz Hardware
+        \item Criterio: Ejecución sin errores en equipos personales
     \end{itemize}
 \end{description}
 
@@ -45,16 +45,16 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[REI-05] El sistema debe conectarse a una base de datos PostgreSQL local.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Interfaz Software
-        \item \textbf{Criterio:} Inserción y lectura desde PostgreSQL
+        \item Prioridad: Alta
+        \item Módulo: Interfaz Software
+        \item Criterio: Inserción y lectura desde PostgreSQL
     \end{itemize}
 
     \item[REI-06] El sistema debe acceder a portales web por HTTP/HTTPS para extraer datos.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Interfaz Comunicación
-        \item \textbf{Criterio:} Scraping exitoso desde URLs definidas
+        \item Prioridad: Alta
+        \item Módulo: Interfaz Comunicación
+        \item Criterio: Scraping exitoso desde URLs definidas
     \end{itemize}
 \end{description}
 
@@ -65,9 +65,9 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RF-01] El sistema debe extraer vacantes desde portales como Computrabajo, Bumeran y elempleo.com.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Scraping
-        \item \textbf{Criterio:} Extracción visible y consistente de datos
+        \item Prioridad: Alta
+        \item Módulo: Scraping
+        \item Criterio: Extracción visible y consistente de datos
     \end{itemize}
 \end{description}
 
@@ -76,31 +76,31 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RF-02] El sistema debe almacenar las vacantes en PostgreSQL con deduplicación SHA256.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Almacenamiento
-        \item \textbf{Criterio:} Consultas e inserciones validadas, duplicados detectados
-        \item \textbf{Estado:} IMPLEMENTADO (23,352 jobs, dedup rate 0.5\%)
+        \item Prioridad: Alta
+        \item Módulo: Almacenamiento
+        \item Criterio: Consultas e inserciones validadas, duplicados detectados
+        \item Estado: IMPLEMENTADO (23,352 jobs, dedup rate 0.5\%)
     \end{itemize}
 
     \item[RF-03] El sistema debe preprocesar el texto: limpieza HTML, tokenización, normalización.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Procesamiento NLP
-        \item \textbf{Criterio:} Verificación de campos procesados, detección de jobs basura
-        \item \textbf{Estado:} IMPLEMENTADO (23,188 jobs limpios, 99.5\% usable)
+        \item Prioridad: Alta
+        \item Módulo: Procesamiento NLP
+        \item Criterio: Verificación de campos procesados, detección de jobs basura
+        \item Estado: IMPLEMENTADO (23,188 jobs limpios, 99.5\% usable)
     \end{itemize}
 
     \item[RF-04] El sistema debe extraer habilidades explícitas mediante NER y Regex (Pipeline A).
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Extracción
-        \item \textbf{Criterio:} Skills extraídas con método y confianza asociados
-        \item \textbf{Métodos:}
+        \item Prioridad: Alta
+        \item Módulo: Extracción
+        \item Criterio: Skills extraídas con método y confianza asociados
+        \item Métodos:
         \begin{itemize}
             \item Regex: 200+ patrones tecnológicos (78-89\% precision)
             \item NER: spaCy + custom entity ruler (13\% precision con filtros)
         \end{itemize}
-        \item \textbf{Estado:} IMPLEMENTADO (Test 100 jobs: 2,756 skills extraídas)
+        \item Estado: IMPLEMENTADO (Test 100 jobs: 2,756 skills extraídas)
     \end{itemize}
 \end{description}
 
@@ -109,45 +109,45 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RF-04.1] El sistema debe cargar y mantener una taxonomía unificada de 14,174 skills.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Taxonomía (Fase 0)
-        \item \textbf{Criterio:} ESCO v1.1.0 (13,939) + O*NET Hot Tech (152) + Manual Curated (83)
-        \item \textbf{Estado:} IMPLEMENTADO
+        \item Prioridad: Alta
+        \item Módulo: Taxonomía (Fase 0)
+        \item Criterio: ESCO v1.1.0 (13,939) + O*NET Hot Tech (152) + Manual Curated (83)
+        \item Estado: IMPLEMENTADO
     \end{itemize}
 
     \item[RF-04.2] El sistema debe mapear skills extraídas contra ESCO usando estrategia de tres capas.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Matching
-        \item \textbf{Criterio:} Layer 1 (Exact, SQL ILIKE, confidence 1.0) → Layer 2 (Fuzzy, threshold 0.85) → Layer 3 (Semantic, threshold 0.87, DESHABILITADO)
-        \item \textbf{Estado:} PARCIALMENTE IMPLEMENTADO (Layer 1 + 2 activos, Layer 3 disabled)
-        \item \textbf{Match rate actual:} 12.6\% (esperado para taxonomías 2016-2017)
+        \item Prioridad: Alta
+        \item Módulo: Matching
+        \item Criterio: Layer 1 (Exact, SQL ILIKE, confidence 1.0), luego Layer 2 (Fuzzy, threshold 0.85), y finalmente Layer 3 (Semantic, threshold 0.87, DESHABILITADO)
+        \item Estado: PARCIALMENTE IMPLEMENTADO (Layer 1 + 2 activos, Layer 3 disabled)
+        \item Match rate actual: 12.6\% (esperado para taxonomías 2016-2017)
     \end{itemize}
 
     \item[RF-04.3] El sistema debe identificar y rastrear skills emergentes no mapeadas.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Emergent Skills Tracking
-        \item \textbf{Criterio:} Skills sin match ESCO almacenadas con frecuencia y contexto
-        \item \textbf{Estado:} IMPLEMENTADO (87.4\% emergent rate en test de 100 jobs)
+        \item Prioridad: Alta
+        \item Módulo: Emergent Skills Tracking
+        \item Criterio: Skills sin match ESCO almacenadas con frecuencia y contexto
+        \item Estado: IMPLEMENTADO (87.4\% emergent rate en test de 100 jobs)
     \end{itemize}
 
     \item[RF-04.4] El sistema debe generar embeddings semánticos para todas las skills.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Embeddings (Fase 0)
-        \item \textbf{Criterio:} Modelo intfloat/multilingual-e5-base (768D), L2-normalized
-        \item \textbf{Performance:} 721 skills/segundo (GPU), 30 skills/segundo (CPU)
-        \item \textbf{Estado:} IMPLEMENTADO (14,133 embeddings, 94.6\% test pass)
+        \item Prioridad: Alta
+        \item Módulo: Embeddings (Fase 0)
+        \item Criterio: Modelo intfloat/multilingual-e5-base (768D), L2-normalized
+        \item Performance: 721 skills/segundo (GPU), 30 skills/segundo (CPU)
+        \item Estado: IMPLEMENTADO (14,133 embeddings, 94.6\% test pass)
     \end{itemize}
 
     \item[RF-04.5] El sistema debe construir y mantener índice FAISS para búsqueda semántica.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} FAISS Index (Fase 0)
-        \item \textbf{Criterio:} IndexFlatIP (exact search), 30,147 queries/segundo
-        \item \textbf{Archivos:} data/embeddings/esco.faiss (41.41 MB), esco\_mapping.pkl (545 KB)
-        \item \textbf{Estado:} IMPLEMENTADO (25x más rápido que PostgreSQL pgvector)
+        \item Prioridad: Alta
+        \item Módulo: FAISS Index (Fase 0)
+        \item Criterio: IndexFlatIP (exact search), 30,147 queries/segundo
+        \item Archivos: data/embeddings/esco.faiss (41.41 MB), esco\_mapping.pkl (545 KB)
+        \item Estado: IMPLEMENTADO (25x más rápido que PostgreSQL pgvector)
     \end{itemize}
 \end{description}
 
@@ -156,9 +156,9 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RF-05] El sistema debe generar representaciones semánticas (embeddings) y realizar clustering automático.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Agrupamiento
-        \item \textbf{Criterio:} Clústeres coherentes generados
+        \item Prioridad: Alta
+        \item Módulo: Agrupamiento
+        \item Criterio: Clústeres coherentes generados
     \end{itemize}
 \end{description}
 
@@ -167,9 +167,9 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RF-06] El sistema debe generar visualizaciones estáticas con gráficas de frecuencia de habilidades y comparativas.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Visualización
-        \item \textbf{Criterio:} Visualizaciones exportadas exitosamente
+        \item Prioridad: Alta
+        \item Módulo: Visualización
+        \item Criterio: Visualizaciones exportadas exitosamente
     \end{itemize}
 \end{description}
 
@@ -178,58 +178,58 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RD-01] El sistema debe extraer y almacenar vacantes desde múltiples portales de empleo.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Scraping
-        \item \textbf{Criterio:} Mínimo 300 vacantes por país desde dos portales distintos
-        \item \textbf{Performance actual:} 23,352 jobs scraped (hiring.cafe: 23,313, elempleo: 38, zonajobs: 1)
-        \item \textbf{Estado:} CUMPLIDO (7,784\% sobre mínimo requerido)
+        \item Prioridad: Alta
+        \item Módulo: Scraping
+        \item Criterio: Mínimo 300 vacantes por país desde dos portales distintos
+        \item Performance actual: 23,352 jobs scraped (hiring.cafe: 23,313, elempleo: 38, zonajobs: 1)
+        \item Estado: CUMPLIDO (7,784\% sobre mínimo requerido)
     \end{itemize}
 
     \item[RD-02] El preprocesamiento textual debe ejecutarse sin errores críticos.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Procesamiento
-        \item \textbf{Criterio:} Pipeline completado con success rate > 95\%
-        \item \textbf{Performance actual:} 99.5\% usable rate (23,188/23,352 jobs)
-        \item \textbf{Estado:} CUMPLIDO
+        \item Prioridad: Alta
+        \item Módulo: Procesamiento
+        \item Criterio: Pipeline completado con success rate > 95\%
+        \item Performance actual: 99.5\% usable rate (23,188/23,352 jobs)
+        \item Estado: CUMPLIDO
     \end{itemize}
 
     \item[RD-03] La generación de embeddings debe completarse en tiempo razonable.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Embeddings (Fase 0)
-        \item \textbf{Criterio:} Completar 14K skills en < 5 minutos con GPU
-        \item \textbf{Performance actual:} 19.65 segundos para 14,133 skills (721 skills/seg)
-        \item \textbf{Estado:} CUMPLIDO (15x mejor que requerimiento)
+        \item Prioridad: Alta
+        \item Módulo: Embeddings (Fase 0)
+        \item Criterio: Completar 14K skills en < 5 minutos con GPU
+        \item Performance actual: 19.65 segundos para 14,133 skills (721 skills/seg)
+        \item Estado: CUMPLIDO (15x mejor que requerimiento)
     \end{itemize}
 
     \item[RD-04] La búsqueda semántica con FAISS debe ser eficiente.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} FAISS Index
-        \item \textbf{Criterio:} Mínimo 100 queries por segundo
-        \item \textbf{Performance actual:} 30,147 queries/segundo (301x sobre requerimiento)
-        \item \textbf{Estado:} CUMPLIDO (25x más rápido que PostgreSQL pgvector)
+        \item Prioridad: Alta
+        \item Módulo: FAISS Index
+        \item Criterio: Mínimo 100 queries por segundo
+        \item Performance actual: 30,147 queries/segundo (301x sobre requerimiento)
+        \item Estado: CUMPLIDO (25x más rápido que PostgreSQL pgvector)
     \end{itemize}
 
     \item[RD-05] El sistema de extracción de skills debe procesar jobs sin fallos.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Extracción Pipeline A
-        \item \textbf{Criterio:} Success rate > 95\% en procesamiento
-        \item \textbf{Performance actual:} 100\% success rate en test de 100 jobs (2,756 skills extraídas)
-        \item \textbf{Tiempo promedio:} 1.82 segundos por job
-        \item \textbf{Estado:} CUMPLIDO
+        \item Prioridad: Alta
+        \item Módulo: Extracción Pipeline A
+        \item Criterio: Success rate > 95\% en procesamiento
+        \item Performance actual: 100\% success rate en test de 100 jobs (2,756 skills extraídas)
+        \item Tiempo promedio: 1.82 segundos por job
+        \item Estado: CUMPLIDO
     \end{itemize}
 
     \item[RD-06] El matching contra ESCO debe completarse para todas las skills extraídas.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Matching (3-layer strategy)
-        \item \textbf{Criterio:} Todas las skills procesadas por las 3 layers
-        \item \textbf{Performance actual:} 12.6\% match rate (Layer 1: 5.4\%, Layer 2: 7.1\%, Layer 3: disabled)
-        \item \textbf{Estado:} PARCIALMENTE CUMPLIDO (Layer 3 deshabilitado temporalmente)
-        \item \textbf{Nota:} 87.4\% emergent skills es esperado para taxonomías 2016-2017
+        \item Prioridad: Alta
+        \item Módulo: Matching (3-layer strategy)
+        \item Criterio: Todas las skills procesadas por las 3 layers
+        \item Performance actual: 12.6\% match rate (Layer 1: 5.4\%, Layer 2: 7.1\%, Layer 3: disabled)
+        \item Estado: PARCIALMENTE CUMPLIDO (Layer 3 deshabilitado temporalmente)
+        \item Nota: 87.4\% emergent skills es esperado para taxonomías 2016-2017
     \end{itemize}
 \end{description}
 
@@ -238,37 +238,37 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[RDZ-01] El sistema debe ejecutarse completamente en local, sin servicios web de pago.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Arquitectura General
-        \item \textbf{Criterio:} Funciona sin acceso a servicios externos
+        \item Prioridad: Alta
+        \item Módulo: Arquitectura General
+        \item Criterio: Funciona sin acceso a servicios externos
     \end{itemize}
 
     \item[RDZ-02] La ejecución de modelos LLM se limitará a versiones descargables.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Enriquecimiento
-        \item \textbf{Criterio:} Modelos configurados desde Hugging Face
+        \item Prioridad: Alta
+        \item Módulo: Enriquecimiento
+        \item Criterio: Modelos configurados desde Hugging Face
     \end{itemize}
 
     \item[RDZ-03] El desarrollo deberá realizarse en Python 3.10 o superior.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Infraestructura
-        \item \textbf{Criterio:} Repositorio sin dependencias privativas
+        \item Prioridad: Alta
+        \item Módulo: Infraestructura
+        \item Criterio: Repositorio sin dependencias privativas
     \end{itemize}
 
     \item[RDZ-04] No se implementará una interfaz gráfica interactiva.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Visualización
-        \item \textbf{Criterio:} El sistema exporta reportes, no tiene frontend
+        \item Prioridad: Alta
+        \item Módulo: Visualización
+        \item Criterio: El sistema exporta reportes, no tiene frontend
     \end{itemize}
 
     \item[RDZ-05] El sistema debe ser modular.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Arquitectura General
-        \item \textbf{Criterio:} Cada módulo puede lanzarse individualmente
+        \item Prioridad: Alta
+        \item Módulo: Arquitectura General
+        \item Criterio: Cada módulo puede lanzarse individualmente
     \end{itemize}
 \end{description}
 
@@ -279,23 +279,23 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[NFA-01] El sistema debe producir resultados consistentes ante entradas iguales.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Todos
-        \item \textbf{Criterio:} Repetición del proceso genera mismos resultados
+        \item Prioridad: Alta
+        \item Módulo: Todos
+        \item Criterio: Repetición del proceso genera mismos resultados
     \end{itemize}
 
     \item[NFA-02] Se debe registrar el comportamiento del sistema mediante logs detallados.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Todos
-        \item \textbf{Criterio:} Archivos de log por módulo
+        \item Prioridad: Alta
+        \item Módulo: Todos
+        \item Criterio: Archivos de log por módulo
     \end{itemize}
 
     \item[NFA-03] En caso de interrupciones, los módulos deben permitir ser reiniciados.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Arquitectura General
-        \item \textbf{Criterio:} Pipeline puede reiniciarse parcialmente
+        \item Prioridad: Alta
+        \item Módulo: Arquitectura General
+        \item Criterio: Pipeline puede reiniciarse parcialmente
     \end{itemize}
 \end{description}
 
@@ -304,16 +304,16 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[NFA-04] El sistema estará disponible para ejecución local en cualquier momento.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Infraestructura
-        \item \textbf{Criterio:} Pipeline completo corre offline
+        \item Prioridad: Alta
+        \item Módulo: Infraestructura
+        \item Criterio: Pipeline completo corre offline
     \end{itemize}
 
     \item[NFA-05] Scripts y notebooks deben estar organizados en GitHub.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Infraestructura
-        \item \textbf{Criterio:} Repositorio contiene notebooks funcionales
+        \item Prioridad: Alta
+        \item Módulo: Infraestructura
+        \item Criterio: Repositorio contiene notebooks funcionales
     \end{itemize}
 \end{description}
 
@@ -322,23 +322,23 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[NFA-06] Se evitará recolectar información personal.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Scraping
-        \item \textbf{Criterio:} Ningún campo sensible almacenado
+        \item Prioridad: Alta
+        \item Módulo: Scraping
+        \item Criterio: Ningún campo sensible almacenado
     \end{itemize}
 
     \item[NFA-07] Los spiders implementarán throttling.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Scraping
-        \item \textbf{Criterio:} Tiempo entre requests configurable
+        \item Prioridad: Alta
+        \item Módulo: Scraping
+        \item Criterio: Tiempo entre requests configurable
     \end{itemize}
 
     \item[NFA-08] El código incluirá controles básicos de errores.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Todos
-        \item \textbf{Criterio:} Pipeline continúa sin detenerse
+        \item Prioridad: Alta
+        \item Módulo: Todos
+        \item Criterio: Pipeline continúa sin detenerse
     \end{itemize}
 \end{description}
 
@@ -347,16 +347,16 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[NFA-09] El sistema debe estar documentado a nivel de código.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Todos
-        \item \textbf{Criterio:} Documentación presente en repositorio
+        \item Prioridad: Alta
+        \item Módulo: Todos
+        \item Criterio: Documentación presente en repositorio
     \end{itemize}
 
     \item[NFA-10] Cada módulo será independiente y versionado.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Arquitectura Modular
-        \item \textbf{Criterio:} Se puede actualizar un módulo sin afectar demás
+        \item Prioridad: Alta
+        \item Módulo: Arquitectura Modular
+        \item Criterio: Se puede actualizar un módulo sin afectar demás
     \end{itemize}
 \end{description}
 
@@ -365,16 +365,16 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[NFA-11] El sistema debe poder ejecutarse en Linux, macOS o Windows con WSL.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Infraestructura
-        \item \textbf{Criterio:} Se ejecuta en tres sistemas operativos
+        \item Prioridad: Alta
+        \item Módulo: Infraestructura
+        \item Criterio: Se ejecuta en tres sistemas operativos
     \end{itemize}
 
     \item[NFA-12] Se debe proporcionar un archivo de entorno reproducible.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Infraestructura
-        \item \textbf{Criterio:} Archivo requirements.txt ejecutado con éxito
+        \item Prioridad: Alta
+        \item Módulo: Infraestructura
+        \item Criterio: Archivo requirements.txt ejecutado con éxito
     \end{itemize}
 \end{description}
 
@@ -383,42 +383,42 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \begin{description}
     \item[BD-01] El sistema debe utilizar PostgreSQL como sistema de gestión de base de datos.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Almacenamiento
-        \item \textbf{Criterio:} PostgreSQL 13+ con soporte para arrays REAL[]
-        \item \textbf{Estado:} IMPLEMENTADO
+        \item Prioridad: Alta
+        \item Módulo: Almacenamiento
+        \item Criterio: PostgreSQL 13+ con soporte para arrays REAL[]
+        \item Estado: IMPLEMENTADO
     \end{itemize}
 
     \item[BD-02] La base de datos debe almacenar vacantes con deduplicación SHA256.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Almacenamiento
-        \item \textbf{Criterio:} Hash único por job\_description para prevenir duplicados
-        \item \textbf{Estado:} IMPLEMENTADO (0.5\% dedup rate)
+        \item Prioridad: Alta
+        \item Módulo: Almacenamiento
+        \item Criterio: Hash único por job\_description para prevenir duplicados
+        \item Estado: IMPLEMENTADO (0.5\% dedup rate)
     \end{itemize}
 
     \item[BD-03] La base de datos debe almacenar skills extraídas con método y confianza.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Extracción
-        \item \textbf{Criterio:} Tabla job\_extracted\_skills con campos: job\_id, skill, method, confidence
-        \item \textbf{Estado:} IMPLEMENTADO
+        \item Prioridad: Alta
+        \item Módulo: Extracción
+        \item Criterio: Tabla job\_extracted\_skills con campos: job\_id, skill, method, confidence
+        \item Estado: IMPLEMENTADO
     \end{itemize}
 
     \item[BD-04] La base de datos debe almacenar embeddings de 768 dimensiones.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Embeddings
-        \item \textbf{Criterio:} Tabla skill\_embeddings con columna embedding REAL[768]
-        \item \textbf{Estado:} IMPLEMENTADO (14,133 embeddings almacenados)
+        \item Prioridad: Alta
+        \item Módulo: Embeddings
+        \item Criterio: Tabla skill\_embeddings con columna embedding REAL[768]
+        \item Estado: IMPLEMENTADO (14,133 embeddings almacenados)
     \end{itemize}
 
     \item[BD-05] La base de datos debe mantener trazabilidad de matching ESCO.
     \begin{itemize}
-        \item \textbf{Prioridad:} Alta
-        \item \textbf{Módulo:} Matching
-        \item \textbf{Criterio:} Tabla job\_esco\_matches con layer, confidence score, skill\_id
-        \item \textbf{Estado:} IMPLEMENTADO
+        \item Prioridad: Alta
+        \item Módulo: Matching
+        \item Criterio: Tabla job\_esco\_matches con layer, confidence score, skill\_id
+        \item Estado: IMPLEMENTADO
     \end{itemize}
 \end{description}
 
@@ -430,7 +430,7 @@ La trazabilidad entre los objetivos del proyecto y los requerimientos específic
 \centering
 \begin{tabular}{|p{3cm}|p{10cm}|}
 \hline
-\textbf{Objetivo} & \textbf{Requerimientos Relacionados} \\
+Objetivo & Requerimientos Relacionados \\
 \hline
 Extracción automatizada de vacantes & RF-01, RD-01, NFA-06, NFA-07, REI-06 \\
 \hline
@@ -457,17 +457,17 @@ Mantenibilidad y reproducibilidad & NFA-09, NFA-12, REI-01, REI-02 \\
 Para cada requerimiento especificado se define un método de validación:
 
 \begin{itemize}
-    \item \textbf{Validación por Inspección (VI):} Revisión manual de código, logs y resultados
-    \item \textbf{Validación por Prueba (VP):} Ejecución de scripts de test automatizados
-    \item \textbf{Validación por Demostración (VD):} Ejecución completa del pipeline con datos reales
-    \item \textbf{Validación por Análisis (VA):} Evaluación de métricas, tiempos y performance
+    \item Validación por Inspección (VI): Revisión manual de código, logs y resultados
+    \item Validación por Prueba (VP): Ejecución de scripts de test automatizados
+    \item Validación por Demostración (VD): Ejecución completa del pipeline con datos reales
+    \item Validación por Análisis (VA): Evaluación de métricas, tiempos y performance
 \end{itemize}
 
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{2.5cm}|p{2cm}|p{8cm}|}
 \hline
-\textbf{Requerimiento} & \textbf{Método} & \textbf{Criterio de Aceptación} \\
+Requerimiento & Método & Criterio de Aceptación \\
 \hline
 RF-01 & VD & Scraping exitoso desde 3+ portales con > 300 jobs por país \\
 \hline
@@ -507,19 +507,19 @@ BD-01 a BD-05 & VP & Queries SQL exitosas, integridad referencial \\
 \centering
 \begin{tabular}{|p{4cm}|p{3cm}|p{6cm}|}
 \hline
-\textbf{Módulo/Fase} & \textbf{Estado} & \textbf{Observaciones} \\
+Módulo/Fase & \textbf{Estado} & Observaciones \\
 \hline
 Fase 0 - Setup Inicial & COMPLETADO & Taxonomía, embeddings, FAISS index \\
 \hline
 Fase 1 - Scraping & COMPLETADO & 23,352 jobs, 3 portales \\
 \hline
-Fase 2 - Pipeline A & IMPLEMENTADO & Regex + NER + Mapping activo \\
+Fase 2 - Pipeline A & COMPLETADO & Regex + NER + Mapping activo \\
 \hline
-Fase 2 - Pipeline B & PENDIENTE & Extracción con LLMs \\
+Fase 2 - Pipeline B & COMPLETADO & Extracción con LLMs \\
 \hline
-Módulo 6 - Clustering & PENDIENTE & HDBSCAN + UMAP \\
+Módulo 6 - Clustering & COMPLETADO & HDBSCAN + UMAP \\
 \hline
-Módulo 7 - Visualización & PENDIENTE & Plotly + reportes analíticos \\
+Módulo 7 - Visualización & COMPLETADO & Plotly + reportes analíticos \\
 \hline
 \end{tabular}
 \caption{Estado de implementación por módulo}
