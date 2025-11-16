@@ -173,7 +173,7 @@ services:
       - labor_network
 
   # ==========================================
-  # NGINX REVERSE PROXY (Opcional)
+  # NGINX REVERSE PROXY
   # ==========================================
   nginx:
     image: nginx:alpine
@@ -188,8 +188,6 @@ services:
     restart: unless-stopped
     networks:
       - labor_network
-    profiles:
-      - with-nginx  # Solo se levanta si usas: docker-compose --profile with-nginx up
 
 volumes:
   postgres_data:
