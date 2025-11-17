@@ -1,7 +1,7 @@
 % ============================================================================
 % PONTIFICIA UNIVERSIDAD JAVERIANA
 % FACULTAD DE INGENIERIA - SISTEMAS
-% Política de Tratamiento de Datos Personales
+% Política de Tratamiento de Datos y Ética del Web Scraping
 % Observatorio de Demanda Laboral en América Latina
 % ============================================================================
 
@@ -19,6 +19,12 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=ieee,citestyle=numeric-comp]{biblatex}
+
+% ============================================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA
+% ============================================================================
+\addbibresource{../latex/bibliografia.bib}
 
 % ============================================================================
 % CONFIGURACIÓN DE INTERLINEADO
@@ -31,7 +37,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{Observatorio de Demanda Laboral}
-\fancyhead[R]{Política de Tratamiento de Datos}
+\fancyhead[R]{Política de Datos y Ética del Scraping}
 \fancyfoot[R]{Página \thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
@@ -77,20 +83,20 @@
 
     \vspace{2.5cm}
 
-    {\Large\itshape Observatorio de demanda laboral en América Latina\par}
+    {\Large Observatorio de demanda laboral en América Latina\par}
 
     \vspace{2cm}
 
-    {\huge\bfseries Política de Tratamiento de\par}
-    {\huge\bfseries Datos Personales\par}
+    {\huge\bfseries Política de Tratamiento de Datos\par}
+    {\huge\bfseries y Ética del Web Scraping\par}
 
     \vspace{2cm}
 
-    {\Large Octubre 2025\par}
+    {\Large Noviembre 2025\par}
 
     \vspace{0.5cm}
 
-    {\large Versión 1.0\par}
+    {\large Versión 2.0\par}
 
     \vspace{1.5cm}
 
@@ -122,285 +128,432 @@
 
 \subsection{Presentación}
 
-El Observatorio de Demanda Laboral en América Latina es un sistema automatizado diseñado para el monitoreo y análisis de la demanda de habilidades técnicas en los mercados laborales de Colombia, México y Argentina. A través de tecnologías de web scraping, procesamiento de lenguaje natural (NLP) e inteligencia artificial, el sistema recopila ofertas de empleo públicas de diversos portales especializados, extrae habilidades técnicas utilizando la taxonomía ESCO (European Skills, Competences, Qualifications and Occupations), y genera análisis de tendencias del mercado laboral.
+El Observatorio de Demanda Laboral en América Latina es un sistema automatizado diseñado para el monitoreo y análisis de la demanda de habilidades técnicas en los mercados laborales de Colombia, México y Argentina. El sistema emplea tecnologías de web scraping, procesamiento de lenguaje natural (NLP) e inteligencia artificial para recopilar ofertas de empleo de portales públicos especializados, extraer habilidades técnicas mediante la taxonomía ESCO (European Skills, Competences, Qualifications and Occupations), y generar análisis de tendencias del mercado laboral.
 
-Dado que el sistema recopila y procesa información de ofertas de empleo que puede contener datos personales, se establece la presente Política de Tratamiento de Datos Personales con el fin de garantizar la protección, seguridad y uso adecuado de la información, en cumplimiento de la normativa colombiana vigente en materia de protección de datos personales.
+El web scraping constituye el método fundamental de adquisición de datos del sistema, permitiendo la recolección sistemática de información públicamente accesible desde portales de empleo que operan en los países objetivo. Esta técnica ha sido ampliamente validada en contextos académicos y de investigación como herramienta legítima para el análisis del mercado laboral \cite{orozco2019webscraping}.
+
+\subsection{Justificación del Uso de Web Scraping}
+
+La implementación de web scraping como metodología de recolección de datos en el Observatorio se fundamenta en las siguientes consideraciones:
+
+\begin{itemize}
+    \item Acceso a información pública ya disponible en internet, sin barreras técnicas que impidan su visualización por parte de usuarios regulares.
+    \item Necesidad académica de obtener datos agregados y actualizados del mercado laboral para fines de investigación científica.
+    \item Ausencia de APIs públicas o mecanismos oficiales de acceso masivo a datos en la mayoría de portales de empleo latinoamericanos.
+    \item Automatización de procesos de monitoreo que serían técnicamente inviables mediante recolección manual.
+    \item Finalidad exclusivamente académica, sin propósitos comerciales ni competencia desleal contra los portales scrapeados.
+\end{itemize}
+
+El uso de web scraping en este proyecto se encuentra respaldado por precedentes académicos y jurídicos que reconocen su legitimidad cuando se realiza sobre información pública, con fines de investigación, respetando los términos de servicio razonables y sin causar daños técnicos a los sistemas de origen \cite{orozco2019webscraping}.
 
 \subsection{Objetivo de la Política}
 
-La presente política tiene como objetivo establecer los principios, procedimientos y derechos de los titulares de los datos personales que puedan ser recolectados y tratados por el Observatorio de Demanda Laboral. En ella se describen las medidas adoptadas para garantizar la seguridad de la información y el respeto a la privacidad de todas las personas cuyos datos puedan ser procesados.
-
-\subsection{Ámbito de Aplicación}
-
-Esta política se aplica a:
+La presente política tiene como objetivo establecer los principios legales, éticos y técnicos que rigen la práctica de web scraping implementada en el Observatorio de Demanda Laboral, así como el tratamiento de los datos personales que puedan ser incidentalmente recopilados durante este proceso. Se busca garantizar:
 
 \begin{itemize}
-    \item Todos los datos recopilados mediante técnicas de web scraping de portales de empleo públicos en Colombia, México y Argentina.
-    \item Información contenida en ofertas de empleo, incluyendo descripciones de puestos, requisitos y otra información publicada por empleadores.
-    \item Habilidades técnicas extraídas y analizadas mediante algoritmos de NLP y machine learning.
-    \item Datos almacenados en la base de datos PostgreSQL del sistema.
-    \item Desarrolladores, investigadores y terceros que, en el desarrollo de sus actividades académicas o de investigación, puedan acceder a información contenida en las bases de datos del Observatorio.
+    \item El cumplimiento de la normativa legal colombiana e internacional sobre protección de datos y propiedad intelectual.
+    \item La adopción de estándares éticos reconocidos en la práctica de web scraping académico.
+    \item La transparencia en los métodos de recolección y procesamiento de información.
+    \item El respeto a los derechos de los titulares de datos personales que puedan estar contenidos en ofertas laborales públicas.
+    \item La implementación de medidas técnicas que garanticen un scraping responsable y no intrusivo.
 \end{itemize}
-
-\subsection{Responsable}
-
-El responsable del tratamiento de los datos personales recolectados a través del Observatorio de Demanda Laboral es el equipo de desarrollo del proyecto, un grupo de trabajo académico de la Pontificia Universidad Javeriana.
-
-\begin{itemize}
-    \item \textbf{Nombre del responsable:} Proyecto Observatorio de Demanda Laboral en América Latina
-    \item \textbf{Naturaleza:} Proyecto académico de investigación
-    \item \textbf{Institución:} Pontificia Universidad Javeriana
-    \item \textbf{Domicilio:} Bogotá D.C., Colombia
-    \item \textbf{Correos electrónicos de contacto:} alejandro\_pinzon@javeriana.edu.co o camachoa.nicolas@javeriana.edu.co
-\end{itemize}
-
-El equipo responsable se compromete a garantizar la protección, confidencialidad y correcto tratamiento de los datos personales recolectados, conforme a lo establecido en la Ley 1581 de 2012 y demás normas concordantes sobre protección de datos personales en Colombia.
 
 \newpage
 
-\section{MARCO LEGAL}
+\section{MARCO LEGAL DEL WEB SCRAPING}
+
+\subsection{Legalidad del Web Scraping en Colombia y Latinoamérica}
+
+El web scraping, como técnica de extracción automatizada de información desde sitios web públicos, no está explícitamente prohibido por la legislación colombiana ni por los marcos jurídicos de México o Argentina. Su legalidad depende del cumplimiento de diversos factores legales y éticos que varían según el contexto de uso, la naturaleza de los datos extraídos y el respeto a los derechos de propiedad intelectual y protección de datos personales.
+
+\subsubsection{Información Pública vs. Información Privada}
+
+La distinción fundamental para determinar la legalidad del web scraping radica en la naturaleza de la información accedida:
+
+\begin{itemize}
+    \item Información pública: Datos accesibles sin autenticación, sin restricciones técnicas explícitas (robots.txt) y sin violación de términos de servicio razonables. Esta categoría incluye ofertas de empleo publicadas abiertamente en portales especializados.
+    \item Información privada: Datos protegidos por autenticación, contraseñas, paywalls o restricciones técnicas explícitas cuya elusión constituiría una violación legal.
+\end{itemize}
+
+El Observatorio de Demanda Laboral se limita exclusivamente a la recolección de información pública, accesible mediante navegación estándar de internet, sin eludir mecanismos de seguridad ni acceder a áreas restringidas de los portales scrapeados.
+
+\subsubsection{Precedentes Legales y Académicos}
+
+Según Orozco y Gómez (2019), el web scraping aplicado a portales de empleo con fines académicos y de investigación del mercado laboral constituye una práctica legítima cuando se cumplen las siguientes condiciones \cite{orozco2019webscraping}:
+
+\begin{enumerate}
+    \item La información extraída es de carácter público y está disponible sin autenticación.
+    \item El propósito es educativo, académico o de investigación científica, sin fines comerciales directos.
+    \item Se respetan los estándares técnicos de scraping responsable (robots.txt, rate limiting).
+    \item No se causa daño técnico a la infraestructura de los sitios scrapeados.
+    \item Se implementan mecanismos de anonimización y agregación de datos personales.
+\end{enumerate}
+
+El proyecto cumple con todos estos criterios, posicionándose dentro del marco de scraping ético y legalmente aceptable para fines de investigación académica.
 
 \subsection{Legislación Aplicable}
 
-El tratamiento de los datos personales en el Observatorio de Demanda Laboral se rige por las siguientes normas de la República de Colombia:
+El tratamiento de datos recolectados mediante web scraping en el Observatorio se rige por las siguientes normativas:
+
+\subsubsection{Colombia}
 
 \begin{itemize}
-    \item \textbf{Ley 1581 de 2012:} Régimen General de Protección de Datos Personales, que establece principios y derechos de los titulares de datos.
-    \item \textbf{Decreto 1377 de 2013:} Reglamentación parcial de la Ley 1581 de 2012, en lo relacionado con las políticas de tratamiento de datos y la autorización de los titulares.
-    \item \textbf{Constitución Política de Colombia (Artículos 15 y 20):} Protección del derecho a la intimidad, habeas data y acceso a la información.
-    \item \textbf{Reglamentos y circulares de la Superintendencia de Industria y Comercio (SIC):} Ente encargado de supervisar el cumplimiento de la normativa de protección de datos en Colombia.
+    \item Ley 1581 de 2012: Régimen General de Protección de Datos Personales, que establece principios de legalidad, finalidad, libertad, veracidad, transparencia, seguridad y confidencialidad en el tratamiento de datos.
+    \item Decreto 1377 de 2013: Reglamentación parcial de la Ley 1581 de 2012.
+    \item Ley 23 de 1982: Sobre derechos de autor, aplicable a la protección de contenidos originales publicados en portales web.
+    \item Constitución Política de Colombia (Artículos 15 y 20): Protección del derecho a la intimidad, habeas data y acceso a la información pública.
 \end{itemize}
 
-\subsection{Principios Rectores del Tratamiento de Datos}
-
-De acuerdo con la legislación vigente, el tratamiento de datos personales en el Observatorio de Demanda Laboral se basa en los siguientes principios:
+\subsubsection{México}
 
 \begin{itemize}
-    \item \textbf{Legalidad:} El tratamiento de datos es una actividad regulada que debe cumplir con la normativa aplicable.
-    \item \textbf{Finalidad:} Los datos se recolectan con propósitos legítimos de investigación académica y análisis del mercado laboral, previamente definidos.
-    \item \textbf{Libertad:} Se respeta el principio de que la recolección de datos debe realizarse de manera transparente y con fines legítimos.
-    \item \textbf{Veracidad o Calidad:} La información tratada proviene de fuentes públicas y se procesa sin alteración de su contenido original.
-    \item \textbf{Transparencia:} Los interesados tienen derecho a conocer el uso que se le está dando a los datos procesados por el sistema.
-    \item \textbf{Seguridad:} El Observatorio adopta medidas de protección técnicas y administrativas para evitar el acceso no autorizado, pérdida o uso indebido de los datos.
-    \item \textbf{Confidencialidad:} Los datos personales no serán divulgados de manera que permitan la identificación de personas específicas, salvo autorización expresa o cuando exista una orden legal que lo justifique.
+    \item Ley Federal de Protección de Datos Personales en Posesión de los Particulares (2010).
+    \item Ley Federal del Derecho de Autor (1996).
+\end{itemize}
+
+\subsubsection{Argentina}
+
+\begin{itemize}
+    \item Ley 25.326 de Protección de Datos Personales (2000).
+    \item Ley 11.723 de Propiedad Intelectual (1933).
+\end{itemize}
+
+\subsection{Propiedad Intelectual y Uso Legítimo}
+
+El Observatorio reconoce los derechos de propiedad intelectual de los portales de empleo sobre el diseño, estructura y contenidos originales de sus plataformas. Sin embargo, la extracción de datos factuales (títulos de puestos, ubicaciones geográficas, habilidades técnicas requeridas) publicados por terceros (empleadores) no constituye una violación de derechos de autor, ya que:
+
+\begin{itemize}
+    \item Los datos factuales no están protegidos por derechos de autor según la legislación colombiana e internacional.
+    \item La información extraída proviene de ofertas publicadas por empleadores, no creadas por los portales.
+    \item El uso se enmarca en el principio de uso legítimo (fair use) para fines académicos y de investigación.
+    \item No se reproduce la estructura, diseño ni elementos creativos de los portales scrapeados.
 \end{itemize}
 
 \newpage
 
-\section{RESPONSABLE DEL TRATAMIENTO Y TIPOS DE DATOS TRATADOS}
+\section{PRINCIPIOS ÉTICOS DEL WEB SCRAPING}
 
-\subsection{Responsable del Tratamiento}
+\subsection{Respeto al Protocolo robots.txt}
 
-El Observatorio de Demanda Laboral, como responsable del tratamiento de datos personales, se compromete a garantizar la confidencialidad, integridad y seguridad de la información procesada, en cumplimiento de la normativa vigente y con fines exclusivamente académicos y de investigación.
+El archivo robots.txt es un estándar técnico mediante el cual los administradores de sitios web comunican sus preferencias sobre qué secciones del sitio pueden o no ser accedidas por robots automatizados. El Observatorio de Demanda Laboral implementa las siguientes políticas de respeto a robots.txt:
 
-\subsection{Tipos de Datos Tratados}
+\begin{itemize}
+    \item Verificación previa del archivo robots.txt antes de iniciar cualquier proceso de scraping en un portal nuevo.
+    \item Respeto absoluto a las directivas Disallow y Allow especificadas en el archivo.
+    \item Identificación clara del bot mediante User-Agent descriptivo que permite a los administradores identificar y contactar al proyecto.
+    \item Suspensión inmediata del scraping en portales que posteriormente agreguen restricciones en robots.txt.
+\end{itemize}
 
-El Observatorio recopila y trata los siguientes tipos de datos:
+El respeto a robots.txt constituye una buena práctica ética reconocida internacionalmente y demuestra la voluntad del proyecto de operar dentro de las normas técnicas establecidas por la comunidad web.
 
-\subsubsection{Datos Recopilados de Ofertas de Empleo Públicas}
+\subsection{Cumplimiento de Términos de Servicio}
+
+Los Términos de Servicio (ToS) de los portales web constituyen acuerdos contractuales entre el portal y sus usuarios. El Observatorio analiza los ToS de cada portal scrapeado para identificar:
+
+\begin{itemize}
+    \item Prohibiciones explícitas y razonables sobre scraping automatizado.
+    \item Restricciones específicas sobre uso comercial de datos.
+    \item Limitaciones de frecuencia o volumen de accesos.
+    \item Requisitos de atribución o reconocimiento.
+\end{itemize}
+
+Cuando un portal prohíbe explícitamente el scraping en sus ToS, el proyecto evalúa la razonabilidad de dicha prohibición en el contexto de uso académico y de investigación científica. En casos donde la prohibición se considera razonable y técnicamente justificada, el portal es excluido del alcance del scraping.
+
+Sin embargo, se reconoce que ciertas cláusulas de ToS que prohíben de manera absoluta cualquier acceso automatizado a información pública pueden ser consideradas excesivamente restrictivas y potencialmente no aplicables en contextos académicos protegidos por principios de libertad de investigación y acceso a información pública.
+
+\subsection{Scraping Responsable: Limitación de Frecuencia}
+
+El Observatorio implementa mecanismos técnicos de scraping responsable para minimizar el impacto en la infraestructura de los portales objetivo:
+
+\begin{itemize}
+    \item Rate limiting: Límite de 1-2 peticiones por segundo por portal, muy por debajo de los umbrales que podrían afectar el rendimiento del sitio.
+    \item Delays aleatorios: Pausas variables entre peticiones (2-5 segundos) para simular comportamiento humano y distribuir la carga.
+    \item Horarios de baja demanda: Ejecución preferente de scrapers durante horarios nocturnos o de bajo tráfico en cada región geográfica.
+    \item Respect headers: Atención a headers HTTP como Retry-After y respeto a códigos de estado 429 (Too Many Requests).
+    \item Caché local: Almacenamiento temporal de páginas visitadas para evitar peticiones duplicadas innecesarias.
+    \item Session reuse: Reutilización de conexiones HTTP para reducir overhead de conexión.
+\end{itemize}
+
+Estas medidas garantizan que el scraping del Observatorio sea técnicamente indistinguible de tráfico regular de usuarios humanos y no cause impacto negativo en la disponibilidad o rendimiento de los portales scrapeados.
+
+\subsection{Transparencia en la Recolección de Datos}
+
+El proyecto adopta principios de transparencia en sus operaciones de scraping:
+
+\begin{itemize}
+    \item User-Agent identificable: Los bots se identifican con un User-Agent descriptivo que incluye el nombre del proyecto y correo de contacto.
+    \item Documentación pública: El código fuente del proyecto, incluyendo los scrapers, está disponible públicamente bajo licencia de código abierto.
+    \item Contactabilidad: Se proporciona información de contacto accesible para que administradores de portales puedan comunicarse con el equipo del proyecto.
+    \item Política de exclusión voluntaria: Cualquier portal puede solicitar ser excluido del scraping, solicitud que será atendida inmediatamente.
+\end{itemize}
+
+\subsection{No Elusión de Medidas de Seguridad}
+
+El Observatorio se compromete a no eludir medidas de seguridad técnicas implementadas por los portales:
+
+\begin{itemize}
+    \item No se elude CAPTCHAs ni sistemas anti-bot.
+    \item No se accede a contenido protegido por autenticación sin autorización explícita.
+    \item No se explotan vulnerabilidades de seguridad de los portales.
+    \item No se utilizan técnicas de ofuscación para ocultar la naturaleza automatizada del acceso.
+\end{itemize}
+
+\newpage
+
+\section{IMPLEMENTACIÓN ÉTICA EN EL OBSERVATORIO}
+
+\subsection{Portales Scrapeados y Justificación}
+
+El Observatorio realiza web scraping sobre los siguientes 8 portales de empleo públicos en Colombia, México y Argentina:
+
+\begin{enumerate}
+    \item HiringCafe (hiring.cafe)
+    \item Computrabajo (computrabajo.com)
+    \item Bumeran (bumeran.com)
+    \item ElEmpleo (elempleo.com)
+    \item OCC Mundial (occ.com.mx)
+    \item ZonaJobs (zonajobs.com)
+    \item Indeed (indeed.com)
+    \item Magneto (magneto365.com)
+\end{enumerate}
+
+Estos portales fueron seleccionados con base en los siguientes criterios:
+
+\begin{itemize}
+    \item Carácter público de las ofertas publicadas (accesibles sin autenticación).
+    \item Relevancia en los mercados laborales objetivo (Colombia, México, Argentina).
+    \item Ausencia de restricciones técnicas absolutas en robots.txt que prohíban el acceso a ofertas públicas.
+    \item Enfoque en sectores tecnológicos que permitan analizar la demanda de habilidades técnicas específicas.
+\end{itemize}
+
+\subsection{Medidas Técnicas de Scraping Responsable}
+
+El sistema implementa las siguientes medidas técnicas para garantizar un scraping ético y responsable:
+
+\subsubsection{Configuración de Scrapy Framework}
+
+\begin{itemize}
+    \item CONCURRENT\_REQUESTS\_PER\_DOMAIN: 1-2 (máximo de peticiones simultáneas por dominio)
+    \item DOWNLOAD\_DELAY: 2-5 segundos (pausa entre peticiones consecutivas)
+    \item RANDOMIZE\_DOWNLOAD\_DELAY: True (variación aleatoria de delays)
+    \item ROBOTSTXT\_OBEY: True (respeto obligatorio a robots.txt)
+    \item USER\_AGENT: Identificación clara del proyecto con correo de contacto
+    \item AUTOTHROTTLE\_ENABLED: True (ajuste automático de velocidad según respuesta del servidor)
+\end{itemize}
+
+\subsubsection{Limitaciones de Alcance}
+
+\begin{itemize}
+    \item Scraping limitado a ofertas activas (últimos 30-60 días).
+    \item Exclusión de secciones no relevantes del portal (foros, blogs, perfiles de usuarios).
+    \item Filtrado por país y categoría tecnológica para minimizar peticiones innecesarias.
+    \item Deduplicación para evitar re-scraping de ofertas ya recolectadas.
+\end{itemize}
+
+\subsection{Datos Públicos vs. Datos Privados}
+
+El Observatorio distingue claramente entre información pública y privada:
+
+\subsubsection{Información Pública Recolectada}
 
 \begin{itemize}
     \item Título del puesto de trabajo
     \item Descripción de funciones y responsabilidades
-    \item Requisitos técnicos y profesionales
-    \item Información de la empresa empleadora (cuando es pública)
-    \item Ubicación geográfica del empleo (país, ciudad)
-    \item Portal de origen de la oferta laboral
+    \item Requisitos técnicos y habilidades requeridas
+    \item Ubicación geográfica (ciudad, país)
+    \item Información de la empresa empleadora cuando es pública
+    \item Modalidad de trabajo (remoto, presencial, híbrido)
     \item Fecha de publicación
 \end{itemize}
 
-\subsubsection{Datos Derivados del Procesamiento}
+\subsubsection{Información Privada NO Recolectada}
 
 \begin{itemize}
-    \item Habilidades técnicas extraídas mediante NLP y análisis de texto
-    \item Mapeo de habilidades a la taxonomía ESCO
-    \item Scores de confianza de las extracciones realizadas
-    \item Vectores de embeddings (representaciones numéricas de habilidades)
-    \item Resultados de clustering y análisis dimensional
-    \item Tendencias agregadas del mercado laboral
+    \item Currículums o perfiles de candidatos
+    \item Información de contacto personal (correos, teléfonos)
+    \item Salarios específicos cuando no son públicos
+    \item Datos de cuentas de usuario del portal
+    \item Información detrás de autenticación
+    \item Mensajes privados o comunicaciones internas
 \end{itemize}
 
-\subsubsection{Datos Sensibles}
+\subsection{Anonimización y Agregación de Datos}
 
-El Observatorio está diseñado para procesar información pública de ofertas de empleo y \textbf{no recopila intencionalmente datos sensibles} tales como:
+Una vez recolectados, los datos son procesados mediante técnicas de anonimización y agregación:
 
 \begin{itemize}
-    \item Datos biométricos
-    \item Información de salud
-    \item Orientación sexual
-    \item Afiliación política o sindical
-    \item Datos financieros personales
+    \item Eliminación de información de contacto personal incidentalmente capturada.
+    \item Agregación estadística de habilidades sin vincular a empresas o personas específicas.
+    \item Generación de reportes que presentan tendencias agregadas del mercado laboral.
+    \item Aplicación de técnicas de k-anonimidad para conjuntos de datos compartidos con fines académicos.
+    \item Pseudonimización de empresas empleadoras en análisis públicos.
 \end{itemize}
 
-En caso de que, por la naturaleza pública de las ofertas de empleo, algún dato sensible sea inadvertidamente recopilado, el sistema implementa mecanismos de anonimización y agregación que impiden la identificación de personas específicas.
+\subsection{Propósito Académico y No Comercial}
 
-\newpage
-
-\section{FINALIDADES DEL TRATAMIENTO DE DATOS Y DERECHOS DE LOS TITULARES}
-
-\subsection{Finalidades del Tratamiento de Datos}
-
-Los datos personales recolectados por el Observatorio de Demanda Laboral serán utilizados exclusivamente para las siguientes finalidades:
+El Observatorio opera exclusivamente con fines académicos y de investigación científica:
 
 \begin{itemize}
-    \item \textbf{Análisis del mercado laboral:} Identificar tendencias de demanda de habilidades técnicas en Colombia, México y Argentina.
-    \item \textbf{Investigación académica:} Generar conocimiento sobre las necesidades del mercado laboral latinoamericano para fines educativos y de investigación.
-    \item \textbf{Extracción de habilidades:} Aplicar técnicas de NLP para identificar y clasificar competencias técnicas requeridas por los empleadores.
-    \item \textbf{Generación de reportes agregados:} Crear visualizaciones, estadísticas y reportes sobre tendencias del mercado, garantizando la no identificación de personas o empresas específicas.
-    \item \textbf{Mejora del sistema:} Optimizar los algoritmos de extracción, clasificación y análisis mediante técnicas de machine learning.
-    \item \textbf{Cumplimiento legal:} Atender requerimientos de entidades reguladoras y cumplir con normativas de protección de datos.
-\end{itemize}
-
-\subsection{Derechos de los Titulares}
-
-De acuerdo con la normativa vigente, las personas cuyos datos puedan estar siendo procesados tienen los siguientes derechos:
-
-\begin{itemize}
-    \item \textbf{Acceder:} Conocer de forma gratuita los datos personales que estén siendo tratados y el procesamiento aplicado.
-    \item \textbf{Actualizar y Rectificar:} Solicitar la corrección de datos parciales, inexactos, incompletos o que induzcan a error.
-    \item \textbf{Revocar la Autorización:} Retirar el consentimiento para el tratamiento de datos cuando aplique, y/o solicitar la supresión del dato cuando en el tratamiento no se respeten los principios, derechos y garantías constitucionales y legales.
-    \item \textbf{Eliminar sus Datos:} Solicitar la supresión de información personal cuando no sea necesaria para las finalidades establecidas.
-    \item \textbf{Solicitar prueba de la autorización:} Cuando aplique, solicitar evidencia del consentimiento otorgado para el tratamiento de datos personales.
-    \item \textbf{Ser informado:} Previa solicitud, conocer el uso que se le ha dado a los datos personales.
-    \item \textbf{Presentar quejas:} Presentar ante la Superintendencia de Industria y Comercio quejas por infracciones a lo dispuesto en la Ley 1581 de 2012 y las demás normas concordantes.
+    \item No comercialización: Los datos recolectados no son vendidos ni comercializados.
+    \item No competencia: El sistema no compite comercialmente con los portales scrapeados.
+    \item Publicaciones académicas: Los resultados se publican en tesis, artículos científicos y conferencias académicas.
+    \item Acceso abierto: Los hallazgos son compartidos públicamente bajo principios de ciencia abierta.
+    \item Código abierto: El software desarrollado se publica bajo licencias de código abierto (MIT, Apache 2.0).
 \end{itemize}
 
 \newpage
 
-\section{MEDIDAS DE SEGURIDAD Y TRANSFERENCIA DE DATOS}
+\section{PROTECCIÓN DE DATOS PERSONALES}
+
+\subsection{Responsable del Tratamiento}
+
+El responsable del tratamiento de los datos personales que puedan ser incidentalmente recolectados es:
+
+\begin{itemize}
+    \item Nombre: Proyecto Observatorio de Demanda Laboral en América Latina
+    \item Naturaleza: Proyecto académico de investigación
+    \item Institución: Pontificia Universidad Javeriana
+    \item Domicilio: Bogotá D.C., Colombia
+    \item Correos de contacto: alejandro\_pinzon@javeriana.edu.co, camachoa.nicolas@javeriana.edu.co
+\end{itemize}
+
+\subsection{Principios de Tratamiento de Datos}
+
+El tratamiento de datos personales en el Observatorio se rige por los siguientes principios de la Ley 1581 de 2012:
+
+\begin{itemize}
+    \item Legalidad: Cumplimiento de la normativa aplicable.
+    \item Finalidad: Datos recolectados exclusivamente para investigación académica del mercado laboral.
+    \item Libertad: Recolección transparente con fines legítimos.
+    \item Veracidad: Procesamiento sin alteración del contenido original de fuentes públicas.
+    \item Transparencia: Derecho de los interesados a conocer el uso de los datos.
+    \item Seguridad: Medidas técnicas y administrativas de protección.
+    \item Confidencialidad: No divulgación de datos que permitan identificación personal.
+\end{itemize}
+
+\subsection{Minimización y Proporcionalidad}
+
+El sistema implementa principios de minimización de datos:
+
+\begin{itemize}
+    \item Solo se procesa información estrictamente necesaria para los objetivos de investigación.
+    \item Datos personales incidentalmente capturados son anonimizados lo antes posible.
+    \item Información sensible (salud, religión, orientación sexual) es identificada y eliminada automáticamente.
+    \item Datos agregados y estadísticos se prefieren sobre datos individuales en todos los análisis.
+\end{itemize}
 
 \subsection{Medidas de Seguridad}
 
-El Observatorio de Demanda Laboral implementa diversas medidas de seguridad técnicas y administrativas para proteger los datos procesados:
-
 \begin{itemize}
-    \item \textbf{Cifrado de datos:} La información almacenada en la base de datos PostgreSQL está protegida mediante cifrado en tránsito y en reposo.
-    \item \textbf{Control de acceso:} Se emplean sistemas de autenticación y autorización para garantizar que solo el personal autorizado del proyecto pueda acceder a la información.
-    \item \textbf{Anonimización y agregación:} Los reportes y visualizaciones generados presentan datos agregados que impiden la identificación de personas o empresas específicas.
-    \item \textbf{Monitoreo y auditoría:} Se realizan revisiones periódicas de los sistemas para identificar vulnerabilidades y prevenir incidentes de seguridad.
-    \item \textbf{Almacenamiento seguro:} Los datos se guardan en infraestructura con protocolos de seguridad certificados y con acceso restringido.
-    \item \textbf{Minimización de datos:} El sistema solo procesa la información estrictamente necesaria para cumplir con las finalidades académicas y de investigación.
-    \item \textbf{Pseudonimización:} Cuando es posible, se utilizan técnicas de pseudonimización para reducir el riesgo de identificación.
+    \item Cifrado de datos en tránsito (HTTPS, TLS 1.3) y en reposo (PostgreSQL encryption).
+    \item Control de acceso mediante autenticación y autorización (solo equipo autorizado).
+    \item Anonimización automática de datos personales mediante scripts de procesamiento.
+    \item Auditoría y logging de accesos a la base de datos.
+    \item Respaldos cifrados con retención limitada.
+    \item Infraestructura con certificaciones de seguridad (Docker, servidores seguros).
 \end{itemize}
 
-En caso de detectar una vulnerabilidad o posible filtración de datos, el equipo responsable tomará acciones inmediatas y notificará a las partes afectadas y a las autoridades competentes, según lo estipulado por la normativa vigente.
-
-\subsection{Transferencia y Transmisión de Datos}
-
-La información procesada por el Observatorio no será compartida con terceros comerciales. Sin embargo, podrá ser compartida en los siguientes casos:
+\subsection{Almacenamiento y Retención}
 
 \begin{itemize}
-    \item \textbf{Cumplimiento Legal:} Cuando sea requerido por una autoridad judicial o administrativa, conforme a la legislación colombiana.
-    \item \textbf{Fines Académicos:} Con otros investigadores o instituciones académicas, siempre garantizando la anonimización y agregación de datos para impedir la identificación de personas específicas.
-    \item \textbf{Prestadores de Servicios:} En caso de que terceros sean contratados para proveer infraestructura tecnológica (servidores, servicios de nube), siempre bajo acuerdos que garanticen la protección de los datos.
-    \item \textbf{Publicaciones Científicas:} Datos anonimizados y agregados podrán ser incluidos en artículos académicos, reportes de investigación o presentaciones científicas.
+    \item Datos de ofertas: Almacenados hasta 24 meses desde su recolección.
+    \item Datos agregados y anonimizados: Conservación indefinida para análisis histórico.
+    \item Información identificable: Eliminación segura tras anonimización.
+    \item Método de eliminación: Borrado permanente de registros y sobrescritura de backups.
 \end{itemize}
-
-Los datos personales recolectados por el Observatorio serán sometidos a tratamiento automatizado mediante herramientas tecnológicas como algoritmos de NLP, modelos de inteligencia artificial, sistemas de embeddings, clustering dimensional (UMAP, HDBSCAN) y búsqueda vectorial (FAISS), con fines de análisis de habilidades, visualización de tendencias y mejora del sistema.
 
 \newpage
 
-\section{REVOCATORIA DE AUTORIZACIÓN Y SUPRESIÓN DE DATOS}
+\section{DERECHOS DE LOS TITULARES Y PROCEDIMIENTOS}
 
-\subsection{Derecho a la Supresión}
+\subsection{Derechos de los Titulares}
 
-Los titulares de datos pueden solicitar la eliminación de su información personal cuando:
+Las personas cuyos datos puedan estar siendo procesados tienen los siguientes derechos según la Ley 1581 de 2012:
 
 \begin{itemize}
-    \item No se respeten los principios, derechos y garantías establecidos en la normativa vigente.
-    \item La información ya no sea necesaria para las finalidades académicas y de investigación con las que fue recopilada.
-    \item Haya un uso indebido de los datos personales.
+    \item Conocer, actualizar y rectificar sus datos personales.
+    \item Solicitar prueba de la autorización otorgada cuando aplique.
+    \item Ser informado sobre el uso de sus datos personales.
+    \item Presentar quejas ante la Superintendencia de Industria y Comercio (SIC).
+    \item Revocar la autorización y solicitar la supresión de datos cuando no se respeten principios legales.
+    \item Acceder gratuitamente a sus datos personales procesados.
 \end{itemize}
 
-En estos casos, el Observatorio procederá con la supresión de los datos personales siempre que no exista una obligación legal, académica o de investigación que requiera su conservación.
+\subsection{Procedimiento de Consultas y Reclamos}
 
-\subsection{Procedimiento de Solicitud}
+\subsubsection{Consultas}
 
-Para solicitar la revocatoria del consentimiento o la supresión de datos, los titulares deben:
+Para consultas sobre datos personales:
 
 \begin{enumerate}
-    \item Enviar una solicitud escrita a los correos electrónicos: alejandro\_pinzon@javeriana.edu.co o camachoa.nicolas@javeriana.edu.co
-    \item Incluir información de contacto y especificar claramente la solicitud
-    \item Proporcionar identificación que permita verificar la titularidad de los datos
+    \item Enviar solicitud a: alejandro\_pinzon@javeriana.edu.co o camachoa.nicolas@javeriana.edu.co
+    \item Incluir: nombre completo, datos de contacto, descripción de la consulta
+    \item Plazo de respuesta: 10 días hábiles (extensible hasta 5 días hábiles adicionales)
 \end{enumerate}
 
-El equipo responsable responderá en un plazo máximo de 15 días hábiles y procederá con la acción solicitada cuando sea procedente.
+\subsubsection{Reclamos}
 
-Si un titular no recibe respuesta a sus solicitudes o considera que sus derechos han sido vulnerados, puede presentar una queja ante la Superintendencia de Industria y Comercio (SIC), entidad encargada de la protección de datos personales en Colombia.
-
-\newpage
-
-\section{CONSULTAS Y RECLAMOS}
-
-\subsection{Consultas}
-
-Los titulares de los datos personales pueden realizar consultas para conocer la información que el Observatorio ha recopilado sobre ellos. Para ello, deben enviar una solicitud a través de los siguientes canales de contacto:
-
-\begin{itemize}
-    \item \textbf{Correos Electrónicos:} alejandro\_pinzon@javeriana.edu.co o camachoa.nicolas@javeriana.edu.co
-    \item \textbf{Institución:} Pontificia Universidad Javeriana - Facultad de Ingeniería
-    \item \textbf{Dirección:} Carrera 7 \# 40-62, Bogotá D.C., Colombia
-\end{itemize}
-
-El Observatorio responderá a las consultas en un plazo máximo de 10 días hábiles contados a partir de la recepción de la solicitud. Si no es posible atender la consulta en este tiempo, se informará al titular sobre la razón del retraso y la nueva fecha de respuesta, la cual no podrá superar los 5 días hábiles adicionales, conforme a la legislación vigente.
-
-\subsection{Reclamos}
-
-Si un titular considera que la información contenida en las bases de datos del Observatorio debe ser corregida, actualizada o eliminada, o si considera que se ha dado un uso inadecuado a sus datos, puede presentar un reclamo siguiendo este procedimiento:
+Para reclamos sobre corrección, actualización o eliminación de datos:
 
 \begin{enumerate}
-    \item \textbf{Presentación del Reclamo:}
-    \begin{itemize}
-        \item Enviar la solicitud a través de los canales de contacto mencionados.
-        \item Incluir nombre completo y datos de contacto.
-        \item Especificar el motivo del reclamo y adjuntar documentos que respalden la solicitud, si aplica.
-    \end{itemize}
-
-    \item \textbf{Verificación y Respuesta:}
-    \begin{itemize}
-        \item Una vez recibido el reclamo completo, el Observatorio contará con 15 días hábiles para dar una respuesta.
-        \item Si se requiere más tiempo, se notificará al usuario, con una prórroga máxima de 8 días hábiles adicionales.
-    \end{itemize}
+    \item Presentar reclamo vía correos electrónicos indicados
+    \item Incluir: identificación, motivo del reclamo, documentos de respaldo
+    \item Plazo de respuesta: 15 días hábiles (extensible hasta 8 días hábiles adicionales)
 \end{enumerate}
+
+\subsection{Supresión de Datos}
+
+Los titulares pueden solicitar la eliminación de sus datos personales cuando:
+
+\begin{itemize}
+    \item No se respeten los principios de protección de datos.
+    \item Los datos ya no sean necesarios para los fines académicos.
+    \item Exista uso indebido de la información.
+\end{itemize}
+
+La supresión se realizará siempre que no exista obligación legal o académica de conservación.
+
+\subsection{Contacto y Quejas}
+
+\begin{itemize}
+    \item Correos: alejandro\_pinzon@javeriana.edu.co, camachoa.nicolas@javeriana.edu.co
+    \item Institución: Pontificia Universidad Javeriana - Facultad de Ingeniería
+    \item Dirección: Carrera 7 \# 40-62, Bogotá D.C., Colombia
+    \item Quejas SIC: www.sic.gov.co (Superintendencia de Industria y Comercio)
+\end{itemize}
 
 \newpage
 
-\section{VIGENCIA DE LA POLÍTICA Y ALMACENAMIENTO DE LOS DATOS}
+\section{VIGENCIA Y ACTUALIZACIONES}
 
 \subsection{Vigencia}
 
-La presente Política de Tratamiento de Datos Personales entra en vigor a partir del \textbf{30 de octubre de 2025} y permanecerá vigente mientras se mantenga en funcionamiento el Observatorio de Demanda Laboral en América Latina.
+Esta Política de Tratamiento de Datos y Ética del Web Scraping entra en vigor a partir del 16 de noviembre de 2025 y permanecerá vigente mientras el Observatorio de Demanda Laboral esté en operación.
 
-El equipo responsable se reserva el derecho de modificar esta política cuando sea necesario para adaptarse a cambios en la legislación, en la tecnología utilizada o en las finalidades del proyecto. Cualquier modificación será publicada y comunicada de manera oportuna.
+\subsection{Modificaciones}
 
-\subsection{Almacenamiento de los Datos}
-
-Los datos personales recolectados serán tratados durante el tiempo que sea necesario para cumplir con las finalidades descritas en esta política, específicamente:
+El equipo responsable se reserva el derecho de modificar esta política cuando sea necesario para:
 
 \begin{itemize}
-    \item \textbf{Datos de ofertas de empleo:} Se almacenarán mientras sean relevantes para el análisis de tendencias del mercado laboral, típicamente hasta 24 meses desde su recopilación.
-    \item \textbf{Datos agregados y anonimizados:} Podrán conservarse indefinidamente con fines de investigación académica, ya que no permiten la identificación de personas específicas.
-    \item \textbf{Datos de análisis histórico:} Se conservarán para estudios longitudinales de evolución del mercado laboral, siempre en formato anonimizado y agregado.
+    \item Adaptarse a cambios en la legislación colombiana o internacional.
+    \item Incorporar nuevos estándares éticos de scraping.
+    \item Actualizar medidas de seguridad y protección de datos.
+    \item Incluir o excluir portales del alcance del scraping.
 \end{itemize}
 
-Posteriormente, los datos que permitan identificación serán eliminados de forma segura mediante:
+Cualquier modificación será comunicada mediante actualización de la versión del documento y publicación en el repositorio público del proyecto.
+
+\subsection{Compromiso Ético}
+
+El equipo del Observatorio de Demanda Laboral se compromete a:
 
 \begin{itemize}
-    \item Borrado permanente de registros de bases de datos
-    \item Sobrescritura de información sensible
-    \item Destrucción segura de respaldos que contengan información identificable
-\end{itemize}
-
-\subsection{Naturaleza de la Información Recopilada}
-
-Es importante destacar que el Observatorio de Demanda Laboral procesa principalmente información de carácter público, proveniente de ofertas de empleo disponibles en portales especializados de acceso público en Colombia, México y Argentina. El sistema está diseñado para:
-
-\begin{itemize}
-    \item Realizar análisis agregados y estadísticos
-    \item Generar insights sobre tendencias del mercado laboral
-    \item No crear perfiles individuales de personas
-    \item No utilizar la información con fines comerciales
-    \item Mantener el enfoque exclusivamente académico y de investigación
+    \item Operar bajo los más altos estándares éticos de investigación académica.
+    \item Respetar los derechos de propiedad intelectual y protección de datos.
+    \item Implementar scraping responsable que no cause daño a los portales objetivo.
+    \item Mantener transparencia en los métodos de recolección y procesamiento de datos.
+    \item Responder de manera oportuna a solicitudes de titulares de datos y administradores de portales.
+    \item Contribuir al conocimiento científico sobre el mercado laboral latinoamericano.
 \end{itemize}
 
 \vfill
@@ -413,5 +566,12 @@ Bogotá D.C., Colombia\\
 \vspace{0.3cm}
 alejandro\_pinzon@javeriana.edu.co | camachoa.nicolas@javeriana.edu.co
 \end{center}
+
+\newpage
+
+% ============================================================================
+% REFERENCIAS
+% ============================================================================
+\printbibliography[title={Referencias}]
 
 \end{document}

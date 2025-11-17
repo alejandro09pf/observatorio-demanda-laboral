@@ -2,7 +2,7 @@
 
 \section{Perspectiva del Producto}
 
-El sistema propuesto, denominado \textit{Observatorio de Demanda Laboral en Tecnología en Latinoamérica}, corresponde a un producto completamente nuevo, diseñado desde cero con el fin de ofrecer una solución automatizada, académicamente robusta y técnicamente escalable para el análisis de habilidades tecnológicas demandadas en el mercado laboral digital. Si bien es novedosa la implementación y el diseño, se basa en múltiples componentes o sistemas similares ya propuestos en literatura Europea, Africana, y Estadounidense, lo que robustece la facilidad de su implementación.
+El sistema propuesto, denominado Observatorio de Demanda Laboral en Tecnología en Latinoamérica, corresponde a un producto completamente nuevo, diseñado desde cero con el fin de ofrecer una solución automatizada, académicamente robusta y técnicamente escalable para el análisis de habilidades tecnológicas demandadas en el mercado laboral digital. Si bien es novedosa la implementación y el diseño, se basa en múltiples componentes o sistemas similares ya propuestos en literatura Europea, Africana, y Estadounidense, lo que robustece la facilidad de su implementación.
 
 Este sistema no reemplaza una herramienta previa ni se integra como módulo en un sistema existente; por el contrario, responde a una necesidad actual no cubierta de manera integral en los contextos académico y gubernamental latinoamericano: la escasez de plataformas automatizadas que permitan entender en profundidad la evolución semántica de las habilidades requeridas en el sector tecnológico, a partir de vacantes en línea publicadas en español.
 
@@ -27,52 +27,90 @@ El flujo funcional del sistema se organiza de manera secuencial y conectada, ini
 Las interfaces internas entre módulos incluyen:
 
 \begin{itemize}
-    \item \textbf{Scraping → Almacenamiento estructurado:} Cada spider obtiene vacantes desde portales como Computrabajo, Bumeran y elempleo.com, y deposita los datos en bruto en archivos .json o .csv, los cuales son posteriormente integrados a una base de datos PostgreSQL.
+    \item De Scraping hacia Almacenamiento estructurado: Cada spider obtiene vacantes desde portales como Computrabajo, Bumeran y elempleo.com, y deposita los datos en bruto en archivos .json o .csv, los cuales son posteriormente integrados a una base de datos PostgreSQL.
 
-    \item \textbf{Almacenamiento → Procesamiento semántico:} Los textos extraídos son lematizados, tokenizados y limpiados utilizando librerías como spaCy, nltk y regex, para luego ser enviados al módulo de extracción de habilidades.
+    \item De Almacenamiento hacia Procesamiento semántico: Los textos extraídos son lematizados, tokenizados y limpiados utilizando librerías como spaCy, nltk y regex, para luego ser enviados al módulo de extracción de habilidades.
 
-    \item \textbf{Procesamiento semántico → Enriquecimiento con LLMs:} Las habilidades explícitas e implícitas se extraen mediante NER, expresiones regulares y modelos de lenguaje como BETO, E5, o T5, ya sea de forma local o descargados desde Hugging Face.
+    \item De Procesamiento semántico hacia Enriquecimiento con LLMs: Las habilidades explícitas e implícitas se extraen mediante NER, expresiones regulares y modelos de lenguaje como BETO, E5, o T5, ya sea de forma local o descargados desde Hugging Face.
 
-    \item \textbf{Enriquecimiento → Embeddings y clustering:} Los textos enriquecidos se transforman en vectores utilizando SentenceTransformers y fastText, y se agrupan mediante algoritmos como HDBSCAN y reducción de dimensionalidad (UMAP).
+    \item De Enriquecimiento hacia Embeddings y clustering: Los textos enriquecidos se transforman en vectores utilizando SentenceTransformers y fastText, y se agrupan mediante algoritmos como HDBSCAN y reducción de dimensionalidad (UMAP).
 
-    \item \textbf{Clustering → Visualización:} Finalmente, los resultados son representados en gráficos estáticos y reportes PDF generados con herramientas como matplotlib, Plotly, pandas y Jinja2.
+    \item De Clustering hacia Visualización: Finalmente, los resultados son representados en gráficos estáticos y reportes PDF generados con herramientas como matplotlib, Plotly, pandas y Jinja2.
 \end{itemize}
 
 Aunque el sistema hace uso intensivo de librerías de código abierto, estas no constituyen interfaces con sistemas externos, sino dependencias internas gestionadas como paquetes dentro del entorno local o virtual del proyecto (por ejemplo, vía pip o conda). No se consumen APIs externas, ni se establece comunicación en tiempo real con servicios web de terceros.
 
 Este diseño modular y desacoplado permite mantener un alto grado de interoperabilidad y facilita la posibilidad de sustituir o extender cada módulo de forma independiente, sin afectar la funcionalidad del sistema completo.
 
+\subsection{Arquitectura de Pipeline de 7 Etapas}
+
+El sistema implementa una arquitectura de procesamiento secuencial compuesta por siete etapas técnicas claramente diferenciadas. Esta estructura modular permite la transformación progresiva de datos crudos hasta la generación de insights analíticos. El flujo completo del pipeline se formaliza mediante la siguiente secuencia:
+
+\begin{equation}
+\text{Scraping} \to \text{Extraction} \to \text{LLM Processing} \to \text{Embedding} \to \text{UMAP} \to \text{HDBSCAN} \to \text{Visualization}
+\end{equation}
+
+A continuación se describen las siete etapas del pipeline con sus tecnologías asociadas:
+
+\begin{enumerate}
+    \item Scraping: Extracción automatizada de vacantes mediante 8 spiders especializados (Scrapy 2.11, Selenium 4.15) desde los portales: Computrabajo, Bumeran, ElEmpleo, HiringCafe, OCC Mundial, ZonaJobs, Indeed, y Magneto.
+
+    \item Extraction (NER + Regex): Detección de habilidades explícitas mediante Named Entity Recognition con spaCy 3.7 y patrones de expresiones regulares sobre textos normalizados.
+
+    \item LLM Processing: Enriquecimiento semántico mediante modelos de lenguaje (Gemma 3 4B, Llama 3 3B, Qwen 2.5 3B, Phi-3.5 Mini) para extracción de habilidades implícitas y normalización contextual.
+
+    \item Embedding: Transformación de textos a representaciones vectoriales de 768 dimensiones mediante el modelo intfloat/multilingual-e5-base, optimizado para búsqueda semántica multilingüe.
+
+    \item UMAP: Reducción de dimensionalidad desde 768D a espacios de menor dimensión (2D-50D) preservando la estructura topológica local y global de los datos.
+
+    \item HDBSCAN: Clustering jerárquico basado en densidad para identificación no supervisada de perfiles laborales y segmentos de demanda tecnológica, sin requerir número de clusters predefinido.
+
+    \item Visualization: Generación de reportes analíticos estáticos mediante matplotlib, Plotly y pandas, incluyendo gráficos de dispersión, heatmaps, distribuciones y tablas de resultados en formatos PDF, HTML y CSV.
+\end{enumerate}
+
+Esta arquitectura de 7 etapas asegura trazabilidad completa del procesamiento, modularidad técnica y reproducibilidad científica del análisis de demanda laboral.
+
 \subsection{Interfaces con el usuario}
 
-El sistema propuesto no cuenta con una interfaz gráfica pública ni con una aplicación de tipo portal web. En su lugar, la interacción con los usuarios se realizará por medio de interfaces técnicas de consola, notebooks ejecutables, scripts de configuración y reportes estáticos generados en PDF, HTML o gráficos .png/.svg.
+El sistema proporciona múltiples interfaces de usuario orientadas a diferentes perfiles técnicos y necesidades analíticas. Además de interfaces técnicas de consola, notebooks ejecutables y reportes estáticos, se desarrolló un frontend web desplegado mediante Docker que presenta un dashboard interactivo con las estadísticas más importantes del observatorio.
 
-A continuación, se describen las interfaces de usuario previstas, junto con sus características técnicas y funcionales:
+A continuación, se describen las interfaces de usuario disponibles, junto con sus características técnicas y funcionales:
 
 \subsubsection{Terminal o Consola (CLI)}
 
 \begin{itemize}
-    \item \textbf{Propósito:} Interacción principal de los desarrolladores e investigadores con el sistema.
-    \item \textbf{Acciones permitidas:} Ejecución de spiders, procesamiento de datos, entrenamiento de modelos, generación de reportes.
-    \item \textbf{Requisitos técnicos:} Acceso a un entorno UNIX-like (Linux/macOS recomendado) o WSL en Windows; Python 3.10+ instalado.
-    \item \textbf{Usabilidad:} Requiere conocimientos intermedios en línea de comandos. El entrenamiento estimado para familiarizarse con los comandos básicos es inferior a 1 hora para usuarios técnicos.
+    \item Propósito: Interacción principal de los desarrolladores e investigadores con el sistema.
+    \item Acciones permitidas: Ejecución de spiders, procesamiento de datos, entrenamiento de modelos, generación de reportes.
+    \item Requisitos técnicos: Acceso a un entorno UNIX-like (Linux/macOS recomendado) o WSL en Windows; Python 3.10+ instalado.
+    \item Usabilidad: Requiere conocimientos intermedios en línea de comandos. El entrenamiento estimado para familiarizarse con los comandos básicos es inferior a 1 hora para usuarios técnicos.
 \end{itemize}
 
 \subsubsection{Notebooks Jupyter}
 
 \begin{itemize}
-    \item \textbf{Propósito:} Validación de resultados, visualización exploratoria y pruebas modulares.
-    \item \textbf{Acciones permitidas:} Carga de resultados del clustering, análisis gráfico, pruebas de embeddings, revisión de habilidades extraídas.
-    \item \textbf{Requisitos técnicos:} Instalación local de jupyterlab o uso en plataforma cloud (ej. Google Colab). Se recomienda resolución mínima de 1366x768 para una visualización óptima.
-    \item \textbf{Usabilidad:} Las notebooks están documentadas con celdas de texto y ejemplos reproducibles. Se espera un nivel básico de familiaridad con Python y Pandas por parte del usuario.
+    \item Propósito: Validación de resultados, visualización exploratoria y pruebas modulares.
+    \item Acciones permitidas: Carga de resultados del clustering, análisis gráfico, pruebas de embeddings, revisión de habilidades extraídas.
+    \item Requisitos técnicos: Instalación local de jupyterlab o uso en plataforma cloud (ej. Google Colab). Se recomienda resolución mínima de 1366x768 para una visualización óptima.
+    \item Usabilidad: Las notebooks están documentadas con celdas de texto y ejemplos reproducibles. Se espera un nivel básico de familiaridad con Python y Pandas por parte del usuario.
+\end{itemize}
+
+\subsubsection{Dashboard Interactivo Web (Docker)}
+
+\begin{itemize}
+    \item Propósito: Visualización centralizada e interactiva de las estadísticas más importantes del observatorio, permitiendo consultas dinámicas y exploración de resultados sin requerir conocimientos técnicos avanzados.
+    \item Acciones permitidas: Navegación entre métricas clave, filtrado por país y portal, visualización de distribuciones de habilidades, consulta de tendencias temporales, exploración de clusters identificados y descarga de reportes generados.
+    \item Requisitos técnicos: Despliegue mediante Docker Compose, acceso vía navegador web moderno (Chrome, Firefox, Edge), resolución mínima de 1920x1080 recomendada. Requiere conexión al servidor donde está desplegado el contenedor Docker.
+    \item Tecnologías: Frontend desarrollado con frameworks web modernos, backend conectado a PostgreSQL para consultas en tiempo real, despliegue containerizado con Docker para portabilidad y reproducibilidad.
+    \item Usabilidad: Interfaz visual intuitiva diseñada para usuarios no técnicos como directivos, analistas de políticas públicas, investigadores académicos y stakeholders institucionales. No requiere conocimientos de programación ni línea de comandos.
 \end{itemize}
 
 \subsubsection{Visualizaciones estáticas y reportes}
 
 \begin{itemize}
-    \item \textbf{Propósito:} Consulta de resultados finales en formato visual o tabular, por parte del equipo académico, directivo o institucional.
-    \item \textbf{Tipos de salida:} Archivos .pdf, .png, .html o .md generados automáticamente desde scripts Python.
-    \item \textbf{Requisitos técnicos:} Visualizador de PDF o navegador moderno actualizado (Chrome, Firefox, Edge). No se requiere conexión a internet tras la generación del archivo.
-    \item \textbf{Usabilidad:} Interfaz pasiva. Los reportes están diseñados para facilitar la interpretación con títulos, leyendas y estructura clara.
+    \item Propósito: Consulta de resultados finales en formato visual o tabular, por parte del equipo académico, directivo o institucional.
+    \item Tipos de salida: Archivos .pdf, .png, .html o .md generados automáticamente desde scripts Python.
+    \item Requisitos técnicos: Visualizador de PDF o navegador moderno actualizado (Chrome, Firefox, Edge). No se requiere conexión a internet tras la generación del archivo.
+    \item Usabilidad: Interfaz pasiva. Los reportes están diseñados para facilitar la interpretación con títulos, leyendas y estructura clara.
 \end{itemize}
 
 \section{Funciones del Producto}
@@ -80,47 +118,47 @@ A continuación, se describen las interfaces de usuario previstas, junto con sus
 El sistema Observatorio de Demanda Laboral en Tecnología en Latinoamérica debe cumplir con una serie de funciones esenciales que permiten cubrir el ciclo completo de análisis automatizado de vacantes laborales. A continuación, se enumeran las principales funciones del producto:
 
 \begin{enumerate}
-    \item \textbf{Extracción automatizada de vacantes}
+    \item Extracción automatizada de vacantes
     \begin{itemize}
         \item Scraping periódico y configurable desde portales de empleo en español como Computrabajo, elempleo.com, Bumeran y LinkedIn.
         \item Filtros por país, cargo, modalidad, sector y fecha.
         \item Recolección estructurada de atributos como título del cargo, empresa, ubicación, modalidad, tecnologías mencionadas, y descripción completa.
     \end{itemize}
 
-    \item \textbf{Preprocesamiento y limpieza textual}
+    \item Preprocesamiento y limpieza textual
     \begin{itemize}
         \item Tokenización, lematización y eliminación de ruido.
         \item Normalización de formatos y campos clave.
         \item Generación de bigramas y trigramas relevantes.
     \end{itemize}
 
-    \item \textbf{Extracción de habilidades (explícitas e implícitas)}
+    \item Extracción de habilidades (explícitas e implícitas)
     \begin{itemize}
         \item Detección mediante patrones regulares y NER.
         \item Enriquecimiento con LLMs multilingües para capturar habilidades implícitas y sinónimos contextuales.
         \item Clasificación en taxonomías como ESCO y CIUO.
     \end{itemize}
 
-    \item \textbf{Vectorización y representación semántica}
+    \item Vectorización y representación semántica
     \begin{itemize}
         \item Embeddings mediante modelos como BETO, fastText y E5.
         \item Reducción de dimensionalidad con UMAP para visualización y agrupación.
     \end{itemize}
 
-    \item \textbf{Clustering de perfiles laborales}
+    \item Clustering de perfiles laborales
     \begin{itemize}
         \item Agrupamiento no supervisado mediante HDBSCAN.
         \item Evaluación con métricas de coherencia semántica y Silhouette Score.
         \item Identificación de segmentos funcionales de demanda tecnológica.
     \end{itemize}
 
-    \item \textbf{Visualización y reporte}
+    \item Visualización y reporte
     \begin{itemize}
         \item Generación de visualizaciones estáticas y reportes analíticos en CSV, PDF o HTML.
         \item Segmentación por país, portal y categoría tecnológica.
     \end{itemize}
 
-    \item \textbf{Gestión y trazabilidad}
+    \item Gestión y trazabilidad
     \begin{itemize}
         \item Registro de logs, validaciones y errores.
         \item Documentación técnica accesible para usuarios académicos y replicadores.
@@ -140,16 +178,16 @@ El sistema está diseñado para ser utilizado por distintos tipos de usuarios, c
 \hline
 Nivel de seguridad o privilegios & Se establecen dos niveles principales de acceso:
 \begin{itemize}
-    \item \textbf{Administrador:} acceso completo al sistema, incluyendo configuración, ejecución y ajustes internos.
-    \item \textbf{Analista:} acceso restringido a resultados, reportes y visualizaciones, sin modificar parámetros o lógica del sistema.
+    \item Administrador: acceso completo al sistema, incluyendo configuración, ejecución y ajustes internos.
+    \item Analista: acceso restringido a resultados, reportes y visualizaciones, sin modificar parámetros o lógica del sistema.
     \item Opcionalmente, se contempla un perfil de validador externo con acceso de solo lectura.
 \end{itemize} \\
 \hline
-Roles & \textbf{Administrador técnico:} configura scraping, define filtros, ajusta modelos, ejecuta el pipeline completo.
+Roles & Administrador técnico: configura scraping, define filtros, ajusta modelos, ejecuta el pipeline completo.
 
-\textbf{Investigador/Analista:} accede a resultados, visualiza reportes y comunica hallazgos sin intervenir en el procesamiento.
+Investigador/Analista: accede a resultados, visualiza reportes y comunica hallazgos sin intervenir en el procesamiento.
 
-\textbf{Validador externo (opcional):} revisa calidad de extracción, validación semántica o consistencia de resultados con fines académicos o de control. \\
+Validador externo (opcional): revisa calidad de extracción, validación semántica o consistencia de resultados con fines académicos o de control. \\
 \hline
 Nivel de estudios o experiencia técnica & El administrador debe tener formación en ingeniería, ciencia de datos o afines, con conocimientos sólidos en Python, NLP y manejo de entornos técnicos.
 
@@ -174,50 +212,50 @@ El sistema propuesto presenta un conjunto de restricciones que condicionan su di
 \subsection{Restricciones Generales}
 
 \begin{itemize}
-    \item \textbf{Alcance técnico-académico:} El sistema está diseñado con fines de investigación académica y validación técnica, no para uso comercial o despliegue masivo.
+    \item Alcance técnico-académico: El sistema está diseñado con fines de investigación académica y validación técnica, no para uso comercial o despliegue masivo.
 
-    \item \textbf{Idioma:} Todo el procesamiento textual está orientado a ofertas laborales en español, aunque se considera una posible presencia de términos en inglés.
+    \item Idioma: Todo el procesamiento textual está orientado a ofertas laborales en español, aunque se considera una posible presencia de términos en inglés.
 
-    \item \textbf{Tolerancia a fallos:} Si bien el sistema cuenta con mecanismos de validación de datos y manejo básico de errores, no se implementarán estrategias avanzadas de tolerancia a fallos o disponibilidad continua.
+    \item Tolerancia a fallos: Si bien el sistema cuenta con mecanismos de validación de datos y manejo básico de errores, no se implementarán estrategias avanzadas de tolerancia a fallos o disponibilidad continua.
 
-    \item \textbf{Ejecución modular secuencial:} Las fases del sistema se ejecutarán en orden secuencial, sin requerimientos de paralelismo ni concurrencia en su versión inicial.
+    \item Ejecución modular secuencial: Las fases del sistema se ejecutarán en orden secuencial, sin requerimientos de paralelismo ni concurrencia en su versión inicial.
 \end{itemize}
 
 \subsection{Restricciones de Software}
 
 \begin{itemize}
-    \item \textbf{Versión de Python:} Python 3.10 o superior es requerido para compatibilidad con todas las librerías utilizadas.
+    \item Versión de Python: Python 3.10 o superior es requerido para compatibilidad con todas las librerías utilizadas.
 
-    \item \textbf{Dependencia de librerías específicas:} El sistema depende del uso de bibliotecas especializadas:
+    \item Dependencia de librerías específicas: El sistema depende del uso de bibliotecas especializadas:
     \begin{itemize}
-        \item \textbf{Web Scraping:} Scrapy, BeautifulSoup, Selenium
-        \item \textbf{NLP:} spaCy (es\_core\_news\_sm), transformers, SentenceTransformers
-        \item \textbf{Embeddings:} intfloat/multilingual-e5-base (768D)
-        \item \textbf{Búsqueda vectorial:} FAISS (Facebook AI Similarity Search)
-        \item \textbf{Matching:} fuzzywuzzy (fuzzy string matching)
-        \item \textbf{Clustering:} HDBSCAN, UMAP
-        \item \textbf{Base de datos:} psycopg2 (PostgreSQL driver)
-        \item \textbf{Data processing:} pandas, numpy
-        \item \textbf{Visualización:} matplotlib, plotly, seaborn
+        \item Web Scraping: Scrapy, BeautifulSoup, Selenium
+        \item NLP: spaCy (es\_core\_news\_sm), transformers, SentenceTransformers
+        \item Embeddings: intfloat/multilingual-e5-base (768D)
+        \item Búsqueda vectorial: FAISS (Facebook AI Similarity Search)
+        \item Matching: fuzzywuzzy (fuzzy string matching)
+        \item Clustering: HDBSCAN, UMAP
+        \item Base de datos: psycopg2 (PostgreSQL driver)
+        \item Data processing: pandas, numpy
+        \item Visualización: matplotlib, plotly, seaborn
     \end{itemize}
 
-    \item \textbf{Base de datos:} PostgreSQL 13 o superior con soporte para arrays de tipo REAL[] para almacenamiento de embeddings de 768 dimensiones.
+    \item Base de datos: PostgreSQL 15 o superior con soporte para arrays de tipo REAL[] para almacenamiento de embeddings de 768 dimensiones.
 
-    \item \textbf{Modelo de embeddings:} El modelo \texttt{intfloat/multilingual-e5-base} debe ser descargado desde Hugging Face (tamaño aproximado: 1.1 GB).
+    \item Modelo de embeddings: El modelo \texttt{intfloat/multilingual-e5-base} debe ser descargado desde Hugging Face (tamaño aproximado: 1.1 GB).
 
-    \item \textbf{Índice FAISS:} El archivo \texttt{esco.faiss} (41.41 MB) y su mapping asociado \texttt{esco\_mapping.pkl} (545 KB) deben estar disponibles en \texttt{data/embeddings/}.
+    \item Índice FAISS: El archivo \texttt{esco.faiss} (41.41 MB) y su mapping asociado \texttt{esco\_mapping.pkl} (545 KB) deben estar disponibles en \texttt{data/embeddings/}.
 
-    \item \textbf{Aceleración GPU (opcional):} CUDA/cuDNN para aceleración de generación de embeddings. El sistema es funcional con CPU pero 25x más lento.
+    \item Aceleración GPU (opcional): CUDA/cuDNN para aceleración de generación de embeddings. El sistema es funcional con CPU pero 25x más lento.
 
-    \item \textbf{Sistema operativo preferido:} Linux (recomendado), Windows 11 con WSL2, o macOS Monterey o superior.
+    \item Sistema operativo preferido: Linux (recomendado), Windows 11 con WSL2, o macOS Monterey o superior.
 
-    \item \textbf{Licencias de uso:} Se restringe el uso del sistema a entornos académicos bajo licencias open source o de uso investigativo.
+    \item Licencias de uso: Se restringe el uso del sistema a entornos académicos bajo licencias open source o de uso investigativo.
 \end{itemize}
 
 \subsection{Restricciones de Hardware}
 
 \begin{itemize}
-    \item \textbf{Requisitos mínimos para Fase 0 y 1:}
+    \item Requisitos mínimos para Fase 0 y 1:
     \begin{itemize}
         \item CPU: 4 núcleos (Intel i5, AMD Ryzen 5, o Apple M1 o superior)
         \item RAM: 8 GB mínimo (16 GB recomendado)
@@ -225,21 +263,21 @@ El sistema propuesto presenta un conjunto de restricciones que condicionan su di
         \item Resolución de pantalla: 1280x800 mínimo
     \end{itemize}
 
-    \item \textbf{Requisitos para generación de embeddings (Fase 0):}
+    \item Requisitos para generación de embeddings (Fase 0):
     \begin{itemize}
-        \item \textbf{Con GPU:} NVIDIA con soporte CUDA 11.0+, 6 GB VRAM mínimo. Velocidad: 721 skills/segundo
-        \item \textbf{Sin GPU (CPU):} Intel i5/i7 o equivalente. Velocidad: ~30 skills/segundo (25x más lento)
-        \item \textbf{Apple Silicon (MPS):} M1/M2/M3 con aceleración Metal. Velocidad: ~400 skills/segundo
+        \item Con GPU: NVIDIA con soporte CUDA 11.0+, 6 GB VRAM mínimo. Velocidad: 721 skills/segundo
+        \item Sin GPU (CPU): Intel i5/i7 o equivalente. Velocidad: ~30 skills/segundo (25x más lento)
+        \item Apple Silicon (MPS): M1/M2/M3 con aceleración Metal. Velocidad: ~400 skills/segundo
     \end{itemize}
 
-    \item \textbf{Requisitos para clustering (Módulo 6 - futuro):}
+    \item Requisitos para clustering (Módulo 6 - futuro):
     \begin{itemize}
         \item RAM: 16 GB mínimo (32 GB recomendado para 23K jobs)
         \item HDBSCAN con 23,188 jobs requiere ~8 GB RAM disponible
         \item UMAP requiere ~4 GB RAM para reducción de dimensionalidad
     \end{itemize}
 
-    \item \textbf{Almacenamiento de base de datos:}
+    \item Almacenamiento de base de datos:
     \begin{itemize}
         \item PostgreSQL con 23,188 jobs: ~2 GB
         \item Tabla skill\_embeddings (14,133 x 768D): ~400 MB
@@ -247,7 +285,7 @@ El sistema propuesto presenta un conjunto de restricciones que condicionan su di
         \item Total estimado: ~3 GB para datos + ~12 GB para modelos
     \end{itemize}
 
-    \item \textbf{Acceso a internet:} Se requiere conexión estable para:
+    \item Acceso a internet: Se requiere conexión estable para:
     \begin{itemize}
         \item Descarga inicial de modelos (intfloat/multilingual-e5-base: 1.1 GB)
         \item Instalación de librerías Python (~2 GB total)
@@ -284,17 +322,17 @@ Esta sección enumera factores externos y condiciones asumidas que podrían afec
 \subsection{Dependencias}
 
 \begin{itemize}
-    \item \textbf{Velocidad de conexión a internet:} Afecta directamente los tiempos de scraping, descarga de modelos y ejecución de procesos remotos.
+    \item Velocidad de conexión a internet: Afecta directamente los tiempos de scraping, descarga de modelos y ejecución de procesos remotos.
 
-    \item \textbf{Disponibilidad y estabilidad de bibliotecas externas:} El sistema depende de librerías que podrían modificar sus versiones o comportamiento.
+    \item Disponibilidad y estabilidad de bibliotecas externas: El sistema depende de librerías que podrían modificar sus versiones o comportamiento.
 
-    \item \textbf{Funcionamiento adecuado del motor de base de datos:} La persistencia de datos depende de una base PostgreSQL operativa.
+    \item Funcionamiento adecuado del motor de base de datos: La persistencia de datos depende de una base PostgreSQL operativa.
 
-    \item \textbf{Funcionamiento de entornos de ejecución local:} Algunos modelos requerirán entornos específicos (compatibilidad CUDA, soporte de arquitectura x64).
+    \item Funcionamiento de entornos de ejecución local: Algunos modelos requerirán entornos específicos (compatibilidad CUDA, soporte de arquitectura x64).
 
-    \item \textbf{Factores legales o contractuales externos:} Cambios en políticas de los portales web o en los lineamientos éticos institucionales podrían limitar la continuidad del scraping.
+    \item Factores legales o contractuales externos: Cambios en políticas de los portales web o en los lineamientos éticos institucionales podrían limitar la continuidad del scraping.
 
-    \item \textbf{Capacidad de procesamiento local:} La ejecución de embeddings y clustering depende de la disponibilidad de memoria RAM suficiente y compatibilidad GPU.
+    \item Capacidad de procesamiento local: La ejecución de embeddings y clustering depende de la disponibilidad de memoria RAM suficiente y compatibilidad GPU.
 \end{itemize}
 
 % ============================================================================

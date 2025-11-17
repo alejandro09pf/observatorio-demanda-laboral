@@ -2,7 +2,7 @@
 
 \section{Propósito}
 
-El presente documento tiene como propósito especificar de manera detallada los requerimientos funcionales y no funcionales del sistema denominado \textit{Observatorio de Demanda Laboral en Tecnología en Latinoamérica}, una herramienta de análisis automatizado orientada a procesar, extraer y segmentar habilidades tecnológicas desde portales de empleo en línea, mediante técnicas modernas de procesamiento de lenguaje natural (NLP), scraping, embeddings semánticos y clustering no supervisado.
+El presente documento tiene como propósito especificar de manera detallada los requerimientos funcionales y no funcionales del sistema denominado Observatorio de Demanda Laboral en Tecnología en Latinoamérica, una herramienta de análisis automatizado orientada a procesar, extraer y segmentar habilidades tecnológicas desde portales de empleo en línea, mediante técnicas modernas de procesamiento de lenguaje natural (NLP), scraping, embeddings semánticos y clustering no supervisado.
 
 Este documento está dirigido principalmente a los siguientes públicos:
 
@@ -20,25 +20,25 @@ La importancia de este documento radica en su papel como contrato técnico entre
 
 \section{Alcance}
 
-El sistema propuesto, titulado \textit{\proyectoTitulo}, tiene como propósito desarrollar una herramienta automatizada capaz de analizar la evolución de las habilidades tecnológicas demandadas en el mercado laboral digital, específicamente en los países de Colombia (CO), México (MX) y Argentina (AR). El sistema abarca desde la recolección periódica de datos a través de scraping en portales de empleo hasta el procesamiento semántico y la segmentación de perfiles laborales utilizando técnicas avanzadas de NLP y clustering no supervisado.
+El sistema propuesto, titulado Observatorio de Demanda Laboral en Tecnología en Latinoamérica, tiene como propósito desarrollar una herramienta automatizada capaz de analizar la evolución de las habilidades tecnológicas demandadas en el mercado laboral digital, específicamente en los países de Colombia (CO), México (MX) y Argentina (AR). El sistema abarca desde la recolección periódica de datos a través de scraping en portales de empleo hasta el procesamiento semántico y la segmentación de perfiles laborales utilizando técnicas avanzadas de NLP y clustering no supervisado.
 
-\textbf{Alcance geográfico:} Colombia (CO), México (MX), Argentina (AR)
+Alcance geográfico: Colombia (CO), México (MX), Argentina (AR)
 
-\textbf{Fuentes de datos:} 11 portales de empleo incluyendo hiring.cafe, computrabajo, bumeran, elempleo.com, zonajobs, infojobs, entre otros.
+Fuentes de datos: 8 portales de empleo principales incluyendo hiring.cafe, computrabajo, bumeran, elempleo.com, zonajobs, indeed, magneto y occ mundial.
 
-\textbf{Taxonomía base:} El sistema utiliza una taxonomía unificada de \textbf{60,000 skills totales}, compuesta por:
+Taxonomía base: El sistema utiliza una taxonomía unificada de 14,215 skills totales, compuesta por:
 \begin{itemize}
-    \item \textbf{ESCO v1.1.0:} 60,000 skills (base europea de competencias laborales)
-    \item \textbf{O*NET Hot Technologies:} 152 skills (tecnologías emergentes del sector IT)
-    \item \textbf{Manual Curated Skills:} 83 skills (específicas para el mercado tech latinoamericano)
+    \item ESCO v1.1.0: 13,939 skills (base europea de competencias laborales)
+    \item O*NET Hot Technologies: 152 skills (tecnologías emergentes del sector IT)
+    \item Manual Curated Skills: 124 skills (específicas para el mercado tech latinoamericano)
 \end{itemize}
 
-\textbf{Stack tecnológico:} Python 3.10+, Scrapy, spaCy, PostgreSQL, FAISS, embeddings E5 multilingües (intfloat/multilingual-e5-base, 768D), HDBSCAN, UMAP.
+Stack tecnológico: Python 3.10+, Scrapy, spaCy, PostgreSQL, FAISS, embeddings E5 multilingües (intfloat/multilingual-e5-base, 768D), HDBSCAN, UMAP.
 
 El producto incluirá las siguientes funcionalidades principales:
 
 \begin{itemize}
-    \item Extracción automatizada de vacantes desde 11 portales web, mediante spiders adaptables que operan respetando las normas de uso de cada sitio.
+    \item Extracción automatizada de vacantes desde 8 portales web principales, mediante spiders adaptables que operan respetando las normas de uso de cada sitio.
 
     \item Procesamiento y limpieza textual, incluyendo tokenización, lematización y detección de habilidades explícitas mediante técnicas híbridas de NER, expresiones regulares y modelos de lenguaje.
 
@@ -125,9 +125,9 @@ Biblioteca de código abierto para búsqueda eficiente de similitud en espacios 
 \subsection{Estrategia de tres capas (Three-layer matching)}
 Metodología implementada para mapear habilidades extraídas contra la taxonomía ESCO:
 \begin{itemize}
-    \item \textbf{Layer 1 - Exact Match:} Búsqueda exacta mediante SQL ILIKE con confianza 1.0
-    \item \textbf{Layer 2 - Fuzzy Match:} Similitud difusa con fuzzywuzzy, threshold 0.85, confianza 0.85-1.0
-    \item \textbf{Layer 3 - Semantic Match:} Búsqueda semántica con FAISS, threshold 0.87, confianza 0.87-1.0 (actualmente deshabilitado debido a limitaciones del modelo E5 con vocabulario técnico)
+    \item Layer 1 - Exact Match: Búsqueda exacta mediante SQL ILIKE con confianza 1.0
+    \item Layer 2 - Fuzzy Match: Similitud difusa con fuzzywuzzy, threshold 0.85, confianza 0.85-1.0
+    \item Layer 3 - Semantic Match: Búsqueda semántica con FAISS, threshold 0.87, confianza 0.87-1.0 (actualmente deshabilitado debido a limitaciones del modelo E5 con vocabulario técnico)
 \end{itemize}
 
 \subsection{Skills emergentes}
@@ -146,13 +146,13 @@ El presente documento de Especificación de Requerimientos del Software (SRS) ti
 El contenido del documento se distribuye de la siguiente manera:
 
 \begin{itemize}
-    \item En la \textbf{Sección 1}, se expone la introducción general del proyecto, incluyendo su propósito, alcance, definiciones clave, referencias utilizadas y una apreciación global de su contenido.
+    \item En la Sección 1, se expone la introducción general del proyecto, incluyendo su propósito, alcance, definiciones clave, referencias utilizadas y una apreciación global de su contenido.
 
-    \item La \textbf{Sección 2} describe de manera general los factores que afectan al producto, incluyendo su perspectiva, interfaces con otros sistemas y con el usuario, consideraciones de hardware y software, restricciones de memoria, operaciones del sistema y requerimientos de adaptación al entorno.
+    \item La Sección 2 describe de manera general los factores que afectan al producto, incluyendo su perspectiva, interfaces con otros sistemas y con el usuario, consideraciones de hardware y software, restricciones de memoria, operaciones del sistema y requerimientos de adaptación al entorno.
 
-    \item La \textbf{Sección 3} presentará los requerimientos funcionales y no funcionales del sistema, detallando cada una de las funcionalidades esperadas, así como las restricciones y condiciones necesarias para su correcto funcionamiento.
+    \item La Sección 3 presentará los requerimientos funcionales y no funcionales del sistema, detallando cada una de las funcionalidades esperadas, así como las restricciones y condiciones necesarias para su correcto funcionamiento.
 
-    \item En las \textbf{Secciones 4 y 5}, se incluirán descripciones de cómo se piensan manejar los requerimientos mencionados anteriormente, así como el proceso de verificación y validación.
+    \item En las Secciones 4 y 5, se incluirán descripciones de cómo se piensan manejar los requerimientos mencionados anteriormente, así como el proceso de verificación y validación.
 
     \item Finalmente, se anexarán diagramas, tablas de trazabilidad y otros elementos que complementen la especificación del sistema.
 \end{itemize}
