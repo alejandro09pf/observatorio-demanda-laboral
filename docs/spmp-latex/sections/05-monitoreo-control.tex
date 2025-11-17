@@ -17,45 +17,29 @@ El proceso general de gestión de requerimientos se presenta en el siguiente dia
 
 \subsection{Proceso de Gestión de Cambios}
 
-Los cambios a los requerimientos podrán ser propuestos por cualquier miembro del equipo, el asesor del proyecto, o por descubrimiento técnico en ejecución. Todo cambio seguirá el siguiente flujo:
+Los cambios a los requerimientos podrán ser propuestos por cualquier miembro del equipo de desarrollo, el asesor académico del proyecto, o identificados mediante descubrimiento técnico emergente durante fases de ejecución cuando limitaciones no previstas o oportunidades de mejora se hacen evidentes. Todo cambio propuesto seguirá flujo estructurado de cinco etapas secuenciales que garantizan análisis riguroso de implicaciones y trazabilidad completa de decisiones.
 
-\begin{enumerate}
-    \item \textbf{Identificación del cambio:} El integrante que identifica la necesidad de cambio documenta el motivo, impacto esperado y alternativas posibles.
+La primera etapa corresponde a identificación formal del cambio, donde el integrante que detecta la necesidad documenta exhaustivamente el motivo técnico o metodológico que lo origina, el impacto esperado sobre funcionalidad del sistema o calidad de resultados, y las alternativas posibles de implementación con análisis comparativo preliminar de trade-offs. La segunda etapa ejecuta evaluación sistemática de impacto mediante discusión estructurada en reunión semanal del equipo, analizando si el cambio afecta cronograma global o de fases específicas, redistribución de carga de trabajo entre integrantes, introducción de nuevas dependencias técnicas entre módulos, o modificación de entregables comprometidos con el asesor.
 
-    \item \textbf{Evaluación de impacto:} Se discute en la reunión semanal si el cambio afecta cronograma, carga de trabajo, dependencias técnicas o entregables.
+La tercera etapa consiste en decisión formal por consenso del equipo técnico, donde el cambio se aprueba o rechaza mediante acuerdo explícito de ambos integrantes fundamentado en análisis de viabilidad técnica y alineación con objetivos del proyecto. En caso de desacuerdo persistente entre integrantes sobre viabilidad o prioridad del cambio, el asesor del proyecto Ing. Luis Gabriel Moreno Sandoval tendrá voz decisoria final para desbloquear la decisión. La cuarta etapa actualiza documentación del proyecto si el cambio es aprobado, registrando formalmente la modificación en acta semanal de reunión con justificación explícita, actualizando documento técnico del proyecto en sección de decisiones arquitectónicas, y ajustando planificación WBS afectada incluyendo redistribución de horas estimadas si aplica.
 
-    \item \textbf{Decisión por consenso:} Se aprueba o rechaza por acuerdo del equipo. Si hay desacuerdo, el asesor tendrá voz decisoria.
-
-    \item \textbf{Actualización de documentación:} Si se aprueba, se registra el cambio en el acta semanal, en el documento técnico del proyecto, y se actualiza la planificación afectada.
-
-    \item \textbf{Comunicación y ajuste:} Los integrantes afectados ajustan su trabajo conforme al cambio aprobado. Se notifica formalmente en la siguiente sesión de seguimiento.
-\end{enumerate}
+La quinta etapa final ejecuta comunicación formal y ajuste operativo del trabajo en curso, donde los integrantes afectados por el cambio aprobado ajustan implementación actual conforme a nueva especificación, actualizan código y documentación técnica correspondiente, y notifican formalmente el estado de implementación del cambio en la siguiente sesión de seguimiento quincenal con el asesor académico.
 
 \subsection{Trazabilidad de Requerimientos}
 
-Los requerimientos funcionales están vinculados directamente a las fases del proyecto y sus entregables asociados. La trazabilidad se mantiene mediante los siguientes mecanismos:
+Los requerimientos funcionales del observatorio están vinculados directamente a las siete fases del proyecto CRISP-DM adaptado y sus entregables técnicos asociados, garantizando que cada funcionalidad especificada pueda ser rastreada desde su origen conceptual hasta su validación empírica final. La trazabilidad se mantiene operativa mediante cuatro mecanismos complementarios de documentación y versionado que cubren diferentes niveles de granularidad del sistema.
 
-\begin{itemize}
-    \item \textbf{Tabla de requerimientos funcionales y fases:} Cada requerimiento está asociado a una o más fases metodológicas, lo que facilita identificar el momento de su validación y prueba.
+El primer mecanismo consiste en tabla de requerimientos funcionales y fases incluida en el documento de especificación de requerimientos, donde cada requerimiento funcional está explícitamente asociado a una o más fases metodológicas del WBS, facilitando identificación precisa del momento de su implementación técnica, validación funcional y prueba de aceptación. El segundo mecanismo emplea el repositorio de código versionado en GitHub, donde cada módulo del sistema tiene carpeta identificada con estructura jerárquica clara y commits descriptivos que referencian mediante tags o mensajes la fase técnica correspondiente, el requerimiento funcional implementado y el autor responsable de la implementación.
 
-    \item \textbf{Repositorio de código en GitHub:} Cada módulo tiene una carpeta identificada y commits descriptivos que referencian la fase técnica correspondiente.
-
-    \item \textbf{Actas de seguimiento:} Registro semanal de avances, donde se indica qué requerimientos fueron implementados, probados o modificados.
-
-    \item \textbf{Documento técnico final:} En la documentación se incluirá una matriz de trazabilidad que vincule cada requerimiento funcional con su fase de diseño, implementación, prueba y validación.
-\end{itemize}
+El tercer mecanismo mantiene actas de seguimiento semanal almacenadas en Google Drive compartido, constituyendo registro cronológico de avances donde se indica explícitamente qué requerimientos funcionales fueron implementados durante la semana, cuáles fueron probados exitosamente mediante validación funcional, y cuáles sufrieron modificaciones de especificación o priorización por decisiones del equipo o feedback del asesor. El cuarto mecanismo documenta en sección específica del documento técnico final una matriz de trazabilidad bidireccional que vincula cada requerimiento funcional con su fase de diseño arquitectónico inicial, etapa de implementación técnica, procedimientos de prueba ejecutados y resultados de validación empírica con métricas cuantitativas de aceptación.
 
 \subsection{Aprobación y Validación de Cambios}
 
-Todos los cambios a requerimientos deben ser validados por:
+Todos los cambios propuestos a requerimientos funcionales o no funcionales del sistema deben ser validados formalmente por tres instancias complementarias de revisión que garantizan viabilidad técnica, coherencia académica y alineación con objetivos institucionales del trabajo de grado.
 
-\begin{itemize}
-    \item El equipo de desarrollo (validación técnica de viabilidad)
-    \item El asesor del proyecto (validación académica y coherencia con los objetivos)
-    \item El director del proyecto (aprobación formal si el cambio implica modificación del alcance o fechas)
-\end{itemize}
+La primera instancia corresponde al equipo de desarrollo conformado por Nicolás Camacho y Alejandro Pinzón, quienes ejecutan validación técnica de viabilidad del cambio propuesto, analizando si es implementable con stack tecnológico actual, si requiere refactorización significativa de módulos ya desarrollados, si introduce deuda técnica aceptable o crítica, y si su implementación cabe dentro del tiempo restante del cronograma considerando carga de trabajo existente. La segunda instancia involucra al asesor del proyecto Ing. Luis Gabriel Moreno Sandoval, quien ejecuta validación académica del cambio propuesto, verificando coherencia con objetivos específicos del trabajo de grado, alineación con metodología CRISP-DM establecida, pertinencia para aportes esperados del proyecto y adecuación a estándares de calidad de trabajos de investigación en Ingeniería de Sistemas. La tercera instancia requiere aprobación formal del director del proyecto si el cambio implica modificación significativa del alcance definido inicialmente, ajuste de fechas de entregables comprometidos institucionalmente, o reasignación sustancial de recursos humanos o técnicos que afecte viabilidad global del cronograma.
 
-La aprobación se formaliza mediante firma digital o confirmación escrita en el acta correspondiente.
+La aprobación formal de cambios validados se materializa mediante firma digital del asesor en documento PDF del acta correspondiente o mediante confirmación escrita explícita en correo electrónico institucional archivado en carpeta compartida del proyecto, garantizando trazabilidad auditable de todas las decisiones de gestión de cambios ejecutadas durante el desarrollo.
 
 \section{Monitoreo y Control de Progreso}
 
@@ -88,33 +72,29 @@ Cantidad de defectos encontrados en validación & Errores técnicos detectados e
 
 \subsection{Actividades de Reporte}
 
-El reporte del avance del proyecto se realizará mediante los siguientes mecanismos:
+El reporte estructurado del avance del proyecto se realizará mediante cuatro mecanismos complementarios de comunicación que operan en diferentes frecuencias y niveles de detalle técnico, garantizando transparencia continua hacia el asesor académico y coordinación efectiva interna del equipo.
 
-\begin{itemize}
-    \item \textbf{Reuniones semanales de seguimiento:} Cada lunes, de 1 hora de duración, con presencia de todo el equipo. Se discute el avance de la semana anterior, se presentan los bloqueos encontrados, se revisan las métricas de avance y se planifican las tareas de la siguiente semana.
+El primer mecanismo consiste en reuniones semanales de seguimiento ejecutadas cada lunes con duración de 1 hora, requiriendo presencia sincrónica de todo el equipo mediante videoconferencia o sesión presencial. La agenda estructurada incluye discusión del avance técnico de la semana anterior medido contra métricas del WBS, presentación de bloqueos técnicos encontrados con descripción de síntomas y hipótesis de causas, revisión cuantitativa de métricas de avance por fase y por integrante, y planificación detallada de tareas de la siguiente semana con asignación explícita de responsables y dependencias entre actividades.
 
-    \item \textbf{Actas de reunión:} Se redactará un acta resumida al final de cada reunión semanal, incluyendo asistencia, temas tratados, decisiones tomadas, compromisos adquiridos y fecha de próxima reunión. Las actas serán almacenadas en Google Drive compartido.
+El segundo mecanismo genera actas de reunión documentadas al finalizar cada sesión semanal, incluyendo registro de asistencia con nombres y roles, temas técnicos y administrativos tratados, decisiones tomadas con justificación y votación si aplica, compromisos adquiridos por cada integrante con fechas límite específicas, y fecha confirmada de próxima reunión. Las actas se almacenan en carpeta compartida de Google Drive con nomenclatura estandarizada que incluye fecha ISO 8601 para facilitar búsqueda cronológica y auditoría posterior.
 
-    \item \textbf{Reportes quincenales al asesor:} Cada dos semanas, el equipo enviará un reporte técnico breve (1–2 páginas) al asesor del proyecto, indicando el estado de las fases, problemas técnicos detectados, soluciones aplicadas y planes próximos.
+El tercer mecanismo establece reportes técnicos quincenales al asesor del proyecto, enviados cada dos semanas mediante correo electrónico institucional con documento PDF adjunto de 1 a 2 páginas estructurado en secciones estándar. El contenido incluye estado actual de cada fase metodológica con porcentaje de completitud estimado, problemas técnicos detectados durante el período con severidad clasificada, soluciones técnicas aplicadas o en evaluación con análisis de alternativas, y planes de trabajo para las próximas dos semanas con énfasis en hitos críticos del cronograma.
 
-    \item \textbf{Revisión de fase:} Al finalizar cada fase metodológica, se llevará a cabo una reunión de revisión extendida (de hasta 2 horas) con el asesor, donde se presenta el entregable correspondiente, se valida su calidad y se ajusta el plan para las siguientes fases si es necesario.
-\end{itemize}
+El cuarto mecanismo ejecuta reunión de revisión de fase al finalizar cada una de las siete fases metodológicas del CRISP-DM adaptado, consistiendo en sesión extendida con el asesor de hasta 2 horas de duración donde se presenta formalmente el entregable técnico correspondiente mediante demostración funcional en vivo, se valida calidad técnica y académica del resultado obtenido mediante inspección de código y análisis de métricas de evaluación, y se ajusta colaborativamente el plan de trabajo para fases subsiguientes si desviaciones detectadas o lecciones aprendidas así lo requieren.
 
 \subsection{Acciones Correctivas}
 
-Cuando se detecte una desviación significativa en el cronograma, los recursos disponibles, o la calidad técnica de los entregables, el equipo podrá aplicar las siguientes acciones correctivas:
+Cuando se detecte desviación significativa en el cronograma planificado, degradación de recursos técnicos o humanos disponibles, o deterioro de calidad técnica de entregables contra criterios de aceptación establecidos, el equipo podrá aplicar cuatro tipos de acciones correctivas escaladas según severidad del problema identificado.
 
-\begin{itemize}
-    \item \textbf{Reprogramación de actividades:} Si una fase se retrasa más de una semana, se evalúa reducir el alcance técnico de otras fases menos críticas, redistribuir tareas entre integrantes, o ajustar el cronograma global con aprobación del asesor.
+La primera acción correctiva consiste en reprogramación táctica de actividades del WBS, aplicable cuando una fase específica se retrasa más de una semana respecto a fechas comprometidas. El equipo evalúa reducir alcance técnico de otras fases menos críticas mediante priorización de requerimientos funcionales, redistribuir tareas entre integrantes según especialización y carga actual de trabajo, o ajustar cronograma global mediante extensión de fechas con aprobación formal del asesor académico y análisis de impacto en fecha de defensa final.
 
-    \item \textbf{Refuerzo técnico colaborativo:} Ante bloqueos técnicos, Nicolás Camacho brindará acompañamiento adicional a los integrantes afectados, incluyendo sesiones de pair programming o revisión de código guiada.
+La segunda acción correctiva implementa refuerzo técnico colaborativo ante bloqueos técnicos que superan capacidad individual de resolución, donde Nicolás Camacho en su rol de líder técnico brindará acompañamiento adicional intensivo a los integrantes afectados, incluyendo sesiones de pair programming sincrónico de 2 a 4 horas para debugging conjunto de código problemático, revisión arquitectónica guiada de diseño de módulos con alto acoplamiento o baja cohesión, y transferencia acelerada de conocimiento especializado en componentes técnicos complejos del stack.
 
-    \item \textbf{Simplificación técnica:} Si una técnica planificada resulta inviable por limitaciones computacionales, falta de datos o complejidad excesiva, se reemplazará por una alternativa más simple pero válida técnicamente (por ejemplo, pasar de fine-tuning a prompting directo con LLMs).
+La tercera acción correctiva ejecuta simplificación técnica controlada cuando una técnica o algoritmo planificado resulta inviable por limitaciones computacionales de hardware disponible, insuficiencia de datos de entrenamiento o anotación, o complejidad de implementación excesiva que amenaza cronograma crítico. El equipo reemplazará la técnica original por alternativa más simple pero técnicamente válida y académicamente defendible, como migrar de fine-tuning de modelos transformer a prompting directo con LLMs preentrenados, sustituir clustering jerárquico por particionamiento k-means, o simplificar pipeline de limpieza de datos reduciendo etapas de normalización.
 
-    \item \textbf{Extensión controlada del cronograma:} Como último recurso, si la calidad del entregable está comprometida, se podrá solicitar una extensión de hasta 2 semanas, previa validación con el director del proyecto y ajuste formal del plan.
-\end{itemize}
+La cuarta acción correctiva aplica extensión controlada del cronograma como último recurso cuando calidad de entregables técnicos está severamente comprometida y amenaza viabilidad de defensa académica. El equipo podrá solicitar formalmente extensión de hasta 2 semanas adicionales, previa validación con el director del proyecto mediante reunión extraordinaria que presente evidencia de problemas críticos encontrados, ajuste formal del plan de trabajo con redistribución de actividades en tiempo extendido, y compromiso escrito de ambos integrantes de dedicación intensiva en período adicional.
 
-Todas las acciones correctivas deberán quedar documentadas en el acta correspondiente, indicando el problema detectado, la decisión tomada, el responsable de implementarla y el plazo de ejecución.
+Todas las acciones correctivas ejecutadas deberán quedar exhaustivamente documentadas en acta de reunión correspondiente, especificando problema técnico o administrativo detectado con métricas cuantitativas de desviación, decisión correctiva tomada con justificación de selección entre alternativas evaluadas, responsable designado de implementar la acción con accountability explícita, y plazo de ejecución con fecha límite verificable en siguiente sesión de seguimiento.
 
 \section{Cierre del Proyecto}
 
@@ -122,54 +102,48 @@ El cierre del proyecto contempla un conjunto de actividades formales que garanti
 
 \subsection{Entrega del Producto}
 
-La entrega final del proyecto incluirá los siguientes componentes:
+La entrega final del proyecto al asesor académico y a la universidad incluirá seis componentes técnicos y documentales complementarios que garantizan completitud funcional del sistema, reproducibilidad científica de resultados y transferencia efectiva de conocimiento generado durante el desarrollo.
 
-\begin{itemize}
-    \item \textbf{Repositorio de código funcional:} Alojado en GitHub, con estructura modular clara, código comentado, archivo README con instrucciones de instalación y ejecución, requirements.txt con dependencias, y ejemplos de ejecución del pipeline completo.
+El primer componente consiste en repositorio de código fuente funcional alojado en GitHub con estructura modular jerárquica que refleja arquitectura del sistema, código Python completamente comentado mediante docstrings en formato Google o NumPy, archivo README markdown con instrucciones detalladas de instalación y ejecución del sistema, archivo requirements.txt con dependencias especificando versiones exactas de bibliotecas utilizadas, y carpeta de ejemplos con scripts de demostración para ejecución del pipeline completo sobre datos sintéticos o muestra real reducida.
 
-    \item \textbf{Dataset procesado:} Base de datos PostgreSQL exportada (dump SQL) con las tablas de vacantes, habilidades extraídas, embeddings y clusters. Incluye un diccionario de datos explicativo.
+El segundo componente entrega dataset procesado exportado desde PostgreSQL mediante dump SQL comprimido conteniendo esquema completo de base de datos y datos de producción, incluyendo tablas de vacantes scrapeadas con metadata temporal y geográfica, habilidades extraídas por ambos pipelines con scores de confianza, vectores de embeddings de 768 dimensiones en formato binario eficiente, asignaciones de clustering con parámetros HDBSCAN utilizados, y diccionario de datos explicativo en formato markdown documentando esquema relacional, tipos de datos, restricciones de integridad y semántica de cada columna.
 
-    \item \textbf{Documento técnico final:} Informe completo del proyecto en formato PDF, con introducción, metodología, arquitectura del sistema, descripción de cada fase técnica, resultados obtenidos, análisis de validación, conclusiones y recomendaciones. Mínimo 60 páginas, formato IEEE o plantilla institucional.
+El tercer componente produce documento técnico final del trabajo de grado en formato PDF profesional de mínimo 60 páginas siguiendo plantilla institucional de la Pontificia Universidad Javeriana o formato IEEE Computer Society, conteniendo introducción contextualizando problema de observación de demanda laboral, metodología CRISP-DM adaptada con justificación de decisiones arquitectónicas, descripción detallada de arquitectura del sistema con diagramas BPMN y de componentes, explicación técnica exhaustiva de cada una de las siete fases con pseudocódigo de algoritmos críticos, presentación de resultados obtenidos con métricas cuantitativas y análisis cualitativo de outputs, validación empírica mediante comparación con gold standard y benchmarks de estado del arte, conclusiones sintetizando aportes del proyecto y lecciones aprendidas, y recomendaciones fundamentadas para trabajo futuro y escalamiento del observatorio.
 
-    \item \textbf{Visualizaciones y notebooks:} Carpeta con gráficos generados (histogramas, clusters, mapas de calor, nubes de palabras) y notebooks de Jupyter con análisis exploratorios y explicaciones técnicas detalladas.
+El cuarto componente compila visualizaciones generadas y notebooks analíticos en carpeta organizada jerárquicamente, incluyendo gráficos de alta resolución en formatos PNG y PDF vectorial representando histogramas de distribución de habilidades más frecuentes, proyecciones UMAP de espacios de embeddings coloreadas por clústeres identificados, mapas de calor geográficos comparando perfiles tecnológicos por país, nubes de palabras ponderadas por frecuencia de términos técnicos, y notebooks Jupyter completamente ejecutables con análisis exploratorios de datos, experimentos de parametrización de clustering, y explicaciones técnicas didácticas paso a paso de decisiones metodológicas.
 
-    \item \textbf{Manual de usuario técnico:} Guía breve para ejecutar el sistema en otro equipo, incluyendo requisitos de hardware, instalación de dependencias, configuración de variables de entorno, y pasos para replicar las fases del pipeline.
+El quinto componente provee manual de usuario técnico conciso de 5 a 10 páginas dirigido a desarrolladores o investigadores que deseen replicar el sistema en infraestructura diferente, especificando requisitos mínimos de hardware incluyendo CPU, RAM, almacenamiento y GPU opcional, instrucciones paso a paso de instalación de dependencias mediante pip o conda en entorno virtual Python aislado, configuración de variables de entorno para credenciales de base de datos y paths de modelos preentrenados descargados, y secuencia de comandos para ejecutar cada fase del pipeline con parámetros por defecto validados y troubleshooting de errores comunes encontrados durante desarrollo.
 
-    \item \textbf{Evidencias de validación:} Logs de ejecución, métricas de evaluación (precisión de NER, coherencia de clusters, ejemplos de habilidades enriquecidas), y capturas de pantalla de visualizaciones funcionales.
-\end{itemize}
+El sexto componente documenta evidencias empíricas de validación del sistema mediante carpeta de artefactos técnicos, conteniendo logs de ejecución representativos de scraping exitoso y manejo de errores de red, métricas cuantitativas de evaluación tabuladas incluyendo precisión y recall del NER, F1-score Post-ESCO de ambos pipelines, coherencia interna de clústeres mediante Silhouette Score y DBCV, ejemplos concretos de habilidades enriquecidas semánticamente por Pipeline B con justificaciones textuales del LLM, y capturas de pantalla de alta resolución de visualizaciones funcionales ejecutadas sobre corpus completo de 30,660 ofertas laborales.
 
 \subsection{Actividades de Cierre}
 
-Al finalizar el desarrollo del proyecto, se llevarán a cabo las siguientes actividades de cierre:
+Al finalizar el desarrollo técnico del proyecto e integración de todos los componentes del observatorio, se ejecutarán seis actividades formales de cierre que garantizan completitud de entregables, documentación de lecciones aprendidas y preparación adecuada para defensa académica ante jurados evaluadores.
 
-\begin{enumerate}
-    \item \textbf{Revisión final de entregables:} El equipo verifica que todos los componentes estén completos, funcionales y correctamente documentados.
+La primera actividad consiste en revisión final exhaustiva de entregables mediante checklist estructurada, donde el equipo verifica sistemáticamente que todos los componentes técnicos y documentales estén completos según especificación del plan de proyecto, funcionales mediante ejecución end-to-end del pipeline sobre datos reales sin errores críticos, y correctamente documentados con comentarios de código, README actualizado y manual de usuario validado mediante prueba de instalación en máquina limpia.
 
-    \item \textbf{Sesión de retrospectiva final:} Reunión de 2 horas donde el equipo reflexiona sobre aprendizajes técnicos, dificultades enfrentadas, decisiones acertadas y mejoras aplicables a futuros proyectos similares. Se documenta en un acta de lecciones aprendidas.
+La segunda actividad ejecuta sesión de retrospectiva final del equipo con duración de 2 horas, donde ambos integrantes reflexionan colaborativamente sobre aprendizajes técnicos adquiridos en cada fase del CRISP-DM, dificultades técnicas y organizacionales enfrentadas con análisis de causas raíz, decisiones arquitectónicas acertadas que facilitaron desarrollo ágil y modular, y mejoras metodológicas aplicables a futuros proyectos académicos o profesionales similares. Los insights se documentan formalmente en acta de lecciones aprendidas archivada en repositorio del proyecto para consulta posterior.
 
-    \item \textbf{Presentación final al asesor:} Se expone el sistema completo al asesor del proyecto, demostrando su funcionamiento end-to-end, explicando decisiones técnicas clave y respondiendo preguntas técnicas y metodológicas.
+La tercera actividad presenta sistema completo al asesor académico mediante sesión formal de demostración técnica de 2 horas, donde se expone funcionamiento end-to-end del observatorio ejecutando pipeline completo en vivo sobre muestra representativa de datos, se explican decisiones técnicas clave como selección de Gemma 3 4B sobre alternativas evaluadas y diseño de arquitectura híbrida de pipelines, y se responden preguntas técnicas y metodológicas del asesor sobre implementación de componentes, validación de resultados y alineación con objetivos académicos del trabajo de grado.
 
-    \item \textbf{Preparación de defensa pública:} El equipo elabora una presentación de entre 20 y 30 minutos para la sustentación formal ante jurados, enfocada en los resultados técnicos, validación empírica y aportes del proyecto.
+La cuarta actividad prepara defensa pública del trabajo de grado mediante elaboración colaborativa de presentación profesional de 20 a 30 minutos en formato PowerPoint o Beamer LaTeX, enfocada estratégicamente en comunicación clara de resultados técnicos obtenidos con métricas cuantitativas destacadas, procedimientos de validación empírica ejecutados sobre gold standard anotado, aportes metodológicos del proyecto como adaptación de CRISP-DM a contexto latinoamericano, y demostración visual impactante del sistema funcionando mediante screenshots y videos cortos de scraping, clustering y visualizaciones generadas.
 
-    \item \textbf{Archivo del proyecto:} Todos los entregables finales se suben a un repositorio institucional (si aplica) y se entrega copia a la universidad en los formatos solicitados (PDF, código fuente, datasets).
+La quinta actividad archiva formalmente el proyecto completo mediante subida de todos los entregables finales a repositorio institucional de la Pontificia Universidad Javeriana si protocolo aplica, y entrega de copia completa a la universidad en formatos solicitados por programa académico incluyendo documento PDF del trabajo de grado firmado digitalmente, código fuente comprimido en archivo ZIP con estructura de carpetas preservada, datasets procesados exportados como dumps SQL, y licencia de uso académico firmada autorizando uso interno con fines educativos y de investigación.
 
-    \item \textbf{Liberación pública (opcional):} Si el equipo lo decide y el asesor lo autoriza, se puede liberar el código bajo licencia open source (MIT o Apache 2.0) para beneficio de la comunidad técnica y académica.
-\end{enumerate}
+La sexta actividad opcional ejecuta liberación pública del código fuente del observatorio bajo licencia open source permisiva como MIT o Apache 2.0, condicionada a decisión consensuada del equipo considerando beneficio para comunidad técnica y académica, y autorización formal del asesor verificando que no existan restricciones institucionales o de propiedad intelectual que impidan publicación abierta. La liberación incluye documentación clara de instalación, datasets sintéticos de ejemplo para testing, y sección de contribuciones invitando a comunidad a reportar issues y proponer mejoras mediante pull requests de GitHub.
 
 \subsection{Criterios de Aceptación Final}
 
-El proyecto será considerado completo y aceptable cuando:
+El proyecto del Observatorio de Demanda Laboral en Tecnología para Latinoamérica será formalmente considerado completo y aceptable para defensa académica ante jurados cuando satisfaga cinco criterios de completitud técnica, funcionalidad sistémica, documentación exhaustiva, validación académica y cumplimiento cronológico.
 
-\begin{itemize}
-    \item Todos los requerimientos funcionales prioritarios hayan sido implementados y validados técnicamente.
+El primer criterio requiere que todos los requerimientos funcionales prioritarios del sistema identificados en documento de especificación hayan sido implementados técnicamente en código Python funcional y validados mediante pruebas de aceptación ejecutadas sobre datos reales, confirmando que módulos de scraping, extracción dual mediante Pipeline A y B, generación de embeddings, clustering HDBSCAN y visualizaciones macro operan correctamente según especificaciones técnicas establecidas.
 
-    \item El sistema sea capaz de ejecutar el pipeline completo desde scraping hasta visualización sin errores críticos.
+El segundo criterio establece que el sistema debe ser capaz de ejecutar pipeline completo de siete fases desde scraping inicial de portales hasta generación de visualizaciones finales sin errores críticos que detengan ejecución, aceptando únicamente warnings no fatales o errores manejados gracefully mediante try-except con logging apropiado, y completando procesamiento de corpus completo de 30,660 ofertas laborales en tiempo razonable sin memory leaks o deadlocks.
 
-    \item La documentación técnica esté completa, coherente y permita replicar el sistema por terceros con conocimientos técnicos medios.
+El tercer criterio exige que documentación técnica del proyecto esté completa cubriendo todas las fases metodológicas con descripción detallada de implementación, coherente manteniendo consistencia terminológica y de notación entre secciones, y suficientemente clara para permitir replicación exitosa del sistema por terceros con conocimientos técnicos de nivel medio en Python, NLP y bases de datos relacionales, validado mediante prueba empírica de instalación por persona externa al equipo.
 
-    \item El asesor del proyecto apruebe formalmente la calidad técnica y académica del trabajo.
+El cuarto criterio condiciona aceptación final a aprobación formal del asesor del proyecto Ing. Luis Gabriel Moreno Sandoval sobre calidad técnica del sistema implementado evaluada mediante inspección de código y demostración funcional, y calidad académica del documento de trabajo de grado evaluada mediante revisión de profundidad metodológica, rigurosidad de análisis de resultados y alineación con estándares de investigación en Ingeniería de Sistemas de la Pontificia Universidad Javeriana.
 
-    \item Se hayan cumplido las entregas programadas según el cronograma ajustado, o se hayan justificado formalmente las extensiones aplicadas.
-\end{itemize}
+El quinto criterio verifica que se hayan cumplido entregas programadas de entregables según cronograma ajustado del proyecto considerando cambios aprobados formalmente durante desarrollo, o alternativamente que extensiones de fechas aplicadas hayan sido justificadas formalmente mediante actas de reunión documentando causas de retrasos, aprobación escrita del asesor aceptando nueva calendarización, y evidencia de mitigación de riesgos identificados para evitar futuros incumplimientos.
 
-Una vez cumplidos estos criterios, el proyecto podrá ser presentado a evaluación formal por parte de los jurados designados.
+Una vez satisfechos estos cinco criterios de aceptación mediante verificación documentada y aprobación formal del asesor académico, el proyecto podrá ser sometido a evaluación final por parte de los jurados designados por el Departamento de Sistemas en sesión de defensa pública programada según calendario académico institucional.

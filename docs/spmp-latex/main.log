@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.25)  4 NOV 2025 18:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.25)  17 NOV 2025 00:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1299,7 +1299,7 @@ Package biblatex Info: ... file 'main.bbl' found.
 Package biblatex Info: Reference section=0 on input line 122.
 Package biblatex Info: Reference segment=0 on input line 122.
  (portada.tex
-<figures/pontificia-universidad-javeriana-vector-logo.png, id=382, 602.25pt x 6
+<figures/pontificia-universidad-javeriana-vector-logo.png, id=354, 602.25pt x 6
 02.25pt>
 File: figures/pontificia-universidad-javeriana-vector-logo.png Graphic file (ty
 pe png)
@@ -1450,50 +1450,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [8
 
 ]
-Underfull \hbox (badness 6592) in paragraph at lines 63--64
-[]|\OT1/ptm/b/n/10.95 Fecha es-ti-ma-
- []
-
-
-Underfull \hbox (badness 2932) in paragraph at lines 65--65
-[]|\OT1/ptm/m/n/10.95 C[]odi-go com-ple-to de scra-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 65--65
-[]|\OT1/ptm/m/n/10.95 Docentes eva-lua-
- []
-
-
-Underfull \hbox (badness 1292) in paragraph at lines 67--67
-[]|\OT1/ptm/m/n/10.95 Base de da-tos es-truc-tu-ra-da
- []
-
-
-Underfull \hbox (badness 1132) in paragraph at lines 69--69
-[]|\OT1/ptm/m/n/10.95 Diccionario de ha-bi-li-da-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 73--73
-[]|\OT1/ptm/m/n/10.95 Documento ex-pli-ca-ti-vo
- []
-
-
-Underfull \hbox (badness 1902) in paragraph at lines 73--73
-[]|\OT1/ptm/m/n/10.95 Universidad / Ar-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 75--75
-[]|\OT1/ptm/m/n/10.95 Pruebas fun-cio-na-les y
- []
-
-
-Overfull \hbox (4.76006pt too wide) in paragraph at lines 61--78
- [][] 
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1502,7 +1458,47 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [9]
-Overfull \hbox (43.03198pt too wide) in paragraph at lines 109--124
+Underfull \hbox (badness 6592) in paragraph at lines 51--52
+[]|\OT1/ptm/b/n/10.95 Fecha es-ti-ma-
+ []
+
+
+Underfull \hbox (badness 2932) in paragraph at lines 53--53
+[]|\OT1/ptm/m/n/10.95 C[]odi-go com-ple-to de scra-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+[]|\OT1/ptm/m/n/10.95 Docentes eva-lua-
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 55--55
+[]|\OT1/ptm/m/n/10.95 Base de da-tos es-truc-tu-ra-da
+ []
+
+
+Underfull \hbox (badness 1132) in paragraph at lines 57--57
+[]|\OT1/ptm/m/n/10.95 Diccionario de ha-bi-li-da-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--61
+[]|\OT1/ptm/m/n/10.95 Documento ex-pli-ca-ti-vo
+ []
+
+
+Underfull \hbox (badness 1902) in paragraph at lines 61--61
+[]|\OT1/ptm/m/n/10.95 Universidad / Ar-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+[]|\OT1/ptm/m/n/10.95 Pruebas fun-cio-na-les y
+ []
+
+
+Overfull \hbox (4.76006pt too wide) in paragraph at lines 49--66
  [][] 
  []
 
@@ -1513,19 +1509,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[10
-pdfTeX warning (ext4): destination with the same identifier (name{table.1.1}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.126 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.1.2}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.126 
-      ]) (sections/02-glosario.tex
+[10]
+Overfull \hbox (43.03198pt too wide) in paragraph at lines 97--112
+ [][] 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1534,6 +1522,26 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [11
+pdfTeX warning (ext4): destination with the same identifier (name{table.1.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.114 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.1.2}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.114 
+      ]) (sections/02-glosario.tex
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[12
 pdfTeX warning (ext4): destination with the same identifier (name{table.1.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -1548,7 +1556,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[12
+[13
 
 ]
 
@@ -1558,7 +1566,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[13]) (sections/03-contexto.tex
+[14]) (sections/03-contexto.tex
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1566,13 +1574,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[14]
+[15]
 Cap\'{\i }tulo 3.
-<figures/CiclodeVidadelProyecto.png, id=625, 449.42906pt x 316.18124pt>
+<figures/CiclodeVidadelProyecto.png, id=602, 449.42906pt x 316.18124pt>
 File: figures/CiclodeVidadelProyecto.png Graphic file (type png)
 <use figures/CiclodeVidadelProyecto.png>
 Package pdftex.def Info: figures/CiclodeVidadelProyecto.png  used on input line
- 29.
+ 17.
 (pdftex.def)             Requested size: 421.3982pt x 296.47224pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1581,7 +1589,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[15
+[16
 
 ]
 
@@ -1591,12 +1599,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[16
+[17
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.52     \item N
+l.40     \item N
                 o permite incorporar descubrimientos progresivos ni resultad...
  <./figures/CiclodeVidadelProyecto.png>]
 
@@ -1606,34 +1614,89 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[17]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
 [18]
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
+[]|\OT1/ptm/m/n/10 Framework as[]^^Pncrono en
+ []
 
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[19]
+Underfull \hbox (badness 2401) in paragraph at lines 106--106
+[]|\OT1/ptm/m/n/10 Alto ren-di-mien-to v[]^^Pa eje-
+ []
 
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[20]
-Overfull \hbox (2.26443pt too wide) in paragraph at lines 243--244
-[]\OT1/ptm/b/n/10.95 Descripci[]on: \OT1/ptm/m/n/10.95 Sui-te de he-rra-mien-ta
-s NLP de Stan-ford, con Stan-za co-mo im-ple-men-ta-ci[]on en Python. 
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
+\OT1/ptm/m/n/10 ges-ti[]on au-tom[]ati-ca de
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
+\OT1/ptm/m/n/10 con-cu-rren-cia/-rein-ten-tos,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
+\OT1/ptm/m/n/10 ex-por-ta-ci[]on na-ti-va JSO-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
+\OT1/ptm/m/n/10 N/CS-V/SQL, co-mu-ni-dad
+ []
+
+
+Underfull \hbox (badness 7814) in paragraph at lines 106--107
+[]|\OT1/ptm/m/n/10 No eje-cu-ta Ja-vaS-cript
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--107
+\OT1/ptm/m/n/10 na-ti-va-men-te, cur-va
+ []
+
+
+Underfull \hbox (badness 1019) in paragraph at lines 108--108
+[]|\OT1/ptm/m/n/10 Renderiza Ja-vaS-cript com-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--108
+\OT1/ptm/m/n/10 ple-ta-men-te, si-mu-la-ci[]on
+ []
+
+
+Underfull \hbox (badness 5008) in paragraph at lines 108--108
+\OT1/ptm/m/n/10 de in-ter-ac-cio-nes hu-ma-nas
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--108
+\OT1/ptm/m/n/10 (click-s/s-croll), com-pa-ti-ble
+ []
+
+
+Underfull \hbox (badness 8038) in paragraph at lines 108--109
+[]|\OT1/ptm/m/n/10 Significativamente m[]as
+ []
+
+
+Underfull \hbox (badness 2469) in paragraph at lines 108--109
+\OT1/ptm/m/n/10 len-to que Scrapy, al-to
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 110--111
+[]|\OT1/ptm/m/n/10 Comunidad m[]as pe-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 110--111
+\OT1/ptm/m/n/10 es-pec[]^^Pfi-cos scra-ping
+ []
+
+
+Overfull \hbox (18.98643pt too wide) in paragraph at lines 102--113
+ [][] 
  []
 
 
@@ -1643,7 +1706,101 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[21]
+[19]
+Underfull \hbox (badness 1946) in paragraph at lines 130--130
+[]|\OT1/ptm/m/n/10 SGBD re-la-cio-nal open-source
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--130
+\OT1/ptm/m/n/10 com-ple-to, ex-ten-sio-nes
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 130--130
+\OT1/ptm/m/n/10 b[]usque-da tex-to (pg[]trgm),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--130
+\OT1/ptm/m/n/10 es-ca-la-bi-li-dad pro-ba-da,
+ []
+
+
+Underfull \hbox (badness 1502) in paragraph at lines 130--130
+\OT1/ptm/m/n/10 in-te-gra-ci[]on pan-da-s/SQ-LAl-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+[]|\OT1/ptm/m/n/10 Requiere ins-ta-la-ci[]on/-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+\OT1/ptm/m/n/10 con-fi-gu-ra-ci[]on lo-cal,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+\OT1/ptm/m/n/10 ma-yor com-ple-ji-dad
+ []
+
+
+Underfull \hbox (badness 2884) in paragraph at lines 132--133
+[]|\OT1/ptm/m/n/10 Sin in-te-gri-dad re-fe-ren-
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 132--133
+\OT1/ptm/m/n/10 cial es-tric-ta, con-sul-tas
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 132--133
+\OT1/ptm/m/n/10 re-la-cio-na-les dif[]^^Pci-les,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 132--133
+\OT1/ptm/m/n/10 me-nos ade-cua-do pa-ra
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--134
+[]|\OT1/ptm/m/n/10 Configuraci[]on m[]^^Pni-ma
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--134
+\OT1/ptm/m/n/10 to-ti-pa-do r[]api-do/-da-ta-sets
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+[]|\OT1/ptm/m/n/10 Rendimiento li-mi-ta-do
+ []
+
+
+Underfull \hbox (badness 2753) in paragraph at lines 134--135
+\OT1/ptm/m/n/10 sin con-cu-rren-cia es-cri-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+\OT1/ptm/m/n/10 tu-ra efi-cien-te, ca-re-ce
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+\OT1/ptm/m/n/10 fun-cio-nes avan-za-das
+ []
+
+
+Overfull \hbox (18.98643pt too wide) in paragraph at lines 126--137
+ [][] 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1651,7 +1808,82 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[22]
+[20
+pdfTeX warning (ext4): destination with the same identifier (name{table.3.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.138 
+      ]
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
+\OT1/ptm/m/n/10 no es-pe-cia-li-za-dos do-
+ []
+
+
+Underfull \hbox (badness 2042) in paragraph at lines 154--155
+\OT1/ptm/m/n/10 mi-nio la-bo-ral, re-quie-re
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--156
+[]|\OT1/ptm/m/n/10 Stanford NLP /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--156
+[]|\OT1/ptm/m/n/10 Suite he-rra-mien-tas NLP
+ []
+
+
+Underfull \hbox (badness 4967) in paragraph at lines 156--156
+[]|\OT1/ptm/m/n/10 Modelos ling[]u[]^^Psti-cos fun-
+ []
+
+
+Underfull \hbox (badness 4266) in paragraph at lines 156--156
+\OT1/ptm/m/n/10 an[]ali-sis sint[]acti-co pro-fun-
+ []
+
+
+Underfull \hbox (badness 2735) in paragraph at lines 156--157
+[]|\OT1/ptm/m/n/10 M[]as len-to que spaCy,
+ []
+
+
+Underfull \hbox (badness 2384) in paragraph at lines 156--157
+\OT1/ptm/m/n/10 me-nor in-te-gra-ci[]on em-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--158
+[]|\OT1/ptm/m/n/10 Representaciones con-tex-
+ []
+
+
+Underfull \hbox (badness 1552) in paragraph at lines 158--158
+\OT1/ptm/m/n/10 tua-les al-ta ca-li-dad, BE-TO
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+[]|\OT1/ptm/m/n/10 Requiere re-cur-sos
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+\OT1/ptm/m/n/10 compu-tacio-na-les sig-ni-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+\OT1/ptm/m/n/10 fi-ca-ti-vos, la-ten-cia al-ta
+ []
+
+
+Overfull \hbox (18.98643pt too wide) in paragraph at lines 150--161
+ [][] 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1659,7 +1891,96 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[23]
+[21
+pdfTeX warning (ext4): destination with the same identifier (name{table.3.2}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.162 
+      ]
+Overfull \hbox (9.79538pt too wide) in paragraph at lines 167--168
+[]\OT1/ptm/m/n/10.95 Se eva-lua-ron cua-tro al-ter-na-ti-vas de mo-de-los pa-ra
+ ge-ne-ra-ci[]on de re-pre-sen-ta-cio-nes vec-to-ria-les sem[]anti-
+ []
+
+
+Underfull \hbox (badness 5359) in paragraph at lines 178--178
+[]|\OT1/ptm/m/n/9 BERT pre-en-tre-na-do cor-pus
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 178--178
+\OT1/ptm/m/n/9 ma-si-vo es-pa[]nol pa-ra com-
+ []
+
+
+Underfull \hbox (badness 3375) in paragraph at lines 178--179
+[]|\OT1/ptm/m/n/9 No op-ti-mi-za-do si-mi-li-tud
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 180--180
+[]|\OT1/ptm/m/n/9 Modelos mul-ti-ling[]ues di-
+ []
+
+
+Underfull \hbox (badness 1838) in paragraph at lines 180--180
+\OT1/ptm/m/n/9 se[]nados em-bed-dings den-sos
+ []
+
+
+Underfull \hbox (badness 2057) in paragraph at lines 182--182
+[]|\OT1/ptm/m/n/9 R[]api-do ge-ne-ra-ci[]on vs BERT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--182
+\OT1/ptm/m/n/9 dis-po-ni-bles (paraphrase-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--185
+[]|\OT1/ptm/m/n/9 No cap-tu-ra con-tex-to
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--185
+\OT1/ptm/m/n/9 sem[]anti-co pro-fun-do,
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 184--185
+\OT1/ptm/m/n/9 em-bed-dings est[]ati-cos no
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[22
+pdfTeX warning (ext4): destination with the same identifier (name{table.3.3}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.188 
+      ]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[23
+pdfTeX warning (ext4): destination with the same identifier (name{table.3.4}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.198 
+      ]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1676,18 +1997,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [25]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[26]
-<figures/DiagramaBPMN.png, id=700, 467.49657pt x 133.24782pt>
+<figures/DiagramaBPMN.png, id=654, 467.49657pt x 133.24782pt>
 File: figures/DiagramaBPMN.png Graphic file (type png)
 <use figures/DiagramaBPMN.png>
-Package pdftex.def Info: figures/DiagramaBPMN.png  used on input line 454.
+Package pdftex.def Info: figures/DiagramaBPMN.png  used on input line 231.
 (pdftex.def)             Requested size: 421.3982pt x 120.11507pt.
 
 
@@ -1697,14 +2010,21 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[27
+[26
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.487     \item R
-                 evisión de logs y outputs del módulo de extracción. <./figu
-res/DiagramaBPMN.png>]
+l.239 
+       <./figures/DiagramaBPMN.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[27]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1713,112 +2033,120 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [28]
-Underfull \hbox (badness 10000) in paragraph at lines 570--570
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[29]
+Underfull \hbox (badness 10000) in paragraph at lines 287--287
 []|\OT1/ptm/m/n/10 Docentes eva-lua-do-
  []
 
 
-Underfull \hbox (badness 3482) in paragraph at lines 570--570
+Underfull \hbox (badness 3482) in paragraph at lines 287--287
 []|\OT1/ptm/m/n/10 Presentaciones for-ma-les, de-fen-sa
  []
 
 
-Underfull \hbox (badness 2932) in paragraph at lines 572--572
+Underfull \hbox (badness 2932) in paragraph at lines 289--289
 []|\OT1/ptm/m/n/10 Portales de em-pleo
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 572--572
+Underfull \hbox (badness 10000) in paragraph at lines 289--289
 \OT1/ptm/m/n/10 (Lin-ke-dIn, Com-pu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 572--572
+Underfull \hbox (badness 10000) in paragraph at lines 289--289
 \OT1/ptm/m/n/10 tra-ba-jo, Bu-me-ran,
  []
 
 
-Underfull \hbox (badness 4181) in paragraph at lines 572--572
+Underfull \hbox (badness 4181) in paragraph at lines 289--289
 []|\OT1/ptm/m/n/10 Acceso web me-dian-te scra-ping,
  []
 
 
-Underfull \hbox (badness 3895) in paragraph at lines 574--574
+Underfull \hbox (badness 3895) in paragraph at lines 291--291
 []|\OT1/ptm/m/n/10 Comunidades t[]ecni-
  []
 
 
-Underfull \hbox (badness 6001) in paragraph at lines 574--574
+Underfull \hbox (badness 6001) in paragraph at lines 291--291
 \OT1/ptm/m/n/10 GitHub Is-sues, fo-
  []
 
 
-Underfull \hbox (badness 4120) in paragraph at lines 574--574
+Underfull \hbox (badness 4120) in paragraph at lines 291--291
 \OT1/ptm/m/n/10 ros de spaC-y/Hug-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 576--576
+Underfull \hbox (badness 10000) in paragraph at lines 293--293
 []|\OT1/ptm/m/n/10 Proveedores de
  []
 
 
-Underfull \hbox (badness 1199) in paragraph at lines 576--576
+Underfull \hbox (badness 1199) in paragraph at lines 293--293
 \OT1/ptm/m/n/10 mo-de-los pre-en-tre-na-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 576--576
+Underfull \hbox (badness 10000) in paragraph at lines 293--293
 \OT1/ptm/m/n/10 dos (Hug-ging-Fa-ce,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 295--295
 []|\OT1/ptm/m/n/10 Pontificia Uni-ver-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 295--295
 \OT1/ptm/m/n/10 si-dad Ja-ve-ria-na
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 295--295
 \OT1/ptm/m/n/10 (De-par-ta-men-to de
  []
 
 
-Underfull \hbox (badness 1215) in paragraph at lines 578--578
+Underfull \hbox (badness 1215) in paragraph at lines 295--295
 []|\OT1/ptm/m/n/10 Provisi[]on de re-cur-sos ins-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 295--295
 \OT1/ptm/m/n/10 ti-tu-cio-na-les, va-li-da-ci[]on
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 295--295
 \OT1/ptm/m/n/10 acad[]emi-ca, apro-ba-ci[]on
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 580--580
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
 []|\OT1/ptm/m/n/10 Colegas y com-
  []
 
 
-Underfull \hbox (badness 1067) in paragraph at lines 580--580
+Underfull \hbox (badness 1067) in paragraph at lines 297--297
 []|\OT1/ptm/m/n/10 Revisi[]on cru-za-da de c[]odi-
  []
 
 
-Underfull \hbox (badness 3735) in paragraph at lines 580--580
+Underfull \hbox (badness 3735) in paragraph at lines 297--297
 []|\OT1/ptm/m/n/10 Sesiones de c[]odi-go com-par-ti-do,
  []
 
 
-Overfull \hbox (18.98643pt too wide) in paragraph at lines 564--583
+Overfull \hbox (18.98643pt too wide) in paragraph at lines 281--300
  [][] 
  []
 
@@ -1829,21 +2157,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[29]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[30
-pdfTeX warning (ext4): destination with the same identifier (name{table.3.1}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.598 
-      ]) (sections/04-administracion.tex
+[30]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1852,6 +2166,20 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [31
+pdfTeX warning (ext4): destination with the same identifier (name{table.3.5}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.305 
+      ]) (sections/04-administracion.tex
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[32
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3.3}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -1866,7 +2194,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[32
+[33
 
 ]
 
@@ -1876,70 +2204,78 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[33
+[34
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.80 
+l.70 
      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.80 
+l.70 
      ]
-Underfull \hbox (badness 3547) in paragraph at lines 100--101
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[35]
+Underfull \hbox (badness 3547) in paragraph at lines 90--91
 []|\OT1/ptm/b/n/10 Tiempo es-ti-ma-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--102
+Underfull \hbox (badness 10000) in paragraph at lines 92--92
 []|\OT1/ptm/m/n/10 Scraping web con
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--102
+Underfull \hbox (badness 10000) in paragraph at lines 92--92
 \OT1/ptm/m/n/10 Scrapy, Se-le-nium y
  []
 
 
-Underfull \hbox (badness 4543) in paragraph at lines 104--104
+Underfull \hbox (badness 4543) in paragraph at lines 94--94
 []|\OT1/ptm/m/n/10 Procesamiento de len-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--108
+Underfull \hbox (badness 10000) in paragraph at lines 98--98
 []|\OT1/ptm/m/n/10 Embeddings mul-ti-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--108
+Underfull \hbox (badness 10000) in paragraph at lines 98--98
 \OT1/ptm/m/n/10 ling[]ues y re-duc-ci[]on
  []
 
 
-Underfull \hbox (badness 2253) in paragraph at lines 110--110
+Underfull \hbox (badness 2253) in paragraph at lines 100--100
 []|\OT1/ptm/m/n/10 Clustering con HDBS-
  []
 
 
-Underfull \hbox (badness 1237) in paragraph at lines 110--110
+Underfull \hbox (badness 1237) in paragraph at lines 100--100
 []|\OT1/ptm/m/n/10 Ejemplo sint[]eti-co +
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 114--114
+Underfull \hbox (badness 4779) in paragraph at lines 104--104
 []|\OT1/ptm/m/n/10 Documentaci[]on t[]ecni-ca
  []
 
 
-Underfull \hbox (badness 3657) in paragraph at lines 114--114
+Underfull \hbox (badness 3657) in paragraph at lines 104--104
 []|\OT1/ptm/m/n/10 Plantillas + va-li-da-
  []
 
 
-Overfull \hbox (2.93365pt too wide) in paragraph at lines 98--117
+Overfull \hbox (2.93365pt too wide) in paragraph at lines 88--107
  [][] 
  []
 
@@ -1950,25 +2286,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[34]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[35
+[36
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.129 
-      ]
-<figures/CartaGantt.png, id=744, 662.475pt x 323.70938pt>
+l.112 N
+       icolás brindará adicionalmente apoyo técnico puntual cuando surjan...
+]
+<figures/CartaGantt.png, id=707, 662.475pt x 323.70938pt>
 File: figures/CartaGantt.png Graphic file (type png)
 <use figures/CartaGantt.png>
-Package pdftex.def Info: figures/CartaGantt.png  used on input line 142.
+Package pdftex.def Info: figures/CartaGantt.png  used on input line 132.
 (pdftex.def)             Requested size: 443.57848pt x 216.74585pt.
 
 
@@ -1978,15 +2307,9 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[36
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.154 
-       <./figures/CartaGantt.png>]
+[37]
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
-55.
+45.
 
 (C:\Users\PcMaster\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
@@ -1999,9 +2322,15 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[37]
+[38
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1 \chapter
+            {Monitoreo y Control del Proyecto} <./figures/CartaGantt.png>]
 Cap\'{\i }tulo 5.
-<figures/BPMNAdministraciondeRequerimientos.png, id=755, 535.2497pt x 269.50688
+<figures/BPMNAdministraciondeRequerimientos.png, id=717, 535.2497pt x 269.50688
 pt>
 File: figures/BPMNAdministraciondeRequerimientos.png Graphic file (type png)
 <use figures/BPMNAdministraciondeRequerimientos.png>
@@ -2015,7 +2344,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[38
+[39
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1}) 
@@ -2031,28 +2360,36 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[39]
-Underfull \hbox (badness 2772) in paragraph at lines 75--75
+[40]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[41]
+Underfull \hbox (badness 2772) in paragraph at lines 59--59
 \OT1/ptm/m/n/10 ple-ta-das en ca-da fa-se me-to-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--79
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
 []|\OT1/ptm/m/n/10 Cantidad de fun-cio-na-li-da-des
  []
 
 
-Underfull \hbox (badness 5637) in paragraph at lines 81--81
+Underfull \hbox (badness 5637) in paragraph at lines 65--65
 []|\OT1/ptm/m/n/10 Tasa de cum-pli-mien-to
  []
 
 
-Underfull \hbox (badness 1430) in paragraph at lines 83--84
+Underfull \hbox (badness 1430) in paragraph at lines 67--68
 []|\OT1/ptm/m/n/10 Encargado de prue-
  []
 
 
-Overfull \hbox (4.76006pt too wide) in paragraph at lines 71--86
+Overfull \hbox (4.76006pt too wide) in paragraph at lines 55--70
  [][] 
  []
 
@@ -2063,12 +2400,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[40
+[42
 pdfTeX warning (ext4): destination with the same identifier (name{table.5.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.97 
+l.80 
      ]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2077,23 +2414,47 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[41]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[42]) (sections/06-procesos-soporte.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
 [43]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[44]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[45]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[46]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[47]) (sections/06-procesos-soporte.tex
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[48]
 Cap\'{\i }tulo 6.
 
 Underfull \hbox (badness 10000) in paragraph at lines 16--16
@@ -2132,7 +2493,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[44
+[49
 
 ]
 
@@ -2142,18 +2503,26 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[45
+[50
 pdfTeX warning (ext4): destination with the same identifier (name{table.6.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.52 \end{itemize}
-                  ]
-<figures/BPMNControldeCambios.png, id=801, 570.63188pt x 301.8778pt>
+l.45 
+     ]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[51]
+<figures/BPMNControldeCambios.png, id=773, 570.63188pt x 301.8778pt>
 File: figures/BPMNControldeCambios.png Graphic file (type png)
 <use figures/BPMNControldeCambios.png>
-Package pdftex.def Info: figures/BPMNControldeCambios.png  used on input line 7
-2.
+Package pdftex.def Info: figures/BPMNControldeCambios.png  used on input line 6
+4.
 (pdftex.def)             Requested size: 421.3982pt x 222.93005pt.
 
 
@@ -2163,13 +2532,184 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[46
+[52
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.83 
+l.76 
       <./figures/BPMNControldeCambios.png>]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.79 ...archivo dump completo mediante comando pg_
+                                                  dump con compresión gzip,...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...to mediante comando pg_dump con compresió
+                                                  n gzip, nomenclatura estan...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...andarizada incluyendo fecha ISO 8601 y nú
+                                                  mero de versión semántic...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...uyendo fecha ISO 8601 y número de versió
+                                                  n semántica para identifi...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...fecha ISO 8601 y número de versión semá
+                                                  ntica para identificación...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...de versión semántica para identificació
+                                                  n unívoca, y almacenamien...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...sión semántica para identificación uní
+                                                  voca, y almacenamiento red...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing { inserted.
+<to be read again> 
+                   \begingroup 
+l.79 ...sión semántica para identificación uní
+                                                  voca, y almacenamiento red...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+
+LaTeX Warning: Command \i invalid in math mode on input line 79.
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ... tanto en repositorio GitHub dentro de lí
+                                                  mites de tamaño como en G...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing { inserted.
+<to be read again> 
+                   \begingroup 
+l.79 ... tanto en repositorio GitHub dentro de lí
+                                                  mites de tamaño como en G...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+
+LaTeX Warning: Command \i invalid in math mode on input line 79.
+
+
+LaTeX Warning: Command \~ invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...itorio GitHub dentro de límites de tamañ
+                                                  o como en Google Drive par...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 79.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.79 ...e esquema relacional y datos de producció
+                                                  n.
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.80 
+     
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.80 
+     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.80 
+     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (1416.21423pt too wide) in paragraph at lines 79--80
+\OT1/ptm/m/n/10.95 dump com-ple-to me-dian-te co-man-do pg$[]\OML/cmm/m/it/10.9
+5 umpconcompresi[]ngzip; nomenclaturaestandarizadaincluyendofechaISO\OT1/cmr/m/
+n/10.95 8601\OML/cmm/m/it/10.95 yn[]merodeversi[]nsem[]nticaparaidentificaci[]n
+un[]$ 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -2177,55 +2717,278 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[47]
-Underfull \hbox (badness 1681) in paragraph at lines 124--124
+[53]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.91 ...riables y funciones descriptivos en snake_
+                                                  case que comuniquen claram...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...nake_case que comuniquen claramente propó
+                                                  sito y contenido, separaci...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...ramente propósito y contenido, separació
+                                                  n lógica clara de funcion...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...te propósito y contenido, separación ló
+                                                  gica clara de funciones me...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...�n lógica clara de funciones mediante lí
+                                                  neas en blanco según nive...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing { inserted.
+<to be read again> 
+                   \begingroup 
+l.91 ...�n lógica clara de funciones mediante lí
+                                                  neas en blanco según nive...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+
+LaTeX Warning: Command \i invalid in math mode on input line 91.
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...funciones mediante líneas en blanco segú
+                                                  n nivel de cohesión funci...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...líneas en blanco según nivel de cohesió
+                                                  n funcional, indentación ...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ... nivel de cohesión funcional, indentació
+                                                  n consistente de 4 espacio...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ... tabuladores para garantizar visualizació
+                                                  n uniforme en diferentes e...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...ón uniforme en diferentes editores, y lí
+                                                  mite sugerido de 100 carac...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing { inserted.
+<to be read again> 
+                   \begingroup 
+l.91 ...ón uniforme en diferentes editores, y lí
+                                                  mite sugerido de 100 carac...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+
+LaTeX Warning: Command \i invalid in math mode on input line 91.
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...límite sugerido de 100 caracteres por lí
+                                                  nea de código cuando sea ...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing { inserted.
+<to be read again> 
+                   \begingroup 
+l.91 ...límite sugerido de 100 caracteres por lí
+                                                  nea de código cuando sea ...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+
+LaTeX Warning: Command \i invalid in math mode on input line 91.
+
+
+LaTeX Warning: Command \' invalid in math mode on input line 91.
+
+! Please use \mathaccent for accents in math mode.
+\add@accent ... \let \ignorespaces \relax \accent 
+                                                  #1 #2\egroup \ifmmode \els...
+l.91 ...gerido de 100 caracteres por línea de có
+                                                  digo cuando sea posible si...
+I'm changing \accent to \mathaccent here; wish me luck.
+(Accents are not the same in formulas as they are in text.)
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.92 
+     
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.92 
+     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.92 
+     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.92 
+     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (1795.61371pt too wide) in paragraph at lines 91--92
+\OT1/ptm/m/n/10.95 snake$[]\OML/cmm/m/it/10.95 asequecomuniquenclaramenteprop[]
+sitoycontenido; separaci[]nl[]gicaclaradefuncionesmediantel[]$ 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[54]
+Underfull \hbox (badness 1681) in paragraph at lines 112--112
 []|\OT1/ptm/m/n/10 Revisar que las va-can-tes ex-
  []
 
 
-Underfull \hbox (badness 1701) in paragraph at lines 124--124
+Underfull \hbox (badness 1701) in paragraph at lines 112--112
 []|\OT1/ptm/m/n/10 Comparar mues-tra ma-nual
  []
 
 
-Underfull \hbox (badness 1173) in paragraph at lines 124--124
+Underfull \hbox (badness 1173) in paragraph at lines 112--112
 \OT1/ptm/m/n/10 con re-sul-ta-dos del scra-per
  []
 
 
-Underfull \hbox (badness 5787) in paragraph at lines 128--128
+Underfull \hbox (badness 5787) in paragraph at lines 116--116
 \OT1/ptm/m/n/10 las ha-bi-li-da-des en-ri-que-ci-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 130--130
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
 []|\OT1/ptm/m/n/10 Inspeccionar vi-sual-men-te
  []
 
 
-Underfull \hbox (badness 6995) in paragraph at lines 130--130
+Underfull \hbox (badness 6995) in paragraph at lines 118--118
 \OT1/ptm/m/n/10 los clus-ters ge-ne-ra-dos y
  []
 
 
-Underfull \hbox (badness 3803) in paragraph at lines 132--132
+Underfull \hbox (badness 3803) in paragraph at lines 120--120
 []|\OT1/ptm/m/n/10 Revisar con el ase-sor si
  []
 
 
-Underfull \hbox (badness 3590) in paragraph at lines 132--132
+Underfull \hbox (badness 3590) in paragraph at lines 120--120
 \OT1/ptm/m/n/10 can in-for-ma-ci[]on re-le-van-te
  []
 
 
-Overfull \hbox (4.76006pt too wide) in paragraph at lines 120--135
+Overfull \hbox (4.76006pt too wide) in paragraph at lines 108--123
  [][] 
  []
 
-<figures/BPMNControlCalidad.png, id=816, 475.02469pt x 225.84375pt>
+<figures/BPMNControlCalidad.png, id=791, 475.02469pt x 225.84375pt>
 File: figures/BPMNControlCalidad.png Graphic file (type png)
 <use figures/BPMNControlCalidad.png>
-Package pdftex.def Info: figures/BPMNControlCalidad.png  used on input line 140
+Package pdftex.def Info: figures/BPMNControlCalidad.png  used on input line 128
 .
 (pdftex.def)             Requested size: 421.3982pt x 200.35587pt.
 
@@ -2235,12 +2998,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[48
+[55
 pdfTeX warning (ext4): destination with the same identifier (name{table.6.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.144 
+l.132 
       ]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2249,29 +3012,37 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[49
+[56
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.169 
+l.142 
        <./figures/BPMNControlCalidad.png>]
-Underfull \hbox (badness 1540) in paragraph at lines 194--194
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[57]
+Underfull \hbox (badness 1540) in paragraph at lines 178--178
 \OT1/ptm/m/n/10 par-te de los por-ta-les web (anti-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 200--200
+Underfull \hbox (badness 10000) in paragraph at lines 184--184
 []|\OT1/ptm/m/n/10 Complejidad t[]ecni-ca ex-ce-si-va
  []
 
 
-Underfull \hbox (badness 1895) in paragraph at lines 200--200
+Underfull \hbox (badness 1895) in paragraph at lines 184--184
 \OT1/ptm/m/n/10 en im-ple-men-ta-ci[]on de clus-te-ring
  []
 
 
-Underfull \hbox (badness 1038) in paragraph at lines 202--202
+Underfull \hbox (badness 1038) in paragraph at lines 186--186
 []|\OT1/ptm/m/n/10 Sobrecarga acad[]emi-ca de los in-
  []
 
@@ -2282,12 +3053,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[50]
-<figures/BPMNIdentificaciondeRiesgos.png, id=836, 605.26125pt x 247.67531pt>
+[58]
+<figures/BPMNIdentificaciondeRiesgos.png, id=809, 605.26125pt x 247.67531pt>
 File: figures/BPMNIdentificaciondeRiesgos.png Graphic file (type png)
 <use figures/BPMNIdentificaciondeRiesgos.png>
 Package pdftex.def Info: figures/BPMNIdentificaciondeRiesgos.png  used on input
- line 218.
+ line 202.
 (pdftex.def)             Requested size: 421.3982pt x 172.43806pt.
 
 
@@ -2297,29 +3068,43 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[51
+[59
 pdfTeX warning (ext4): destination with the same identifier (name{table.6.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.222 
+l.206 
       ]
-Underfull \hbox (badness 2495) in paragraph at lines 249--249
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[60
+pdfTeX warning (ext4): destination with the same identifier (name{figure.6.3}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.216 
+       <./figures/BPMNIdentificaciondeRiesgos.png>]
+Underfull \hbox (badness 2495) in paragraph at lines 230--230
 \OT1/ptm/m/n/10 bots.txt y usar Se-le-niu-m/-Playw-right
  []
 
 
-Underfull \hbox (badness 1348) in paragraph at lines 255--255
+Underfull \hbox (badness 1348) in paragraph at lines 236--236
 []|\OT1/ptm/m/n/10 Comenzar con t[]ecni-cas sim-ples (K-
  []
 
 
-Underfull \hbox (badness 6526) in paragraph at lines 257--257
+Underfull \hbox (badness 6526) in paragraph at lines 238--238
 []|\OT1/ptm/m/n/10 Planificar cro-no-gra-ma con-si-de-ran-do
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 261--261
+Underfull \hbox (badness 10000) in paragraph at lines 242--242
 []|\OT1/ptm/m/n/10 Mantener bac-kups se-ma-na-les en
  []
 
@@ -2330,13 +3115,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[52
-pdfTeX warning (ext4): destination with the same identifier (name{figure.6.3}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.268 
-       <./figures/BPMNIdentificaciondeRiesgos.png>]
+[61]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -2344,14 +3123,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[53
+[62
 pdfTeX warning (ext4): destination with the same identifier (name{table.6.4}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.274     \item \textbf
-                       {Revisión semanal de riesgos:} En cada reunión de s...
-])
+l.253 
+      ]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -2359,7 +3137,23 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[54]
+[63]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[64])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[65]
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 2
 06.
 
@@ -2384,7 +3178,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[55
+[66
 
 ]
 Overfull \hbox (6.59361pt too wide) in paragraph at lines 206--206
@@ -2399,7 +3193,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[56] (main.aux
+[67] (main.aux
 LaTeX Info: Redefining \sptext on input line 12.
 LaTeX Info: Redefining \. on input line 12.
 LaTeX Info: Redefining \% on input line 12.
@@ -2408,28 +3202,35 @@ LaTeX Info: Redefining \% on input line 12.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 781B2DA4BD914E817B30733B9642716C;17897.
+(rerunfilecheck)             Checksum: 1D66BAD19D6BB74474BF13DFAD0732A7;16378.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 34231 strings out of 474486
- 659132 string characters out of 5742338
- 1945542 words of memory out of 5000000
+ 34203 strings out of 474486
+ 658722 string characters out of 5742338
+ 1946542 words of memory out of 5000000
  55747 multiletter control sequences out of 15000+600000
- 584546 words of font info for 90 fonts, out of 8000000 for 9000
+ 586091 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,13n,87p,783b,2313s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr
-8a.pfb><C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/u
-tmb8a.pfb><C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts/type1/urw/time
-s/utmr8a.pfb><C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts/type1/urw/t
-imes/utmri8a.pfb>
-Output written on main.pdf (57 pages, 889767 bytes).
+ 84i,13n,87p,1474b,2313s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmmi10.pfb><C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmmi8.pfb><C:/Users/PcMaster/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/PcMaster/AppData/Local/Programs/M
+iKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/PcMaster/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/PcMaster/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/PcMaster/AppData/Local
+/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (68 pages, 980720 bytes).
 PDF statistics:
- 962 PDF objects out of 1000 (max. 8388607)
- 226 named destinations out of 1000 (max. 500000)
- 853 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 952 PDF objects out of 1000 (max. 8388607)
+ 194 named destinations out of 1000 (max. 500000)
+ 797 words of extra memory for PDF output out of 10000 (max. 10000000)
 

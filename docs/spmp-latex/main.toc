@@ -10,100 +10,80 @@
 \contentsline {subsection}{\numberline {1.2.4}Objetivos Específicos}{9}{subsection.1.2.4}%
 \contentsline {section}{\numberline {1.3}Supuestos y Restricciones}{9}{section.1.3}%
 \contentsline {subsection}{\numberline {1.3.1}Supuestos}{9}{subsection.1.3.1}%
-\contentsline {subsection}{\numberline {1.3.2}Restricciones}{9}{subsection.1.3.2}%
-\contentsline {section}{\numberline {1.4}Entregables}{10}{section.1.4}%
-\contentsline {section}{\numberline {1.5}Resumen de Calendarización y Presupuesto}{10}{section.1.5}%
-\contentsline {section}{\numberline {1.6}Evolución del Plan}{11}{section.1.6}%
-\contentsline {chapter}{\numberline {2}Glosario}{12}{chapter.2}%
-\contentsline {chapter}{\numberline {3}Contexto del proyecto}{15}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Modelo de Ciclo de Vida}{15}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Análisis de Alternativas y Justificación}{16}{subsection.3.1.1}%
-\contentsline {subsubsection}{Modelo de Cascada Tradicional}{16}{subsubsection*.3}%
-\contentsline {subsubsection}{Scrum completo (ágil puro)}{17}{subsubsection*.4}%
-\contentsline {subsubsection}{CRISP-DM adaptado + prácticas ágiles (modelo elegido)}{17}{subsubsection*.5}%
-\contentsline {section}{\numberline {3.2}Análisis de Alternativas Tecnológicas}{18}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Herramientas de Web Scraping}{18}{subsection.3.2.1}%
-\contentsline {subsubsection}{Scrapy}{18}{subsubsection*.6}%
-\contentsline {subsubsection}{Selenium}{19}{subsubsection*.7}%
-\contentsline {subsubsection}{Playwright (evaluado como respaldo)}{19}{subsubsection*.8}%
+\contentsline {subsection}{\numberline {1.3.2}Restricciones}{10}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Entregables}{11}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Resumen de Calendarización y Presupuesto}{11}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Evolución del Plan}{12}{section.1.6}%
+\contentsline {chapter}{\numberline {2}Glosario}{13}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Contexto del proyecto}{16}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Modelo de Ciclo de Vida}{16}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Análisis de Alternativas y Justificación}{17}{subsection.3.1.1}%
+\contentsline {subsubsection}{Modelo de Cascada Tradicional}{17}{subsubsection*.3}%
+\contentsline {subsubsection}{Scrum completo (ágil puro)}{18}{subsubsection*.4}%
+\contentsline {subsubsection}{CRISP-DM adaptado + prácticas ágiles (modelo elegido)}{18}{subsubsection*.5}%
+\contentsline {section}{\numberline {3.2}Análisis de Alternativas Tecnológicas}{19}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Herramientas de Web Scraping}{19}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Sistemas de Gestión de Bases de Datos}{20}{subsection.3.2.2}%
-\contentsline {subsubsection}{PostgreSQL}{20}{subsubsection*.9}%
-\contentsline {subsubsection}{MongoDB}{20}{subsubsection*.10}%
-\contentsline {subsubsection}{SQLite}{21}{subsubsection*.11}%
 \contentsline {subsection}{\numberline {3.2.3}Bibliotecas de Procesamiento de Lenguaje Natural (NLP)}{21}{subsection.3.2.3}%
-\contentsline {subsubsection}{spaCy}{21}{subsubsection*.12}%
-\contentsline {subsubsection}{Stanford NLP / Stanza}{22}{subsubsection*.13}%
-\contentsline {subsubsection}{Transformers de HuggingFace (BETO, RoBERTuito)}{22}{subsubsection*.14}%
-\contentsline {subsection}{\numberline {3.2.4}Modelos de Embeddings Semánticos}{23}{subsection.3.2.4}%
-\contentsline {subsubsection}{BETO (BERT en español)}{23}{subsubsection*.15}%
-\contentsline {subsubsection}{Multilingual-E5 / LaBSE}{23}{subsubsection*.16}%
-\contentsline {subsubsection}{SBERT (Sentence-BERT)}{24}{subsubsection*.17}%
-\contentsline {subsubsection}{fastText}{24}{subsubsection*.18}%
-\contentsline {section}{\numberline {3.3}Lenguajes y Herramientas}{24}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Lenguaje de programación principal}{25}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Extracción de datos (Scraping)}{25}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Almacenamiento de datos}{25}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Procesamiento de texto y NLP}{25}{subsection.3.3.4}%
-\contentsline {subsection}{\numberline {3.3.5}Enriquecimiento semántico y LLMs}{25}{subsection.3.3.5}%
-\contentsline {subsection}{\numberline {3.3.6}Embeddings y representación semántica}{25}{subsection.3.3.6}%
-\contentsline {subsection}{\numberline {3.3.7}Agrupamiento y reducción de dimensionalidad}{26}{subsection.3.3.7}%
-\contentsline {subsection}{\numberline {3.3.8}Visualización de resultados}{26}{subsection.3.3.8}%
-\contentsline {subsection}{\numberline {3.3.9}Control de versiones y colaboración}{26}{subsection.3.3.9}%
-\contentsline {subsection}{\numberline {3.3.10}Documentación y edición}{26}{subsection.3.3.10}%
-\contentsline {section}{\numberline {3.4}Plan de Aceptación del Producto}{26}{section.3.4}%
+\contentsline {subsection}{\numberline {3.2.4}Modelos de Embeddings Semánticos}{22}{subsection.3.2.4}%
+\contentsline {section}{\numberline {3.3}Lenguajes y Herramientas}{23}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Stack Tecnológico Principal}{23}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Herramientas de Análisis y Visualización}{24}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Infraestructura de Desarrollo y Documentación}{25}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Plan de Aceptación del Producto}{25}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Diseño técnico y arquitectura}{26}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Sistema de extracción (scraping) y carga a base de datos}{27}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.2}Sistema de extracción (scraping) y carga a base de datos}{26}{subsection.3.4.2}%
 \contentsline {subsection}{\numberline {3.4.3}Extracción de habilidades explícitas (NER y regex)}{27}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}Enriquecimiento semántico con LLMs}{28}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.4}Enriquecimiento semántico con LLMs}{27}{subsection.3.4.4}%
 \contentsline {subsection}{\numberline {3.4.5}Embeddings y clustering}{28}{subsection.3.4.5}%
 \contentsline {subsection}{\numberline {3.4.6}Visualización macro}{29}{subsection.3.4.6}%
 \contentsline {subsection}{\numberline {3.4.7}Documentación técnica y guía metodológica}{29}{subsection.3.4.7}%
-\contentsline {section}{\numberline {3.5}Organización del Proyecto y Comunicación}{29}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Interfaces Externas}{29}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Organigrama y Descripción de Roles}{31}{subsection.3.5.2}%
-\contentsline {chapter}{\numberline {4}Administración del Proyecto}{32}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Métodos y Herramientas de Estimación}{32}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Método de Estimación del Proyecto}{32}{subsection.4.1.1}%
-\contentsline {subsubsection}{Método de estimación utilizado}{32}{subsubsection*.19}%
-\contentsline {subsubsection}{Estimación del esfuerzo por integrante}{33}{subsubsection*.20}%
-\contentsline {subsubsection}{Estimación por fase metodológica}{33}{subsubsection*.21}%
-\contentsline {subsubsection}{Herramientas empleadas para la estimación}{33}{subsubsection*.22}%
-\contentsline {section}{\numberline {4.2}Inicio del proyecto}{34}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Entrenamiento del Personal}{34}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Infraestructura}{35}{subsection.4.2.2}%
-\contentsline {section}{\numberline {4.3}Planes de Trabajo del Proyecto}{36}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Descomposición de Actividades}{36}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Calendarización}{36}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Asignación de Recursos}{36}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Asignación de Presupuesto y Justificación}{37}{subsection.4.3.4}%
-\contentsline {chapter}{\numberline {5}Monitoreo y Control del Proyecto}{38}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Administración de Requerimientos}{38}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Proceso de Gestión de Cambios}{39}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Trazabilidad de Requerimientos}{39}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}Aprobación y Validación de Cambios}{39}{subsection.5.1.3}%
-\contentsline {section}{\numberline {5.2}Monitoreo y Control de Progreso}{40}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Métricas de Seguimiento}{40}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Actividades de Reporte}{40}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}Acciones Correctivas}{41}{subsection.5.2.3}%
-\contentsline {section}{\numberline {5.3}Cierre del Proyecto}{41}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Entrega del Producto}{42}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Actividades de Cierre}{42}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}Criterios de Aceptación Final}{43}{subsection.5.3.3}%
-\contentsline {chapter}{\numberline {6}Procesos de Soporte}{44}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Gestión de la Configuración}{44}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Elementos de Configuración}{44}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Proceso de Control de Versiones}{45}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}Gestión de Cambios en la Configuración}{46}{subsection.6.1.3}%
-\contentsline {subsection}{\numberline {6.1.4}Backup y Recuperación}{47}{subsection.6.1.4}%
-\contentsline {section}{\numberline {6.2}Aseguramiento de Calidad}{47}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Estándares de Calidad Aplicados}{47}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Actividades de Verificación y Validación}{48}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Revisión Técnica de Entregables}{49}{subsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.2.4}Métricas de Calidad}{49}{subsection.6.2.4}%
-\contentsline {section}{\numberline {6.3}Gestión de Riesgos}{50}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Identificación de Riesgos}{50}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Análisis de Riesgos}{52}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.3.3}Estrategias de Mitigación}{52}{subsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.3.4}Monitoreo de Riesgos}{54}{subsection.6.3.4}%
-\contentsline {subsection}{\numberline {6.3.5}Responsabilidades en Gestión de Riesgos}{54}{subsection.6.3.5}%
-\contentsline {chapter}{BIBLIOGRAFÍA}{55}{chapter*.23}%
+\contentsline {section}{\numberline {3.5}Organización del Proyecto y Comunicación}{30}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Interfaces Externas}{30}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Organigrama y Descripción de Roles}{32}{subsection.3.5.2}%
+\contentsline {chapter}{\numberline {4}Administración del Proyecto}{33}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Métodos y Herramientas de Estimación}{33}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Método de Estimación del Proyecto}{33}{subsection.4.1.1}%
+\contentsline {subsubsection}{Método de estimación utilizado}{33}{subsubsection*.6}%
+\contentsline {subsubsection}{Estimación del esfuerzo por integrante}{34}{subsubsection*.7}%
+\contentsline {subsubsection}{Estimación por fase metodológica}{34}{subsubsection*.8}%
+\contentsline {subsubsection}{Herramientas empleadas para la estimación}{35}{subsubsection*.9}%
+\contentsline {section}{\numberline {4.2}Inicio del proyecto}{35}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Entrenamiento del Personal}{35}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Infraestructura}{37}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}Planes de Trabajo del Proyecto}{37}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Descomposición de Actividades}{37}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Calendarización}{37}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Asignación de Recursos}{38}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Asignación de Presupuesto y Justificación}{38}{subsection.4.3.4}%
+\contentsline {chapter}{\numberline {5}Monitoreo y Control del Proyecto}{39}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Administración de Requerimientos}{39}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Proceso de Gestión de Cambios}{40}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Trazabilidad de Requerimientos}{40}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Aprobación y Validación de Cambios}{41}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}Monitoreo y Control de Progreso}{42}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Métricas de Seguimiento}{42}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Actividades de Reporte}{42}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Acciones Correctivas}{43}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Cierre del Proyecto}{44}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Entrega del Producto}{44}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Actividades de Cierre}{46}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Criterios de Aceptación Final}{47}{subsection.5.3.3}%
+\contentsline {chapter}{\numberline {6}Procesos de Soporte}{49}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Gestión de la Configuración}{49}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Elementos de Configuración}{49}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Proceso de Control de Versiones}{50}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Gestión de Cambios en la Configuración}{51}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Backup y Recuperación}{52}{subsection.6.1.4}%
+\contentsline {section}{\numberline {6.2}Aseguramiento de Calidad}{53}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Estándares de Calidad Aplicados}{54}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Actividades de Verificación y Validación}{55}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Revisión Técnica de Entregables}{56}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Métricas de Calidad}{57}{subsection.6.2.4}%
+\contentsline {section}{\numberline {6.3}Gestión de Riesgos}{58}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Identificación de Riesgos}{58}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Análisis de Riesgos}{60}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Estrategias de Mitigación}{61}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Monitoreo de Riesgos}{63}{subsection.6.3.4}%
+\contentsline {subsection}{\numberline {6.3.5}Responsabilidades en Gestión de Riesgos}{64}{subsection.6.3.5}%
+\contentsline {chapter}{BIBLIOGRAFÍA}{66}{chapter*.10}%

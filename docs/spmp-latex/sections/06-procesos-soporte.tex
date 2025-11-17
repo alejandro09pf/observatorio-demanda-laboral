@@ -37,35 +37,27 @@ Actas de reunión y seguimiento & Registros de reuniones semanales y decisiones 
 
 \subsection{Proceso de Control de Versiones}
 
-El control de versiones del código y de los artefactos técnicos se realizará mediante Git y GitHub, siguiendo las siguientes prácticas:
+El control de versiones del código fuente y de los artefactos técnicos del proyecto se realizará mediante Git como sistema de control distribuido y GitHub como plataforma de hospedaje y colaboración remota, siguiendo cinco prácticas fundamentales de ingeniería de software que garantizan trazabilidad histórica, integración controlada y recuperabilidad ante errores.
 
-\begin{itemize}
-    \item \textbf{Rama principal (main):} Contiene la versión estable del sistema, probada y validada al cierre de cada fase metodológica. Los commits a esta rama requieren revisión previa.
+La primera práctica establece rama principal denominada main como línea base estable del sistema, conteniendo únicamente código probado funcionalmente y validado técnicamente al cierre de cada fase metodológica del CRISP-DM. Los commits directos a esta rama están prohibidos, requiriendo obligatoriamente revisión previa mediante pull request aprobado por líder técnico Nicolás Camacho. La segunda práctica crea ramas de desarrollo dedicadas por fase metodológica siguiendo nomenclatura estandarizada dev-fase-X donde X identifica número de fase, permitiendo desarrollo paralelo aislado de funcionalidades correspondientes sin afectar estabilidad de main. Al completar validación técnica satisfactoria de fase, rama temporal se fusiona a main mediante pull request con revisión de código y resolución de conflictos de merge.
 
-    \item \textbf{Ramas de desarrollo por fase (dev-fase-X):} Cada fase metodológica tendrá una rama temporal donde se desarrollarán las funcionalidades correspondientes. Al validarse técnicamente, se fusionará a main mediante pull request.
+La tercera práctica exige commits descriptivos con mensajes claros estructurados que indiquen qué cambio técnico se realizó describiendo alcance específico de modificación, por qué razón se ejecutó justificando decisión arquitectónica o corrección de bug, y en qué fase del proyecto se efectuó para facilitar trazabilidad cronológica. El formato estandarizado sugerido sigue convención de prefijo por fase: [FASE-X] seguido de descripción concisa del cambio en modo imperativo presente. La cuarta práctica implementa versionado semántico para entregas formales de entregables mayores, etiquetando commits significativos con tags de versión siguiendo convención v0.1 para prototipos iniciales, v0.2 para iteraciones intermedias, hasta v1.0 para release académico final, facilitando identificación y recuperación de estados históricos específicos del sistema.
 
-    \item \textbf{Commits descriptivos:} Todo commit debe tener un mensaje claro que indique qué cambio se realizó, por qué y en qué fase del proyecto se hizo. Formato sugerido: ``[FASE-X] Descripción breve del cambio''.
-
-    \item \textbf{Versionado semántico para entregas:} Cada entregable mayor será etiquetado con un tag de versión (v0.1, v0.2, v1.0, etc.) para facilitar la trazabilidad histórica.
-
-    \item \textbf{Sincronización diaria:} Los integrantes deberán hacer push de sus avances al menos una vez al día, para evitar conflictos de integración y facilitar la colaboración.
-\end{itemize}
+La quinta práctica establece sincronización diaria obligatoria donde los integrantes deben ejecutar git push de avances locales al menos una vez al día laboral al finalizar sesión de trabajo, garantizando que repositorio remoto GitHub refleje estado actual de desarrollo y minimizando riesgo de conflictos masivos de integración acumulados. Esta práctica facilita colaboración efectiva permitiendo revisión continua cruzada de código entre integrantes y backup automático diario de trabajo en progreso.
 
 \subsection{Gestión de Cambios en la Configuración}
 
-Cualquier cambio en la configuración del sistema (por ejemplo, modificación de estructura de base de datos, cambio de librerías clave, ajuste de arquitectura de scraping) deberá seguir este procedimiento:
+Cualquier cambio propuesto en la configuración técnica del sistema incluyendo modificación de estructura de esquema relacional de base de datos PostgreSQL, reemplazo o actualización de versión de bibliotecas clave del stack Python, o ajuste significativo de arquitectura de scrapers web que afecte modularidad o extensibilidad, deberá seguir procedimiento formal estructurado de cinco etapas secuenciales que garantizan análisis riguroso de impacto y trazabilidad completa de decisiones técnicas.
 
-\begin{enumerate}
-    \item El integrante que propone el cambio documenta la razón técnica, el impacto esperado y las alternativas evaluadas.
+La primera etapa requiere que el integrante que identifica necesidad del cambio documente exhaustivamente razón técnica fundamentada que motiva modificación propuesta con evidencia empírica de problema actual o limitación detectada, impacto esperado sobre funcionalidad del sistema cuantificando mejora en métricas de desempeño o calidad esperadas, y alternativas técnicas evaluadas mediante análisis comparativo de trade-offs entre opciones consideradas.
 
-    \item Se discute en reunión semanal si el cambio es necesario, viable y justificado.
+La segunda etapa ejecuta discusión estructurada en reunión semanal del equipo donde se debate colaborativamente si el cambio propuesto es técnicamente necesario para cumplir objetivos funcionales o no funcionales del proyecto, viable de implementar dentro de restricciones de tiempo y recursos computacionales disponibles, y académicamente justificado alineándose con metodología CRISP-DM establecida y aportes esperados del trabajo de grado.
 
-    \item Si se aprueba, se implementa en una rama específica, se prueba localmente, y se documenta en el README o en comentarios del código.
+La tercera etapa implementa el cambio aprobado mediante desarrollo en rama específica de Git denominada feature/nombre-cambio aislada de main, ejecuta pruebas funcionales exhaustivas localmente en entorno de desarrollo de integrante responsable validando que modificación no introduce regresiones críticas en módulos dependientes, y documenta técnicamente el cambio en archivo README principal del repositorio o mediante comentarios explicativos inline en código fuente modificado describiendo justificación y procedimiento de uso.
 
-    \item Se abre un pull request para revisión por parte de Nicolás antes de fusionar a la rama principal.
+La cuarta etapa abre pull request formal en GitHub para revisión técnica obligatoria por parte de Nicolás Camacho como líder técnico antes de autorizar fusión a rama principal main, incluyendo descripción detallada del cambio, screenshots o logs de pruebas ejecutadas exitosamente, y análisis de impacto en otros módulos del sistema para facilitar evaluación informada de revisor.
 
-    \item Se actualiza el archivo de configuración correspondiente, se registra el cambio en el acta semanal y se comunica formalmente al equipo.
-\end{enumerate}
+La quinta etapa final actualiza archivo de configuración correspondiente del sistema como config.json o variables de entorno en archivo .env con nuevos parámetros o versiones de dependencias, registra formalmente el cambio aprobado en acta semanal de reunión con justificación técnica resumida, y comunica modificación al equipo completo mediante mensaje en canal de comunicación del proyecto explicando qué cambió y cómo afecta workflow de desarrollo de otros integrantes.
 
 \begin{figure}[H]
 \centering
@@ -76,19 +68,17 @@ Cualquier cambio en la configuración del sistema (por ejemplo, modificación de
 
 \subsection{Backup y Recuperación}
 
-Para garantizar la disponibilidad de los artefactos del proyecto ante pérdidas accidentales, se implementarán las siguientes medidas:
+Para garantizar disponibilidad continua de los artefactos del proyecto ante pérdidas accidentales por fallas de hardware, errores humanos de borrado o corrupción de archivos, se implementarán cuatro medidas complementarias de respaldo y recuperación que operan en diferentes niveles de granularidad temporal y tipo de contenido.
 
-\begin{itemize}
-    \item \textbf{GitHub como repositorio central:} Todo el código y documentación técnica se alojará en GitHub, que ofrece redundancia automática y permite recuperar versiones previas en caso de errores.
+La primera medida establece GitHub como repositorio central de versionado distribuido donde todo el código fuente Python, scripts de análisis, documentación técnica en formato Markdown y LaTeX, y archivos de configuración del sistema se alojarán con historial completo de commits. Esta plataforma ofrece redundancia automática geográfica mediante replicación en múltiples datacenters, control de versiones granular permitiendo recuperar cualquier estado histórico del código mediante git checkout o revert, y mecanismo de recuperación ante errores mediante creación de branches de rollback o cherry-pick de commits específicos.
 
-    \item \textbf{Google Drive compartido:} Los datasets grandes, modelos preentrenados, documentos en edición activa y archivos binarios se almacenarán en una carpeta compartida de Google Drive con acceso restringido al equipo.
+La segunda medida utiliza Google Drive compartido institucional como almacenamiento de archivos de gran tamaño que exceden límites prácticos de Git, incluyendo datasets intermedios en formato CSV o pickle superiores a 100 MB, modelos preentrenados descargados de HuggingFace con pesos completos, documentos de trabajo en edición activa mediante Google Docs con sincronización en tiempo real, y archivos binarios de visualizaciones en alta resolución. La carpeta compartida tiene acceso restringido exclusivamente al equipo de desarrollo mediante autenticación institucional, versionado automático de Google Drive que retiene versiones de archivos modificados durante 30 días, y cuota de almacenamiento asignada de 15 GB por integrante.
 
-    \item \textbf{Backups semanales locales:} Cada integrante mantendrá una copia local actualizada del repositorio completo, sincronizada semanalmente mediante git pull.
+La tercera medida exige backups semanales locales obligatorios donde cada integrante del equipo mantiene copia local completa del repositorio GitHub actualizada, sincronizada semanalmente mediante git pull origin main para incorporar cambios remotos, almacenada en disco duro local con respaldo adicional en disco externo o partición secundaria, y verificada mensualmente mediante ejecución de tests de integridad que confirmen que repositorio local puede ejecutar pipeline completo sin dependencias externas.
 
-    \item \textbf{Exportaciones SQL periódicas:} La base de datos PostgreSQL será exportada (dump) al finalizar cada fase técnica, con fecha y versión identificada, y almacenada en GitHub y Google Drive.
-\end{itemize}
+La cuarta medida implementa exportaciones SQL periódicas automatizadas de base de datos PostgreSQL ejecutadas al finalizar cada una de las siete fases técnicas del proyecto, generando archivo dump completo mediante comando pg_dump con compresión gzip, nomenclatura estandarizada incluyendo fecha ISO 8601 y número de versión semántica para identificación unívoca, y almacenamiento redundante tanto en repositorio GitHub dentro de límites de tamaño como en Google Drive para dumps superiores a 50 MB, garantizando recuperabilidad completa de esquema relacional y datos de producción.
 
-En caso de pérdida de datos, se recurrirá al historial de GitHub o a los backups de Google Drive, según corresponda. Si un integrante pierde su copia local, podrá clonar nuevamente el repositorio completo y descargar los archivos grandes desde Drive.
+En caso de materialización de pérdida de datos por cualquier causa identificada, el procedimiento de recuperación seguirá protocolo escalonado según severidad. Para pérdida de código fuente o documentación técnica versionada, se recurrirá al historial completo de GitHub mediante git log para identificar último commit válido y git reset para restaurar estado funcional previo al error. Para pérdida de datasets o modelos grandes, se descargarán copias de respaldo desde Google Drive compartido verificando integridad mediante checksums MD5 si disponibles. Si un integrante pierde completamente su copia local de trabajo por falla catastrófica de hardware, podrá ejecutar recuperación completa mediante git clone del repositorio completo desde GitHub para obtener código fuente, descarga de carpeta compartida de Google Drive para recuperar datasets y modelos grandes, y restauración de dump SQL más reciente de PostgreSQL para reconstruir base de datos operativa, completando proceso de recuperación en tiempo estimado de 2 a 4 horas dependiendo de velocidad de conexión a internet.
 
 \section{Aseguramiento de Calidad}
 
@@ -96,19 +86,17 @@ El aseguramiento de calidad tiene como objetivo garantizar que los entregables d
 
 \subsection{Estándares de Calidad Aplicados}
 
-Se aplicarán los siguientes estándares de calidad técnica en el desarrollo del proyecto:
+El desarrollo del observatorio seguirá cinco estándares complementarios de calidad técnica que garantizan legibilidad del código, mantenibilidad del sistema, reproducibilidad científica y coherencia con mejores prácticas de ingeniería de software académico y profesional.
 
-\begin{itemize}
-    \item \textbf{PEP 8 (Python):} Todo el código Python seguirá las convenciones de estilo de PEP 8, incluyendo nombres de variables descriptivos, separación clara de funciones, indentación de 4 espacios y límite de 100 caracteres por línea cuando sea posible.
+El primer estándar adopta convenciones de estilo PEP 8 como guía oficial para todo el código Python del proyecto, incluyendo uso obligatorio de nombres de variables y funciones descriptivos en snake_case que comuniquen claramente propósito y contenido, separación lógica clara de funciones mediante líneas en blanco según nivel de cohesión funcional, indentación consistente de 4 espacios sin uso de tabuladores para garantizar visualización uniforme en diferentes editores, y límite sugerido de 100 caracteres por línea de código cuando sea posible sin comprometer legibilidad, aceptando excepciones justificadas para strings largos de prompts LLM o URLs completas en comentarios.
 
-    \item \textbf{Modularidad y reutilización:} Cada fase del pipeline será implementada como un módulo independiente con entradas y salidas claramente definidas, facilitando la depuración, el testing y la reutilización futura.
+El segundo estándar exige modularidad y reutilización mediante diseño arquitectónico donde cada una de las siete fases del pipeline CRISP-DM será implementada como módulo Python independiente con responsabilidad única bien definida, entradas explícitamente tipadas mediante type hints de Python 3.10+ especificando tipos de datos esperados, salidas claramente documentadas retornando estructuras de datos consistentes como DataFrames de pandas o diccionarios con esquema predefinido, y acoplamiento mínimo entre módulos comunicándose exclusivamente mediante interfaces públicas sin dependencias circulares, facilitando depuración aislada de componentes individuales, testing unitario independiente por módulo y reutilización futura de componentes en proyectos relacionados.
 
-    \item \textbf{Documentación interna del código:} Funciones complejas deberán incluir docstrings explicativas en español, indicando propósito, parámetros de entrada, salida esperada y ejemplo de uso.
+El tercer estándar requiere documentación interna exhaustiva del código donde funciones con complejidad ciclomática superior a 5 o que implementen lógica de negocio no trivial deberán incluir docstrings explicativas detalladas en español siguiendo formato Google o NumPy, indicando propósito claro de la función describiendo qué problema resuelve y por qué existe, parámetros de entrada con tipos esperados y restricciones de valores válidos, salida esperada especificando tipo de dato retornado y significado semántico, excepciones que pueden lanzarse documentando condiciones que las activan, y ejemplo de uso mínimo mostrando llamada típica con valores reales y resultado esperado para facilitar comprensión rápida de API.
 
-    \item \textbf{Manejo de errores:} Se implementarán validaciones básicas de entrada, manejo de excepciones con mensajes claros, y logging de eventos críticos para facilitar el diagnóstico de problemas.
+El cuarto estándar implementa manejo robusto de errores mediante estrategia defensiva que incluye validaciones básicas de entrada al inicio de funciones críticas verificando tipos de datos, rangos numéricos válidos y existencia de archivos requeridos antes de procesamiento, manejo explícito de excepciones mediante bloques try-except con captura específica de tipos de error esperados como FileNotFoundError, JSONDecodeError o ConnectionError en lugar de excepciones genéricas, mensajes de error claros y accionables que informen al usuario qué falló, por qué ocurrió el error y qué acción correctiva puede tomar, y logging estructurado de eventos críticos mediante biblioteca logging de Python con niveles apropiados DEBUG para trazas detalladas, INFO para hitos de progreso, WARNING para situaciones anómalas recuperables y ERROR para fallos críticos, facilitando diagnóstico post-mortem de problemas en producción.
 
-    \item \textbf{Reproducibilidad técnica:} Todos los procesos estarán documentados con suficiente detalle como para que un tercero con conocimientos técnicos medios pueda replicar el pipeline completo.
-\end{itemize}
+El quinto estándar garantiza reproducibilidad técnica completa mediante documentación exhaustiva donde todos los procesos del pipeline estarán descritos con suficiente detalle granular en README técnico, notebooks Jupyter comentados y documento de metodología del trabajo de grado, permitiendo que investigador externo con conocimientos técnicos de nivel medio en Python, procesamiento de lenguaje natural y bases de datos relacionales pueda replicar sistema completo desde cero, obteniendo resultados estadísticamente equivalentes a los reportados considerando variabilidad estocástica inherente a modelos de lenguaje y algoritmos de clustering no deterministas, validado mediante prueba empírica de instalación ejecutada por persona externa al equipo de desarrollo en máquina limpia sin configuración previa.
 
 \subsection{Actividades de Verificación y Validación}
 
@@ -144,35 +132,31 @@ Visualización & Comprobar que los gráficos se generan sin errores y se exporta
 
 \subsection{Revisión Técnica de Entregables}
 
-Al finalizar cada fase metodológica, se realizará una revisión técnica formal del entregable correspondiente, siguiendo este procedimiento:
+Al finalizar cada una de las siete fases metodológicas del pipeline CRISP-DM, se ejecutará revisión técnica formal estructurada del entregable correspondiente siguiendo procedimiento de cinco etapas secuenciales que garantizan calidad funcional, coherencia arquitectónica y alineación con objetivos académicos del trabajo de grado.
 
-\begin{enumerate}
-    \item El responsable de la fase presenta el entregable al equipo completo en reunión semanal, explicando la implementación técnica, las decisiones tomadas y los resultados obtenidos.
+La primera etapa consiste en presentación formal del entregable donde el integrante responsable de la fase expone módulo desarrollado al equipo completo durante reunión semanal de seguimiento con duración estimada de 30 a 45 minutos, explicando arquitectura e implementación técnica del código con énfasis en decisiones de diseño no triviales, decisiones clave tomadas durante desarrollo incluyendo alternativas evaluadas y criterios de selección aplicados, y resultados técnicos obtenidos mediante ejecución sobre datos reales con análisis de métricas de desempeño, calidad de outputs y tiempo de procesamiento observado.
 
-    \item Los demás integrantes revisan el código, prueban el módulo localmente, y formulan preguntas técnicas o identifican posibles mejoras.
+La segunda etapa ejecuta revisión colaborativa de código donde los demás integrantes del equipo clonan rama de desarrollo del módulo en sus entornos locales, revisan exhaustivamente código fuente Python mediante lectura crítica de implementación buscando bugs potenciales, code smells o violaciones de estándares PEP 8, prueban módulo localmente ejecutando pipeline completo sobre muestra representativa de datos para verificar reproducibilidad de resultados reportados, y formulan preguntas técnicas fundamentadas sobre decisiones de implementación o identifican posibles mejoras de eficiencia, legibilidad o robustez ante casos extremos.
 
-    \item Se redacta un checklist de verificación con criterios mínimos de aceptación (por ejemplo: ``¿El código ejecuta sin errores?'', ``¿Los datos de salida tienen la estructura esperada?'', ``¿Está documentado el proceso?'').
+La tercera etapa redacta checklist de verificación formal con criterios mínimos de aceptación específicos al tipo de entregable, incluyendo preguntas técnicas binarias como si el código ejecuta sin errores críticos que detengan ejecución en condiciones normales de entrada, si los datos de salida generados tienen estructura esperada conforme a especificación de interfaz del módulo validada mediante inspección de schemas, si está adecuadamente documentado el proceso mediante docstrings de funciones principales y comentarios explicativos inline en secciones complejas, si manejo de errores cubre casos extremos identificados mediante análisis de riesgos, y si desempeño de ejecución es razonable completando procesamiento de corpus completo en tiempo compatible con cronograma del proyecto.
 
-    \item Si el entregable cumple todos los criterios, se aprueba y se fusiona a la rama principal. Si no, se registra una lista de correcciones pendientes y se establece un plazo para aplicarlas.
+La cuarta etapa toma decisión formal de aceptación donde si el entregable cumple todos los criterios obligatorios del checklist se aprueba formalmente mediante consenso del equipo, se fusiona a rama principal main mediante pull request con squash de commits para mantener historial limpio, y se etiqueta con tag de versión semántica correspondiente a fase completada; alternativamente si el entregable no cumple criterios críticos se registra lista detallada de correcciones pendientes priorizadas por severidad en documento de issues de GitHub, se establece plazo concreto de 3 a 5 días para aplicar correcciones identificadas según complejidad de cambios requeridos, y se programa sesión de re-revisión para validar implementación de mejoras solicitadas.
 
-    \item El asesor del proyecto revisa el entregable en la reunión quincenal de seguimiento y valida que esté alineado con los objetivos técnicos y académicos del proyecto.
-\end{enumerate}
+La quinta etapa final involucra validación académica donde el asesor del proyecto Ing. Luis Gabriel Moreno Sandoval revisa el entregable técnico aprobado internamente durante reunión quincenal de seguimiento con duración de 1 hora, valida que implementación esté técnicamente alineada con objetivos específicos del trabajo de grado y metodología CRISP-DM establecida, verifica que resultados obtenidos sean académicamente defendibles mediante comparación con benchmarks de literatura o análisis de coherencia semántica cualitativa, y provee retroalimentación formal escrita en acta de reunión con aprobación explícita o solicitudes de refinamiento adicional antes de proceder a siguiente fase del proyecto.
 
 \subsection{Métricas de Calidad}
 
-Se emplearán las siguientes métricas cualitativas y cuantitativas para evaluar la calidad del sistema:
+La evaluación cuantitativa y cualitativa de calidad del sistema desarrollado se fundamentará en cinco métricas complementarias que cubren dimensiones de completitud funcional, exactitud de outputs, interpretabilidad de resultados, complejidad del código y legibilidad para terceros.
 
-\begin{itemize}
-    \item \textbf{Cobertura de requisitos funcionales:} Porcentaje de requisitos implementados respecto al total definido en el documento SRS.
+La primera métrica mide cobertura de requisitos funcionales calculada como porcentaje de requisitos funcionales prioritarios del sistema especificados en documento SRS que han sido completamente implementados en código Python funcional y validados mediante pruebas de aceptación, respecto al total de requisitos funcionales definidos inicialmente, estableciendo umbral mínimo de aceptación de 90 por ciento para requisitos críticos del pipeline y 70 por ciento para requisitos opcionales de mejoras futuras.
 
-    \item \textbf{Tasa de errores en validación manual:} Proporción de habilidades extraídas o enriquecidas que son incorrectas o irrelevantes, evaluada sobre una muestra de 100 registros.
+La segunda métrica cuantifica tasa de errores en validación manual determinada como proporción de habilidades técnicas extraídas por Pipeline A mediante NER y regex o enriquecidas semánticamente por Pipeline B mediante LLM que son incorrectas por no corresponder a habilidades técnicas reales, irrelevantes por ser demasiado genéricas o fuera de dominio tecnológico, o mal normalizadas a taxonomía ESCO sin correspondencia semántica adecuada, evaluada mediante inspección manual exhaustiva sobre muestra estadísticamente representativa de 100 registros seleccionados aleatoriamente del corpus completo, estableciendo umbral de calidad aceptable inferior a 15 por ciento de errores para Pipeline A y 10 por ciento para Pipeline B considerando su mayor sofisticación.
 
-    \item \textbf{Coherencia de clusters:} Evaluación cualitativa de si los grupos de habilidades generados tienen sentido semántico y técnico, mediante inspección visual y discusión con el asesor.
+La tercera métrica evalúa coherencia semántica de clusters generados mediante análisis cualitativo experto de si los grupos de habilidades identificados por HDBSCAN tienen sentido técnico y semántico coherente agrupando tecnologías relacionadas por dominio de aplicación, stack tecnológico compartido o nivel de abstracción similar, mediante inspección visual de proyecciones UMAP bidimensionales con etiquetado de clústeres principales, revisión de listas de top 10 habilidades más frecuentes por cluster, y discusión estructurada con el asesor académico sobre interpretabilidad de taxonomía emergente identificada, documentando ejemplos de clusters exitosos y outliers problemáticos para refinamiento iterativo de hiperparámetros.
 
-    \item \textbf{Complejidad ciclomática moderada:} Funciones con complejidad razonable, evitando bloques de código excesivamente largos o anidados.
+La cuarta métrica monitorea complejidad ciclomática moderada del código mediante análisis estático con herramientas como radon o flake8 verificando que funciones individuales del sistema mantengan complejidad ciclomática inferior a 10 para favorecer testabilidad y comprensión, evitando bloques de código excesivamente largos superiores a 100 líneas por función que indiquen falta de descomposición modular, o anidamiento excesivo de condicionales y loops superiores a 4 niveles de profundidad que dificulten seguimiento de flujo de control, estableciendo como objetivo que 80 por ciento de funciones tengan complejidad inferior a 5 indicando diseño simple y directo.
 
-    \item \textbf{Legibilidad del código:} Evaluación subjetiva de si el código es comprensible para un desarrollador externo, verificada mediante revisión cruzada entre integrantes.
-\end{itemize}
+La quinta métrica evalúa legibilidad del código mediante análisis subjetivo de si el código fuente Python es comprensible y mantenible para desarrollador externo con experiencia intermedia en el lenguaje pero sin conocimiento previo del dominio específico del observatorio, verificada empíricamente mediante revisión cruzada entre integrantes del equipo donde cada desarrollador lee e interpreta código escrito por el otro sin consultar documentación externa, midiendo tiempo necesario para comprender propósito de módulo y localizar componente específico, y documentando sugerencias de mejora de nombres de variables, estructura de funciones o comentarios explicativos para incrementar claridad y reducir curva de aprendizaje de futuros mantenedores del sistema.
 
 \section{Gestión de Riesgos}
 
@@ -224,14 +208,11 @@ R10 & Pérdida de datos por falta de backups adecuados & Baja & Alto & Infraestr
 
 Cada riesgo ha sido evaluado en términos de probabilidad de ocurrencia (Baja, Media, Alta) e impacto en el proyecto (Bajo, Medio, Alto), permitiendo priorizarlos según su nivel de criticidad.
 
-Los riesgos de mayor criticidad (probabilidad media-alta e impacto alto) son:
+El análisis cuantitativo de riesgos identifica cuatro amenazas de mayor criticidad que combinan probabilidad media-alta con impacto alto sobre el proyecto, clasificadas en dos categorías principales. La primera categoría corresponde a riesgos técnicos de scraping, específicamente R01 relacionado con cambios estructurales en HTML de portales de empleo que rompan funcionamiento de scrapers implementados requiriendo mantenimiento correctivo urgente, y R02 asociado a bloqueo o limitación de acceso mediante técnicas anti-scraping como CAPTCHAs, rate limiting o blacklisting de IP que restrinjan capacidad de recolección masiva de datos. Estos riesgos técnicos afectarían directamente disponibilidad del corpus de vacantes laborales requerido como insumo fundamental del pipeline completo, pudiendo paralizar fases posteriores de procesamiento NLP y análisis semántico hasta que se resuelva problema de adquisición de datos.
 
-\begin{itemize}
-    \item \textbf{R01 y R02:} Problemas con el scraping, que afectarían directamente la disponibilidad de datos y podrían paralizar las fases posteriores.
-    \item \textbf{R06 y R07:} Problemas organizacionales relacionados con disponibilidad de tiempo y cumplimiento del cronograma, que podrían generar retrasos en cascada.
-\end{itemize}
+La segunda categoría engloba riesgos organizacionales de gestión de proyecto, específicamente R06 relacionado con sobrecarga académica de integrantes por compromisos paralelos en otras asignaturas del programa curricular de Ingeniería de Sistemas que reduce disponibilidad horaria semanal efectiva por debajo de estimación inicial de 8 a 12 horas por persona, y R07 asociado a retrasos acumulados en entrega de fases metodológicas que comprometan cumplimiento del cronograma general de 16 semanas establecido para completar trabajo de grado. Estos riesgos organizacionales podrían generar efecto cascada de retrasos progresivos donde demoras tempranas en fases críticas de path crítico se amplifican en etapas posteriores, forzando reducción de alcance funcional o solicitud de extensión formal de plazo académico ante dirección de programa.
 
-Estos riesgos recibirán especial atención en las estrategias de mitigación y monitoreo continuo.
+Estos cuatro riesgos de criticidad alta recibirán especial atención prioritaria en definición de estrategias de mitigación preventiva detalladas, monitoreo continuo semanal mediante indicadores de alerta temprana específicos, y activación inmediata de planes de contingencia reactiva en caso de materialización confirmada durante ejecución del proyecto.
 
 \subsection{Estrategias de Mitigación}
 
@@ -268,32 +249,24 @@ R10 & Implementar sistema de backups automáticos semanales en GitHub y Google D
 
 \subsection{Monitoreo de Riesgos}
 
-El seguimiento de riesgos se realizará de forma continua durante todo el proyecto, mediante las siguientes actividades:
+El seguimiento de riesgos se realizará de forma continua durante todo el proyecto mediante implementación de cuatro actividades complementarias de monitoreo sistemático que operan en diferentes escalas temporales y niveles de granularidad para detectar tempranamente señales de materialización de amenazas identificadas.
 
-\begin{itemize}
-    \item \textbf{Revisión semanal de riesgos:} En cada reunión de seguimiento, se dedicará un espacio breve (10 minutos) para revisar si algún riesgo identificado se ha materializado, si han surgido nuevos riesgos, y si las estrategias de mitigación están funcionando.
+La primera actividad establece revisión semanal estructurada de riesgos donde en cada reunión de seguimiento del equipo se dedicará espacio breve de 10 minutos para revisar colaborativamente si algún riesgo identificado en matriz de análisis se ha materializado parcial o totalmente durante semana transcurrida, si han surgido nuevos riesgos emergentes no contemplados inicialmente que ameriten incorporación a tabla de seguimiento, si estrategias de mitigación preventiva implementadas están funcionando efectivamente según evidencia empírica observada, y si es necesario ajustar nivel de probabilidad o impacto de riesgos existentes en función de información actualizada obtenida durante ejecución del proyecto.
 
-    \item \textbf{Indicadores de alerta temprana:} Se monitorearán señales que indiquen la proximidad de riesgos, tales como:
-    \begin{itemize}
-        \item Errores frecuentes en el scraper (indicador de R01)
-        \item Aumento en tiempo de respuesta de portales o CAPTCHAs (indicador de R02)
-        \item Bajo rendimiento en métricas de NER (indicador de R03)
-        \item Retrasos superiores a 3 días en tareas asignadas (indicador de R06 y R07)
-    \end{itemize}
+La segunda actividad implementa monitoreo continuo de indicadores de alerta temprana consistentes en señales observables que indiquen proximidad creciente de materialización de riesgos específicos antes de que se manifiesten completamente, permitiendo activación proactiva de medidas correctivas anticipadas. Estos indicadores cuantitativos y cualitativos incluyen como primer indicador errores frecuentes superiores a 3 fallos diarios en ejecución de scrapers por cambios detectados en estructura HTML de portales señalizando proximidad de R01, como segundo indicador aumento progresivo en tiempo promedio de respuesta HTTP de portales objetivo superiores a 5 segundos o aparición de CAPTCHAs en sesiones de scraping alertando sobre posible R02, como tercer indicador bajo rendimiento en métricas de evaluación de NER con F1-score inferior a 60 por ciento en validación de muestras indicando materialización de R03, y como cuarto indicador retrasos acumulados superiores a 3 días en entrega de tareas asignadas según cronograma WBS señalizando activación de R06 y potencial desencadenamiento de R07 por efecto cascada.
 
-    \item \textbf{Registro de incidentes:} Cualquier materialización de riesgo será documentada en el acta semanal, indicando el riesgo activado, la acción correctiva aplicada, el responsable y el resultado obtenido.
+La tercera actividad exige registro formal detallado de incidentes donde cualquier materialización confirmada de riesgo será documentada exhaustivamente en acta semanal de reunión de seguimiento mediante plantilla estructurada que indique identificador del riesgo activado según código de tabla de análisis, descripción concreta de cómo se manifestó la amenaza con evidencia empírica específica observada, acción correctiva aplicada inmediatamente especificando plan de contingencia ejecutado y recursos movilizados, integrante responsable de implementar solución y realizar seguimiento de efectividad, y resultado final obtenido cuantificando tiempo de resolución y impacto residual sobre cronograma o calidad de entregables.
 
-    \item \textbf{Actualización de la matriz de riesgos:} Si durante el proyecto se identifica un nuevo riesgo relevante, se agregará a la tabla de riesgos con su respectiva evaluación y estrategia de mitigación.
-\end{itemize}
+La cuarta actividad establece actualización dinámica de matriz de riesgos donde si durante desarrollo del proyecto se identifica nuevo riesgo relevante no contemplado en análisis inicial que tenga probabilidad media o alta y impacto medio o alto, será agregado formalmente a tabla de identificación y clasificación con asignación de código secuencial R11 en adelante, evaluación fundamentada de probabilidad e impacto según criterios consistentes con análisis previo, categorización en tipo técnico, organizacional o infraestructura, definición de estrategia de mitigación preventiva y plan de contingencia reactivo siguiendo mismo formato que riesgos originales, y comunicación al equipo completo y asesor académico durante siguiente reunión de seguimiento para aprobación e incorporación al proceso de monitoreo continuo.
 
 \subsection{Responsabilidades en Gestión de Riesgos}
 
-\begin{itemize}
-    \item \textbf{Nicolás Camacho (Líder técnico):} Responsable de identificar y monitorear riesgos técnicos (R01–R05), proponer soluciones técnicas y coordinar la aplicación de estrategias de mitigación.
+La distribución de responsabilidades en gestión de riesgos del proyecto sigue modelo colaborativo diferenciado donde cada integrante asume liderazgo específico sobre categorías particulares de amenazas según especialización técnica y rol asignado en estructura organizacional del equipo, complementado con responsabilidades compartidas transversales que requieren participación activa de todos los miembros.
 
-    \item \textbf{Alejandro Pinzón (Coordinador de proyecto):} Responsable de monitorear riesgos organizacionales (R06–R08), gestionar el cronograma, detectar desviaciones y proponer acciones correctivas.
+Nicolás Camacho, en su rol de líder técnico y arquitecto principal del sistema, asume responsabilidad primaria sobre identificación proactiva y monitoreo continuo de riesgos técnicos categorizados como R01 hasta R05 en matriz de análisis, incluyendo amenazas relacionadas con scraping web, rendimiento de modelos NLP, disponibilidad y calidad de datos, y complejidad de implementación de clustering semántico. Sus funciones específicas incluyen proponer soluciones técnicas fundamentadas ante materialización de riesgos de esta categoría mediante análisis de alternativas viables, coordinar aplicación operativa de estrategias de mitigación preventiva definidas ejecutando ajustes de código y configuración necesarios, y evaluar efectividad de medidas correctivas implementadas mediante análisis de métricas de desempeño y calidad de outputs generados.
 
-    \item \textbf{Todo el equipo:} Responsable de reportar cualquier riesgo detectado, participar en la evaluación de impacto, y colaborar en la implementación de planes de contingencia cuando sea necesario.
-\end{itemize}
+Alejandro Pinzón, en su rol de coordinador de proyecto y responsable de documentación académica, asume responsabilidad primaria sobre monitoreo continuo de riesgos organizacionales categorizados como R06 hasta R08 en matriz de análisis, incluyendo amenazas relacionadas con sobrecarga académica de integrantes, retrasos acumulados en cronograma y conflictos internos de coordinación en equipo. Sus funciones específicas incluyen gestión activa del cronograma WBS verificando semanalmente cumplimiento de plazos establecidos mediante revisión de estado de tareas asignadas, detección temprana de desviaciones respecto a planificación original superior a 2 días mediante comparación entre fechas estimadas y reales de entrega, y propuesta de acciones correctivas oportunas incluyendo redistribución temporal de carga de trabajo entre integrantes o ajuste de alcance de fases no críticas para recuperar alineación con cronograma maestro.
 
-La gestión de riesgos será un proceso continuo y colaborativo, integrado a las actividades semanales del proyecto, con el objetivo de minimizar incertidumbre y maximizar la probabilidad de éxito en la entrega final del observatorio laboral.
+Todo el equipo sin distinción de rol asume responsabilidades compartidas transversales consistentes en reportar inmediatamente cualquier riesgo detectado durante ejecución de tareas asignadas mediante comunicación en reunión semanal o canal urgente si criticidad lo amerita, participar activamente en evaluación colaborativa de impacto de riesgos materializados o emergentes mediante discusión estructurada fundamentada en evidencia empírica disponible, y colaborar constructivamente en implementación de planes de contingencia reactiva cuando sea necesario mediante ejecución de tareas de emergencia asignadas o soporte técnico cruzado entre integrantes para acelerar resolución de incidentes críticos.
+
+La gestión de riesgos será proceso continuo y colaborativo ejecutado de forma integrada a actividades semanales regulares del proyecto sin constituir overhead administrativo separado, con objetivo explícito de minimizar incertidumbre asociada a amenazas identificadas mediante preparación anticipada y respuesta ágil, y maximizar probabilidad de éxito en entrega final del observatorio laboral cumpliendo estándares de calidad técnica, cronograma académico establecido y objetivos funcionales definidos en alcance del trabajo de grado.

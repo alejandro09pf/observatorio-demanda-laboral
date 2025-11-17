@@ -7,8 +7,9 @@ REM ============================================================================
 setlocal
 
 set MAIN=main
-set LATEX=pdflatex
-set BIBTEX=biber
+set MIKTEX_PATH=C:\Users\PcMaster\AppData\Local\Programs\MiKTeX\miktex\bin\x64
+set LATEX=%MIKTEX_PATH%\pdflatex.exe
+set BIBTEX=%MIKTEX_PATH%\biber.exe
 
 echo.
 echo ===============================================
