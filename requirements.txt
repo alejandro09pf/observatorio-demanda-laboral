@@ -92,3 +92,8 @@ colorama>=0.4.6
 
 # Database enhancements
 pgvector  # PostgreSQL vector extension support
+
+# ESCO Matcher dependencies
+faiss-cpu>=1.7.4  # Vector similarity search for ESCO matching
+fuzzywuzzy>=0.18.0  # Fuzzy string matching for ESCO
+python-Levenshtein>=0.21.0  # Speed up fuzzywuzzy

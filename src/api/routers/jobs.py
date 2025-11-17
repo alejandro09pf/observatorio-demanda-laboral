@@ -106,13 +106,14 @@ def get_job_detail(
     db: Session = Depends(get_db)
 ) -> JobDetail:
     """
-    Get detailed information about a specific job, including extracted skills.
+    Get detailed information about a specific job, including all types of extracted skills.
 
     Args:
         job_id: UUID of the job posting
 
     Returns:
-        JobDetail with full description, requirements, and extracted skills
+        JobDetail with full description, requirements, and all extracted skills
+        (Pipeline A: extracted_skills, Pipeline B: enhanced_skills, Manual: manual_skills)
     """
     try:
         # Query job
@@ -121,10 +122,26 @@ def get_job_detail(
         if not job:
             raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
 
-        # Query extracted skills for this job
+        # Query extracted skills for this job (Pipeline A: NER + Regex)
         skills = db.query(ExtractedSkill).filter(
             ExtractedSkill.job_id == job_id
         ).all()
+
+        # Query enhanced skills for this job (Pipeline B: LLM)
+        enhanced_skills_query = text("""
+            SELECT normalized_skill, skill_type, esco_concept_uri, llm_model
+            FROM enhanced_skills
+            WHERE job_id = :job_id
+        """)
+        enhanced_skills_result = db.execute(enhanced_skills_query, {"job_id": str(job_id)}).fetchall()
+
+        # Query manual/gold standard annotations for this job
+        manual_skills_query = text("""
+            SELECT skill_text, skill_type, esco_concept_uri
+            FROM gold_standard_annotations
+            WHERE job_id = :job_id
+        """)
+        manual_skills_result = db.execute(manual_skills_query, {"job_id": str(job_id)}).fetchall()
 
         # Convert to dict
         job_dict = {
@@ -151,6 +168,27 @@ def get_job_detail(
                     "esco_uri": skill.esco_uri
                 }
                 for skill in skills
+            ],
+            "enhanced_skills": [
+                {
+                    "skill_text": row.normalized_skill,
+                    "skill_type": row.skill_type,
+                    "extraction_method": "pipeline_b",
+                    "confidence_score": 1.0,
+                    "esco_uri": row.esco_concept_uri,
+                    "llm_model": row.llm_model
+                }
+                for row in enhanced_skills_result
+            ],
+            "manual_skills": [
+                {
+                    "skill_text": row.skill_text,
+                    "skill_type": row.skill_type,
+                    "extraction_method": "manual",
+                    "confidence_score": 1.0,
+                    "esco_uri": row.esco_concept_uri
+                }
+                for row in manual_skills_result
             ]
         }
 

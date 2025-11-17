@@ -1,6 +1,6 @@
 """
 Celery Tasks for Skill Extraction
-Worker 2: Extract skills from job postings using NER, Regex, and ESCO matching
+Worker 2: Extract skills from job postings using Pipeline A (NER + Regex + ESCO)
 """
 import logging
 import psycopg2
@@ -10,9 +10,8 @@ from celery import Task, group
 from src.tasks.celery_app import celery_app
 from src.events import publish_event
 
-# Import extractor components directly to avoid faiss dependency
-from src.extractor.ner_extractor import NERExtractor
-from src.extractor.regex_patterns import RegexExtractor
+# Import Pipeline A (complete extraction with ESCO mapping)
+from src.extractor.pipeline import ExtractionPipeline
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +22,12 @@ def extract_skills_task(
     job_id: str,
 ) -> dict:
     """
-    Extract skills from a single job posting using ExtractionPipeline.
+    Extract skills from a single job posting using Pipeline A (NER + Regex + ESCO).
 
     This task:
-    1. Fetches job data from database
-    2. Runs NER + Regex + ESCO matching
-    3. Saves extracted skills to database
+    1. Fetches job data from cleaned_jobs (or fallback to raw_jobs)
+    2. Runs Pipeline A: NER + Regex + ESCO mapping
+    3. Saves extracted skills to database with ESCO URIs
     4. Updates extraction status
 
     Args:
@@ -45,17 +44,16 @@ def extract_skills_task(
         self.update_state(
             state='PROGRESS',
             meta={
-                'current': f'Starting skill extraction for job {job_id}...',
+                'current': f'Starting Pipeline A extraction for job {job_id}...',
                 'progress': 0,
                 'job_id': job_id
             }
         )
 
-        logger.info(f"🔍 Celery Worker: Starting extraction task - job {job_id}")
+        logger.info(f"🔍 Celery Worker: Starting Pipeline A extraction - job {job_id}")
 
-        # Initialize extractors
-        ner_extractor = NERExtractor()
-        regex_extractor = RegexExtractor()
+        # Initialize Pipeline A
+        pipeline = ExtractionPipeline()
 
         # Update task state: Fetching job
         self.update_state(
@@ -78,6 +76,8 @@ def extract_skills_task(
                 rj.title,
                 rj.description,
                 rj.requirements,
+                rj.portal,
+                rj.country,
                 cj.combined_text
             FROM raw_jobs rj
             LEFT JOIN cleaned_jobs cj ON rj.job_id = cj.job_id
@@ -93,57 +93,46 @@ def extract_skills_task(
         title = row[1] or ''
         description = row[2] or ''
         requirements = row[3] or ''
-        combined_text = row[4]
-
-        # Use combined_text if available, otherwise combine manually
-        full_text = combined_text if combined_text else f"{title}\n{description}\n{requirements}".strip()
+        portal = row[4]
+        country = row[5]
+        combined_text = row[6]
 
         cursor.close()
 
-        # Update task state: Extracting
+        # Prepare job data for Pipeline A
+        job_data = {
+            'job_id': job_id,
+            'title': title,
+            'description': description,
+            'requirements': requirements,
+            'portal': portal,
+            'country': country,
+            'combined_text': combined_text
+        }
+
+        # Update task state: Running Pipeline A
         self.update_state(
             state='PROGRESS',
             meta={
-                'current': f'Running NER + Regex extraction...',
+                'current': f'Running Pipeline A (NER + Regex + ESCO)...',
                 'progress': 30,
                 'job_id': job_id
             }
         )
 
-        # Extract skills with NER
-        ner_skills = ner_extractor.extract_skills(full_text)
+        # Run Pipeline A extraction (NER + Regex + ESCO mapping)
+        extraction_results = pipeline.extract_skills_from_job(job_data)
 
-        # Extract skills with Regex
-        regex_skills = regex_extractor.extract_skills(full_text)
-
-        # Combine and deduplicate (simple approach: use set of skill texts)
-        all_skills = {}
-        for skill in regex_skills:
-            all_skills[skill.skill_text.lower()] = {
-                'skill_text': skill.skill_text,
-                'extraction_method': 'regex',
-                'confidence': skill.confidence,
-                'skill_type': skill.skill_type
-            }
-
-        for skill in ner_skills:
-            key = skill.skill_text.lower()
-            if key not in all_skills:
-                all_skills[key] = {
-                    'skill_text': skill.skill_text,
-                    'extraction_method': 'ner',
-                    'confidence': skill.confidence,
-                    'skill_type': skill.skill_type
-                }
+        logger.info(f"   Pipeline A extracted {len(extraction_results)} skills")
 
         # Update task state: Saving results
         self.update_state(
             state='PROGRESS',
             meta={
-                'current': f'Saving {len(all_skills)} skills to database...',
+                'current': f'Saving {len(extraction_results)} skills to database...',
                 'progress': 70,
                 'job_id': job_id,
-                'skills_found': len(all_skills)
+                'skills_found': len(extraction_results)
             }
         )
 
@@ -151,18 +140,23 @@ def extract_skills_task(
         cursor = conn.cursor()
         skills_saved = 0
 
-        for skill_data in all_skills.values():
+        for result in extraction_results:
+            # Extract ESCO URI if match exists
+            esco_uri = result.esco_match.esco_uri if result.esco_match else None
+
             cursor.execute("""
                 INSERT INTO extracted_skills
-                (job_id, skill_text, extraction_method, skill_type, confidence_score)
-                VALUES (%s, %s, %s, %s, %s)
-                ON CONFLICT (job_id, skill_text) DO NOTHING
+                (job_id, skill_text, extraction_method, skill_type, confidence_score, esco_uri)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (job_id, skill_text) DO UPDATE SET
+                    esco_uri = EXCLUDED.esco_uri
             """, (
                 job_id,
-                skill_data['skill_text'],
-                skill_data['extraction_method'],
-                skill_data['skill_type'],
-                skill_data['confidence']
+                result.skill_text,
+                result.extraction_method,
+                result.skill_type,
+                result.final_confidence,
+                esco_uri
             ))
             if cursor.rowcount > 0:
                 skills_saved += 1

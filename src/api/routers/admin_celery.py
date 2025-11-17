@@ -22,15 +22,15 @@ from api.schemas.admin import (
 
 # Import Celery tasks and app
 try:
-    from src.tasks.celery_app import celery_app
-    from src.tasks.scraping_tasks import run_spider_task
-    from src.tasks.extraction_tasks import extract_skills_task, process_pending_extractions
-    from src.tasks.enhancement_tasks import enhance_job_task, process_pending_enhancements
-    from src.tasks.clustering_tasks import run_clustering_task, analyze_cluster_task
+    from tasks.celery_app import celery_app
+    from tasks.scraping_tasks import run_spider_task
+    from tasks.extraction_tasks import extract_skills_task, process_pending_extractions
+    from tasks.enhancement_tasks import enhance_job_task, process_pending_enhancements
+    from tasks.clustering_tasks import run_clustering_task, analyze_cluster_task
     CELERY_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     CELERY_AVAILABLE = False
-    logging.warning("Celery not available, some features will be disabled")
+    logging.warning(f"Celery not available: {e}, some features will be disabled")
 
 logger = logging.getLogger(__name__)
 
@@ -388,6 +388,104 @@ def health_check():
             "message": str(e),
             "workers": 0
         }
+
+
+@router.get("/schedule")
+def get_celery_schedule():
+    """
+    Get Celery Beat schedule configuration.
+
+    Returns:
+        Scheduled tasks with their cron patterns and configurations
+
+    Example:
+        GET /api/admin/schedule
+
+        Response:
+        {
+            "scraping_tasks": [...],
+            "extraction_tasks": [...],
+            "clustering_tasks": [...],
+            "other_tasks": [...]
+        }
+    """
+    if not CELERY_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="Celery not available"
+        )
+
+    try:
+        import re
+        from datetime import datetime
+
+        # Get beat schedule from Celery config
+        schedule = celery_app.conf.beat_schedule if hasattr(celery_app.conf, 'beat_schedule') else {}
+
+        def parse_crontab(crontab_str):
+            """Parse crontab string to human readable format."""
+            # Extract numbers from crontab string like "<crontab: 0 2 * * * (m/h/dM/MY/d)>"
+            match = re.search(r'(\d+)\s+(\d+)\s+(\*|\d+)\s+(\*|\d+)\s+(\*|\d+)', crontab_str)
+            if match:
+                minute, hour, day, month, dow = match.groups()
+
+                # Convert to human readable
+                time_str = f"{hour.zfill(2)}:{minute.zfill(2)}"
+
+                if dow != '*':
+                    days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+                    return f"{days[int(dow)]} {time_str}"
+                elif day != '*':
+                    return f"Día {day} a las {time_str}"
+                else:
+                    return f"Diario a las {time_str}"
+            return crontab_str
+
+        scraping_tasks = []
+        extraction_tasks = []
+        clustering_tasks = []
+        other_tasks = []
+
+        for task_name, task_config in schedule.items():
+            schedule_str = str(task_config.get('schedule', ''))
+            parsed_schedule = parse_crontab(schedule_str)
+            args = task_config.get('args', [])
+
+            task_info = {
+                'name': task_name,
+                'schedule': parsed_schedule,
+                'raw_schedule': schedule_str,
+                'args': args
+            }
+
+            # Categorize tasks
+            if 'scraping' in task_name:
+                if len(args) >= 2:
+                    task_info['spider'] = args[0]
+                    task_info['country'] = args[1]
+                    task_info['max_jobs'] = args[2] if len(args) > 2 else None
+                scraping_tasks.append(task_info)
+            elif 'extraction' in task_name or 'cleaning' in task_name or 'embeddings' in task_name:
+                extraction_tasks.append(task_info)
+            elif 'clustering' in task_name:
+                if len(args) >= 1:
+                    task_info['pipeline'] = args[0]
+                    task_info['n_clusters'] = args[1] if len(args) > 1 else None
+                clustering_tasks.append(task_info)
+            else:
+                other_tasks.append(task_info)
+
+        return {
+            "scraping_tasks": scraping_tasks,
+            "extraction_tasks": extraction_tasks,
+            "clustering_tasks": clustering_tasks,
+            "other_tasks": other_tasks,
+            "total_scheduled_tasks": len(schedule)
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting schedule: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get schedule: {str(e)}")
 
 
 # ==========================================

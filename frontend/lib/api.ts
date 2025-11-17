@@ -68,7 +68,9 @@ export interface Job {
 export interface JobDetail extends Job {
   description?: string;
   requirements?: string;
-  extracted_skills: ExtractedSkill[];
+  extracted_skills: ExtractedSkill[];  // Pipeline A (NER + Regex)
+  enhanced_skills?: ExtractedSkill[];   // Pipeline B (LLM)
+  manual_skills?: ExtractedSkill[];     // Manual/Golden annotations
 }
 
 export interface ExtractedSkill {
@@ -248,8 +250,37 @@ export const getFilteredStats = async (params?: {
   job_status?: string;
   extraction_method?: string;
   mapping_status?: string;
+  skill_type?: string;
 }): Promise<FilteredStatsResponse> => {
   const response = await api.get('/api/stats/filtered', { params });
+  return response.data;
+};
+
+export interface CountryStats {
+  country: string;
+  total_jobs: number;
+  total_skills: number;
+  unique_skills: number;
+}
+
+export interface StatsByCountryResponse {
+  countries: {
+    [countryCode: string]: CountryStats;
+  };
+  filters: {
+    extraction_method?: string;
+    job_status?: string;
+    mapping_status?: string;
+  };
+}
+
+export const getStatsByCountry = async (params?: {
+  extraction_method?: string;
+  job_status?: string;
+  mapping_status?: string;
+  skill_type?: string;
+}): Promise<StatsByCountryResponse> => {
+  const response = await api.get('/api/stats/by-country', { params });
   return response.data;
 };
 
@@ -314,6 +345,46 @@ export const getSkillsByType = async (params?: {
   country?: string;
 }): Promise<SkillsByTypeResponse> => {
   const response = await api.get('/api/skills/by-type', { params });
+  return response.data;
+};
+
+export interface CooccurringSkill {
+  skill_text: string;
+  skill_type: string;
+  cooccurrence_count: number;
+}
+
+export interface CountryDistribution {
+  country: string;
+  count: number;
+}
+
+export interface SkillDetailResponse {
+  skill: {
+    skill_text: string;
+    skill_type: string;
+    esco_uri?: string;
+    total_count: number;
+    extraction_method: string;
+  };
+  cooccurring_skills: CooccurringSkill[];
+  jobs: Job[];
+  total_jobs: number;
+  country_distribution: CountryDistribution[];
+}
+
+export const getSkillDetail = async (
+  skillText: string,
+  params?: {
+    extraction_method?: string;
+    country?: string;
+    limit_jobs?: number;
+    limit_cooccurring?: number;
+  }
+): Promise<SkillDetailResponse> => {
+  const response = await api.get('/api/skills/detail', {
+    params: { skill_text: skillText, ...params },
+  });
   return response.data;
 };
 

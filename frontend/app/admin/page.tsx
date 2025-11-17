@@ -2,483 +2,325 @@
 
 import { useEffect, useState } from 'react';
 import {
-  getAvailableSpiders,
   getScrapingStatus,
   startScraping,
   stopScraping,
   ScrapingStatus,
-  ScrapingTask,
-  getLLMStatus,
-  downloadGemma,
-  runPipelineB,
-  LLMStatus,
+  getAvailableSpiders,
 } from '@/lib/api';
 
+interface ExtractionStats {
+  total_jobs: number;
+  pending: number;
+  completed: number;
+  failed: number;
+  total_skills_extracted: number;
+  completion_rate: number;
+}
+
+interface EnhancementStats {
+  total_jobs: number;
+  pending: number;
+  completed: number;
+  failed: number;
+  total_enhanced: number;
+  completion_rate: number;
+}
+
+interface ScheduleTask {
+  name: string;
+  schedule: string;
+  spider?: string;
+  country?: string;
+  max_jobs?: number;
+  pipeline?: string;
+  n_clusters?: number;
+}
+
+interface CelerySchedule {
+  scraping_tasks: ScheduleTask[];
+  extraction_tasks: ScheduleTask[];
+  clustering_tasks: ScheduleTask[];
+  other_tasks: ScheduleTask[];
+  total_scheduled_tasks: number;
+}
+
 export default function AdminPage() {
-  const [status, setStatus] = useState<ScrapingStatus | null>(null);
+  const [scrapingStatus, setScrapingStatus] = useState<ScrapingStatus | null>(null);
+  const [extractionStats, setExtractionStats] = useState<ExtractionStats | null>(null);
+  const [enhancementStats, setEnhancementStats] = useState<EnhancementStats | null>(null);
+  const [schedule, setSchedule] = useState<CelerySchedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Scraping config
   const [availableSpiders, setAvailableSpiders] = useState<string[]>([]);
   const [availableCountries, setAvailableCountries] = useState<string[]>([]);
 
-  // Form state
-  const [selectedSpiders, setSelectedSpiders] = useState<string[]>([]);
-  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
-  const [maxJobs, setMaxJobs] = useState<number>(100);
-  const [maxPages, setMaxPages] = useState<number>(10);
-  const [isStarting, setIsStarting] = useState(false);
-
-  // LLM Pipeline B state
-  const [llmStatus, setLlmStatus] = useState<LLMStatus | null>(null);
-  const [isDownloadingGemma, setIsDownloadingGemma] = useState(false);
-  const [pipelineBLimit, setPipelineBLimit] = useState<number>(100);
-  const [pipelineBCountry, setPipelineBCountry] = useState<string>('');
-  const [isRunningPipelineB, setIsRunningPipelineB] = useState(false);
-
-  // Fetch available spiders and countries
-  useEffect(() => {
-    const fetchAvailable = async () => {
-      try {
-        const result = await getAvailableSpiders();
-        setAvailableSpiders(result.spiders);
-        setAvailableCountries(result.countries);
-      } catch (err) {
-        console.error('Error fetching available:', err);
-      }
-    };
-    fetchAvailable();
-  }, []);
-
-  // Fetch LLM status
-  useEffect(() => {
-    const fetchLLMStatus = async () => {
-      try {
-        const result = await getLLMStatus();
-        setLlmStatus(result);
-      } catch (err) {
-        console.error('Error fetching LLM status:', err);
-      }
-    };
-    fetchLLMStatus();
-    // Refresh every 10 seconds
-    const interval = setInterval(fetchLLMStatus, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch scraping status
-  const fetchStatus = async () => {
-    setLoading(true);
+  // Fetch all status data
+  const fetchAllData = async () => {
     try {
-      const result = await getScrapingStatus();
-      setStatus(result);
+      // Fetch with error handling for each endpoint
+      const [scraping, extraction, enhancement, available, scheduleData] = await Promise.all([
+        fetch('http://localhost:8000/api/admin/scraping/status')
+          .then(r => r.json())
+          .catch(() => ({ active_tasks: [], total_active: 0, system_status: 'unavailable' })),
+        fetch('http://localhost:8000/api/admin/extraction/stats')
+          .then(r => r.json())
+          .catch(() => null),
+        fetch('http://localhost:8000/api/admin/enhancement/stats')
+          .then(r => r.json())
+          .catch(() => null),
+        getAvailableSpiders().catch(() => ({ spiders: [], countries: [] })),
+        fetch('http://localhost:8000/api/admin/schedule')
+          .then(r => r.json())
+          .catch(() => null),
+      ]);
+
+      setScrapingStatus(scraping);
+      setExtractionStats(extraction);
+      setEnhancementStats(enhancement);
+      setAvailableSpiders(available.spiders || []);
+      setAvailableCountries(available.countries || []);
+      setSchedule(scheduleData);
       setError(null);
     } catch (err) {
-      setError('Error al cargar estado');
-      console.error(err);
+      console.error('Error fetching admin data:', err);
+      setError('Error al cargar datos de administración');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchStatus();
-    // Auto-refresh every 5 seconds
-    const interval = setInterval(fetchStatus, 5000);
+    fetchAllData();
+    // Auto-refresh every 10 seconds
+    const interval = setInterval(fetchAllData, 10000);
     return () => clearInterval(interval);
   }, []);
 
-  const handleStartScraping = async () => {
-    if (selectedSpiders.length === 0) {
-      alert('Selecciona al menos un portal');
-      return;
-    }
-    if (selectedCountries.length === 0) {
-      alert('Selecciona al menos un país');
-      return;
-    }
 
-    setIsStarting(true);
-    try {
-      await startScraping({
-        spiders: selectedSpiders,
-        countries: selectedCountries,
-        max_jobs: maxJobs,
-        max_pages: maxPages,
-      });
-      // Clear form
-      setSelectedSpiders([]);
-      setSelectedCountries([]);
-      setMaxJobs(100);
-      setMaxPages(10);
-      // Refresh status
-      await fetchStatus();
-      alert('Scraping iniciado exitosamente');
-    } catch (err) {
-      console.error('Error starting scraping:', err);
-      alert('Error al iniciar scraping');
-    } finally {
-      setIsStarting(false);
-    }
-  };
-
-  const handleStopTask = async (taskId: string) => {
-    if (!confirm('¿Estás seguro de detener esta tarea?')) return;
-
-    try {
-      await stopScraping(taskId);
-      await fetchStatus();
-      alert('Tarea detenida');
-    } catch (err) {
-      console.error('Error stopping task:', err);
-      alert('Error al detener tarea');
-    }
-  };
-
-  const toggleSpider = (spider: string) => {
-    setSelectedSpiders(prev =>
-      prev.includes(spider)
-        ? prev.filter(s => s !== spider)
-        : [...prev, spider]
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando panel de administración...</p>
+        </div>
+      </div>
     );
-  };
+  }
 
-  const toggleCountry = (country: string) => {
-    setSelectedCountries(prev =>
-      prev.includes(country)
-        ? prev.filter(c => c !== country)
-        : [...prev, country]
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+        <h2 className="text-red-800 text-lg font-semibold mb-2">Error</h2>
+        <p className="text-red-600">{error}</p>
+        <button
+          onClick={fetchAllData}
+          className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          Reintentar
+        </button>
+      </div>
     );
-  };
-
-  const handleDownloadGemma = async () => {
-    if (!confirm('¿Descargar Gemma 3 4B (2.8 GB)? Puede tardar 5-10 minutos.')) return;
-
-    setIsDownloadingGemma(true);
-    try {
-      const result = await downloadGemma();
-      alert(result.message);
-      // Refresh LLM status after a few seconds
-      setTimeout(async () => {
-        const newStatus = await getLLMStatus();
-        setLlmStatus(newStatus);
-      }, 3000);
-    } catch (err) {
-      console.error('Error downloading Gemma:', err);
-      alert('Error al descargar Gemma');
-    } finally {
-      setIsDownloadingGemma(false);
-    }
-  };
-
-  const handleRunPipelineB = async () => {
-    if (pipelineBLimit <= 0) {
-      alert('Debes especificar un límite mayor a 0');
-      return;
-    }
-
-    setIsRunningPipelineB(true);
-    try {
-      const result = await runPipelineB({
-        limit: pipelineBLimit,
-        country: pipelineBCountry || undefined,
-        model: 'gemma-3-4b-instruct'
-      });
-      alert(`Pipeline B iniciado: ${result.message}\nTask ID: ${result.task_id}`);
-      // Reset form
-      setPipelineBLimit(100);
-      setPipelineBCountry('');
-    } catch (err: any) {
-      console.error('Error running Pipeline B:', err);
-      const errorMsg = err.response?.data?.detail || 'Error al iniciar Pipeline B';
-      alert(errorMsg);
-    } finally {
-      setIsRunningPipelineB(false);
-    }
-  };
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Administración</h1>
-        <p className="text-gray-600 mt-2">Control del sistema y tareas de scraping</p>
+        <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
+        <p className="text-gray-600 mt-2">
+          Gestión y monitoreo del observatorio laboral
+        </p>
       </div>
 
-      {/* System Status */}
-      {status && (
-        <div className={`rounded-lg p-4 ${
-          status.system_status === 'operational'
-            ? 'bg-green-50 border border-green-200'
-            : 'bg-red-50 border border-red-200'
-        }`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className={`inline-block w-3 h-3 rounded-full ${
-                status.system_status === 'operational' ? 'bg-green-600' : 'bg-red-600'
-              }`}></span>
-              <p className="font-medium">
-                Estado del Sistema: {status.system_status === 'operational' ? 'Operativo' : 'Error'}
-              </p>
-            </div>
-            <p className="text-sm">
-              Tareas activas: <span className="font-bold">{status.total_active}</span>
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* New Scraping Task */}
+      {/* Scraping Section */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Iniciar Nuevo Scraping</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">🔄 Scraping de Datos</h2>
 
-        <div className="space-y-6">
-          {/* Spiders Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Portales de Empleo
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {availableSpiders.map(spider => (
-                <button
-                  key={spider}
-                  onClick={() => toggleSpider(spider)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                    selectedSpiders.includes(spider)
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {spider}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Countries Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Países
-            </label>
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
-              {availableCountries.map(country => (
-                <button
-                  key={country}
-                  onClick={() => toggleCountry(country)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                    selectedCountries.includes(country)
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {country}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Parameters */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+          <h3 className="font-semibold text-gray-900 mb-3">📊 Estado Actual</h3>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="max-jobs" className="block text-sm font-medium text-gray-700 mb-2">
-                Máximo de Empleos
-              </label>
-              <input
-                id="max-jobs"
-                type="number"
-                value={maxJobs}
-                onChange={(e) => setMaxJobs(Number(e.target.value))}
-                min="1"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <span className="text-sm text-gray-600">Estado del Sistema:</span>
+              <span className={`ml-2 font-medium ${
+                scrapingStatus?.system_status === 'operational' ? 'text-green-600' :
+                scrapingStatus?.system_status === 'unavailable' ? 'text-yellow-600' : 'text-red-600'
+              }`}>
+                {scrapingStatus?.system_status === 'operational' ? '✅ Operacional' :
+                 scrapingStatus?.system_status === 'unavailable' ? '⚠️ No disponible (Celery)' :
+                 '❌ Con problemas'}
+              </span>
             </div>
             <div>
-              <label htmlFor="max-pages" className="block text-sm font-medium text-gray-700 mb-2">
-                Máximo de Páginas
-              </label>
-              <input
-                id="max-pages"
-                type="number"
-                value={maxPages}
-                onChange={(e) => setMaxPages(Number(e.target.value))}
-                min="1"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <span className="text-sm text-gray-600">Tareas Activas:</span>
+              <span className="ml-2 font-medium">
+                {scrapingStatus?.total_active || 0}
+              </span>
             </div>
           </div>
 
-          {/* Start Button */}
-          <button
-            onClick={handleStartScraping}
-            disabled={isStarting || selectedSpiders.length === 0 || selectedCountries.length === 0}
-            className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isStarting ? 'Iniciando...' : 'Iniciar Scraping'}
-          </button>
-        </div>
-      </div>
-
-      {/* LLM Pipeline B */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Pipeline B - Extracción LLM</h2>
-
-        {llmStatus && (
-          <div className={`rounded-lg p-4 mb-4 ${
-            llmStatus.ready
-              ? 'bg-green-50 border border-green-200'
-              : 'bg-yellow-50 border border-yellow-200'
-          }`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className={`inline-block w-3 h-3 rounded-full ${
-                  llmStatus.ready ? 'bg-green-600' : 'bg-yellow-600'
-                }`}></span>
-                <div>
-                  <p className="font-medium">
-                    {llmStatus.model_name} - {llmStatus.downloaded ? 'Descargado' : 'No descargado'}
-                  </p>
-                  <p className="text-sm text-gray-600">Tamaño: {llmStatus.size_gb} GB</p>
-                </div>
-              </div>
-              {!llmStatus.downloaded && (
-                <button
-                  onClick={handleDownloadGemma}
-                  disabled={isDownloadingGemma}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isDownloadingGemma ? 'Descargando...' : 'Descargar Modelo'}
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="pipeline-b-limit" className="block text-sm font-medium text-gray-700 mb-2">
-                Cantidad de Empleos a Procesar
-              </label>
-              <input
-                id="pipeline-b-limit"
-                type="number"
-                value={pipelineBLimit}
-                onChange={(e) => setPipelineBLimit(Number(e.target.value))}
-                min="1"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="pipeline-b-country" className="block text-sm font-medium text-gray-700 mb-2">
-                País (Opcional)
-              </label>
-              <select
-                id="pipeline-b-country"
-                value={pipelineBCountry}
-                onChange={(e) => setPipelineBCountry(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todos los países</option>
-                {availableCountries.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <button
-            onClick={handleRunPipelineB}
-            disabled={isRunningPipelineB || !llmStatus?.ready}
-            className="w-full px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isRunningPipelineB ? 'Iniciando Pipeline B...' : 'Ejecutar Pipeline B'}
-          </button>
-
-          {!llmStatus?.ready && (
-            <p className="text-sm text-yellow-600 text-center">
-              Descarga el modelo Gemma primero para habilitar Pipeline B
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Active Tasks */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
-          Tareas Activas {status && `(${status.total_active})`}
-        </h2>
-
-        {loading && !status && (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-              <p className="mt-2 text-gray-600 text-sm">Cargando...</p>
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-600">{error}</p>
-          </div>
-        )}
-
-        {status && status.active_tasks.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-gray-500">No hay tareas activas</p>
-          </div>
-        )}
-
-        {status && status.active_tasks.length > 0 && (
-          <div className="space-y-4">
-            {status.active_tasks.map(task => (
-              <div
-                key={task.task_id}
-                className="border border-gray-200 rounded-lg p-4"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Tarea {task.task_id.slice(0, 8)}
-                      </h3>
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        task.status === 'running'
-                          ? 'bg-green-100 text-green-800'
-                          : task.status === 'completed'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {task.status}
+          {scrapingStatus && scrapingStatus.active_tasks && scrapingStatus.active_tasks.length > 0 && (
+            <div className="mt-4">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">Tareas en Ejecución:</h4>
+              {scrapingStatus.active_tasks.map((task: any) => (
+                <div key={task.task_id} className="bg-white rounded p-3 mb-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-medium">{task.config?.spiders?.join(', ') || 'N/A'}</span>
+                      <span className="text-sm text-gray-500 ml-2">
+                        ({task.config?.country || 'N/A'})
                       </span>
                     </div>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <p><strong>Portales:</strong> {task.spiders.join(', ')}</p>
-                      <p><strong>Países:</strong> {task.countries.join(', ')}</p>
-                      <p><strong>Límites:</strong> {task.max_jobs} empleos, {task.max_pages} páginas</p>
-                      <p><strong>Iniciada:</strong> {new Date(task.started_at).toLocaleString('es-ES')}</p>
-                      {task.completed_at && (
-                        <p><strong>Completada:</strong> {new Date(task.completed_at).toLocaleString('es-ES')}</p>
-                      )}
-                      {task.pid && <p><strong>PID:</strong> {task.pid}</p>}
-                      {task.error && (
-                        <p className="text-red-600"><strong>Error:</strong> {task.error}</p>
-                      )}
-                    </div>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      {task.status || 'running'}
+                    </span>
                   </div>
-                  {task.status === 'running' && (
-                    <button
-                      onClick={() => handleStopTask(task.task_id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition text-sm font-medium"
-                    >
-                      Detener
-                    </button>
-                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+
+          {scrapingStatus?.system_status === 'unavailable' && (
+            <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-sm text-yellow-800">
+                ⚠️ Sistema de scraping no disponible (Celery workers no están corriendo)
+              </p>
+            </div>
+          )}
+        </div>
+
+        {schedule && schedule.scraping_tasks && schedule.scraping_tasks.length > 0 && (
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
+            <h3 className="font-semibold text-blue-900 mb-3">⏰ Tareas Programadas de Scraping</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+              {schedule.scraping_tasks.map((task, idx) => (
+                <div key={idx} className="bg-white rounded p-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-gray-900">{task.spider}</span>
+                    <span className="text-xs px-2 py-0.5 bg-gray-100 rounded">{task.country}</span>
+                  </div>
+                  <span className="text-xs text-gray-600">{task.schedule}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-blue-700 mt-3 italic">
+              💡 {schedule.scraping_tasks.length} tareas automáticas configuradas en Celery Beat
+            </p>
           </div>
         )}
+      </div>
+
+      {/* Pipeline Status */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">📊 Estado del Pipeline de Procesamiento</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Extraction (Pipeline A) */}
+          <div className="border border-gray-200 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 mb-3">🎯 Extracción de Skills (Pipeline A)</h3>
+            {extractionStats ? (
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Jobs:</span>
+                  <span className="font-medium">{(extractionStats.total_jobs || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Completados:</span>
+                  <span className="font-medium text-green-600">{(extractionStats.completed || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Pendientes:</span>
+                  <span className="font-medium text-orange-600">{(extractionStats.pending || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Fallidos:</span>
+                  <span className="font-medium text-red-600">{(extractionStats.failed || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Skills Extraídas:</span>
+                  <span className="font-medium text-blue-600">{(extractionStats.total_skills_extracted || 0).toLocaleString()}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                  <div
+                    className="bg-green-600 h-2 rounded-full"
+                    style={{ width: `${extractionStats.completion_rate || 0}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-500 text-right">{(extractionStats.completion_rate || 0).toFixed(1)}% completado</p>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500 mb-4 p-4 bg-gray-50 rounded">
+                Cargando estadísticas...
+              </div>
+            )}
+          </div>
+
+          {/* Enhancement (Pipeline B) */}
+          <div className="border border-gray-200 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 mb-3">🤖 Enhancement LLM (Pipeline B)</h3>
+            {enhancementStats ? (
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Jobs:</span>
+                  <span className="font-medium">{(enhancementStats.total_jobs || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Completados:</span>
+                  <span className="font-medium text-green-600">{(enhancementStats.completed || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Pendientes:</span>
+                  <span className="font-medium text-orange-600">{(enhancementStats.pending || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Fallidos:</span>
+                  <span className="font-medium text-red-600">{(enhancementStats.failed || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Skills Mejoradas:</span>
+                  <span className="font-medium text-purple-600">{(enhancementStats.total_enhanced || 0).toLocaleString()}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                  <div
+                    className="bg-purple-600 h-2 rounded-full"
+                    style={{ width: `${enhancementStats.completion_rate || 0}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-500 text-right">{(enhancementStats.completion_rate || 0).toFixed(1)}% completado</p>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500 mb-4 p-4 bg-gray-50 rounded">
+                Cargando estadísticas...
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* System Info */}
+      <div className="bg-gradient-to-r from-gray-700 to-gray-900 rounded-lg shadow p-6 text-white">
+        <h2 className="text-xl font-bold mb-4">ℹ️ Información del Sistema</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div>
+            <p className="text-gray-300">Versión</p>
+            <p className="font-semibold">1.0.0</p>
+          </div>
+          <div>
+            <p className="text-gray-300">Database</p>
+            <p className="font-semibold">PostgreSQL 15</p>
+          </div>
+          <div>
+            <p className="text-gray-300">Cache</p>
+            <p className="font-semibold">Redis</p>
+          </div>
+          <div>
+            <p className="text-gray-300">Workers</p>
+            <p className="font-semibold">Celery</p>
+          </div>
+        </div>
       </div>
     </div>
   );

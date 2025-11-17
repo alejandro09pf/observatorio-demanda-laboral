@@ -18,3 +18,6 @@ class TopSkillsResponse(BaseModel):
     """Response for top skills endpoint."""
     total_unique: int
     skills: List[SkillCount]
+    page: Optional[int] = None
+    page_size: Optional[int] = None
+    total_pages: Optional[int] = None

@@ -27,10 +27,12 @@ class JobBase(BaseModel):
 
 
 class JobDetail(JobBase):
-    """Detailed job model with description and extracted skills."""
+    """Detailed job model with description and all types of extracted skills."""
     description: str
     requirements: Optional[str] = None
-    extracted_skills: List[dict] = []
+    extracted_skills: List[dict] = []  # Pipeline A (NER + Regex)
+    enhanced_skills: List[dict] = []   # Pipeline B (LLM)
+    manual_skills: List[dict] = []     # Manual/Golden annotations
 
 
 class JobListResponse(BaseModel):
@@ -48,6 +50,7 @@ class ExtractedSkillSchema(BaseModel):
     extraction_method: Optional[str] = None
     confidence_score: Optional[float] = None
     esco_uri: Optional[str] = None
+    llm_model: Optional[str] = None  # For Pipeline B skills
 
     class Config:
         from_attributes = True
