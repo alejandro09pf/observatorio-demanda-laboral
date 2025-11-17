@@ -1,30 +1,44 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getJobs, JobListResponse, Job } from '@/lib/api';
+import { getJobs, JobListResponse, Job, getStats, StatsResponse } from '@/lib/api';
 import Link from 'next/link';
 
 export default function JobsPage() {
   const [data, setData] = useState<JobListResponse | null>(null);
+  const [stats, setStats] = useState<StatsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
-  const [country, setCountry] = useState<string>('');
-  const [portal, setPortal] = useState<string>('');
-  const [jobStatus, setJobStatus] = useState<string>('');
+  const [country, setCountry] = useState<string>('all');
+  const [portal, setPortal] = useState<string>('all');
+  const [jobStatus, setJobStatus] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState(1);
   const pageSize = 20;
+
+  // Fetch stats for filter options
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const statsData = await getStats();
+        setStats(statsData);
+      } catch (err) {
+        console.error('Error fetching stats:', err);
+      }
+    };
+    fetchStats();
+  }, []);
 
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
       try {
         const result = await getJobs({
-          country: country || undefined,
-          portal: portal || undefined,
-          job_status: jobStatus || undefined,
+          country: country !== 'all' ? country : undefined,
+          portal: portal !== 'all' ? portal : undefined,
+          job_status: jobStatus !== 'all' ? jobStatus : undefined,
           search: search || undefined,
           limit: pageSize,
           offset: (page - 1) * pageSize,
@@ -49,109 +63,115 @@ export default function JobsPage() {
 
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 
+  const hasActiveFilters = country !== 'all' || portal !== 'all' || jobStatus !== 'all' || search !== '';
+
+  const clearFilters = () => {
+    setCountry('all');
+    setPortal('all');
+    setJobStatus('all');
+    setSearch('');
+    setPage(1);
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Empleos</h1>
-        <p className="text-gray-600 mt-2">
-          Explora las ofertas laborales recolectadas
-        </p>
-      </div>
+    <div className="space-y-4">
+      {/* Header with Filters */}
+      <div className="flex items-start justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Empleos</h1>
+          <p className="text-gray-600 mt-1">
+            Explora las ofertas laborales recolectadas
+          </p>
+        </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtros</h2>
-        <form onSubmit={handleSearchSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Compact Filters */}
+        <div className="bg-white rounded-lg shadow p-4 min-w-[600px]">
+          <div className="grid grid-cols-3 gap-2.5 mb-3">
             <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                Buscar
-              </label>
-              <input
-                id="search"
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Título o descripción..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="country-filter" className="block text-xs font-medium text-gray-600 mb-1">
                 País
               </label>
               <select
-                id="country"
+                id="country-filter"
                 value={country}
                 onChange={(e) => {
                   setCountry(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
-                <option value="">Todos</option>
-                <option value="AR">Argentina</option>
-                <option value="CO">Colombia</option>
-                <option value="MX">México</option>
+                <option value="all">Todos</option>
+                {stats?.countries?.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
               </select>
             </div>
 
             <div>
-              <label htmlFor="portal" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="portal-filter" className="block text-xs font-medium text-gray-600 mb-1">
                 Portal
               </label>
               <select
-                id="portal"
+                id="portal-filter"
                 value={portal}
                 onChange={(e) => {
                   setPortal(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
-                <option value="">Todos</option>
-                <option value="bumeran">Bumeran</option>
-                <option value="computrabajo">Computrabajo</option>
-                <option value="elempleo">El Empleo</option>
-                <option value="hiring_cafe">Hiring Café</option>
-                <option value="magneto">Magneto</option>
-                <option value="occmundial">OCC Mundial</option>
-                <option value="zonajobs">ZonaJobs</option>
+                <option value="all">Todos</option>
+                {stats?.portals?.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
               </select>
             </div>
 
             <div>
-              <label htmlFor="job-status" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="job-status-filter" className="block text-xs font-medium text-gray-600 mb-1">
                 Estado
               </label>
               <select
-                id="job-status"
+                id="job-status-filter"
                 value={jobStatus}
                 onChange={(e) => {
                   setJobStatus(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
-                <option value="">Todos</option>
-                <option value="raw">Sin limpiar (Raw)</option>
-                <option value="cleaned">Limpiados (30k)</option>
-                <option value="golden">Golden (300)</option>
+                <option value="all">Todos</option>
+                <option value="raw">Raw</option>
+                <option value="cleaned">Cleaned</option>
+                <option value="golden">Golden</option>
               </select>
             </div>
           </div>
 
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-            >
-              Buscar
-            </button>
+          <div className="mb-3">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Buscar por título o descripción..."
+              className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
           </div>
-        </form>
+
+          <div className="flex items-center justify-end">
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+              >
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Results Count */}

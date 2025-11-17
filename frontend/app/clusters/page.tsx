@@ -19,10 +19,12 @@ export default function ClustersPage() {
   const [availableConfigs, setAvailableConfigs] = useState<ClusterConfig[]>([]);
   const [selectedConfig, setSelectedConfig] = useState<string>('');
 
-  // Filters
-  const [pipelineFilter, setPipelineFilter] = useState<string>('all');
-  const [sizeFilter, setSizeFilter] = useState<string>('all');
-  const [escoStageFilter, setEscoStageFilter] = useState<string>('all');
+  // Filters - Changed from pipeline to data source (pipeline + size)
+  const [dataSourceFilter, setDataSourceFilter] = useState<string>('manual_golden');
+  const [escoStageFilter, setEscoStageFilter] = useState<string>('pre');
+
+  // Image modal state
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   // Fetch available configs on mount
   useEffect(() => {
@@ -30,8 +32,13 @@ export default function ClustersPage() {
       try {
         const result = await getAvailableClusterConfigs();
         setAvailableConfigs(result.configs);
-        // Set first config as default if available
-        if (result.configs.length > 0) {
+        // Set default config based on filters
+        const defaultConfig = result.configs.find(
+          c => c.pipeline === 'manual' && c.size === '300' && c.esco_stage === 'pre'
+        );
+        if (defaultConfig) {
+          setSelectedConfig(defaultConfig.name);
+        } else if (result.configs.length > 0) {
           setSelectedConfig(result.configs[0].name);
         }
       } catch (err) {
@@ -41,36 +48,33 @@ export default function ClustersPage() {
     fetchConfigs();
   }, []);
 
-  // Filtered configs based on selected filters
-  const filteredConfigs = useMemo(() => {
-    return availableConfigs.filter((config) => {
-      if (pipelineFilter !== 'all' && config.pipeline !== pipelineFilter) return false;
-      if (sizeFilter !== 'all' && config.size !== sizeFilter) return false;
-      if (escoStageFilter !== 'all' && config.esco_stage !== escoStageFilter) return false;
-      return true;
-    });
-  }, [availableConfigs, pipelineFilter, sizeFilter, escoStageFilter]);
-
-  // Auto-select first filtered config when filters change
+  // Auto-select config when filters change
   useEffect(() => {
-    if (filteredConfigs.length > 0 && !filteredConfigs.find(c => c.name === selectedConfig)) {
-      setSelectedConfig(filteredConfigs[0].name);
-    }
-  }, [filteredConfigs, selectedConfig]);
+    // Parse dataSourceFilter to get pipeline and size
+    let pipeline = 'manual';
+    let size = '300';
 
-  // Get unique filter values from available configs
-  const pipelines = useMemo(() =>
-    [...new Set(availableConfigs.map(c => c.pipeline))].sort(),
-    [availableConfigs]
-  );
-  const sizes = useMemo(() =>
-    [...new Set(availableConfigs.map(c => c.size))].sort(),
-    [availableConfigs]
-  );
-  const escoStages = useMemo(() =>
-    [...new Set(availableConfigs.map(c => c.esco_stage))].sort(),
-    [availableConfigs]
-  );
+    if (dataSourceFilter === 'manual_golden') {
+      pipeline = 'manual';
+      size = '300';
+    } else if (dataSourceFilter === 'pipeline_a_golden') {
+      pipeline = 'pipeline_a';
+      size = '300';
+    } else if (dataSourceFilter === 'pipeline_b_golden') {
+      pipeline = 'pipeline_b';
+      size = '300';
+    } else if (dataSourceFilter === 'pipeline_a_all') {
+      pipeline = 'pipeline_a';
+      size = '30k';
+    }
+
+    const matchingConfig = availableConfigs.find(
+      c => c.pipeline === pipeline && c.size === size && c.esco_stage === escoStageFilter
+    );
+    if (matchingConfig) {
+      setSelectedConfig(matchingConfig.name);
+    }
+  }, [dataSourceFilter, escoStageFilter, availableConfigs]);
 
   // Fetch clustering data and images when config changes
   useEffect(() => {
@@ -100,129 +104,119 @@ export default function ClustersPage() {
   // Get current config info
   const currentConfig = availableConfigs.find(c => c.name === selectedConfig);
 
-  // Get friendly pipeline name
-  const getPipelineName = (pipeline: string) => {
-    switch (pipeline) {
-      case 'manual': return 'Manual (ONET)';
-      case 'pipeline_a': return 'Pipeline A (NER + Regex)';
-      case 'pipeline_b': return 'Pipeline B (LLM)';
-      default: return pipeline;
+  // Get friendly data source name
+  const getDataSourceName = (dataSource: string) => {
+    switch (dataSource) {
+      case 'manual_golden': return 'Manual (ONET Golden)';
+      case 'pipeline_a_golden': return 'Pipeline A Golden';
+      case 'pipeline_b_golden': return 'Pipeline B (LLM Golden)';
+      case 'pipeline_a_all': return 'Pipeline A (Todos)';
+      default: return dataSource;
     }
   };
 
+  // Image modal navigation
+  const openImageModal = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const nextImage = () => {
+    if (selectedImageIndex !== null && selectedImageIndex < images.length - 1) {
+      setSelectedImageIndex(selectedImageIndex + 1);
+    }
+  };
+
+  const previousImage = () => {
+    if (selectedImageIndex !== null && selectedImageIndex > 0) {
+      setSelectedImageIndex(selectedImageIndex - 1);
+    }
+  };
+
+  // Keyboard navigation for modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImageIndex === null) return;
+
+      if (e.key === 'Escape') closeImageModal();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') previousImage();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImageIndex, images.length]);
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Clustering de Habilidades</h1>
-        <p className="text-gray-600 mt-2">
-          Agrupación automática de habilidades similares mediante UMAP + HDBSCAN
-        </p>
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtros de Configuración</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Pipeline Filter */}
-          <div>
-            <label htmlFor="pipeline-filter" className="block text-sm font-medium text-gray-700 mb-1">
-              Pipeline de Extracción
-            </label>
-            <select
-              id="pipeline-filter"
-              value={pipelineFilter}
-              onChange={(e) => setPipelineFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">Todos</option>
-              {pipelines.map((pipeline) => (
-                <option key={pipeline} value={pipeline}>
-                  {getPipelineName(pipeline)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Size Filter */}
-          <div>
-            <label htmlFor="size-filter" className="block text-sm font-medium text-gray-700 mb-1">
-              Tamaño del Dataset
-            </label>
-            <select
-              id="size-filter"
-              value={sizeFilter}
-              onChange={(e) => setSizeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">Todos</option>
-              {sizes.map((size) => (
-                <option key={size} value={size}>
-                  {size === '30k' ? '30,000 jobs' : `${size} jobs`}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* ESCO Stage Filter */}
-          <div>
-            <label htmlFor="esco-filter" className="block text-sm font-medium text-gray-700 mb-1">
-              Etapa ESCO
-            </label>
-            <select
-              id="esco-filter"
-              value={escoStageFilter}
-              onChange={(e) => setEscoStageFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">Todas</option>
-              {escoStages.map((stage) => (
-                <option key={stage} value={stage}>
-                  {stage === 'pre' ? 'Pre-ESCO (original)' : 'Post-ESCO (normalizado)'}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Config Selector */}
-          <div>
-            <label htmlFor="config-selector" className="block text-sm font-medium text-gray-700 mb-1">
-              Configuración ({filteredConfigs.length})
-            </label>
-            <select
-              id="config-selector"
-              value={selectedConfig}
-              onChange={(e) => setSelectedConfig(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {filteredConfigs.map((config) => (
-                <option key={config.name} value={config.name}>
-                  {config.name}
-                </option>
-              ))}
-            </select>
-          </div>
+    <div className="space-y-4">
+      {/* Header with Filters */}
+      <div className="flex items-start justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Clustering de Habilidades</h1>
+          <p className="text-gray-600 mt-1">
+            Agrupación automática de habilidades similares mediante UMAP + HDBSCAN
+          </p>
         </div>
 
-        {/* Current Config Info */}
-        {currentConfig && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <div className="flex flex-wrap gap-3">
-              <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                {getPipelineName(currentConfig.pipeline)}
-              </span>
-              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                {currentConfig.size === '30k' ? '30,000 jobs' : `${currentConfig.size} jobs`}
-              </span>
-              <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                {currentConfig.esco_stage === 'pre' ? 'Pre-ESCO' : 'Post-ESCO'}
-              </span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
-                {currentConfig.image_count} imágenes
-              </span>
+        {/* Compact Filters */}
+        <div className="bg-white rounded-lg shadow p-4 min-w-[450px]">
+          <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <label htmlFor="data-source-filter" className="block text-xs font-medium text-gray-600 mb-1">
+                Datos
+              </label>
+              <select
+                id="data-source-filter"
+                value={dataSourceFilter}
+                onChange={(e) => setDataSourceFilter(e.target.value)}
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="manual_golden">Manual (ONET Golden)</option>
+                <option value="pipeline_a_golden">Pipeline A Golden</option>
+                <option value="pipeline_b_golden">Pipeline B (LLM Golden)</option>
+                <option value="pipeline_a_all">Pipeline A (Todos)</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="esco-filter" className="block text-xs font-medium text-gray-600 mb-1">
+                Etapa ESCO
+              </label>
+              <select
+                id="esco-filter"
+                value={escoStageFilter}
+                onChange={(e) => setEscoStageFilter(e.target.value)}
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="pre">Pre-ESCO</option>
+                <option value="post">Post-ESCO</option>
+              </select>
             </div>
           </div>
-        )}
+
+          {/* Current Config Info */}
+          {currentConfig && (
+            <div className="mt-3 pt-3 border-t border-gray-200">
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-xs font-medium">
+                  {getDataSourceName(dataSourceFilter)}
+                </span>
+                <span className="px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs font-medium">
+                  {currentConfig.size === '30k' ? '30,000 jobs' : `${currentConfig.size} jobs`}
+                </span>
+                <span className="px-2 py-0.5 bg-purple-100 text-purple-800 rounded text-xs font-medium">
+                  {currentConfig.esco_stage === 'pre' ? 'Pre-ESCO' : 'Post-ESCO'}
+                </span>
+                <span className="px-2 py-0.5 bg-gray-100 text-gray-800 rounded text-xs font-medium">
+                  {currentConfig.image_count} imágenes
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Loading State */}
@@ -253,8 +247,12 @@ export default function ClustersPage() {
                 Visualizaciones ({images.length})
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {images.map((image) => (
-                  <div key={image.filename} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                {images.map((image, idx) => (
+                  <div
+                    key={image.filename}
+                    className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition cursor-pointer"
+                    onClick={() => openImageModal(idx)}
+                  >
                     <img
                       src={`http://localhost:8000${image.url}`}
                       alt={image.filename}
@@ -407,6 +405,73 @@ export default function ClustersPage() {
             </div>
           </div>
         </>
+      )}
+
+      {/* Image Modal */}
+      {selectedImageIndex !== null && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          onClick={closeImageModal}
+        >
+          <div className="relative max-w-7xl max-h-full" onClick={(e) => e.stopPropagation()}>
+            {/* Close Button */}
+            <button
+              onClick={closeImageModal}
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 transition"
+              aria-label="Cerrar"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Image Info */}
+            <div className="absolute -top-12 left-0 text-white text-sm">
+              <p className="font-medium">{images[selectedImageIndex].filename}</p>
+              <p className="text-gray-300">
+                {selectedImageIndex + 1} de {images.length}
+              </p>
+            </div>
+
+            {/* Previous Button */}
+            {selectedImageIndex > 0 && (
+              <button
+                onClick={previousImage}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 text-white hover:text-gray-300 transition"
+                aria-label="Anterior"
+              >
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+
+            {/* Image */}
+            <img
+              src={`http://localhost:8000${images[selectedImageIndex].url}`}
+              alt={images[selectedImageIndex].filename}
+              className="max-w-full max-h-[85vh] w-auto h-auto mx-auto rounded-lg shadow-2xl"
+            />
+
+            {/* Next Button */}
+            {selectedImageIndex < images.length - 1 && (
+              <button
+                onClick={nextImage}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 text-white hover:text-gray-300 transition"
+                aria-label="Siguiente"
+              >
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
+
+            {/* Keyboard Hints */}
+            <div className="absolute -bottom-12 left-0 right-0 text-center text-white text-xs text-gray-400">
+              <p>Usa las flechas ← → para navegar • ESC para cerrar</p>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -16,9 +16,19 @@ from typing import List, Dict, Any, Optional, Tuple
 import logging
 import pickle
 import numpy as np
-import faiss
+try:
+    import faiss
+    FAISS_AVAILABLE = True
+except ImportError:
+    FAISS_AVAILABLE = False
+    logging.warning("FAISS not available, Layer 3 (semantic matching) will be disabled")
 from pathlib import Path
-from fuzzywuzzy import fuzz
+try:
+    from fuzzywuzzy import fuzz
+    FUZZYWUZZY_AVAILABLE = True
+except ImportError:
+    FUZZYWUZZY_AVAILABLE = False
+    logging.warning("fuzzywuzzy not available, fuzzy matching disabled")
 from sentence_transformers import SentenceTransformer
 from dataclasses import dataclass
 
@@ -67,6 +77,14 @@ class ESCOMatcher3Layers:
 
     def _load_faiss_index(self):
         """Load FAISS index and skill mapping for semantic search."""
+        # Skip loading FAISS if not available
+        if not FAISS_AVAILABLE:
+            logger.warning("FAISS library not available - Layer 3 disabled")
+            self.faiss_index = None
+            self.skill_texts = None
+            self.model = None
+            return
+
         # Skip loading FAISS if Layer 3 is disabled
         if not self.LAYER3_ENABLED:
             logger.info("Layer 3 (semantic matching) is DISABLED - skipping FAISS index load")
@@ -206,6 +224,10 @@ class ESCOMatcher3Layers:
         2. Run fuzzy matching on candidates only (much faster)
         3. If no candidates found, search all skills (fallback)
         """
+        # Skip if fuzzywuzzy not available
+        if not FUZZYWUZZY_AVAILABLE:
+            return None
+
         try:
             with psycopg2.connect(self.db_url) as conn:
                 cursor = conn.cursor()
