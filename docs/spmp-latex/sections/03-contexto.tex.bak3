@@ -1,0 +1,647 @@
+\chapter{Contexto del proyecto}
+
+\section{Modelo de Ciclo de Vida}
+
+El proyecto ``Observatorio Automatizado de Demanda Laboral en Tecnología para Latinoamérica'' adopta un enfoque metodológico mixto que combina elementos del modelo CRISP-DM con prácticas ágiles inspiradas en Scrum, adaptadas a un entorno académico. Esta combinación busca asegurar tanto una estructura clara y validada como una flexibilidad en la ejecución iterativa del desarrollo.
+
+El modelo CRISP-DM (Cross-Industry Standard Process for Data Mining) proporciona una base sólida para proyectos de análisis de datos, al organizar el trabajo en fases encadenadas y recurrentes. Su estructura es especialmente adecuada para proyectos que incluyen scraping, procesamiento textual, análisis semántico y generación de visualizaciones, como es el caso de este sistema.
+
+El ciclo de vida del proyecto se compone de seis fases principales encadenadas y recurrentes. La primera fase corresponde a la comprensión del dominio y diseño del sistema, incluyendo revisión crítica del estado del arte, definición del pipeline modular, y planificación por etapas metodológicas. La segunda fase implementa la extracción de datos mediante scraping con spiders personalizados por portal y país, almacenando resultados de forma estructurada en base de datos relacional.
+
+La tercera fase ejecuta procesamiento semántico y enriquecimiento, aplicando NER, expresiones regulares y validación con LLMs para extracción explícita e implícita de habilidades técnicas. La cuarta fase realiza vectorización y clustering, obteniendo embeddings semánticos, reducción de dimensionalidad con UMAP y agrupación de perfiles mediante HDBSCAN. La quinta fase genera visualización y validación, produciendo gráficos estáticos para evaluación cualitativa y cuantitativa por expertos del dominio. Finalmente, la sexta fase consolida documentación y empaquetado final, integrando guía metodológica, código versionado, resultados obtenidos y recomendaciones para futuras iteraciones.
+
+Cada una de estas fases se articula mediante entregables intermedios verificables, como bases de datos limpias, corpus anotados, scripts funcionales y reportes interpretables.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/CiclodeVidadelProyecto.png}
+\caption{Ciclo de Vida del Proyecto basado en CRISP-DM con prácticas ágiles}
+\label{fig:ciclo-vida}
+\end{figure}
+
+\subsection{Análisis de Alternativas y Justificación}
+
+En el contexto del desarrollo del sistema ``Observatorio Automatizado de Demanda Laboral en Tecnología para Latinoamérica'', se evaluaron distintas alternativas de modelos de ciclo de vida y enfoques metodológicos. A continuación, se analizan tres enfoques representativos: cascada tradicional, metodología ágil (Scrum completo), y CRISP-DM adaptado con prácticas ágiles.
+
+\subsubsection{Modelo de Cascada Tradicional}
+
+El modelo de cascada propone una secuencia rígida de etapas: análisis de requerimientos, diseño, implementación, pruebas y despliegue. Su lógica lineal facilita la planificación y la documentación desde el inicio, siendo útil en proyectos con requerimientos estables y completamente definidos.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Claridad en los entregables por fase.
+    \item Control estricto del avance y dependencias.
+    \item Buena trazabilidad documental.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Supone requerimientos estables, lo cual no aplica a este proyecto, donde los resultados intermedios pueden modificar fases posteriores.
+    \item No permite incorporar descubrimientos progresivos ni resultados exploratorios.
+    \item La validación se da muy tarde, sin retroalimentación temprana.
+\end{itemize}
+
+\textbf{Conclusión:} Debido a la naturaleza exploratoria, técnica y adaptable del proyecto, el modelo de cascada resulta inadecuado.
+
+\subsubsection{Scrum completo (ágil puro)}
+
+Scrum es un marco ágil iterativo que organiza el trabajo en sprints, con roles definidos y eventos regulares. Favorece la adaptación continua y la entrega incremental de valor.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Flexibilidad ante cambios y descubrimientos técnicos.
+    \item Retroalimentación constante.
+    \item Priorización de entregables más relevantes en cada ciclo.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Supone la existencia de un cliente activo y disponible para validar cada sprint, lo cual no aplica a un proyecto académico sin cliente externo.
+    \item En su forma pura, Scrum puede fragmentar demasiado procesos que requieren una visión de pipeline.
+    \item Requiere una madurez organizacional y disciplina de roles que excede el alcance del equipo.
+\end{itemize}
+
+\textbf{Conclusión:} Si bien Scrum ofrece beneficios para la iteración y mejora continua, su estructura estricta no se ajusta del todo al carácter investigativo y académico del presente proyecto.
+
+\subsubsection{CRISP-DM adaptado + prácticas ágiles (modelo elegido)}
+
+El modelo CRISP-DM fue diseñado para proyectos de minería de datos y análisis avanzado. Sus fases se ajustan de forma natural a un proyecto basado en scraping, NLP, embeddings y clustering. La combinación con prácticas ligeras de Scrum permite mantener orden sin renunciar a la flexibilidad.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Alineación directa con las etapas técnicas del proyecto.
+    \item Permite iteración interna por módulo o fase.
+    \item No requiere cliente externo constante.
+    \item Favorece la documentación, trazabilidad y replicabilidad.
+    \item Facilita la planeación modular, con entregables verificables en cada fase.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item No cubre explícitamente aspectos de comunicación o roles.
+    \item Requiere una adaptación cuidadosa al contexto académico.
+\end{itemize}
+
+\textbf{Justificación final:}
+
+Se adopta un modelo híbrido fundamentado en CRISP-DM como columna vertebral del flujo de trabajo, complementado con prácticas ágiles inspiradas en Scrum para planificación, validación y control de avances.
+
+\section{Análisis de Alternativas Tecnológicas}
+
+En complemento al análisis metodológico, se presenta a continuación un estudio comparativo de las principales alternativas tecnológicas evaluadas para cada componente crítico del sistema, con justificación de las decisiones finales adoptadas.
+
+\subsection{Herramientas de Web Scraping}
+
+\subsubsection{Scrapy}
+
+\textbf{Descripción:} Framework asíncrono de scraping en Python, diseñado para proyectos de extracción a gran escala con arquitectura modular basada en spiders.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Alto rendimiento mediante ejecución asíncrona (Twisted).
+    \item Gestión automática de concurrencia, reintentos y delays.
+    \item Exportación nativa a JSON, CSV, SQL.
+    \item Comunidad activa y documentación robusta.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item No ejecuta JavaScript de forma nativa.
+    \item Curva de aprendizaje moderada para scrapers complejos.
+\end{itemize}
+
+\subsubsection{Selenium}
+
+\textbf{Descripción:} Herramienta de automatización de navegadores que permite interactuar con contenido dinámico cargado mediante JavaScript.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Renderiza JavaScript completamente, ideal para sitios dinámicos.
+    \item Permite simulación de interacciones humanas (clicks, scroll).
+    \item Compatible con múltiples navegadores (Chrome, Firefox).
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Significativamente más lento que Scrapy.
+    \item Consume más recursos (CPU, memoria).
+    \item Requiere gestión explícita de drivers (ChromeDriver).
+\end{itemize}
+
+\subsubsection{Playwright (evaluado como respaldo)}
+
+\textbf{Descripción:} Alternativa moderna a Selenium, desarrollada por Microsoft, con API más simple y ejecución más rápida.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Más rápido y estable que Selenium.
+    \item API más limpia y moderna.
+    \item Soporte nativo para capturas de pantalla y manejo de red.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Comunidad más pequeña que Selenium.
+    \item Menos ejemplos específicos para scraping laboral.
+\end{itemize}
+
+\textbf{Decisión final:} Se adopta \textbf{Scrapy como herramienta principal} por su rendimiento y robustez para scraping masivo de páginas estáticas o semi-dinámicas. \textbf{Selenium se empleará como respaldo} para portales que requieran ejecución de JavaScript. Playwright queda como alternativa secundaria en caso de problemas con Selenium.
+
+\subsection{Sistemas de Gestión de Bases de Datos}
+
+\subsubsection{PostgreSQL}
+
+\textbf{Descripción:} Sistema de gestión de bases de datos relacional de código abierto, con fuerte soporte para consultas complejas, integridad referencial y tipos de datos avanzados.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Soporte nativo para JSON y tipos de datos no estructurados.
+    \item ACID completo, garantizando integridad transaccional.
+    \item Extensiones para búsqueda de texto completo (pg\_trgm).
+    \item Escalabilidad probada en proyectos de mediano y gran tamaño.
+    \item Integración directa con pandas y SQLAlchemy.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Requiere instalación y configuración local o en servidor.
+    \item Mayor complejidad administrativa que SQLite.
+\end{itemize}
+
+\subsubsection{MongoDB}
+
+\textbf{Descripción:} Base de datos NoSQL orientada a documentos, almacena datos en formato JSON/BSON flexible.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Esquema flexible, ideal para datos semi-estructurados.
+    \item Fácil almacenamiento de anidaciones complejas.
+    \item Alto rendimiento en escritura masiva.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item No garantiza integridad referencial estricta.
+    \item Consultas relacionales complejas son más difíciles.
+    \item Menos adecuado para análisis estructurado y normalización posterior.
+\end{itemize}
+
+\subsubsection{SQLite}
+
+\textbf{Descripción:} Base de datos relacional ligera, embebida, sin necesidad de servidor.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Configuración mínima (archivo único).
+    \item Ideal para prototipos rápidos y datasets pequeños.
+    \item Compatible con SQL estándar.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Rendimiento limitado con grandes volúmenes de datos.
+    \item Sin soporte para concurrencia de escritura eficiente.
+    \item Carece de funciones avanzadas de PostgreSQL.
+\end{itemize}
+
+\textbf{Decisión final:} Se selecciona \textbf{PostgreSQL} como base de datos principal, por su capacidad para manejar esquemas estructurados con integridad referencial, su soporte avanzado para consultas analíticas, su extensibilidad para búsqueda textual, y su integración sólida con el ecosistema Python de ciencia de datos.
+
+\subsection{Bibliotecas de Procesamiento de Lenguaje Natural (NLP)}
+
+\subsubsection{spaCy}
+
+\textbf{Descripción:} Biblioteca industrial de NLP en Python, optimizada para eficiencia y modularidad, con soporte para múltiples idiomas incluyendo español.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Rápida y eficiente en producción.
+    \item Modelos preentrenados de calidad para español (es\_core\_news).
+    \item Soporte nativo para tokenización, lematización, POS tagging y NER.
+    \item Fácil integración con transformers de HuggingFace.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Modelos de NER genéricos, no especializados en dominio laboral.
+    \item Requiere ajuste fino o complementos para habilidades técnicas específicas.
+\end{itemize}
+
+\subsubsection{Stanford NLP / Stanza}
+
+\textbf{Descripción:} Suite de herramientas NLP de Stanford, con Stanza como implementación en Python.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Modelos lingüísticos sólidos con fundamento académico.
+    \item Soporte para análisis sintáctico profundo (dependencias).
+    \item Modelos multilingües entrenados en corpus universales.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Más lento que spaCy en ejecución.
+    \item Configuración más compleja.
+    \item Menor integración con ecosistema de embeddings modernos.
+\end{itemize}
+
+\subsubsection{Transformers de HuggingFace (BETO, RoBERTuito)}
+
+\textbf{Descripción:} Modelos de lenguaje basados en arquitectura Transformer (BERT, RoBERTa) preentrenados en español.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Representaciones contextuales de alta calidad.
+    \item BETO entrenado específicamente en español.
+    \item Adaptable mediante fine-tuning para dominios específicos.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Requiere recursos computacionales significativos.
+    \item Latencia alta para procesamiento en tiempo real.
+    \item Fine-tuning requiere datasets etiquetados grandes.
+\end{itemize}
+
+\textbf{Decisión final:} Se adopta \textbf{spaCy como biblioteca principal de NLP} por su balance entre velocidad, facilidad de uso y calidad en tareas básicas de NER y tokenización. Se complementará con \textbf{expresiones regulares personalizadas} para habilidades técnicas específicas, y se evaluará el uso de \textbf{modelos Transformer (BETO)} para tareas de enriquecimiento semántico en fases posteriores si los recursos computacionales lo permiten.
+
+\subsection{Modelos de Embeddings Semánticos}
+
+\subsubsection{BETO (BERT en español)}
+
+\textbf{Descripción:} Modelo BERT preentrenado en corpus masivo de español, adecuado para tareas de comprensión de lenguaje contextual.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Entrenado específicamente en español.
+    \item Representaciones contextuales de alta calidad.
+    \item Compatible con biblioteca Transformers.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item No optimizado para similitud semántica (embeddings densos).
+    \item Requiere fine-tuning para tareas de sentence similarity.
+    \item Alto costo computacional.
+\end{itemize}
+
+\subsubsection{Multilingual-E5 / LaBSE}
+
+\textbf{Descripción:} Modelos multilingües diseñados específicamente para generar embeddings densos de oraciones con alta similitud semántica cross-lingual.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Optimizados para similitud semántica (cosine similarity).
+    \item Soporte para múltiples idiomas en un mismo espacio vectorial.
+    \item LaBSE entrenado en más de 100 idiomas.
+    \item E5 con rendimiento superior en benchmarks recientes.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Modelos grandes (requisitos de memoria).
+    \item Menor especialización en dominio laboral específico.
+\end{itemize}
+
+\subsubsection{SBERT (Sentence-BERT)}
+
+\textbf{Descripción:} Extensión de BERT optimizada para embeddings de oraciones mediante siamese networks.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Rápido en generación de embeddings comparado con BERT estándar.
+    \item Modelos multilingües disponibles (paraphrase-multilingual).
+    \item Amplia adopción en tareas de similitud semántica.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item Rendimiento variable según idioma y dominio.
+    \item Algunos modelos no incluyen español en su entrenamiento principal.
+\end{itemize}
+
+\subsubsection{fastText}
+
+\textbf{Descripción:} Embeddings basados en subpalabras, livianos y entrenables localmente.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Rápido y ligero.
+    \item Maneja palabras fuera de vocabulario (OOV) mediante subpalabras.
+    \item Entrenable en corpus específico del proyecto.
+\end{itemize}
+
+\textbf{Limitaciones:}
+\begin{itemize}
+    \item No captura contexto semántico profundo.
+    \item Embeddings estáticos (no contextuales).
+    \item Menor rendimiento en similitud semántica compleja.
+\end{itemize}
+
+\textbf{Decisión final:} Se adopta \textbf{Multilingual-E5 como modelo principal de embeddings} por su optimización específica para similitud semántica, su soporte multilingüe (español-inglés), y su rendimiento superior en benchmarks de sentence similarity. Como alternativa secundaria, se evaluará \textbf{LaBSE} si se requiere mayor cobertura multilingüe, y \textbf{fastText} como respaldo ligero para experimentos rápidos o entornos con recursos limitados.
+
+\section{Lenguajes y Herramientas}
+
+El desarrollo del Observatorio de Demanda Laboral en Tecnología para Latinoamérica requiere una combinación de herramientas de software, lenguajes de programación, marcos de trabajo y bibliotecas especializadas.
+
+\subsection{Lenguaje de programación principal}
+
+\textbf{Python:} Python es el lenguaje principal del proyecto debido a su simplicidad, versatilidad y fuerte ecosistema para ciencia de datos, scraping y procesamiento de lenguaje natural.
+
+\subsection{Extracción de datos (Scraping)}
+
+\begin{itemize}
+    \item \textbf{Scrapy:} Framework robusto para scraping asíncrono, útil para manejar grandes volúmenes de páginas con estructuras HTML regulares.
+
+    \item \textbf{Selenium:} Utilizado como respaldo para portales con contenido dinámico cargado por JavaScript.
+
+    \item \textbf{Playwright (respaldo opcional):} Herramienta moderna para automatización de navegación.
+\end{itemize}
+
+\subsection{Almacenamiento de datos}
+
+\textbf{PostgreSQL:} Sistema de gestión de bases de datos relacionales que garantiza integridad, consultas complejas y eficiencia.
+
+\subsection{Procesamiento de texto y NLP}
+
+\begin{itemize}
+    \item \textbf{spaCy (modelo spaCy-es):} Biblioteca moderna para NLP, enfocada en eficiencia y modularidad.
+
+    \item \textbf{Expresiones Regulares (Regex):} Utilizadas para detectar patrones específicos dentro de campos.
+
+    \item \textbf{NLTK y Stanza (respaldo opcional):} En caso de requerirse mayor granularidad lingüística.
+\end{itemize}
+
+\subsection{Enriquecimiento semántico y LLMs}
+
+El enriquecimiento semántico se implementa mediante Hugging Face Transformers con Gemma 3 4B Instruct como modelo de lenguaje principal, seleccionado tras evaluación comparativa de cuatro alternativas open-source. Este modelo permite realizar razonamiento semántico e inferencia de habilidades implícitas mediante prompting estructurado en español. El diseño se complementa con técnicas de Prompt Engineering, consistentes en el diseño iterativo de instrucciones especializadas para tareas como normalización de habilidades y extracción contextual de competencias técnicas.
+
+\subsection{Embeddings y representación semántica}
+
+\begin{itemize}
+    \item \textbf{SentenceTransformers:} Biblioteca que permite el uso de modelos como BETO, LaBSE, E5 y SBERT para generar representaciones vectoriales semánticas.
+
+    \item \textbf{fastText (respaldo):} Modelo entrenable localmente, útil en caso de requerir embeddings ligeros o adaptables.
+\end{itemize}
+
+\subsection{Agrupamiento y reducción de dimensionalidad}
+
+\begin{itemize}
+    \item \textbf{UMAP:} Para proyectar espacios de embeddings de alta dimensión a representaciones más interpretables.
+
+    \item \textbf{HDBSCAN:} Algoritmo robusto para agrupamiento sin necesidad de predefinir número de clusters.
+
+    \item \textbf{k-means / DBSCAN (respaldo):} Métodos tradicionales considerados en caso de requerirse comparaciones.
+\end{itemize}
+
+\subsection{Visualización de resultados}
+
+\begin{itemize}
+    \item \textbf{Plotly y Dash:} Librerías para la generación de visualizaciones interactivas o estáticas.
+
+    \item \textbf{Matplotlib / Seaborn (respaldo):} Librerías complementarias para generar gráficos más simples.
+\end{itemize}
+
+\subsection{Control de versiones y colaboración}
+
+\textbf{Git + GitHub:} Sistema de control de versiones distribuido y plataforma para gestión colaborativa del código.
+
+\subsection{Documentación y edición}
+
+\begin{itemize}
+    \item \textbf{Google Docs y Overleaf:} Google Docs se utilizará para documentación colaborativa. Overleaf será el entorno elegido para la redacción final en LaTeX.
+
+    \item \textbf{Markdown (README):} Estandarizado para documentar módulos y scripts dentro del repositorio GitHub.
+\end{itemize}
+
+\section{Plan de Aceptación del Producto}
+
+El Plan de Aceptación del Producto define los criterios mediante los cuales cada entregable del Observatorio de Demanda Laboral en Tecnología para Latinoamérica será evaluado por el equipo académico para considerar su aceptación formal.
+
+\subsection{Diseño técnico y arquitectura}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Diagrama modular del pipeline documentado (en BPMN o equivalente).
+    \item Justificación detallada de elección de tecnologías y estructura de datos.
+    \item Documento metodológico inicial validado por el asesor.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Revisión por pares.
+    \item Validación en reunión de asesoría.
+    \item Documento compartido y versionado en Google Docs y GitHub.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/DiagramaBPMN.png}
+\caption{Diagrama BPMN del flujo general del proceso del observatorio}
+\label{fig:bpmn-general}
+\end{figure}
+
+\subsection{Sistema de extracción (scraping) y carga a base de datos}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Spiders funcionales en al menos dos portales por país.
+    \item Almacenamiento exitoso de vacantes en PostgreSQL con al menos 500 registros reales.
+    \item Código funcional documentado, modular y con respaldo ante fallos.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Validación de funcionamiento en tiempo real por parte del asesor.
+    \item Revisión del script y la estructura de la base de datos.
+    \item Comparación de outputs y verificación de duplicados.
+\end{itemize}
+
+\subsection{Extracción de habilidades explícitas (NER y regex)}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Al menos un modelo funcional de NER en español integrado.
+    \item Regex adaptadas al dominio y resultados de extracción evaluables.
+    \item Anotaciones automatizadas disponibles para validación.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Validación manual de muestras aleatorias.
+    \item Revisión de logs y outputs del módulo de extracción.
+    \item Comparación con glosarios laborales como ESCO.
+\end{itemize}
+
+\subsection{Enriquecimiento semántico con LLMs}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Prompts definidos y documentados para al menos dos tareas.
+    \item Resultados con tasa de precisión aceptable (>70\%) sobre una muestra controlada.
+    \item Trazabilidad de razonamiento y justificación de outputs.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Evaluación cualitativa en reunión conjunta con el asesor.
+    \item Comparación contra listas de habilidades base.
+    \item Reporte técnico con ejemplos y explicaciones.
+\end{itemize}
+
+\subsection{Embeddings y clustering}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Habilidades representadas mediante embeddings densos en formato vectorial.
+    \item Aplicación exitosa de clustering con HDBSCAN y análisis cualitativo de al menos tres clústeres significativos.
+    \item Visualización preliminar mediante UMAP u otra técnica.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Validación de cohesión semántica entre elementos de un mismo clúster.
+    \item Revisión técnica con gráfico y métricas básicas (e.g., Silhouette Score).
+    \item Informe de análisis de clústeres interpretado por el equipo.
+\end{itemize}
+
+\subsection{Visualización macro}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Generación de al menos tres visualizaciones que representen: frecuencia de habilidades, distribución geográfica, y clústeres semánticos.
+    \item Reportes exportables con interpretaciones básicas.
+    \item Usabilidad mínima para revisión técnica.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Presentación ante asesor con feedback inmediato.
+    \item Validación del código en entorno local.
+    \item Revisión de consistencia visual y semántica de las gráficas.
+\end{itemize}
+
+\subsection{Documentación técnica y guía metodológica}
+
+\textbf{Criterios de aceptación:}
+\begin{itemize}
+    \item Redacción clara, completa y estructurada de todas las etapas metodológicas.
+    \item Instrucciones de replicación paso a paso.
+    \item Inclusión de logs, prompts, scripts y resultados clave.
+\end{itemize}
+
+\textbf{Técnicas e instrumentos:}
+\begin{itemize}
+    \item Revisión integral por parte del asesor.
+    \item Comparación con estándares académicos de replicabilidad.
+    \item Validación cruzada entre documento y repositorio.
+\end{itemize}
+
+\section{Organización del Proyecto y Comunicación}
+
+\subsection{Interfaces Externas}
+
+En el desarrollo del proyecto se identifican varias entidades externas que, aunque no forman parte directa del equipo de desarrollo, cumplen funciones esenciales en el acompañamiento académico, la evaluación, la provisión de insumos y la validación conceptual del sistema.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{4cm}|p{5cm}|p{2.5cm}|}
+\hline
+\textbf{Entidad externa} & \textbf{Rol en el proyecto} & \textbf{Tipo de interacción} & \textbf{Frecuencia} \\
+\hline
+Director del Proyecto (Ing. Luis Gabriel Moreno Sandoval) & Supervisión académica, validación técnica, orientación metodológica & Reuniones de seguimiento, revisión de entregables, aprobación de decisiones clave & Quincenal \\
+\hline
+Docentes evaluadores & Evaluación formal del trabajo de grado, validación de calidad académica & Presentaciones formales, defensa pública, retroalimentación escrita & 2-3 sesiones durante el proyecto \\
+\hline
+Portales de empleo (LinkedIn, Computrabajo, Bumeran, Indeed) & Fuentes de datos primarias (ofertas laborales) & Acceso web mediante scraping, consulta de APIs públicas (si disponibles) & Diaria durante fase de scraping \\
+\hline
+Comunidades técnicas (Stack Overflow, GitHub Issues, foros de spaCy/HuggingFace) & Soporte técnico, resolución de dudas, acceso a ejemplos y soluciones & Consulta de documentación, publicación de issues, revisión de ejemplos & Según necesidad \\
+\hline
+Proveedores de modelos preentrenados (HuggingFace, spaCy, OpenAI) & Acceso a modelos de NLP, embeddings y LLMs & Descarga de modelos, uso de APIs gratuitas o académicas & Según fase técnica \\
+\hline
+Pontificia Universidad Javeriana (Departamento de Sistemas) & Provisión de recursos institucionales, validación académica, aprobación formal del trabajo & Entrega de documentos formales, uso de recursos bibliotecarios, acceso institucional & Permanente \\
+\hline
+Colegas y compañeros de carrera & Revisión cruzada de código, retroalimentación informal, validación de usabilidad & Sesiones de código compartido, discusiones técnicas informales & Ocasional \\
+\hline
+\end{tabular}
+\caption{Tabla de Interfaces Externas del Proyecto}
+\label{tab:interfaces-externas}
+\end{table}
+
+\textbf{Gestión de las interfaces:}
+
+La comunicación con el director del proyecto se realizará mediante reuniones quincenales programadas, comunicación por correo electrónico para consultas urgentes, y revisión de entregables mediante Google Drive compartido y GitHub.
+
+El acceso a portales de empleo se gestionará respetando términos de servicio, robots.txt, y políticas anti-scraping, implementando delays, rotación de user agents y limitación de tasa de peticiones.
+
+El uso de modelos y herramientas de código abierto se documentará adecuadamente, citando licencias y fuentes, y respetando términos de uso académico cuando aplique.
+
+\subsection{Organigrama y Descripción de Roles}
+
+El equipo de desarrollo del proyecto está conformado por dos estudiantes de la carrera de Ingeniería de Sistemas, cada uno con responsabilidades claramente definidas según sus fortalezas técnicas y organizativas.
+
+\textbf{Nicolás Camacho - Líder Técnico y Arquitecto del Sistema:}
+
+Responsable del diseño de la arquitectura del sistema, coordinación técnica, toma de decisiones clave sobre modelos, herramientas y estructura del pipeline. Supervisa la integración de módulos y garantiza la coherencia técnica de todo el sistema.
+
+\textbf{Alejandro Pinzón - Desarrollo de Módulos y Documentación:}
+
+Encargado del desarrollo técnico de componentes específicos del sistema, incluyendo scraping, procesamiento, embeddings y visualización. También lidera la redacción de documentos formales y la planificación y ejecución de pruebas funcionales.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm and 2cm,
+    every node/.style={font=\small},
+    director/.style={
+        rectangle,
+        draw=black,
+        thick,
+        fill=blue!20,
+        text width=5.5cm,
+        align=center,
+        minimum height=1.2cm,
+        rounded corners=3pt,
+        drop shadow
+    },
+    equipo/.style={
+        rectangle,
+        draw=black,
+        thick,
+        fill=green!15,
+        text width=5cm,
+        align=center,
+        minimum height=2.8cm,
+        rounded corners=3pt,
+        drop shadow
+    },
+    line/.style={
+        draw,
+        thick,
+        -Stealth
+    }
+]
+
+% Nodo del Director
+\node[director] (director) {
+    \textbf{Director del Proyecto}\\[2pt]
+    \small Ing. Luis Gabriel Moreno Sandoval\\[1pt]
+    \footnotesize Pontificia Universidad Javeriana
+};
+
+% Nodo del Equipo de Desarrollo
+\node[equipo, below=of director] (equipo) {
+    \textbf{Equipo de Desarrollo}\\[6pt]
+    \textbf{Nicolás Camacho Alarcón}\\
+    \footnotesize Líder Técnico y Arquitecto del Sistema\\[4pt]
+    \textbf{Alejandro Pinzón Fajardo}\\
+    \footnotesize Desarrollo de Módulos y Documentación
+};
+
+% Conexión
+\draw[line] (director) -- (equipo);
+
+\end{tikzpicture}
+\caption{Organigrama del equipo de desarrollo del proyecto}
+\label{fig:organigrama}
+\end{figure}

@@ -1,0 +1,23 @@
+\subsection{Bibliotecas de Procesamiento de Lenguaje Natural (NLP)}
+
+Se evaluaron tres alternativas de bibliotecas para procesamiento de lenguaje natural en español, cada una con diferentes trade-offs entre velocidad, precisión y facilidad de uso. La Tabla \ref{tab:comparacion-nlp} presenta la comparación sistemática.
+
+\begin{table}[H]
+\centering
+\caption{Comparación de Bibliotecas de Procesamiento de Lenguaje Natural}
+\label{tab:comparacion-nlp}
+\small
+\begin{tabular}{|p{2.8cm}|p{4.2cm}|p{4cm}|p{3.5cm}|}
+\hline
+\textbf{Biblioteca} & \textbf{Descripción} & \textbf{Ventajas} & \textbf{Limitaciones} \\
+\hline
+spaCy & Biblioteca industrial NLP en Python optimizada para eficiencia con soporte español & Rápida y eficiente producción, modelos preentrenados calidad (es\_core\_news), soporte tokenización/lematización/POS/NER, integración HuggingFace & Modelos NER genéricos no especializados dominio laboral, requiere ajuste fino para habilidades técnicas \\
+\hline
+Stanford NLP / Stanza & Suite herramientas NLP Stanford con implementación Python & Modelos lingüísticos fundamento académico sólido, análisis sintáctico profundo (dependencias), modelos multilingües corpus universales & Más lento que spaCy, configuración compleja, menor integración embeddings modernos \\
+\hline
+Transformers HuggingFace & Modelos Transformer (BERT, RoBERTa) preentrenados español (BETO, RoBERTuito) & Representaciones contextuales alta calidad, BETO específico español, adaptable fine-tuning dominios & Requiere recursos computacionales significativos, latencia alta tiempo real, fine-tuning necesita datasets grandes \\
+\hline
+\end{tabular}
+\end{table}
+
+La decisión final adoptó spaCy como biblioteca principal de NLP por tres razones fundamentales. Primero, su balance entre velocidad y calidad en tareas básicas de NER y tokenización permite procesar el corpus completo en tiempo razonable. Segundo, su facilidad de uso y documentación robusta reduce la curva de aprendizaje del equipo. Tercero, su integración nativa con modelos Transformer de HuggingFace permite combinar eficiencia en tareas básicas con capacidades avanzadas cuando sea necesario. La estrategia complementará spaCy con expresiones regulares personalizadas para habilidades técnicas específicas no cubiertas por modelos genéricos, y evaluará el uso de modelos Transformer como BETO para tareas de enriquecimiento semántico en fases posteriores si los recursos computacionales lo permiten.

@@ -4,122 +4,91 @@
 
 El Observatorio de Demanda Laboral es un sistema académico de investigación diseñado para automatizar el análisis de habilidades técnicas demandadas en el mercado laboral de América Latina. A través de técnicas avanzadas de procesamiento de lenguaje natural, embeddings semánticos y clustering no supervisado, el sistema permite identificar tendencias, perfiles emergentes y brechas de competencias en el sector tecnológico de Colombia, México y Argentina.
 
-El sistema opera en modo batch, procesando miles de ofertas laborales recolectadas automáticamente desde 11 portales de empleo (Computrabajo, Bumeran, ElEmpleo, InfoJobs, OCC Mundial, ZonaJobs, hiring.cafe, entre otros). La arquitectura está diseñada para maximizar precisión y reproducibilidad científica, priorizando calidad de resultados sobre velocidad de procesamiento.
+El sistema procesa ofertas laborales recolectadas automáticamente desde 8 portales de empleo principales (Computrabajo, Bumeran, ElEmpleo, HiringCafe, OCC Mundial, ZonaJobs, Indeed, Magneto). La arquitectura híbrida integra procesamiento síncrono de baja latencia para consultas de usuarios con procesamiento asíncrono distribuido de tareas computacionalmente intensivas, diseñada para maximizar precisión y reproducibilidad científica.
 
-La plataforma integra dos pipelines paralelos de extracción de habilidades:
-\begin{itemize}
-    \item Pipeline A (Tradicional): NER con spaCy + Regex patterns + Matching ESCO de 3 capas (exact/fuzzy/semantic)
-    \item Pipeline B (Experimental): LLM-based extraction con Gemma 3 4B o Llama 3 3B para comparación científica
-\end{itemize}
-
-Los resultados se almacenan en PostgreSQL con trazabilidad completa, generan embeddings mediante E5 Multilingual (768D), reducción dimensional con UMAP, clustering con HDBSCAN, y exportación de visualizaciones y reportes analíticos.
+La plataforma implementa dos pipelines paralelos de extracción de habilidades mediante Pipeline A (NER con spaCy más Regex patterns más Matching ESCO de 3 capas) y Pipeline B (extracción basada en LLM con Gemma 3 4B para comparación científica). Los resultados se almacenan en PostgreSQL con trazabilidad completa, generan embeddings mediante E5 Multilingual de 768 dimensiones, aplican reducción dimensional con UMAP, ejecutan clustering con HDBSCAN, y exportan visualizaciones y reportes analíticos.
 
 \subsection{Decisiones arquitectónicas}
 
-El diseño arquitectónico del Observatorio de Demanda Laboral responde a un equilibrio cuidadoso entre objetivos científicos y restricciones operativas. Como proyecto de investigación académica desarrollado por un equipo de dos personas con recursos computacionales limitados, las decisiones arquitectónicas priorizan reproducibilidad científica, simplicidad operativa y trazabilidad completa sobre escalabilidad masiva o latencia mínima.
+El diseño arquitectónico del Observatorio de Demanda Laboral responde a un equilibrio entre objetivos científicos y restricciones operativas. Como proyecto de investigación académica desarrollado por un equipo de dos personas con recursos computacionales limitados, las decisiones arquitectónicas priorizan reproducibilidad científica, simplicidad operativa y trazabilidad completa sobre escalabilidad masiva o latencia mínima.
 
-Esta sección documenta las decisiones fundamentales que configuran la arquitectura del sistema, explicando el razonamiento técnico-científico detrás de cada elección y los trade-offs aceptados conscientemente.
+\subsubsection{Arquitectura Híbrida: Justificación y Patrones}
 
-\subsubsection{Arquitectura de Pipeline Lineal vs Microservicios}
+La decisión arquitectónica fundamental fue adoptar una arquitectura híbrida que combina tres patrones complementarios para satisfacer requisitos duales de latencia: operaciones síncronas de baja latencia (menos de 1 segundo) para consultas de usuarios, y procesamiento asíncrono distribuido de tareas computacionalmente intensivas que pueden requerir minutos u horas.
 
-La primera decisión arquitectónica crítica fue la selección del estilo arquitectónico general. Tras evaluar tres alternativas principales (microservicios, event-driven y pipeline lineal), se adoptó una arquitectura de pipeline secuencial de 8 etapas como columna vertebral del sistema.
+El primer patrón corresponde al API Gateway implementado mediante Nginx, que actúa como punto único de entrada para todas las peticiones HTTP/HTTPS externas proporcionando routing inteligente, terminación SSL/TLS, rate limiting para protección contra abusos, y logging centralizado para auditoría. El segundo patrón implementa Microservicios en Capas para comunicación Request/Response mediante arquitectura de tres capas: Presentación (Frontend con Next.js), Lógica de Negocio (API con FastAPI), y Persistencia (PostgreSQL). El tercer patrón utiliza Event-Driven Architecture mediante comunicación Pub/Sub donde la API y Celery Beat publican tareas a Redis, mientras que Celery Workers consumen estas tareas, ejecutan el procesamiento, y persisten resultados en PostgreSQL.
 
-Esta elección se fundamenta en la naturaleza específica del problema y el contexto del proyecto:
+La selección de arquitectura híbrida se fundamentó en cinco razones principales: dualidad de requisitos de latencia (consultas inmediatas versus procesamiento de horas), escalabilidad horizontal selectiva (workers escalables dinámicamente sin modificar código), simplicidad operativa con potencia de procesamiento (mantiene trazabilidad mientras obtiene paralelismo), optimización de recursos (Request/Response evita overhead para operaciones simples mientras Event-Driven maximiza CPU para procesamiento intensivo), y madurez del ecosistema tecnológico (Celery y Redis como combinación probada industrialmente).
 
-Ventajas seleccionadas:
-\begin{enumerate}
-    \item Simplicidad operativa: Proyecto académico con equipo de 2 desarrolladores y recursos computacionales limitados (1-2 servidores, sin infraestructura Kubernetes)
-    \item Trazabilidad completa: Flujo unidireccional permite debugging determinístico y auditoría de transformaciones etapa por etapa, esencial para validación científica
-    \item Velocidad de desarrollo: Implementación de microservicios requiere 3-4x más tiempo en configuración de comunicación inter-servicios
-    \item Naturaleza batch del dominio: Análisis de demanda laboral no requiere procesamiento en tiempo real (latencias de horas/días son aceptables)
-    \item Reproducibilidad: Pipeline secuencial con parámetros fijos facilita reproducción exacta de experimentos
-\end{enumerate}
-
-Trade-offs aceptados conscientemente:
-\begin{itemize}
-    \item Limitación de paralelismo entre etapas (mitigado con batch processing interno)
-    \item Escalabilidad horizontal limitada (suficiente para 23K ofertas actuales y proyección de 600K)
-    \item Latencia acumulativa de 30-60 segundos por oferta con LLM (aceptable en contexto batch académico)
-    \item Single point of failure (mitigado con persistencia intermedia en PostgreSQL tras cada etapa)
-\end{itemize}
-
-Estos trade-offs son aceptables en el contexto de investigación académica, donde la precisión y reproducibilidad tienen mayor prioridad que la latencia en tiempo real. La Tabla \ref{tab:comparacion-arquitecturas} presenta la comparación sistemática que fundamentó esta decisión.
+La Tabla \ref{tab:comparacion-arquitecturas} presenta la evaluación de estilos arquitectónicos considerados durante el diseño.
 
 \begin{table}[H]
 \centering
-\caption{Comparación de Estilos Arquitectónicos}
+\caption{Comparación de Estilos Arquitectónicos Evaluados}
 \label{tab:comparacion-arquitecturas}
-\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+\begin{tabular}{|p{3.2cm}|p{2.8cm}|p{3cm}|p{3.5cm}|}
 \hline
-\textbf{Criterio} & \textbf{Microservicios} & \textbf{Event-Driven} & \textbf{Pipeline Lineal} \\
+\textbf{Criterio} & \textbf{Pipeline Lineal} & \textbf{Microservicios} & \textbf{Arquitectura Híbrida} \\
 \hline
-Complejidad & Alta & Media-alta & \textbf{Baja} \\
+Complejidad & Baja & Alta & Media \\
 \hline
-Trazabilidad & Media & Media & \textbf{Excelente} \\
+Escalabilidad horizontal & Limitada & Excelente & Excelente (workers) \\
 \hline
-Debugging & Difícil & Medio & \textbf{Fácil} \\
+Latencia de consultas & Alta (bloqueante) & Baja & Baja (menor a 1s) \\
 \hline
-Overhead operativo & Alto & Medio & \textbf{Bajo} \\
+Throughput & Bajo (secuencial) & Medio & Alto (paralelo) \\
 \hline
-Time to market & Lento & Medio & \textbf{Rápido} \\
+Trazabilidad & Excelente & Media & Alta \\
+\hline
+Tolerancia a fallos & Baja & Alta & Alta \\
+\hline
+Time to market & Rápido & Lento & Medio \\
 \hline
 \end{tabular}
 \end{table}
 
-\subsubsection{Pipeline Secuencial de 8 Etapas}
+\subsubsection{Pipeline Secuencial de 7 Etapas CRISP-DM}
 
-Una vez establecido el estilo arquitectónico general, la siguiente decisión fue determinar la granularidad y especialización de cada etapa del pipeline. El diseño resultante divide el procesamiento en 8 etapas especializadas, cada una con una responsabilidad única y bien definida, siguiendo el principio de separación de responsabilidades (Separation of Concerns):
+Una vez establecido el estilo arquitectónico general, la siguiente decisión fue determinar la granularidad y especialización de cada etapa del pipeline. El diseño resultante divide el procesamiento en 7 etapas especializadas siguiendo la metodología CRISP-DM adaptada para minería de textos, donde cada componente mantiene una responsabilidad única y bien definida según el principio de separación de responsabilidades.
 
-Etapas del pipeline y sus responsabilidades:
+La Tabla \ref{tab:pipeline-etapas} describe las etapas del pipeline con sus tecnologías, responsabilidades y tiempos característicos de procesamiento.
 
-\begin{enumerate}
-    \item Scraping (Scrapy + Selenium): Recolección automatizada de ofertas desde portales web
-    \item Cleaning: Limpieza y normalización de texto HTML
-    \item Extraction A (NER + Regex): Identificación de habilidades explícitas
-    \item Extraction B (LLM): Enriquecimiento semántico e inferencia de habilidades implícitas
-    \item Matching ESCO: Normalización contra taxonomías con estrategia de 3 capas
-    \item Embedding (E5 Multilingual): Generación de representaciones vectoriales 768D
-    \item Dimension Reduction (UMAP): Proyección a 2-3 dimensiones visualizables
-    \item Clustering (HDBSCAN): Agrupamiento no supervisado de habilidades
-\end{enumerate}
+\begin{table}[H]
+\centering
+\caption{Etapas del Pipeline CRISP-DM y Especificaciones Técnicas}
+\label{tab:pipeline-etapas}
+\begin{tabular}{|p{2.8cm}|p{3cm}|p{5cm}|p{2.2cm}|}
+\hline
+\textbf{Etapa} & \textbf{Tecnología} & \textbf{Responsabilidad} & \textbf{Tiempo} \\
+\hline
+1. Scraping & Scrapy + Selenium & Recolección automatizada desde 8 portales (Colombia, México, Argentina) & 2-4 horas \\
+\hline
+2. Cleaning & BeautifulSoup & Limpieza HTML, normalización Unicode, extracción texto plano & 5-10 minutos \\
+\hline
+3. Extraction & spaCy NER + Regex + LLM & Identificación habilidades explícitas (Pipeline A) e implícitas (Pipeline B) & 20-30 minutos \\
+\hline
+4. Enhancement & Gemma 3 4B & Enriquecimiento semántico, matching ESCO con 3 capas (exact/fuzzy/semantic) & 1-2 horas \\
+\hline
+5. Embedding & E5 Multilingual & Generación vectores densos 768D normalizados L2, construcción índice FAISS & 15-20 minutos \\
+\hline
+6. Clustering & UMAP + HDBSCAN & Reducción dimensional 768D a 2-3D, clustering no supervisado con detección ruido & 10-15 minutos \\
+\hline
+7. Visualization & Matplotlib + Seaborn & Generación gráficos interactivos, reportes analíticos, exportación multi-formato & 5-10 minutos \\
+\hline
+\end{tabular}
+\end{table}
 
-El diseño modular del pipeline garantiza que cada etapa opera de forma autónoma: lee los datos procesados por la etapa anterior desde PostgreSQL, ejecuta su transformación especializada con validaciones internas, y persiste los resultados en tablas dedicadas para consumo de la siguiente etapa. Esta arquitectura facilita el debugging aislado, permite reejecutar etapas individuales sin reprocesar el dataset completo, y asegura trazabilidad end-to-end mediante foreign keys.
+El diseño modular del pipeline garantiza que cada etapa opera de forma autónoma mediante el siguiente flujo: lee los datos procesados por la etapa anterior desde PostgreSQL, ejecuta su transformación especializada con validaciones internas, y persiste los resultados en tablas dedicadas para consumo de la siguiente etapa. Esta arquitectura facilita el debugging aislado al permitir inspeccionar resultados intermedios en cualquier punto del flujo, habilita la reejecución de etapas individuales sin reprocesar el dataset completo (reduciendo tiempo de desarrollo), y asegura trazabilidad end-to-end mediante foreign keys que conectan cada resultado analítico con la oferta laboral original que lo generó.
 
 \subsubsection{Selección de Tecnologías Críticas}
 
-La elección del stack tecnológico es una decisión arquitectónica fundamental que impacta directamente en la calidad de los resultados científicos, el rendimiento del sistema y la viabilidad operativa. Las siguientes tecnologías fueron seleccionadas tras evaluación comparativa rigurosa, priorizando madurez, documentación, comunidad activa y alineación con los objetivos del proyecto:
+La elección del stack tecnológico es una decisión arquitectónica fundamental que impacta directamente en la calidad de los resultados científicos, el rendimiento del sistema y la viabilidad operativa. Las tecnologías fueron seleccionadas tras evaluación comparativa rigurosa, priorizando madurez del ecosistema, calidad de documentación, comunidad activa de soporte, y alineación estratégica con los objetivos del proyecto.
 
-PostgreSQL 15+ como Persistencia Central:
-\begin{itemize}
-    \item Soporte JSONB para metadatos flexibles
-    \item Extensión pgvector para vectores 768D
-    \item Robustez transaccional ACID
-    \item Particionamiento para escalabilidad
-\end{itemize}
+PostgreSQL 15+ fue seleccionado como sistema de persistencia central por su combinación de robustez transaccional ACID, soporte nativo para JSONB permitiendo metadatos flexibles sin esquema fijo, extensión pgvector para almacenamiento de vectores densos de 768 dimensiones, y capacidades de particionamiento para escalabilidad futura. Para búsqueda vectorial de alta performance se implementó FAISS desarrollado por Facebook AI Research, que alcanza 30,147 queries por segundo mediante exact search con IndexFlatIP garantizando 100 por ciento de recall, superando por factor de 25x el rendimiento de pgvector en consultas de similitud.
 
-FAISS para Búsqueda Vectorial:
-\begin{itemize}
-    \item 30,147 queries/segundo (25x más rápido que pgvector)
-    \item Exact search con IndexFlatIP (100\% recall)
-    \item Desarrollado por Facebook AI Research
-\end{itemize}
+El procesamiento de lenguaje natural utiliza spaCy con el modelo entrenado es core news lg de 97 millones de parámetros optimizado para español, complementado con EntityRuler poblado con las 14,174 skills de la taxonomía ESCO para reconocimiento de entidades de alta precisión con latencia inferior a 100 milisegundos por documento. La taxonomía de referencia corresponde a ESCO v1.1.0 publicada bajo licencia Creative Commons BY 4.0, que provee 13,939 habilidades con etiquetas en español e inglés organizadas mediante estructura ontológica con URIs persistentes, expandida estratégicamente con 152 habilidades de O*NET y 124 skills identificadas manualmente durante el gold standard totalizando 14,174 competencias normalizadas.
 
-spaCy + EntityRuler para NER:
-\begin{itemize}
-    \item Modelo es\_core\_news\_lg (97M parámetros)
-    \item EntityRuler poblado con 14,174 skills ESCO
-    \item Latencia $<$100ms por documento
-\end{itemize}
-
-ESCO v1.1.0 como Taxonomía Base:
-\begin{itemize}
-    \item 13,939 skills con etiquetas ES/EN
-    \item Estructura ontológica con URIs
-    \item Licencia CC BY 4.0
-    \item Expandida con 152 O*NET + 83 manual = 14,174 total
-\end{itemize}
-
-La Tabla \ref{tab:stack-tecnologico} resume las decisiones tecnológicas fundamentales.
+La Tabla \ref{tab:stack-tecnologico} resume las decisiones tecnológicas fundamentales con sus justificaciones técnicas.
 
 \begin{table}[H]
 \centering
@@ -152,132 +121,101 @@ Lenguaje & Python 3.11+ & Ecosistema científico, type hints \\
 
 \subsubsection{Estrategia Dual de Pipelines}
 
-La decisión arquitectónica más singular del proyecto es la implementación de dos pipelines paralelos e independientes para extracción de habilidades. Esta estrategia responde directamente al objetivo científico central del proyecto: evaluar rigurosamente si los modelos de lenguaje grandes (LLMs) pueden superar a técnicas tradicionales de NLP en la tarea específica de extracción de habilidades técnicas desde ofertas laborales en español.
+La decisión arquitectónica más singular del proyecto es la implementación de dos pipelines paralelos e independientes para extracción de habilidades. Esta estrategia responde directamente al objetivo científico central del proyecto: evaluar rigurosamente si los modelos de lenguaje grandes pueden superar a técnicas tradicionales de NLP en la tarea específica de extracción de habilidades técnicas desde ofertas laborales en español.
 
-El diseño experimental establece un grupo control (Pipeline A) y un grupo de tratamiento (Pipeline B), permitiendo comparación controlada con metodología científica:
+El diseño experimental establece un grupo control (Pipeline A) y un grupo de tratamiento (Pipeline B), permitiendo comparación controlada con metodología científica. La Tabla \ref{tab:pipeline-comparison} presenta las características diferenciales de ambos pipelines.
 
-Pipeline A (Control - Alta Precisión):
-\begin{itemize}
-    \item Métodos tradicionales validados: NER + Regex
-    \item Procesa 100\% de ofertas laborales
-    \item Precision 78-95\%, latencia $<$2 segundos/oferta
-    \item Baseline para comparación
-\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Comparación de Pipeline A (Control) vs Pipeline B (Tratamiento)}
+\label{tab:pipeline-comparison}
+\begin{tabular}{|p{3cm}|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{Criterio} & \textbf{Pipeline A (Control)} & \textbf{Pipeline B (Tratamiento)} \\
+\hline
+Técnica & NER con spaCy + Regex patterns & LLM local (Gemma 3 4B o Llama 3 3B) \\
+\hline
+Cobertura & 100\% ofertas laborales (30,660 jobs) & Subconjunto estratégico 300-1,000 ofertas \\
+\hline
+Precisión & 78-95\% según gold standard & 80-90\% esperada \\
+\hline
+Latencia & Menor a 2 segundos por oferta & 5-10 segundos por oferta \\
+\hline
+Habilidades & Explícitas con menciones literales & Explícitas + implícitas inferidas \\
+\hline
+Spanglish & Limitado a diccionario ESCO & Manejo contextual nativo \\
+\hline
+Rol & Baseline de alta precisión & Evaluación capacidad LLM \\
+\hline
+Restricción & N/A & Computacional (GPU/CPU local) \\
+\hline
+\end{tabular}
+\end{table}
 
-Pipeline B (Tratamiento - Alta Cobertura):
-\begin{itemize}
-    \item LLM-based extraction con modelos ligeros locales (Gemma 3 4B / Llama 3 3B)
-    \item Procesa subconjunto estratégico (300-1000 ofertas) por restricciones computacionales
-    \item Precision esperada 80-90\%, latencia 5-10 segundos/oferta
-    \item Captura habilidades implícitas y maneja Spanglish técnico
-\end{itemize}
+La clave metodológica es que ambos pipelines convergen en el mismo módulo de matching ESCO con estrategia de 3 capas (exact matching, fuzzy matching con umbral 85 por ciento, semantic matching con embeddings), garantizando que las diferencias observadas en los resultados provengan exclusivamente de la técnica de extracción utilizada en cada pipeline, no de variaciones en la normalización posterior. Esta arquitectura dual con punto de convergencia controlado permite responder la pregunta de investigación con validez científica.
 
-La clave metodológica es que ambos pipelines convergen en el mismo módulo de matching ESCO con estrategia de 3 capas (exact/fuzzy/semantic), garantizando que las diferencias observadas en los resultados provengan exclusivamente de la técnica de extracción, no de variaciones en la normalización posterior. Esta arquitectura dual permite responder la pregunta de investigación con validez científica.
-
-Síntesis de las decisiones arquitectónicas:
-
-El conjunto de decisiones documentadas en esta sección configura un sistema que equilibra pragmáticamente las restricciones de un proyecto académico con los estándares de rigor científico. La arquitectura de pipeline lineal con 8 etapas especializadas, el stack tecnológico basado en herramientas maduras de código abierto, y la estrategia dual de pipelines para comparación experimental, conforman una arquitectura coherente y justificada que habilita la investigación propuesta dentro de los recursos disponibles.
+El conjunto de decisiones documentadas en esta sección configura un sistema que equilibra pragmáticamente las restricciones de un proyecto académico desarrollado por dos personas con recursos computacionales limitados, con los estándares de rigor científico requeridos para investigación reproducible. La arquitectura híbrida con 7 etapas CRISP-DM especializadas, el stack tecnológico basado en herramientas maduras de código abierto con comunidad activa, y la estrategia dual de pipelines para comparación experimental controlada, conforman una arquitectura coherente y justificada que habilita la investigación propuesta dentro de los recursos disponibles manteniendo trazabilidad completa y reproducibilidad metodológica.
 
 \subsection{Consideraciones de diseño y mitigación de limitaciones}
 
-Para abordar las limitaciones inherentes a la arquitectura de pipeline lineal y optimizar el rendimiento dentro de las restricciones académicas, se implementaron las siguientes estrategias:
+Para abordar las limitaciones inherentes a la arquitectura de pipeline lineal y optimizar el rendimiento dentro de las restricciones académicas, se implementaron seis estrategias de diseño complementarias que maximizan robustez, performance y calidad de datos. La Tabla \ref{tab:estrategias-optimizacion} resume las estrategias implementadas con sus beneficios cuantificados.
 
-\subsubsection{Persistencia Intermedia y Checkpointing}
+\begin{table}[H]
+\centering
+\caption{Estrategias de Optimización y Mitigación de Limitaciones}
+\label{tab:estrategias-optimizacion}
+\begin{tabular}{|p{3.5cm}|p{6cm}|p{4cm}|}
+\hline
+\textbf{Estrategia} & \textbf{Implementación} & \textbf{Beneficio Cuantificado} \\
+\hline
+Persistencia Intermedia y Checkpointing & Cada etapa persiste en PostgreSQL antes de continuar. Campo extraction\_status permite reanudar desde última etapa completada. & Sistema reinicia desde cualquier etapa sin reprocesar dataset completo \\
+\hline
+Deduplicación Multi-Nivel & Nivel 1: SHA-256 hash (title+company+desc). Nivel 2: UNIQUE(job\_id, skill, method). Nivel 3: UNIQUE(skill\_text) & Elimina duplicados con 0\% falsos positivos. Reduce de 30K a 23,188 ofertas únicas \\
+\hline
+Batch Processing Optimizado & Embeddings batch=32. Inserts BD batch=100. Cursor server-side PostgreSQL & Throughput 721 skills/s (vs 50 skills/s sin batching) \\
+\hline
+Índices BD Optimizados & Índices GIN para full-text en ESCO labels. Índices en foreign keys para joins & Matching 2,756 skills en menor a 5 segundos \\
+\hline
+Logging Estructurado y Monitoreo & Niveles DEBUG/INFO/WARNING/ERROR. Timestamps. Métricas por etapa. Progress bars tqdm & Identificación rápida de cuellos de botella y errores sistemáticos \\
+\hline
+Validación y Tests Automatizados & 37 tests en test\_embeddings.py. Validación normalización L2. Tests similitud semántica & Detección temprana de degradación de calidad \\
+\hline
+\end{tabular}
+\end{table}
 
-Cada etapa persiste resultados en PostgreSQL antes de continuar. Tablas especializadas mantienen trazabilidad completa. El campo \texttt{extraction\_status} en raw\_jobs permite reanudar desde última etapa completada.
+La estrategia de persistencia intermedia garantiza que fallos en etapas avanzadas del pipeline (como clustering después de 4 horas de procesamiento) no requieran reejecutar desde scraping, reduciendo significativamente el tiempo de debugging durante desarrollo. La deduplicación multi-nivel implementa tres capas de verificación progresivamente más estrictas: el hash SHA-256 en scraping previene almacenamiento de ofertas completamente idénticas, la restricción UNIQUE compuesta en extracción elimina redundancia de habilidades detectadas múltiples veces en la misma oferta por diferentes métodos, y la unicidad de skill text en embeddings asegura que cada competencia se vectorice exactamente una vez independientemente de su frecuencia en el corpus.
 
-Beneficio: Sistema puede reiniciarse desde cualquier etapa sin reprocesar todo el dataset.
+El batch processing optimizado reconoce que los modelos de embeddings (E5 Multilingual) y las operaciones de base de datos tienen overhead fijo por invocación, por lo que procesar 32 skills simultáneamente amortiza el costo de carga del modelo en GPU y reduce el número de roundtrips a PostgreSQL de 10,000 transacciones individuales a 100 transacciones batch, multiplicando throughput por factor de 14x. Los índices GIN (Generalized Inverted Index) de PostgreSQL permiten búsqueda full-text eficiente en las 14,174 etiquetas ESCO sin realizar table scans lineales, mientras que índices en foreign keys aceleran joins entre raw jobs y extracted skills de tiempo cuadrático a logarítmico.
 
-\subsubsection{Deduplicación Multi-Nivel}
+El logging estructurado con niveles jerárquicos permite debugging granular durante desarrollo (DEBUG) mientras mantiene logs limpios en producción (INFO), con timestamps precisos que facilitan análisis de performance y detección de regresiones entre ejecuciones. La suite de 37 tests automatizados verifica invariantes críticos como normalización L2 de embeddings (norma euclidiana igual a 1.0 con tolerancia de 1e-6), ausencia de valores NaN o Infinito que corromperían clustering, y coherencia semántica donde habilidades relacionadas como Python y Django deben tener similitud coseno mayor a 0.7.
 
-\begin{itemize}
-    \item Nivel 1 (Scraping): SHA-256 hash de (title + company + description)
-    \item Nivel 2 (Extracción): UNIQUE(job\_id, skill\_text, extraction\_method)
-    \item Nivel 3 (Embeddings): UNIQUE(skill\_text)
-\end{itemize}
+\subsection{Vistas arquitectónicas del sistema}
 
-Beneficio: Elimina duplicados con 0\% falsos positivos, reduciendo dataset de ~30K a 23,188 ofertas únicas.
+Para documentar completamente la arquitectura híbrida del observatorio, se presentan dos vistas complementarias siguiendo el Modelo 4+1 de Vistas Arquitectónicas. La Vista Lógica describe la organización funcional de componentes y sus relaciones, mientras que la Vista Física documenta la topología de despliegue en el servidor de producción con especificaciones de infraestructura.
 
-\subsubsection{Batch Processing Optimizado}
+\subsubsection{Vista Lógica}
 
-Generación de embeddings en batches de 32, inserts a BD en batches de 100, cursor server-side en PostgreSQL para queries grandes.
-
-Beneficio: Throughput de 721 skills/segundo en embeddings (vs. ~50 skills/segundo sin batching).
-
-\subsubsection{Índices de Base de Datos Optimizados}
-
-Índices GIN en PostgreSQL para búsqueda de texto full-text en ESCO labels, índices en foreign keys para joins eficientes.
-
-Beneficio: Matching de 2,756 skills en $<$5 segundos.
-
-\subsubsection{Logging Estructurado y Monitoreo}
-
-Logging con niveles (DEBUG, INFO, WARNING, ERROR), timestamps de cada operación, métricas de performance por etapa, progress bars con tqdm.
-
-Beneficio: Identificación rápida de cuellos de botella y errores sistemáticos.
-
-\subsubsection{Validación y Tests Automatizados}
-
-37 tests en scripts/test\_embeddings.py, validación de integridad de datos (embeddings normalizados L2, sin NaN/Inf), tests de similitud semántica.
-
-Beneficio: Detección temprana de degradación de calidad.
-
-\subsection{Diagrama de arquitectura de alto nivel}
-
-La Figura \ref{fig:arquitectura-pipeline} presenta la vista completa del pipeline secuencial de 8 etapas con persistencia intermedia en PostgreSQL.
+La Vista Lógica (Figura \ref{fig:vista-logica-sad}) presenta la arquitectura híbrida con sus tres patrones integrados: API Gateway implementado con Nginx para routing y terminación SSL, Microservicios en Capas con comunicación Request/Response para operaciones síncronas (Frontend Next.js, API FastAPI, PostgreSQL), y Event-Driven Architecture con comunicación Pub/Sub mediante Redis para procesamiento asíncrono distribuido (Celery Beat publica tareas, Workers las ejecutan). El diagrama muestra cómo ambos flujos convergen en PostgreSQL como fuente única de verdad, garantizando consistencia de datos independientemente del mecanismo de acceso.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-    node distance=1.5cm,
-    every node/.style={font=\small},
-    stage/.style={rectangle, draw, fill=blue!20, text width=3cm, text centered, minimum height=1cm},
-    db/.style={cylinder, draw, fill=green!20, text width=2cm, text centered, minimum height=0.8cm},
-    arrow/.style={->, >=stealth, thick}
-]
-
-% Etapas del pipeline
-\node[stage] (scraping) {1. Scraping\\Scrapy + Selenium};
-\node[stage, below of=scraping] (cleaning) {2. Cleaning\\HTML Strip};
-\node[stage, below of=cleaning] (extraction) {3. Extraction\\NER + Regex + LLM};
-\node[stage, below of=extraction] (matching) {4. Matching ESCO\\3-Layer Strategy};
-\node[stage, below of=matching] (embedding) {5. Embedding\\E5 768D};
-\node[stage, below of=embedding] (umap) {6. UMAP\\768D $\rightarrow$ 2D};
-\node[stage, below of=umap] (clustering) {7. Clustering\\HDBSCAN};
-\node[stage, below of=clustering] (viz) {8. Visualización\\Reportes};
-
-% Base de datos (al lado)
-\node[db, right of=extraction, xshift=3cm] (postgres) {PostgreSQL\\14,174 ESCO\\23,188 jobs};
-
-% Flechas
-\draw[arrow] (scraping) -- (cleaning);
-\draw[arrow] (cleaning) -- (extraction);
-\draw[arrow] (extraction) -- (matching);
-\draw[arrow] (matching) -- (embedding);
-\draw[arrow] (embedding) -- (umap);
-\draw[arrow] (umap) -- (clustering);
-\draw[arrow] (clustering) -- (viz);
-
-% Flechas a PostgreSQL (persistencia intermedia)
-\draw[arrow, dashed] (scraping) -- ++(3,0) |- (postgres);
-\draw[arrow, dashed] (cleaning) -- ++(3,0) |- (postgres);
-\draw[arrow, dashed] (extraction) -- (postgres);
-\draw[arrow, dashed] (matching) -- ++(3,0) |- (postgres);
-\draw[arrow, dashed] (embedding) -- ++(3,0) |- (postgres);
-
-\end{tikzpicture}
-\caption{Arquitectura de Pipeline Secuencial de 8 Etapas}
-\label{fig:arquitectura-pipeline}
+\includegraphics[width=0.95\textwidth]{diagrams/VistaLogica.png}
+\caption{Vista Lógica del Sistema. Arquitectura híbrida integrando API Gateway (Nginx), Microservicios en Capas (comunicación síncrona Request/Response), y Event-Driven Architecture (comunicación asíncrona Pub/Sub mediante Redis y Celery).}
+\label{fig:vista-logica-sad}
 \end{figure}
 
-\textbf{Características Clave de la Arquitectura:}
-\begin{itemize}
-    \item \checkmark Modularidad: Cada etapa puede ejecutarse independientemente
-    \item \checkmark Trazabilidad: Foreign keys mantienen relación con raw\_jobs
-    \item \checkmark Reproducibilidad: Parámetros fijos, semillas aleatorias, versiones controladas
-    \item \checkmark Escalabilidad: Batch processing, índices optimizados, particionamiento
-    \item \checkmark Resiliencia: Persistencia intermedia, checkpoints, manejo de errores
-\end{itemize}
+\subsubsection{Vista Física}
+
+La Vista Física (Figura \ref{fig:vista-fisica-sad}) documenta el despliegue en servidor de producción con especificaciones de hardware: CPU Intel Xeon E5-2686 v4 de 8 núcleos a 2.3 GHz, 32 GB RAM DDR4, almacenamiento SSD NVMe de 500 GB, y sistema operativo Ubuntu 22.04 LTS. El diagrama muestra los siete contenedores Docker orquestados mediante Docker Compose (frontend, api, postgres, redis, celery-worker, celery-beat, nginx), red bridge interna con aislamiento de seguridad, mapeo de puertos (80/443 para Nginx, 3000 para Frontend, 8000 para API), y volúmenes persistentes para PostgreSQL y Redis que garantizan durabilidad de datos ante reinicios de contenedores.
+
+\begin{figure}[H]
+\centering
+\makebox[\textwidth]{\includegraphics[width=1.25\textwidth]{diagrams/VistaFisica.png}}
+\caption{Vista Física del Sistema. Servidor de producción con especificaciones de hardware, contenedores Docker orquestados por Docker Compose, red bridge interna, mapeo de puertos, y volúmenes persistentes para PostgreSQL y Redis.}
+\label{fig:vista-fisica-sad}
+\end{figure}
+
+La arquitectura implementada cumple con cinco características esenciales para el proyecto: modularidad donde cada componente puede ejecutarse y desarrollarse independientemente facilitando debugging y mantenimiento, trazabilidad completa mediante foreign keys que conectan cualquier resultado analítico con la oferta laboral original que lo generó, reproducibilidad científica garantizada por parámetros fijos documentados en código con semillas aleatorias controladas y versiones específicas de dependencias, escalabilidad horizontal mediante batch processing optimizado con índices de base de datos especializados y capacidad de particionamiento futuro, y resiliencia operativa con persistencia intermedia en cada etapa del pipeline más checkpoints que permiten recuperación ante fallos y manejo robusto de errores.
 
 \subsection{Componentes del Sistema}
 
@@ -307,16 +245,10 @@ La base de datos actúa como columna vertebral del sistema, implementando el pat
 
 \subsubsection{Esquema de Tablas Principales}
 
-\textbf{raw\_jobs}: Ofertas tal como fueron scrapeadas (job\_id UUID, portal, country, url, title, description, content\_hash SHA-256, is\_usable flag)
+La tabla raw\_jobs almacena ofertas tal como fueron scrapeadas con campos job\_id UUID, portal, country, url, title, description, content\_hash SHA-256 e is\_usable flag. La tabla cleaned\_jobs contiene texto limpio y normalizado con job\_id FK, title\_cleaned, description\_cleaned, combined\_text pre-computado y word\_count.
 
-\textbf{cleaned\_jobs}: Texto limpio y normalizado (job\_id FK, title\_cleaned, description\_cleaned, combined\_text pre-computado, word\_count)
+La tabla extracted\_skills registra habilidades identificadas mediante extraction\_id UUID, job\_id FK, skill\_text, extraction\_method, confidence\_score, esco\_uri y mapping\_method. La tabla esco\_skills funciona como taxonomía de referencia con esco\_uri PK, preferred\_label\_es, preferred\_label\_en, alt\_labels, skill\_type totalizando 14,174 registros.
 
-\textbf{extracted\_skills}: Habilidades identificadas (extraction\_id UUID, job\_id FK, skill\_text, extraction\_method, confidence\_score, esco\_uri, mapping\_method)
-
-\textbf{esco\_skills}: Taxonomía de referencia (esco\_uri PK, preferred\_label\_es, preferred\_label\_en, alt\_labels, skill\_type, 14,174 registros)
-
-\textbf{skill\_embeddings}: Representaciones vectoriales (embedding\_id UUID, skill\_text UNIQUE, embedding vector[768], model\_name, created\_at)
-
-\textbf{analysis\_results}: Resultados de clustering (analysis\_id UUID, analysis\_type, country, date\_range, parameters JSONB, results JSONB)
+La tabla skill\_embeddings almacena representaciones vectoriales con embedding\_id UUID, skill\_text UNIQUE, embedding vector[768], model\_name y created\_at. La tabla analysis\_results persiste resultados de clustering con analysis\_id UUID, analysis\_type, country, date\_range, parameters JSONB y results JSONB.
 
 Todas las tablas derivadas mantienen referencia mediante foreign key hacia raw\_jobs, garantizando trazabilidad completa desde cualquier resultado hasta la oferta original.

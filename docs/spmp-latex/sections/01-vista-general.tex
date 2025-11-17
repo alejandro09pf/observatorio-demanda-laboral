@@ -14,9 +14,9 @@ Este proyecto se realiza con el fin de sentar las bases técnicas y metodológic
 
 \subsection{Alcance}
 
-El proyecto contempla la implementación de un pipeline local compuesto por las siguientes etapas: (1) scraping de portales de empleo (Computrabajo, elempleo.com, Bumeran), (2) extracción de habilidades mediante NER y regex, (3) enriquecimiento semántico con LLMs, (4) representación vectorial con embeddings multilingües, (5) clustering con UMAP y HDBSCAN, y (6) generación de visualizaciones macro estáticas.
+El proyecto contempla la implementación de un pipeline local compuesto por siete etapas secuenciales. Inicia con scraping de ocho portales de empleo en Colombia, México y Argentina, seguido de limpieza y normalización de datos. Posteriormente ejecuta extracción de habilidades mediante dos pipelines paralelos: Pipeline A basado en NER y expresiones regulares, y Pipeline B utilizando modelos de lenguaje grandes para enriquecimiento semántico. Las etapas finales incluyen representación vectorial con embeddings multilingües, clustering con UMAP y HDBSCAN, y generación de visualizaciones macro estáticas junto con análisis temporal.
 
-Quedan fuera del alcance: el desarrollo de dashboards interactivos, la construcción de portales web, la automatización continua del pipeline y la integración con bases de datos externas o APIs privadas.
+Quedan fuera del alcance el desarrollo de dashboards interactivos en tiempo real, la construcción de portales web públicos, la automatización continua mediante orquestadores empresariales, y la integración con bases de datos externas o APIs privadas de portales de empleo.
 
 \subsection{Objetivo general}
 
@@ -24,35 +24,23 @@ Desarrollar un sistema que permita procesar y segmentar la demanda de habilidade
 
 \subsection{Objetivos Específicos}
 
-\begin{itemize}
-    \item Construir un estado del arte exhaustivo para comparar trabajos existentes en el ámbito de observatorios laborales automatizados y técnicas de procesamiento de lenguaje natural en español.
+El proyecto contempla cuatro objetivos específicos que estructuran su desarrollo. El primero consiste en construir un estado del arte exhaustivo que permita comparar trabajos existentes en observatorios laborales automatizados y técnicas de procesamiento de lenguaje natural aplicadas al español, estableciendo así el marco conceptual y metodológico del sistema. El segundo objetivo busca diseñar una arquitectura modular, escalable y reutilizable para el observatorio, fundamentada en las mejores prácticas identificadas durante la revisión del estado del arte y adaptada a las particularidades del contexto latinoamericano.
 
-    \item Diseñar una arquitectura modular, escalable y reutilizable para el observatorio laboral automatizado, fundamentada en las mejores prácticas identificadas en el estado del arte.
-
-    \item Implementar e integrar técnicas de inteligencia artificial para la identificación, normalización y agrupación semántica de habilidades tecnológicas en ofertas laborales en español.
-
-    \item Validar el desempeño y la robustez de la arquitectura y los modelos propuestos mediante métricas cuantitativas y estudios empíricos.
-\end{itemize}
+El tercer objetivo se enfoca en implementar e integrar técnicas de inteligencia artificial para la identificación, normalización y agrupación semántica de habilidades tecnológicas en ofertas laborales en español, combinando métodos tradicionales basados en reglas con modelos de lenguaje modernos. Finalmente, el cuarto objetivo establece la necesidad de validar el desempeño y la robustez tanto de la arquitectura propuesta como de los modelos implementados, mediante métricas cuantitativas de precisión y recall, así como estudios empíricos sobre conjuntos de datos anotados manualmente.
 
 \section{Supuestos y Restricciones}
 
 \subsection{Supuestos}
 
-\begin{itemize}
-    \item Se mantendrá acceso continuo a portales de empleo y/o APIs para extracción de vacantes.
-    \item Existirá un corpus suficiente y variado de vacantes en español.
-    \item Se contará con infraestructura local adecuada para ejecutar las tareas técnicas.
-    \item El equipo mantendrá una coordinación fluida durante las semanas de ejecución.
-    \item Se contará con modelos a utilizar que tengan el funcionamiento adecuado en español.
-\end{itemize}
+El proyecto opera bajo cinco supuestos fundamentales que condicionan su viabilidad técnica y operativa. Se asume que será posible mantener acceso continuo a los portales de empleo seleccionados o sus APIs públicas para la extracción sistemática de vacantes durante todo el período de ejecución. Adicionalmente, se presupone la existencia de un corpus suficientemente amplio y variado de ofertas laborales publicadas en español que permita entrenar y validar los modelos de extracción con representatividad estadística adecuada.
+
+Desde la perspectiva de infraestructura, se asume que el equipo contará con recursos computacionales locales adecuados para ejecutar las tareas técnicas del pipeline, incluyendo procesamiento de lenguaje natural, generación de embeddings y clustering de habilidades. En términos organizacionales, se supone que el equipo mantendrá coordinación fluida y comunicación efectiva durante las semanas de ejecución del proyecto. Finalmente, se presume que los modelos de lenguaje y bibliotecas de NLP seleccionados tendrán funcionamiento adecuado para el procesamiento de texto en español, particularmente considerando las variantes dialectales de Colombia, México y Argentina.
 
 \subsection{Restricciones}
 
-\begin{itemize}
-    \item Existencia de carga académica paralela por parte del equipo.
-    \item Capacidad limitada de procesamiento local (sin uso de GPUs o servidores externos).
-    \item Tiempo acotado para ajuste fino de prompts, clustering y visualizaciones.
-\end{itemize}
+El proyecto enfrenta tres restricciones principales que delimitan su alcance y enfoque metodológico. La primera corresponde a la existencia de carga académica paralela por parte de los integrantes del equipo, quienes deben balancear el desarrollo del observatorio con otras responsabilidades curriculares del programa de Ingeniería de Sistemas, limitando así las horas semanales disponibles para dedicación exclusiva al proyecto.
+
+La segunda restricción corresponde a la capacidad limitada de procesamiento computacional local, operando sin acceso a GPUs de alto rendimiento ni infraestructura de servidores externos, lo cual condiciona la selección de modelos de lenguaje hacia alternativas de tamaño intermedio ejecutables en hardware consumer con cuantización. La tercera restricción refleja el tiempo acotado disponible para experimentación iterativa en componentes que requieren ajuste manual, como el refinamiento de prompts para LLMs, la optimización de parámetros de clustering, y el diseño de visualizaciones interpretables, priorizando implementaciones funcionales sobre exploraciones exhaustivas de hiperparámetros.
 
 \section{Entregables}
 
