@@ -258,3 +258,53 @@ El componente Pre-ESCO utilizó módulo de normalización canónica con dicciona
 El componente Post-ESCO remapeó todas las skills usando \texttt{ESCO\allowbreak Matcher\allowbreak 3Layers} para garantizar fairness: Pipeline A se ignoró y remapeó desde texto normalizado igual que Pipeline B. Este diseño eliminó ventajas artificiales asegurando que diferencias Post-ESCO reflejaran calidad de extracción textual. Skills sin match ESCO se descartaron de la comparación Post-ESCO, cuantificándose separadamente como ``Skills Emergentes'' para análisis cualitativo.
 
 Las 300 ofertas se procesaron por todos los pipelines: Pipeline A (NER+Regex completo), Pipeline A Regex-Only, Pipeline B con 4 LLMs (Gemma, Llama, Qwen, Phi), y Pipeline A.1 (TF-IDF, descartado por F1$<$12\%). Los outputs se almacenaron en tablas dedicadas facilitando queries de evaluación mediante joins con \texttt{gold\_\allowbreak standard\_\allowbreak annotations}.
+
+\section{Implementación del Frontend Interactivo}
+
+El observatorio implementó un frontend web con Next.js 16, React y TypeScript que proporciona acceso interactivo a las 30,660 ofertas procesadas y habilidades extraídas mediante sistema de filtrado multidimensional. La arquitectura utiliza Next.js App Router con componentes client-side, comunicación con backend FastAPI mediante Axios, fetching paralelo de datos, y estilos Tailwind CSS con paleta de colores contextual que distingue visualmente skills técnicas, soft skills, elementos ESCO y métodos de extracción.
+
+\subsection{Dashboard Principal}
+
+El dashboard presenta estadísticas de cobertura en tiempo real con filtrado simultáneo por país (Colombia, México, Argentina), método de extracción (Manual, Pipeline A, Pipeline B, NER, Regex), estado del empleo, tipo de habilidad y estado de mapeo ESCO. Muestra métricas clave del corpus, preview del Top 15 de habilidades más demandadas con barras de progreso, distribución geográfica y desglose de métodos de extracción. Las estadísticas se actualizan dinámicamente conforme el usuario aplica filtros.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/DashboardFront.png}
+\caption{Dashboard Principal del Observatorio mostrando estadísticas agregadas, Top 15 de habilidades más demandadas, distribución geográfica y sistema de filtrado multidimensional.}
+\label{fig:dashboard-front}
+\end{figure}
+
+\subsection{Módulo de Exploración de Habilidades}
+
+El módulo combina tres modos de visualización: Top (20, 50 o 100 habilidades más frecuentes), Todos (paginación de 50 resultados), y Búsqueda (texto completo con paginación). Cada skill muestra frecuencia absoluta, porcentaje de aparición, tipo con badge de color, badge ESCO cuando aplica, y barra de progreso visual. El sistema de paginación incluye navegación por números de página y muestra el rango actual de resultados.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/SkillsFront.png}
+\caption{Módulo de Exploración de Habilidades con búsqueda de texto completo, filtrado multidimensional y tres modos de visualización (Top, Todos, Búsqueda).}
+\label{fig:skills-front}
+\end{figure}
+
+\subsection{Sistema de Consulta de Ofertas Laborales}
+
+La sección de empleos permite filtrado por país, portal de origen y estado de procesamiento, además de búsqueda de texto completo. Los resultados se presentan en tabla paginada (20 empleos por página) con título, empresa, ubicación, portal y fecha de publicación. Cada empleo lleva a página de detalle individual que muestra descripción completa, requisitos, metadata (salario, contrato, modalidad remota) y todas las habilidades extraídas con filtrado propio por tipo, método de extracción y estado de mapeo ESCO.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/JobAddViewFront.png}
+\caption{Vista Detallada de Oferta Laboral mostrando descripción completa, metadata y habilidades extraídas con filtrado por tipo, método de extracción y estado de mapeo ESCO.}
+\label{fig:job-detail-front}
+\end{figure}
+
+\subsection{Panel de Administración}
+
+El panel de administración proporciona monitoreo en tiempo real del sistema Celery mostrando workers activos, tareas en ejecución y salud del sistema. Presenta estadísticas de Pipeline A y Pipeline B incluyendo jobs procesados, completados, pendientes, fallidos, skills extraídas y tasa de completitud visualizada con barra de progreso. Muestra el schedule de Celery Beat con tareas programadas automáticamente, implementa auto-refresh cada 10 segundos, y maneja gracefully casos donde Celery no está disponible.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/PanelAdminFront.png}
+\caption{Panel de Administración y Monitoreo presentando estado del sistema Celery, estadísticas de Pipeline A y Pipeline B, y schedule de tareas automáticas con auto-refresh cada 10 segundos.}
+\label{fig:admin-panel-front}
+\end{figure}
+
+El frontend implementa además funcionalidades avanzadas de visualización de distribuciones geográficas, análisis detallado de habilidades individuales con skills co-ocurrentes, y módulo completo de clustering con selección de configuraciones y visualización de resultados. Las capturas de pantalla adicionales de estas funcionalidades se presentan en el Apéndice G.
