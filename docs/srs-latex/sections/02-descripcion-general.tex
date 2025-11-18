@@ -6,17 +6,9 @@ El sistema propuesto, denominado Observatorio de Demanda Laboral en Tecnología 
 
 Este sistema no reemplaza una herramienta previa ni se integra como módulo en un sistema existente; por el contrario, responde a una necesidad actual no cubierta de manera integral en los contextos académico y gubernamental latinoamericano: la escasez de plataformas automatizadas que permitan entender en profundidad la evolución semántica de las habilidades requeridas en el sector tecnológico, a partir de vacantes en línea publicadas en español.
 
-La decisión de desarrollar este producto surge de una combinación de motivaciones técnicas y sociales:
+La decisión de desarrollar este producto surge de una combinación de motivaciones técnicas y sociales que se complementan mutuamente. Desde el punto de vista técnico, se busca aplicar metodologías avanzadas de procesamiento de lenguaje natural, extracción de entidades nombradas, embeddings multilingües y clustering semántico para lograr una segmentación coherente y útil de perfiles laborales emergentes en el sector tecnológico. Desde una perspectiva social y estratégica, se pretende brindar herramientas de análisis riguroso que apoyen a universidades, centros de formación, entidades públicas y actores del ecosistema digital en la identificación temprana de brechas de habilidades, facilitando así la toma de decisiones informadas en política educativa, mejoramiento de empleabilidad y diseño de programas de reconversión laboral.
 
-\begin{itemize}
-    \item Desde el punto de vista técnico, se busca aplicar metodologías avanzadas de procesamiento de lenguaje natural, extracción de entidades, embeddings multilingües y clustering semántico para lograr una segmentación coherente y útil de perfiles laborales.
-
-    \item Desde una perspectiva social y estratégica, se pretende brindar herramientas de análisis que apoyen a universidades, centros de formación, entidades públicas y actores del ecosistema digital en la identificación temprana de brechas de habilidades, facilitando la toma de decisiones informadas en política educativa, empleabilidad y reconversión laboral.
-\end{itemize}
-
-El sistema propuesto se distingue de otros enfoques parciales por su carácter modular, reproducible y enfocado en la generación de conocimiento estratégico a partir de datos abiertos. Su desarrollo también permitirá validar técnicas emergentes de extracción e inferencia con LLMs en español, contribuyendo al cuerpo académico y técnico en ciencia de datos aplicada al empleo.
-
-En síntesis, el Observatorio representa un aporte original y pertinente tanto desde el plano metodológico como desde su aplicabilidad social, al combinar scraping ético, NLP multilingüe y visualización analítica para abordar un problema real en el contexto latinoamericano.
+El sistema propuesto se distingue de otros enfoques parciales por su carácter modular, reproducible y enfocado en la generación de conocimiento estratégico a partir de datos abiertos. Su desarrollo también permitirá validar técnicas emergentes de extracción e inferencia con modelos de lenguaje en español, contribuyendo al cuerpo académico y técnico en ciencia de datos aplicada al empleo. En síntesis, el Observatorio representa un aporte original y pertinente tanto desde el plano metodológico como desde su aplicabilidad social, al combinar scraping ético, procesamiento de lenguaje natural multilingüe y visualización analítica para abordar un problema real en el contexto latinoamericano.
 
 \subsection{Interfaces con el sistema}
 
@@ -24,51 +16,17 @@ El sistema ``Observatorio de Demanda Laboral en Tecnología en Latinoamérica'' 
 
 El flujo funcional del sistema se organiza de manera secuencial y conectada, iniciando con el módulo de web scraping, el cual actúa como punto de entrada para la adquisición de datos desde portales de empleo. Cada uno de los módulos siguientes procesa la información recibida del anterior, generando una línea de procesamiento de datos estructurada y continua.
 
-Las interfaces internas entre módulos incluyen:
+Las interfaces internas entre módulos siguen un flujo secuencial de procesamiento de datos. El módulo de scraping obtiene vacantes desde portales como Computrabajo, Bumeran y ElEmpleo, depositando los datos en bruto que posteriormente son integrados a PostgreSQL. El módulo de procesamiento semántico recibe estos textos y los normaliza mediante lematización, tokenización y limpieza utilizando librerías especializadas como spaCy y expresiones regulares. El módulo de extracción de habilidades procesa estos textos normalizados mediante técnicas de reconocimiento de entidades nombradas, expresiones regulares y modelos de lenguaje descargados desde Hugging Face. El módulo de embeddings transforma las habilidades extraídas en vectores de 768 dimensiones mediante SentenceTransformers. El módulo de clustering aplica reducción dimensional con UMAP seguido de agrupamiento con HDBSCAN. Finalmente, el módulo de visualización genera gráficos interactivos y reportes analíticos mediante matplotlib, Plotly y pandas, exportando resultados a formatos PDF, HTML y CSV, complementados por un dashboard web desarrollado con Next.js para consulta dinámica.
 
-\begin{itemize}
-    \item De Scraping hacia Almacenamiento estructurado: Cada spider obtiene vacantes desde portales como Computrabajo, Bumeran y elempleo.com, y deposita los datos en bruto en archivos .json o .csv, los cuales son posteriormente integrados a una base de datos PostgreSQL.
+Aunque el sistema hace uso intensivo de librerías de código abierto, estas no constituyen interfaces con sistemas externos, sino dependencias internas gestionadas como paquetes dentro del entorno virtual del proyecto mediante pip. No se consumen APIs externas de pago, ni se establece comunicación en tiempo real con servicios web propietarios de terceros. Este diseño modular y desacoplado permite mantener un alto grado de interoperabilidad y facilita la posibilidad de sustituir o extender cada módulo de forma independiente, sin afectar la funcionalidad del sistema completo.
 
-    \item De Almacenamiento hacia Procesamiento semántico: Los textos extraídos son lematizados, tokenizados y limpiados utilizando librerías como spaCy, nltk y regex, para luego ser enviados al módulo de extracción de habilidades.
+\subsection{Arquitectura del Sistema}
 
-    \item De Procesamiento semántico hacia Enriquecimiento con LLMs: Las habilidades explícitas e implícitas se extraen mediante NER, expresiones regulares y modelos de lenguaje como BETO, E5, o T5, ya sea de forma local o descargados desde Hugging Face.
+El sistema implementa una arquitectura híbrida que combina tres patrones arquitectónicos complementarios para satisfacer requisitos duales de latencia y procesamiento. El patrón Request/Response mediante microservicios en capas proporciona operaciones síncronas de baja latencia para consultas de usuarios a través de frontend Next.js y API FastAPI conectados a PostgreSQL. El patrón Event-Driven mediante comunicación Pub/Sub con Redis y Celery permite procesamiento asíncrono distribuido de tareas computacionalmente intensivas que pueden requerir minutos u horas, tales como scraping, extracción de habilidades con modelos de lenguaje, generación de embeddings y clustering. El patrón API Gateway implementado con Nginx actúa como punto único de entrada para todas las peticiones HTTP/HTTPS externas, proporcionando routing inteligente, terminación SSL/TLS y rate limiting.
 
-    \item De Enriquecimiento hacia Embeddings y clustering: Los textos enriquecidos se transforman en vectores utilizando SentenceTransformers y fastText, y se agrupan mediante algoritmos como HDBSCAN y reducción de dimensionalidad (UMAP).
+El pipeline de procesamiento de datos se organiza en siete etapas especializadas siguiendo la metodología CRISP-DM adaptada para minería de textos: scraping automatizado desde 7 portales principales mediante Scrapy y Selenium, extracción de habilidades mediante reconocimiento de entidades nombradas con spaCy y expresiones regulares, enriquecimiento semántico opcional mediante modelos de lenguaje locales, generación de embeddings de 768 dimensiones con el modelo E5 Multilingual, reducción dimensional con UMAP preservando estructura topológica, clustering jerárquico basado en densidad con HDBSCAN sin requerir número de clusters predefinido, y visualización mediante dashboard web Next.js complementado con reportes estáticos en formatos PDF, HTML y CSV.
 
-    \item De Clustering hacia Visualización: Finalmente, los resultados son representados en gráficos estáticos y reportes PDF generados con herramientas como matplotlib, Plotly, pandas y Jinja2.
-\end{itemize}
-
-Aunque el sistema hace uso intensivo de librerías de código abierto, estas no constituyen interfaces con sistemas externos, sino dependencias internas gestionadas como paquetes dentro del entorno local o virtual del proyecto (por ejemplo, vía pip o conda). No se consumen APIs externas, ni se establece comunicación en tiempo real con servicios web de terceros.
-
-Este diseño modular y desacoplado permite mantener un alto grado de interoperabilidad y facilita la posibilidad de sustituir o extender cada módulo de forma independiente, sin afectar la funcionalidad del sistema completo.
-
-\subsection{Arquitectura de Pipeline de 7 Etapas}
-
-El sistema implementa una arquitectura de procesamiento secuencial compuesta por siete etapas técnicas claramente diferenciadas. Esta estructura modular permite la transformación progresiva de datos crudos hasta la generación de insights analíticos. El flujo completo del pipeline se formaliza mediante la siguiente secuencia:
-
-\begin{equation}
-\text{Scraping} \to \text{Extraction} \to \text{LLM Processing} \to \text{Embedding} \to \text{UMAP} \to \text{HDBSCAN} \to \text{Visualization}
-\end{equation}
-
-A continuación se describen las siete etapas del pipeline con sus tecnologías asociadas:
-
-\begin{enumerate}
-    \item Scraping: Extracción automatizada de vacantes mediante 8 spiders especializados (Scrapy 2.11, Selenium 4.15) desde los portales: Computrabajo, Bumeran, ElEmpleo, HiringCafe, OCC Mundial, ZonaJobs, Indeed, y Magneto.
-
-    \item Extraction (NER + Regex): Detección de habilidades explícitas mediante Named Entity Recognition con spaCy 3.7 y patrones de expresiones regulares sobre textos normalizados.
-
-    \item LLM Processing: Enriquecimiento semántico mediante modelos de lenguaje (Gemma 3 4B, Llama 3 3B, Qwen 2.5 3B, Phi-3.5 Mini) para extracción de habilidades implícitas y normalización contextual.
-
-    \item Embedding: Transformación de textos a representaciones vectoriales de 768 dimensiones mediante el modelo intfloat/multilingual-e5-base, optimizado para búsqueda semántica multilingüe.
-
-    \item UMAP: Reducción de dimensionalidad desde 768D a espacios de menor dimensión (2D-50D) preservando la estructura topológica local y global de los datos.
-
-    \item HDBSCAN: Clustering jerárquico basado en densidad para identificación no supervisada de perfiles laborales y segmentos de demanda tecnológica, sin requerir número de clusters predefinido.
-
-    \item Visualization: Generación de reportes analíticos estáticos mediante matplotlib, Plotly y pandas, incluyendo gráficos de dispersión, heatmaps, distribuciones y tablas de resultados en formatos PDF, HTML y CSV.
-\end{enumerate}
-
-Esta arquitectura de 7 etapas asegura trazabilidad completa del procesamiento, modularidad técnica y reproducibilidad científica del análisis de demanda laboral.
+La especificación detallada de la arquitectura del sistema, incluyendo decisiones de diseño, justificaciones técnicas, diagramas de componentes, vistas arquitectónicas y patrones implementados, se documenta exhaustivamente en el Documento de Arquitectura del Software (SAD) que acompaña este SRS.
 
 \subsection{Interfaces con el usuario}
 
@@ -76,42 +34,21 @@ El sistema proporciona múltiples interfaces de usuario orientadas a diferentes 
 
 A continuación, se describen las interfaces de usuario disponibles, junto con sus características técnicas y funcionales:
 
-\subsubsection{Terminal o Consola (CLI)}
+\subsubsection{Terminal o Consola}
 
-\begin{itemize}
-    \item Propósito: Interacción principal de los desarrolladores e investigadores con el sistema.
-    \item Acciones permitidas: Ejecución de spiders, procesamiento de datos, entrenamiento de modelos, generación de reportes.
-    \item Requisitos técnicos: Acceso a un entorno UNIX-like (Linux/macOS recomendado) o WSL en Windows; Python 3.10+ instalado.
-    \item Usabilidad: Requiere conocimientos intermedios en línea de comandos. El entrenamiento estimado para familiarizarse con los comandos básicos es inferior a 1 hora para usuarios técnicos.
-\end{itemize}
+La interfaz de línea de comandos constituye la interacción principal de los desarrolladores e investigadores con el sistema, permitiendo la ejecución de spiders, procesamiento de datos, entrenamiento de modelos y generación de reportes. Esta interfaz requiere acceso a un entorno UNIX-like, recomendándose Linux o macOS, aunque también es funcional en Windows mediante WSL. El sistema requiere Python 3.10 o superior instalado. La usabilidad de esta interfaz demanda conocimientos intermedios en línea de comandos, aunque el entrenamiento estimado para familiarizarse con los comandos básicos es inferior a una hora para usuarios técnicos.
 
 \subsubsection{Notebooks Jupyter}
 
-\begin{itemize}
-    \item Propósito: Validación de resultados, visualización exploratoria y pruebas modulares.
-    \item Acciones permitidas: Carga de resultados del clustering, análisis gráfico, pruebas de embeddings, revisión de habilidades extraídas.
-    \item Requisitos técnicos: Instalación local de jupyterlab o uso en plataforma cloud (ej. Google Colab). Se recomienda resolución mínima de 1366x768 para una visualización óptima.
-    \item Usabilidad: Las notebooks están documentadas con celdas de texto y ejemplos reproducibles. Se espera un nivel básico de familiaridad con Python y Pandas por parte del usuario.
-\end{itemize}
+Las notebooks Jupyter sirven para validación de resultados, visualización exploratoria y pruebas modulares. Estas interfaces permiten la carga de resultados de clustering, análisis gráfico, pruebas de embeddings y revisión de habilidades extraídas. Los requisitos técnicos incluyen instalación local de JupyterLab o uso en plataforma cloud como Google Colab, recomendándose una resolución mínima de 1366x768 píxeles para visualización óptima. Las notebooks están documentadas con celdas de texto explicativo y ejemplos reproducibles, esperándose un nivel básico de familiaridad con Python y Pandas por parte del usuario.
 
-\subsubsection{Dashboard Interactivo Web (Docker)}
+\subsubsection{Dashboard Interactivo Web}
 
-\begin{itemize}
-    \item Propósito: Visualización centralizada e interactiva de las estadísticas más importantes del observatorio, permitiendo consultas dinámicas y exploración de resultados sin requerir conocimientos técnicos avanzados.
-    \item Acciones permitidas: Navegación entre métricas clave, filtrado por país y portal, visualización de distribuciones de habilidades, consulta de tendencias temporales, exploración de clusters identificados y descarga de reportes generados.
-    \item Requisitos técnicos: Despliegue mediante Docker Compose, acceso vía navegador web moderno (Chrome, Firefox, Edge), resolución mínima de 1920x1080 recomendada. Requiere conexión al servidor donde está desplegado el contenedor Docker.
-    \item Tecnologías: Frontend desarrollado con frameworks web modernos, backend conectado a PostgreSQL para consultas en tiempo real, despliegue containerizado con Docker para portabilidad y reproducibilidad.
-    \item Usabilidad: Interfaz visual intuitiva diseñada para usuarios no técnicos como directivos, analistas de políticas públicas, investigadores académicos y stakeholders institucionales. No requiere conocimientos de programación ni línea de comandos.
-\end{itemize}
+El dashboard web constituye la interfaz principal de visualización centralizada e interactiva de las estadísticas del observatorio, permitiendo consultas dinámicas y exploración de resultados sin requerir conocimientos técnicos avanzados. Esta interfaz permite navegación entre métricas clave, filtrado por país y portal, visualización de distribuciones de habilidades, consulta de tendencias temporales, exploración de clusters identificados y descarga de reportes generados. El despliegue se realiza mediante Docker Compose, requiriendo acceso vía navegador web moderno como Chrome, Firefox o Edge, recomendándose resolución mínima de 1920x1080 píxeles y conexión al servidor donde está desplegado el contenedor Docker. El frontend se desarrolló con Next.js conectado al backend FastAPI, que consulta PostgreSQL en tiempo real, todo desplegado de forma containerizada con Docker para garantizar portabilidad y reproducibilidad. La interfaz visual intuitiva está diseñada para usuarios no técnicos como directivos, analistas de políticas públicas, investigadores académicos y stakeholders institucionales, sin requerir conocimientos de programación ni línea de comandos.
 
 \subsubsection{Visualizaciones estáticas y reportes}
 
-\begin{itemize}
-    \item Propósito: Consulta de resultados finales en formato visual o tabular, por parte del equipo académico, directivo o institucional.
-    \item Tipos de salida: Archivos .pdf, .png, .html o .md generados automáticamente desde scripts Python.
-    \item Requisitos técnicos: Visualizador de PDF o navegador moderno actualizado (Chrome, Firefox, Edge). No se requiere conexión a internet tras la generación del archivo.
-    \item Usabilidad: Interfaz pasiva. Los reportes están diseñados para facilitar la interpretación con títulos, leyendas y estructura clara.
-\end{itemize}
+Los reportes estáticos permiten la consulta de resultados finales en formato visual o tabular por parte del equipo académico, directivo o institucional. El sistema genera automáticamente archivos en formatos PDF, PNG, HTML y Markdown desde scripts Python especializados. Los requisitos técnicos se limitan a un visualizador de PDF o navegador moderno actualizado, sin requerir conexión a internet tras la generación del archivo. Los reportes están diseñados con títulos descriptivos, leyendas explicativas y estructura clara para facilitar la interpretación sin asistencia técnica.
 
 \section{Funciones del Producto}
 
