@@ -1,13 +1,15 @@
-\section*{APÉNDICE F: IMPLEMENTACIÓN DETALLADA DE PIPELINES DE EXTRACCIÓN}
-\addcontentsline{toc}{section}{Apéndice F: Implementación Detallada de Pipelines}
+\section*{APÉNDICE E: IMPLEMENTACIÓN DETALLADA DE PIPELINES DE EXTRACCIÓN}
+\addcontentsline{toc}{section}{Apéndice E: Implementación Detallada de Pipelines}
 
-Este apéndice documenta exhaustivamente la implementación técnica de los dos pipelines de extracción de habilidades: Pipeline A (NER + Expresiones Regulares) y Pipeline B (Large Language Models). Se presentan los componentes específicos, flujos de procesamiento, configuraciones, mecanismos de control de calidad, y resultados de evaluación detallados sobre el gold standard de 300 ofertas laborales.
+Este apéndice complementa el Capítulo 6 (Desarrollo), específicamente las Secciones 6.1 y 6.2 que presentan la implementación de los dos pipelines de extracción de habilidades del observatorio. Mientras el capítulo principal describe la arquitectura general de Pipeline A basado en NER y expresiones regulares con latencia de 0.97s/oferta, y Pipeline B basado en Large Language Models con Gemma 3 4B ejecutando inferencia local mediante llama.cpp con cuantización Q4\_K\_M, este apéndice proporciona la documentación técnica exhaustiva de componentes específicos, justificaciones de decisiones arquitectónicas, flujos de procesamiento detallados paso a paso, configuraciones de inferencia con parámetros exactos, y mecanismos de control de calidad implementados para garantizar reproducibilidad y trazabilidad completa.
 
-\subsection*{F.1. Pipeline A: Implementación NER + Expresiones Regulares}
+La documentación incluye especificaciones críticas de implementación que fundamentan los resultados de evaluación presentados en la Tabla 6.2 del capítulo principal: para Pipeline A se detallan los 666 patrones del EntityRuler de spaCy poblados con taxonomía ESCO, las 371 expresiones regulares organizadas en 18 categorías técnicas con word boundaries y case-insensitive matching, el diccionario de normalización canónica con 200+ equivalencias que reduce el vocabulario de 6,498 skills únicas a 3,200 formas estandarizadas, y el flujo de integración de 7 pasos que combina NER y Regex mediante unión con metadata de método de extracción; para Pipeline B se documentan los parámetros exactos de inferencia con temperature 0.3 y top\_p 0.9 que balancean determinismo con diversidad léxica, el mecanismo de JSON Schema validation que garantiza 99.3\% de éxito en parsing automático, el sistema de reintento automático con backoff exponencial para manejar timeouts de inferencia, y los campos de trazabilidad que registran processing\_time\_seconds y tokens\_used para análisis de eficiencia computacional. Adicionalmente, se presenta análisis comparativo cuantitativo de ambos pipelines sobre el gold standard de 300 ofertas con métricas desglosadas Pre-ESCO y Post-ESCO, demostrando que Pipeline B supera a Pipeline A en exhaustividad (Recall Pre-ESCO 46.23\% vs 39.42\%) mientras mantiene precisión comparable.
+
+\subsection*{E.1. Pipeline A: Implementación NER + Expresiones Regulares}
 
 Pipeline A constituye el método base de extracción de habilidades del observatorio, diseñado para identificar menciones explícitas de tecnologías en ofertas laborales mediante la combinación de Reconocimiento de Entidades Nombradas (NER) y expresiones regulares (Regex).
 
-\subsubsection*{F.1.1. Justificación del Enfoque Dual NER + Regex}
+\subsubsection*{E.1.1. Justificación del Enfoque Dual NER + Regex}
 
 La decisión de combinar NER y Regex se fundamentó en las limitaciones complementarias de cada técnica individual:
 
@@ -33,7 +35,7 @@ La decisión de combinar NER y Regex se fundamentó en las limitaciones compleme
     \item \textbf{Escalabilidad}: Latencia combinada de 0.97s/oferta permite procesamiento masivo del corpus
 \end{itemize}
 
-\subsubsection*{F.1.2. Componentes del Pipeline A}
+\subsubsection*{E.1.2. Componentes del Pipeline A}
 
 \textbf{1. Componente NER (Reconocimiento de Entidades Nombradas)}:
 \begin{itemize}
@@ -49,7 +51,7 @@ La decisión de combinar NER y Regex se fundamentó en las limitaciones compleme
         \begin{itemize}
             \item Categorías base (247 patrones): Lenguajes (20), Frameworks (38), Bases de datos (15), Cloud (15), DevOps (18), Control de versiones (6), Data Science (18), Web technologies (18), Domain-specific: .NET, Build tools, Cloud services (99)
             \item Patrones contextualizados en español (9): ``experiencia en'', ``conocimiento de'', ``desarrollo con''
-            \item Skills técnicas O*NET + ESCO (276): Taxonomías externas para ampliar cobertura
+            \item Skills técnicas O*NET + manuales (235): Taxonomías externas (152 O*NET + 83 manuales) para ampliar cobertura
             \item Patrones de bullet points (2): Captura de listas separadas por símbolos
         \end{itemize}
     \item \textbf{Características}: Word boundaries (\textbackslash b), case-insensitive matching, captura de grupos contextuales
@@ -59,7 +61,7 @@ La decisión de combinar NER y Regex se fundamentó en las limitaciones compleme
 \textbf{3. Componente de Integración y Normalización}:
 \begin{itemize}
     \item \textbf{Deduplicación}: Eliminación de duplicados mediante normalización textual
-    \item \textbf{Normalización}: Diccionario canónico de 200+ equivalencias (``js'' $\to$ ``JavaScript'', ``k8s'' $\to$ ``Kubernetes'')
+    \item \textbf{Normalización}: Diccionario canónico de 200+ equivalencias (``js'' a ``JavaScript'', ``k8s'' a ``Kubernetes'')
     \item \textbf{Niveles de output}:
         \begin{itemize}
             \item Raw extractions: Metadata de método, posición, confianza
@@ -68,7 +70,7 @@ La decisión de combinar NER y Regex se fundamentó en las limitaciones compleme
     \item \textbf{Reducción de vocabulario}: De 6,498 skills únicas a ~3,200 formas canónicas
 \end{itemize}
 
-\subsubsection*{F.1.3. Flujo de Integración y Procesamiento}
+\subsubsection*{E.1.3. Flujo de Integración y Procesamiento}
 
 La integración de NER y Regex opera mediante el siguiente flujo secuencial de 7 pasos:
 
@@ -97,7 +99,7 @@ La integración de NER y Regex opera mediante el siguiente flujo secuencial de 7
     \item \textbf{Normalización canónica}: Se aplica diccionario de equivalencias
         \begin{itemize}
             \item Diccionario: 200+ reglas mapeando variantes a formas canónicas
-            \item Ejemplos: ``js'' $\to$ ``JavaScript'', ``k8s'' $\to$ ``Kubernetes'', ``postgres'' $\to$ ``PostgreSQL''
+            \item Ejemplos: ``js'' a ``JavaScript'', ``k8s'' a ``Kubernetes'', ``postgres'' a ``PostgreSQL''
             \item Resultado: Reducción de 6,498 skills únicas a ~3,200 formas canónicas
         \end{itemize}
     \item \textbf{Generación de outputs}: Se producen dos niveles de extracciones
@@ -118,7 +120,7 @@ La integración de NER y Regex opera mediante el siguiente flujo secuencial de 7
     \item Tiempo proyectado para corpus completo: ~8.3 horas para 30,660 ofertas
 \end{itemize}
 
-\subsubsection*{F.1.4. Control de Calidad y Validación}
+\subsubsection*{E.1.4. Control de Calidad y Validación}
 
 Para garantizar la calidad de las extracciones del Pipeline A, se implementaron múltiples mecanismos de validación y filtrado que operan en diferentes etapas del procesamiento.
 
@@ -160,7 +162,7 @@ Para garantizar la calidad de las extracciones del Pipeline A, se implementaron 
     \item ESCO match rate: 12.6\% (baja cobertura indica presencia de skills emergentes no en ESCO v1.1.0)
 \end{itemize}
 
-\subsubsection*{F.1.5. Evaluación Detallada del Pipeline A}
+\subsubsection*{E.1.5. Evaluación Detallada del Pipeline A}
 
 La evaluación del Pipeline A se realizó mediante comparación contra el gold standard de 300 ofertas laborales manualmente anotadas (100 por país: Colombia, México, Argentina).
 
@@ -212,11 +214,11 @@ Los resultados cuantitativos completos de la evaluación de Pipeline A (métrica
     \item Sensibilidad a ruido HTML: Ofertas mal limpiadas generan falsos positivos
 \end{itemize}
 
-\subsection*{F.2. Pipeline B: Implementación con Large Language Models}
+\subsection*{E.2. Pipeline B: Implementación con Large Language Models}
 
 Pipeline B constituye el método de enriquecimiento semántico del observatorio, diseñado para complementar Pipeline A mediante extracción de habilidades implícitas, sinónimos contextuales, y competencias inferidas.
 
-\subsubsection*{F.2.1. Justificación del Enfoque LLM}
+\subsubsection*{E.2.1. Justificación del Enfoque LLM}
 
 La decisión de implementar un pipeline basado en LLMs se fundamentó en cuatro limitaciones estructurales de Pipeline A:
 
@@ -236,7 +238,7 @@ El enfoque LLM resuelve estas limitaciones mediante:
 
 La validación experimental confirmó que Pipeline B supera cuantitativamente a Pipeline A con el trade-off esperado en latencia (resultados detallados en el capítulo de Resultados).
 
-\subsubsection*{F.2.2. Selección del Modelo}
+\subsubsection*{E.2.2. Selección del Modelo}
 
 Se evaluaron cuatro modelos open-source de tamaño intermedio (3-4B parámetros):
 
@@ -269,7 +271,7 @@ Los resultados cuantitativos completos (métricas F1 Pre/Post-ESCO, skills por o
     \item Latencia aceptable para procesamiento batch no-interactivo
 \end{enumerate}
 
-\subsubsection*{F.2.3. Arquitectura de Prompt Engineering}
+\subsubsection*{E.2.3. Arquitectura de Prompt Engineering}
 
 El prompt de Pipeline B se estructuró en 6 secciones secuenciales documentadas exhaustivamente en el Apéndice A. Las decisiones de diseño validadas experimentalmente incluyen:
 
@@ -277,11 +279,11 @@ El prompt de Pipeline B se estructuró en 6 secciones secuenciales documentadas 
     \item \textbf{Exhaustividad sobre conservadurismo}: Instrucción ``EXTRAE TODAS'' aumentó recall de 31.2\% a 46.23\% Pre-ESCO
     \item \textbf{Ejemplos con ruido realista}: Ofertas con beneficios, capacitaciones futuras y años de experiencia redujeron falsos positivos de 23\% a 8\%
     \item \textbf{Distinción explícita de NO extraer}: Listar casos negativos eliminó 67\% de alucinaciones
-    \item \textbf{Normalización inline}: Especificar transformaciones ``postgres$\to$PostgreSQL, k8s$\to$Kubernetes'' redujo variantes léxicas de 18\% a 4\%
+    \item \textbf{Normalización inline}: Especificar transformaciones como ``postgres a PostgreSQL, k8s a Kubernetes'' redujo variantes léxicas de 18\% a 4\%
     \item \textbf{Formato JSON estricto}: Exigir ``ÚNICAMENTE el objeto JSON'' permitió parsing automático con 99\% éxito
 \end{itemize}
 
-\subsubsection*{F.2.4. Configuración de Inferencia}
+\subsubsection*{E.2.4. Configuración de Inferencia}
 
 \textbf{Parámetros de generación}:
 \begin{itemize}
@@ -299,7 +301,7 @@ El prompt de Pipeline B se estructuró en 6 secciones secuenciales documentadas 
     \item Caching de prompts base para reutilización entre ofertas
 \end{itemize}
 
-\subsubsection*{F.2.5. Evaluación Detallada del Pipeline B}
+\subsubsection*{E.2.5. Evaluación Detallada del Pipeline B}
 
 \textbf{Resultados de evaluación}:
 
@@ -322,7 +324,7 @@ La evaluación de Pipeline B sobre el gold standard confirmó su superioridad cu
     \item Latencia alta (18.3s mediana) limita aplicación a subconjuntos estratégicos del corpus
 \end{itemize}
 
-\subsection*{F.3. Conclusiones de Implementación}
+\subsection*{E.3. Conclusiones de Implementación}
 
 La implementación dual de pipelines permite balancear tres atributos críticos del sistema:
 

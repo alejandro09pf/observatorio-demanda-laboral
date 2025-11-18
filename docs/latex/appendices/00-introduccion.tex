@@ -1,0 +1,26 @@
+\chapter*{APÉNDICES}
+\addcontentsline{toc}{chapter}{Apéndices}
+
+Los siguientes apéndices proporcionan documentación técnica complementaria y exhaustiva de los componentes principales del Observatorio de Demanda Laboral en Tecnología en Latinoamérica. Cada apéndice amplía la información presentada en los capítulos principales del documento, ofreciendo especificaciones detalladas, ejemplos representativos y evidencia metodológica que respaldan las decisiones de diseño e implementación descritas en el cuerpo principal de esta memoria de grado.
+
+La organización de los apéndices sigue el orden cronológico del desarrollo del proyecto, reflejando las fases de la metodología CRISP-DM adoptada. Se inicia con la especificación formal de requerimientos funcionales y no funcionales del sistema, continúa con la documentación arquitectónica y de diseño que fundamenta las decisiones técnicas, prosigue con detalles de implementación de los pipelines de extracción de habilidades, y finaliza con evidencia de evaluación cuantitativa mediante el gold standard y documentación visual del producto final desplegado.
+
+Los apéndices están estructurados de la siguiente manera:
+
+\begin{itemize}
+    \item Apéndice A presenta la especificación exhaustiva de requerimientos del sistema, detallando capacidades funcionales, propiedades de calidad, restricciones operativas y casos de uso principales que orientaron el desarrollo del observatorio.
+
+    \item Apéndice B documenta decisiones arquitectónicas fundamentales, comparando estilos evaluados durante la fase de diseño, describiendo el flujo metodológico integrado CRISP-DM con pipeline de siete etapas, y especificando el stack tecnológico completo seleccionado para cada capa funcional del sistema.
+
+    \item Apéndice C proporciona la especificación técnica completa de la base de datos relacional PostgreSQL, documentando las trece tablas organizadas en tres capas funcionales, los 87 campos con sus tipos de datos específicos, las restricciones de integridad referencial, los 34 índices optimizados, y los volúmenes de datos procesados.
+
+    \item Apéndice D presenta el template completo del prompt de extracción utilizado por Pipeline B, incluyendo la estructura de seis secciones, los tres ejemplos end-to-end con ruido realista, las reglas de normalización inline, y las decisiones de ingeniería de prompts validadas experimentalmente.
+
+    \item Apéndice E documenta exhaustivamente la implementación técnica de Pipeline A (NER + Expresiones Regulares) y Pipeline B (Large Language Models), detallando componentes específicos, flujos de procesamiento, configuraciones de inferencia, mecanismos de control de calidad, y resultados de evaluación sobre el gold standard.
+
+    \item Apéndice F proporciona dos ejemplos representativos de anotaciones manuales del gold standard de 300 ofertas laborales, ilustrando el protocolo de anotación con formato atómico, la diversidad geográfica e idiomática del dataset, y la clasificación binaria entre hard skills y soft skills.
+
+    \item Apéndice G presenta capturas de pantalla adicionales del frontend web del observatorio, complementando las interfaces principales documentadas en el Capítulo 6 con vistas de funcionalidades avanzadas de filtrado multidimensional, distribuciones geográficas, análisis de clustering y configuración de parámetros.
+\end{itemize}
+
+Esta documentación complementaria permite la reproducibilidad completa del sistema, facilita la extensión futura de sus capacidades, y proporciona evidencia detallada de las decisiones metodológicas y técnicas adoptadas durante el desarrollo del proyecto de grado.

@@ -1,13 +1,15 @@
-\section*{APÉNDICE C: REQUERIMIENTOS Y ESPECIFICACIÓN FUNCIONAL DEL SISTEMA}
-\addcontentsline{toc}{section}{Apéndice C: Requerimientos y Especificación Funcional}
+\section*{APÉNDICE A: REQUERIMIENTOS Y ESPECIFICACIÓN FUNCIONAL DEL SISTEMA}
+\addcontentsline{toc}{section}{Apéndice A: Requerimientos y Especificación Funcional}
 
-Este apéndice documenta de forma exhaustiva los requerimientos funcionales, no funcionales y de datos del observatorio de demanda laboral, así como las restricciones técnicas, de datos y metodológicas que delimitaron el alcance del proyecto. La especificación funcional detalla la arquitectura de pipeline de 7 etapas, las interfaces críticas entre módulos y los casos de uso principales del sistema.
+Este apéndice complementa los Capítulos 2 (Descripción General del Proyecto) y 4 (Metodología), proporcionando la especificación técnica formal y exhaustiva de los requerimientos que orientaron el diseño e implementación del Observatorio de Demanda Laboral en Tecnología en Latinoamérica. Mientras el Capítulo 2 presenta una visión general de los objetivos y alcance del sistema, y el Capítulo 4 describe la metodología CRISP-DM adoptada, este apéndice documenta de forma rigurosa los requerimientos funcionales, no funcionales y de datos del sistema, así como las restricciones técnicas, de datos y metodológicas que delimitaron el alcance del proyecto.
 
-\subsection*{C.1. Requerimientos del Sistema}
+La especificación funcional detalla la arquitectura de pipeline de siete etapas secuenciales (scraping, normalización, extracción, mapeo ESCO, embeddings, clustering, visualización), las interfaces críticas entre módulos que garantizan la interoperabilidad de componentes heterogéneos, y los casos de uso principales que validan el cumplimiento de los objetivos establecidos. Esta documentación formal establece el contrato técnico entre los requerimientos de negocio expresados en lenguaje natural y la implementación técnica descrita en el Capítulo 6, facilitando la trazabilidad completa entre necesidades identificadas y funcionalidades implementadas.
+
+\subsection*{A.1. Requerimientos del Sistema}
 
 Los requerimientos del sistema se organizan en tres categorías: funcionales, no funcionales y de datos. Esta taxonomía permite abarcar tanto las capacidades operativas del observatorio como las propiedades de calidad que garantizan su viabilidad técnica y científica.
 
-\subsubsection*{C.1.1. Requerimientos Funcionales}
+\subsubsection*{A.1.1. Requerimientos Funcionales}
 
 El observatorio debe implementar las siguientes capacidades funcionales, organizadas según las etapas del pipeline de procesamiento:
 
@@ -29,7 +31,7 @@ El observatorio debe implementar las siguientes capacidades funcionales, organiz
 
 \textbf{RF-7. Trazabilidad y auditoría:} Cada etapa del pipeline debe registrar metadatos de procesamiento (timestamps, versiones de modelos, parámetros de configuración, métricas de calidad) en una base de datos relacional que permita la reproducibilidad de los análisis y la auditoría de resultados.
 
-\subsubsection*{C.1.2. Requerimientos No Funcionales}
+\subsubsection*{A.1.2. Requerimientos No Funcionales}
 
 Los requerimientos no funcionales establecen las propiedades de calidad que el sistema debe satisfacer:
 
@@ -43,7 +45,7 @@ Los requerimientos no funcionales establecen las propiedades de calidad que el s
 
 \textbf{RNF-5. Reproducibilidad científica:} Los experimentos deben ser completamente reproducibles mediante el uso de semillas aleatorias fijas, versionado de modelos, registro de hiperparámetros y almacenamiento de datasets intermedios.
 
-\subsubsection*{C.1.3. Requerimientos de Datos}
+\subsubsection*{A.1.3. Requerimientos de Datos}
 
 Los requerimientos de datos especifican las características cualitativas y cuantitativas de la información a recolectar:
 
@@ -57,11 +59,11 @@ Los requerimientos de datos especifican las características cualitativas y cuan
 
 \textbf{RD-5. Metadatos temporales:} Cada oferta debe registrar fecha de publicación, fecha de recolección y fecha de expiración (si está disponible) para permitir análisis de evolución temporal de la demanda.
 
-\subsection*{C.2. Restricciones}
+\subsection*{A.2. Restricciones}
 
 Las restricciones representan limitaciones inherentes al problema, al contexto de operación o a las decisiones de alcance del proyecto.
 
-\subsubsection*{C.2.1. Restricciones Técnicas}
+\subsubsection*{A.2.1. Restricciones Técnicas}
 
 \textbf{C-1. Límites de scraping:} Los portales de empleo implementan medidas anti-bot (CAPTCHAs, rate limiting, bloqueos por IP) que restringen la velocidad y volumen de recolección. El sistema debe respetar estas limitaciones mediante delays adaptativos, rotación de user-agents y estrategias de backoff exponencial.
 
@@ -71,7 +73,7 @@ Las restricciones representan limitaciones inherentes al problema, al contexto d
 
 \textbf{C-4. Latencia de procesamiento LLM:} El procesamiento de ofertas con LLMs ejecutados localmente introduce latencia significativa (40-45 segundos/oferta) comparado con métodos tradicionales. Alternativamente, las llamadas a APIs de LLMs comerciales (OpenAI, Anthropic) reducirían latencia pero introducirían costos variables y dependencias externas. El diseño debe balancear calidad de resultados con viabilidad técnica y tiempos de procesamiento.
 
-\subsubsection*{C.2.2. Restricciones de Datos}
+\subsubsection*{A.2.2. Restricciones de Datos}
 
 \textbf{C-5. Heterogeneidad de formatos:} No existe un estándar para la publicación de ofertas laborales. Los portales utilizan campos, nomenclaturas y niveles de detalle diferentes, lo que dificulta la normalización automática.
 
@@ -81,17 +83,17 @@ Las restricciones representan limitaciones inherentes al problema, al contexto d
 
 \textbf{C-8. Volatilidad temporal:} Las ofertas se eliminan o modifican frecuentemente (típicamente tienen vigencia de 30-60 días), lo que requiere estrategias de recolección periódica y versionado de datos.
 
-\subsubsection*{C.2.3. Restricciones Metodológicas}
+\subsubsection*{A.2.3. Restricciones Metodológicas}
 
 \textbf{C-9. Ausencia de ground truth:} No existe un dataset etiquetado de referencia para habilidades en ofertas laborales en español latinoamericano, lo que dificulta la evaluación cuantitativa rigurosa de los modelos de extracción.
 
 \textbf{C-10. Sesgo de fuente:} Los portales de empleo no representan el universo completo del mercado laboral. Excluyen ofertas publicadas en sitios corporativos directos, redes sociales, o canales informales, introduciendo sesgo de formalidad y tamaño de empresa.
 
-\subsection*{C.3. Especificación Funcional}
+\subsection*{A.3. Especificación Funcional}
 
 La especificación funcional describe el comportamiento de alto nivel del sistema mediante la definición de su arquitectura de pipeline y las interfaces entre módulos.
 
-\subsubsection*{C.3.1. Arquitectura de Pipeline de 7 Etapas}
+\subsubsection*{A.3.1. Arquitectura de Pipeline de 7 Etapas}
 
 El observatorio se estructura como un pipeline secuencial de transformación de datos, donde cada etapa consume la salida de la anterior y produce artefactos almacenados en PostgreSQL:
 
@@ -101,25 +103,25 @@ El observatorio se estructura como un pipeline secuencial de transformación de 
 
 \textbf{Etapa 3 - Extracción (Pipeline A):} Aplica NER + Regex. \textit{Entrada:} \texttt{combined\_text}. \textit{Salida:} Tabla \texttt{extracted\_skills} con campos \texttt{job\_id}, \texttt{skill\_text}, \texttt{extraction\_\allowbreak method}, \texttt{confidence\_\allowbreak score}.
 
-\textbf{Etapa 4 - Extracción (Pipeline B):} Aplica LLM. \textit{Entrada:} \texttt{combined\_text} + prompt engineering. \textit{Salida:} Tabla \texttt{enhanced\_skills} con campos \texttt{job\_id}, \texttt{skill\_text}, \texttt{implicit\_flag}, \texttt{llm\_\allowbreak confidence}, \texttt{esco\_\allowbreak suggestion}.
+\textbf{Etapa 4 - Extracción (Pipeline B):} Aplica LLM. \textit{Entrada:} \texttt{combined\_text} + prompt engineering. \textit{Salida:} Tabla \texttt{enhanced\_skills} con campos \texttt{job\_id}, \texttt{normalized\_skill}, \texttt{skill\_type}, \texttt{llm\_\allowbreak confidence}, \texttt{esco\_\allowbreak concept\_\allowbreak uri}, \texttt{esco\_\allowbreak preferred\_\allowbreak label}, \texttt{processing\_\allowbreak time\_\allowbreak seconds}, \texttt{tokens\_\allowbreak used}.
 
 \textbf{Etapa 5 - Mapeo ESCO:} Normaliza contra taxonomía. \textit{Entrada:} \texttt{extracted\_skills} + \texttt{enhanced\_skills}. \textit{Salida:} Campos adicionales \texttt{esco\_\allowbreak concept\_\allowbreak uri}, \texttt{esco\_\allowbreak preferred\_\allowbreak label}, \texttt{mapping\_\allowbreak method}.
 
-\textbf{Etapa 6 - Embeddings:} Genera vectores. \textit{Entrada:} \texttt{esco\_\allowbreak preferred\_\allowbreak label}. \textit{Salida:} Tabla \texttt{skill\_\allowbreak embeddings} con campos \texttt{skill\_id}, \texttt{embedding\_\allowbreak vector} (pgvector[768]).
+\textbf{Etapa 6 - Embeddings:} Genera vectores. \textit{Entrada:} \texttt{skill\_text} normalizado. \textit{Salida:} Tabla \texttt{skill\_\allowbreak embeddings} con campos \texttt{embedding\_id}, \texttt{skill\_text} (UNIQUE), \texttt{embedding} VECTOR(768), \texttt{model\_name}, \texttt{model\_version}.
 
-\textbf{Etapa 7 - Clustering:} Reduce dimensionalidad y agrupa. \textit{Entrada:} \texttt{skill\_embeddings}. \textit{Salida:} Tabla \texttt{analysis\_\allowbreak results} con campos \texttt{job\_id}, \texttt{cluster\_id}, \texttt{umap\_x}, \texttt{umap\_y}, \texttt{cluster\_\allowbreak label}.
+\textbf{Etapa 7 - Clustering:} Reduce dimensionalidad y agrupa. \textit{Entrada:} \texttt{skill\_embeddings}. \textit{Salida:} Tabla \texttt{analysis\_\allowbreak results} con campos \texttt{analysis\_id}, \texttt{analysis\_type}, \texttt{job\_id}, \texttt{country}, \texttt{date\_range\_start}, \texttt{date\_range\_end}, \texttt{parameters} (JSONB), \texttt{results} (JSONB que contiene cluster\_id, umap\_x, umap\_y, cluster\_label).
 
-\subsubsection*{C.3.2. Interfaces Críticas}
+\subsubsection*{A.3.2. Interfaces Críticas}
 
-\textbf{I-1. Interfaz Scraper-Database:} Los spiders de Scrapy utilizan un pipeline personalizado (\texttt{JobPostgresPipeline}) que serializa items a formato JSON y los inserta en \texttt{raw\_jobs} con manejo de duplicados por hash SHA-256 del contenido.
+\textbf{I-1. Interfaz Scraper-Database:} Los spiders de Scrapy utilizan un pipeline personalizado (\texttt{Job\allowbreak PostgresPipeline}) que serializa items a formato JSON y los inserta en \texttt{raw\_jobs} con manejo de duplicados por hash SHA-256 del contenido.
 
-\textbf{I-2. Interfaz Extractor-ESCO:} El módulo \texttt{ESCOMatcher3Layers} expone métodos: \texttt{find\_exact\_match()} y \texttt{find\_fuzzy\_match()}. El sistema implementa memoización mediante diccionario \texttt{skill\_text} $\to$ \texttt{esco\_uri} que evita remapear skills repetidas.
+\textbf{I-2. Interfaz Extractor-ESCO:} El módulo \texttt{ESCOMatcher3Layers} expone métodos: \texttt{find\_exact\_\allowbreak match()} y \texttt{find\_fuzzy\_match()}. El sistema implementa memoización mediante diccionario que mapea \texttt{skill\_text} a \texttt{esco\_uri} que evita remapear skills repetidas.
 
 \textbf{I-3. Interfaz LLM-Processor:} El módulo \texttt{LLMHandler} abstrae llamadas a modelos locales (vía llama.cpp, transformers) o remotos (OpenAI API) mediante una interfaz unificada que recibe prompts estructurados y retorna respuestas en formato JSON validado con Pydantic.
 
 \textbf{I-4. Interfaz Orquestador-Pipeline:} El \texttt{MasterController} expone comandos CLI (vía Typer) que orquestan la ejecución secuencial de etapas, con control de estado persistente en base de datos para permitir reinicio tras fallos.
 
-\subsubsection*{C.3.3. Casos de Uso Principales}
+\subsubsection*{A.3.3. Casos de Uso Principales}
 
 \textbf{CU-1. Recolección programada:} Un scheduler ejecuta spiders periódicamente (ej: diariamente a las 2 AM) para mantener el corpus actualizado. El sistema registra métricas de cada ejecución (items capturados, errores, duración) y envía alertas si el volumen cae por debajo de umbrales históricos.
 

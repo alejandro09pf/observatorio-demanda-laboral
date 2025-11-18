@@ -1,9 +1,11 @@
-\section*{APÉNDICE D: INFORMACIÓN ADICIONAL SOBRE ARQUITECTURA Y METODOLOGÍA}
-\addcontentsline{toc}{section}{Apéndice D: Información Adicional sobre Arquitectura y Metodología}
+\section*{APÉNDICE B: INFORMACIÓN ADICIONAL SOBRE ARQUITECTURA Y METODOLOGÍA}
+\addcontentsline{toc}{section}{Apéndice B: Información Adicional sobre Arquitectura y Metodología}
 
-Este apéndice proporciona información complementaria sobre los diagramas de arquitectura y metodología presentados en los capítulos 4 y 5 del documento principal. Se detallan las decisiones de diseño, comparaciones arquitectónicas, y el flujo de transformación de datos a través del pipeline.
+Este apéndice complementa los Capítulos 4 (Metodología) y 5 (Diseño de Solución), proporcionando documentación técnica detallada sobre las decisiones arquitectónicas fundamentales y el flujo metodológico integrado del proyecto. Mientras el Capítulo 4 presenta el marco general de CRISP-DM adaptado al contexto del observatorio y el Capítulo 5 describe la arquitectura híbrida seleccionada mediante diagramas de vistas lógica, física y de procesos, este apéndice profundiza en las justificaciones técnicas que respaldaron cada decisión de diseño, las comparaciones cuantitativas entre alternativas arquitectónicas evaluadas, y el stack tecnológico completo especificando versiones exactas, configuraciones específicas y criterios de selección académica para cada componente.
 
-\subsection*{D.1. Detalles del Flujo Metodológico}
+La documentación incluye el detalle del flujo de transformación de datos a través del pipeline de siete etapas con estructuras de datos intermedias persistidas en PostgreSQL, las características técnicas específicas de la arquitectura híbrida que combina microservicios en capas con event-driven architecture mediante Redis y Celery, y las tablas exhaustivas del stack tecnológico organizadas por capa funcional con justificaciones académicas basadas en cinco criterios principales: licencias permisivas, madurez y estabilidad, documentación científica completa, reproducibilidad mediante control de versiones, y escalabilidad demostrada para el procesamiento de más de 30,000 ofertas laborales.
+
+\subsection*{B.1. Detalles del Flujo Metodológico}
 
 El diagrama de flujo metodológico presentado en el Capítulo 4 (Figura \ref{fig:flujo-metodologico}) integra las seis fases de CRISP-DM con las siete etapas del pipeline de software. Los ciclos iterativos entre las fases de Modelado y Evaluación permitieron mejora incremental del sistema mediante:
 
@@ -14,7 +16,7 @@ El diagrama de flujo metodológico presentado en el Capítulo 4 (Figura \ref{fig
     \item \textbf{Calibración de clustering}: Experimentación con 70+ configuraciones de HDBSCAN para determinar \texttt{min\_cluster\_size=12} y \texttt{min\_samples=3} óptimos.
 \end{itemize}
 
-\subsection*{D.2. Detalles del Pipeline de 7 Etapas}
+\subsection*{B.2. Detalles del Pipeline de 7 Etapas}
 
 El diagrama de arquitectura modular presentado en el Capítulo 5 (Figura \ref{fig:arquitectura-completa}) muestra el pipeline secuencial de 7 etapas. Información adicional sobre tecnologías específicas por módulo:
 
@@ -22,66 +24,33 @@ El diagrama de arquitectura modular presentado en el Capítulo 5 (Figura \ref{fi
     \item \textbf{Scraping}: Framework Scrapy 2.11 con Selenium 4.15 para contenido dinámico, delays adaptativos (2-5s), rotación de user-agents, y backoff exponencial.
     \item \textbf{Extraction}: spaCy \texttt{es\_core\_news\_lg} v3.7 con EntityRuler personalizado, 548 patrones regex en 18 categorías, latencia 50-80ms por documento.
     \item \textbf{LLM Processing}: Gemma 3 4B con cuantización Q4 (4-6 GB VRAM), temperatura 0.3, max\_tokens 3072, latencia 18s (P50).
-    \item \textbf{ESCO Matching}: Taxonomía extendida 14,215 skills (13,939 ESCO v1.1.0 + 152 O*NET + 124 manuales), matching exact + fuzzy $\geq$0.92.
+    \item \textbf{ESCO Matching}: Taxonomía extendida 14,174 skills (13,939 ESCO v1.1.0 + 152 O*NET + 83 manuales), matching exact + fuzzy $\geq$0.92.
     \item \textbf{Embedding}: Modelo \texttt{intfloat/multilingual-e5-base} (768D, 278M parámetros), batch\_size=32, latencia $<$100ms/batch.
-    \item \textbf{UMAP}: Parámetros \texttt{n\_neighbors=15}, \texttt{min\_dist=0.1}, \texttt{metric='cosine'}, reducción 768D $\rightarrow$ 2-3D.
-    \item \textbf{HDBSCAN}: Parámetros \texttt{min\_cluster\_size=12}, \texttt{min\_samples=3}, \texttt{cluster\_selection\_method='eom'}.
+    \item \textbf{UMAP}: Parámetros \texttt{n\_neighbors=15}, \texttt{min\_dist=0.1}, \texttt{metric='cosine'}, reducción de 768D a 2-3D.
+    \item \textbf{HDBSCAN}: Parámetros \texttt{min\_cluster\_size=12}, \texttt{min\_samples=3}, \texttt{cluster\_selection\_\allowbreak method='eom'}.
 \end{itemize}
 
-\subsection*{D.3. Flujo de Transformación de Datos}
+\subsection*{B.3. Flujo de Transformación de Datos}
 
 El flujo de datos atraviesa las siguientes transformaciones principales desde la recolección inicial hasta la generación de visualizaciones finales, con estructuras de datos intermedias persistidas en PostgreSQL:
 
 \begin{itemize}
-    \item \textbf{raw\_jobs $\to$ cleaned\_jobs}: Normalización de encoding UTF-8, eliminación de HTML residual, detección de idioma (español/inglés/Spanglish), deduplicación SHA-256.
-    \item \textbf{cleaned\_jobs $\to$ extracted\_skills}: Aplicación de Pipeline A (NER+Regex) con extracción de 27.6 skills promedio por oferta, 87.4\% emergent skills sin match ESCO.
-    \item \textbf{cleaned\_jobs $\to$ enhanced\_skills}: Aplicación de Pipeline B (LLM) con prompt de 170 líneas, detección de hard skills (78.7\%) y soft skills (21.3\%).
-    \item \textbf{extracted/enhanced\_skills $\to$ matched\_skills}: Normalización contra ESCO mediante 2 capas (exact + fuzzy), match rate 12.6\% baseline, 25\% con matcher mejorado.
-    \item \textbf{matched\_skills $\to$ skill\_embeddings}: Vectorización con E5 Multilingual (768D), normalización L2, indexación FAISS para búsqueda rápida.
-    \item \textbf{skill\_embeddings $\to$ umap\_projections}: Reducción dimensional con parámetros n\_neighbors=15, min\_dist=0.1, metric='cosine'.
-    \item \textbf{umap\_projections $\to$ clusters}: Clustering HDBSCAN con min\_cluster\_size=12, min\_samples=3, identificación de 50 clusters principales.
+    \item \textbf{raw\_jobs a cleaned\_jobs}: Normalización de encoding UTF-8, eliminación de HTML residual, detección de idioma (español/inglés/Spanglish), deduplicación SHA-256.
+    \item \textbf{cleaned\_jobs a extracted\_skills}: Aplicación de Pipeline A (NER+Regex) con extracción de 27.6 skills promedio por oferta, 87.4\% emergent skills sin match ESCO.
+    \item \textbf{cleaned\_jobs a enhanced\_skills}: Aplicación de Pipeline B (LLM) con prompt de 170 líneas, detección de hard skills (78.7\%) y soft skills (21.3\%).
+    \item \textbf{extracted/enhanced\_skills a matched\_skills}: Normalización contra ESCO mediante 2 capas (exact + fuzzy), match rate 12.6\% baseline, 25\% con matcher mejorado.
+    \item \textbf{matched\_skills a skill\_embeddings}: Vectorización con E5 Multilingual (768D), normalización L2, indexación FAISS para búsqueda rápida.
+    \item \textbf{skill\_embeddings a umap\_projections}: Reducción dimensional con parámetros n\_neighbors=15, min\_dist=0.1, metric='cosine'.
+    \item \textbf{umap\_projections a clusters}: Clustering HDBSCAN con min\_cluster\_size=12, min\_samples=3, identificación de 50 clusters principales.
 \end{itemize}
 
-\subsection*{D.4. Comparación de Estilos Arquitectónicos}
-
-Durante la fase de diseño se evaluaron tres estilos arquitectónicos para el observatorio: pipeline lineal tradicional, microservicios puros, y arquitectura híbrida que combina microservicios con pub/sub orientado a eventos. La Tabla \ref{tab:arch-comparison-anexo} presenta la comparación según criterios relevantes para el contexto académico y operativo del proyecto.
-
-\begin{table}[H]
-\centering
-\caption{Comparación de Estilos Arquitectónicos Evaluados}
-\label{tab:arch-comparison-anexo}
-\begin{tabular}{|p{3.2cm}|p{2.8cm}|p{3cm}|p{3.5cm}|}
-\hline
-\textbf{Criterio} & \textbf{Pipeline Lineal} & \textbf{Microservicios Puros} & \textbf{Arquitectura Híbrida} \\
-\hline
-Complejidad de implementación & Baja & Alta & Media \\
-\hline
-Escalabilidad horizontal & Limitada & Excelente & Excelente (workers) \\
-\hline
-Latencia de consultas & Alta (bloqueante) & Baja & Baja (menor a 1s) \\
-\hline
-Throughput de procesamiento & Bajo (secuencial) & Medio & Alto (paralelo) \\
-\hline
-Trazabilidad & Excelente & Media & Alta \\
-\hline
-Tolerancia a fallos & Baja & Alta & Alta \\
-\hline
-Time to market & Rápido & Lento & Medio \\
-\hline
-\end{tabular}
-\end{table}
-
-Se seleccionó arquitectura híbrida fundamentado en cuatro razones principales que balancean capacidades técnicas con viabilidad operativa. Primero, la arquitectura híbrida proporciona procesamiento paralelo mediante cola de tareas (Redis + Celery) sin la complejidad completa de microservicios puros que requieren service mesh, service discovery, y circuit breakers. Segundo, permite escalar horizontalmente solo los workers de procesamiento (agregar más workers Celery) sin necesidad de escalar todos los componentes, reduciendo costos operativos. Tercero, frontend (Next.js), API (FastAPI), y workers (Celery) operan independientemente con comunicación desacoplada mediante cola de eventos, facilitando desarrollo modular y debugging. Cuarto, el sistema pub/sub con Redis permite procesamiento batch de miles de ofertas sin bloquear la API web, con monitoreo de progreso en tiempo real y tolerancia a fallos mediante reintentos automáticos.
-
-El pipeline lineal fue descartado por impedir paralelismo y limitar throughput a procesamiento secuencial. Los microservicios puros fueron descartados por introducir complejidad innecesaria para un proyecto académico con equipo de 2 desarrolladores. La arquitectura híbrida proporciona el balance óptimo entre capacidades técnicas y viabilidad operativa.
-
-\subsection*{D.5. Características de la Arquitectura Híbrida}
+\subsection*{B.4. Características de la Arquitectura Híbrida}
 
 La arquitectura implementada combina tres patrones complementarios que operan coordinadamente para maximizar throughput y tolerancia a fallos. El primer patrón corresponde a microservicios en capas con separación física entre frontend (Next.js + React), API backend (FastAPI), y base de datos (PostgreSQL) con comunicación HTTP/REST, permitiendo desarrollo, despliegue y escalamiento independiente de cada componente. El segundo patrón implementa Event-Driven Architecture mediante cola de tareas distribuida con Redis como message broker y Celery como sistema de workers, habilitando procesamiento asíncrono de pipelines de extracción con paralelismo configurable. El tercer patrón estructura el procesamiento como pipelines modulares donde cada etapa (scraping, normalización, extracción, matching, clustering) se implementa como módulo Python independiente orquestado por Celery tasks, facilitando testing unitario y evolución incremental.
 
 Esta arquitectura permite procesamiento paralelo de múltiples ofertas simultáneamente mediante workers Celery que operan en background sin bloquear la API web. La tolerancia a fallos se implementa mediante reintentos automáticos (max retries=3 configurado en tasks) y persistencia de estado en PostgreSQL permitiendo recuperación ante fallos de workers individuales sin pérdida de progreso. La escalabilidad horizontal se logra agregando workers Celery adicionales para incrementar throughput de procesamiento según demanda.
 
-\subsection*{D.6. Stack Tecnológico Completo}
+\subsection*{B.5. Stack Tecnológico Completo}
 
 Las siguientes tablas documentan las decisiones tecnológicas fundamentales y su justificación académica y técnica, organizadas por capa funcional del sistema. Todas las tecnologías seleccionadas cumplen con cinco criterios principales: licencias permisivas (MIT, Apache 2.0, PostgreSQL, CC BY) permitiendo uso académico y potencial comercial futuro; madurez y estabilidad con versiones $\geq$ 2.0 y comunidades activas; documentación académica completa con publicaciones científicas revisadas por pares para componentes críticos; reproducibilidad mediante control de versiones de dependencias y semillas fijas para componentes estocásticos; y escalabilidad demostrada para el procesamiento de más de 30,000 ofertas laborales.
 
@@ -95,7 +64,7 @@ Las siguientes tablas documentan las decisiones tecnológicas fundamentales y su
 \hline
 Base de datos & PostgreSQL 15+ con pgvector & Soporte JSONB para metadatos flexibles, extensión pgvector para vectores 768D, robustez ACID, particionamiento para escalabilidad. \\
 \hline
-Taxonomía & ESCO v1.1.0 (+ 276 ext.) & Cobertura 13,000+ skills con etiquetas español/inglés, extendida con 152 O*NET + 124 manual (total 14,215), estructura ontológica con URIs, respaldo institucional CE, licencia CC BY 4.0. \\
+Taxonomía & ESCO v1.1.0 (+ 235 ext.) & Cobertura 13,000+ skills con etiquetas español/inglés, extendida con 152 O*NET + 83 manual (total 14,174), estructura ontológica con URIs, respaldo institucional CE, licencia CC BY 4.0. \\
 \hline
 Framework scraping & Scrapy 2.11 + Selenium 4.15 & Arquitectura asíncrona (100+ req/min), manejo robusto de reintentos, middlewares extensibles, Selenium para JavaScript dinámico. \\
 \hline
@@ -130,7 +99,7 @@ Frontend web & Next.js 14 + React 18 & Server-Side Rendering para SEO, React par
 \hline
 API backend & FastAPI 0.104 + Pydantic & Framework async Python, validación automática con Pydantic, generación OpenAPI/Swagger, endpoints REST para CRUD y publicación de tareas asíncronas. \\
 \hline
-Contenedorización & Docker 24 + Docker Compose & Orquestación de 7 servicios (nginx, frontend, api, postgres, redis, celery\_beat, celery\_worker), imágenes multi-arch (linux/arm64), volúmenes persistentes. \\
+Contenedorización & Docker 24 + Docker Compose & Orquestación de 7 servicios (nginx, frontend, api, postgres, redis, celery\_beat, celery\_worker) \\
 \hline
 \end{tabular}
 \end{table}

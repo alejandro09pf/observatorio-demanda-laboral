@@ -96,7 +96,7 @@ Las 8 configuraciones evaluadas validaron la escalabilidad del sistema procesand
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{../../outputs/clustering/experiments/comparison_table.png}
+\includegraphics[width=1.12\textwidth]{../../outputs/clustering/experiments/comparison_table.png}
 \caption{Tabla comparativa de las 8 configuraciones de clustering ejecutadas, mostrando número de clusters, métricas de calidad (Silhouette Score, Davies-Bouldin Index), porcentaje de ruido y cantidad de skills únicas procesadas. Las configuraciones PRE-ESCO generan significativamente más clusters que POST-ESCO debido a la mayor diversidad léxica antes de normalización taxonómica.}
 \label{fig:clustering_comparison_table}
 \end{figure}
@@ -114,7 +114,7 @@ Las 8 configuraciones evaluadas validaron la escalabilidad del sistema procesand
     \includegraphics[width=\textwidth]{../../outputs/clustering/experiments/manual_300_post/exp2_nn15_mcs10/umap_scatter.png}
     \caption*{(b) Manual 300 POST-ESCO: 2 clusters}
 \end{minipage}
-\caption{Visualización UMAP 2D del clustering con Manual Annotations (300 jobs, $min\_cluster\_size=10$). La proyección PRE-ESCO (a) identifica 61 clusters interpretables reflejando diversidad léxica completa, mientras POST-ESCO (b) colapsa a 2 clusters debido a que 87.7\% de skills no mapean a ESCO, demostrando el impacto dramático de la normalización taxonómica en la estructura de agrupamiento.}
+\caption{Visualización UMAP 2D del clustering con Manual Annotations (300 jobs, $min\_cluster\_size=10$). La proyección PRE-ESCO identifica 61 clusters interpretables reflejando diversidad léxica completa, mientras POST-ESCO. Colapsa a 2 clusters debido a que 87.7\% de skills no mapean a ESCO, demostrando el impacto dramático de la normalización taxonómica en la estructura de agrupamiento.}
 \label{fig:clustering_pre_post_comparison}
 \end{figure}
 

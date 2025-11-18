@@ -1,7 +1,9 @@
-\section*{APÉNDICE A: PROMPT DE EXTRACCIÓN DE HABILIDADES - PIPELINE B}
-\addcontentsline{toc}{section}{Apéndice A: Prompt de Pipeline B}
+\section*{APÉNDICE D: PROMPT DE EXTRACCIÓN DE HABILIDADES - PIPELINE B}
+\addcontentsline{toc}{section}{Apéndice D: Prompt de Pipeline B}
 
-Este apéndice documenta el prompt completo utilizado por Pipeline B (LLM-based) para extracción de habilidades de ofertas laborales. El prompt fue diseñado mediante ingeniería iterativa para optimizar exhaustividad (captura de todas las tecnologías mencionadas) mientras mantiene precisión (evitar alucinaciones de skills no presentes en el texto).
+Este apéndice complementa el Capítulo 6 (Desarrollo), específicamente la Sección 6.2 que describe la implementación de Pipeline B basado en Large Language Models para extracción y normalización de habilidades. Mientras el capítulo principal presenta la arquitectura del pipeline LLM con Gemma 3 4B, las métricas de performance (latencia P50 de 18 segundos, consumo de tokens promedio, tasas de éxito de parsing JSON de 99\%), y los resultados comparativos frente a Pipeline A mostrados en la Tabla 6.2, este apéndice proporciona el artefacto técnico central que hace posible la extracción semántica avanzada: el template completo del prompt de 170 líneas utilizado para guiar el comportamiento del modelo.
+
+El prompt documentado fue diseñado mediante ingeniería iterativa extensiva a través de múltiples ciclos de experimentación, refinamiento y validación sobre el gold standard de 300 ofertas laborales. Su estructura de seis secciones integra definición de rol como experto del mercado laboral tecnológico latinoamericano, especificación detallada del alcance de la tarea con distinción explícita entre hard skills y soft skills, siete reglas de extracción que optimizan exhaustividad sin sacrificar precisión, quince ejemplos positivos y siete negativos que enseñan al modelo mediante few-shot learning qué constituye una habilidad válida versus ruido contextual, tres ejemplos end-to-end completos con ofertas realistas que incluyen secciones de beneficios y capacitaciones futuras para entrenar el discernimiento del modelo, e instrucciones finales que refuerzan las reglas de normalización y el formato JSON estricto sin texto adicional que permite parsing automático con 99.3\% de éxito. Las cinco decisiones de diseño documentadas en este apéndice (énfasis en exhaustividad, ejemplos con ruido realista, casos negativos explícitos, normalización inline, formato JSON estricto) fueron validadas cuantitativamente mediante ablation studies que demostraron incrementos de recall de 31.2\% a 46.23\% Pre-ESCO y reducción de falsos positivos de 23\% a 8\%.
 
 \subsection*{Estructura del Prompt}
 
@@ -177,7 +179,7 @@ Las siguientes decisiones de ingeniería de prompts fueron validadas experimenta
     \item \textbf{Exhaustividad sobre conservadurismo}: La instrucción ``EXTRAE TODAS'' con énfasis tipográfico (mayúsculas, negritas) aumentó recall de 31.2\% a 46.23\% Pre-ESCO en comparación con prompts conservadores que pedían ``solo skills críticas''.
     \item \textbf{Ejemplos con ruido realista}: Incluir ofertas con secciones de beneficios, capacitaciones futuras y años de experiencia redujo tasa de falsos positivos de 23\% a 8\% en pruebas sobre 50 ofertas.
     \item \textbf{Distinción explícita de NO extraer}: Listar casos negativos con justificación (``aprenderás Kubernetes'' es capacitación futura, NO requisito actual) eliminó el 67\% de alucinaciones observadas en versiones previas del prompt.
-    \item \textbf{Normalización inline}: Especificar transformaciones ``postgres$\to$PostgreSQL, k8s$\to$Kubernetes'' directamente en el prompt redujo variantes léxicas de skills idénticas de 18\% a 4\%.
+    \item \textbf{Normalización inline}: Especificar transformaciones como ``postgres a PostgreSQL, k8s a Kubernetes'' directamente en el prompt redujo variantes léxicas de skills idénticas de 18\% a 4\%.
     \item \textbf{Formato JSON estricto}: Exigir ``ÚNICAMENTE el objeto JSON'' sin texto adicional permitió parsing automático con 99\% de éxito (299/300 ofertas) versus 73\% en versiones que permitían respuestas verbosas.
 \end{itemize}
 

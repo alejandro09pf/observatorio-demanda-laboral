@@ -1,115 +1,153 @@
-\section*{APÉNDICE E: INFORMACIÓN ADICIONAL SOBRE BASE DE DATOS}
-\addcontentsline{toc}{section}{Apéndice E: Información Adicional sobre Base de Datos}
+\section*{APÉNDICE C: INFORMACIÓN ADICIONAL SOBRE BASE DE DATOS}
+\addcontentsline{toc}{section}{Apéndice C: Información Adicional sobre Base de Datos}
 
-Este apéndice proporciona información complementaria sobre el diseño de la base de datos presentado en el Capítulo 5 (Figura \ref{fig:diagrama-er}). Se detallan las especificaciones completas de cada tabla, los índices optimizados para procesamiento batch, la configuración de PostgreSQL para manejo de grandes volúmenes de datos, y las estrategias de persistencia y trazabilidad implementadas.
+Este apéndice complementa el Capítulo 5 (Diseño de Solución), específicamente la Sección 5.3.5 que presenta el diagrama entidad-relación del sistema y los principios fundamentales del diseño de base de datos. Mientras el capítulo principal describe la arquitectura de persistencia mediante el diagrama ER con trece tablas organizadas en tres capas funcionales (adquisición de datos, procesamiento de habilidades, y taxonomía ESCO), este apéndice proporciona la especificación técnica exhaustiva de cada tabla con los 87 campos distribuidos, tipos de datos PostgreSQL específicos, restricciones de integridad referencial, y los 34 índices optimizados que permiten el procesamiento eficiente de más de 30,000 ofertas laborales.
 
-\subsection*{E.1. Especificación Detallada de Tablas}
+La documentación incluye detalles críticos de implementación que no pudieron incorporarse en el capítulo principal por restricciones de espacio: la arquitectura de lookup por texto implementada en skill\_embeddings para flexibilidad y performance, el diseño flexible mediante campos JSONB en analysis\_results que permite almacenar configuraciones y resultados heterogéneos de clustering sin modificaciones de esquema, los campos de calidad y deduplicación añadidos progresivamente mediante las migraciones 006 y 007 para gestionar duplicados semánticos y ofertas no usables, la tabla gold\_standard\_annotations agregada en la migración 008 para evaluación cuantitativa de pipelines, y los campos de métricas de la migración 009 que registran tiempos de procesamiento y consumo de tokens para análisis de eficiencia. Adicionalmente, se documenta la configuración específica de PostgreSQL optimizada para procesamiento batch con 4GB de shared\_buffers y 256MB de work\_mem, y las estrategias de persistencia y trazabilidad que garantizan reproducibilidad completa mediante versionado de modelos, timestamps exhaustivos, y metadatos de configuración en formato JSONB.
 
-El diagrama entidad-relación presentado en el Capítulo 5 muestra las seis tablas principales del sistema. Esta sección documenta la especificación completa de campos, tipos de datos, índices y volúmenes para cada tabla.
+\subsection*{C.1. Especificación Detallada de Tablas}
 
-\subsubsection*{E.1.1. Tabla raw\_jobs}
+El diagrama entidad-relación presentado en el Capítulo 5 muestra las trece tablas del sistema organizadas en tres capas funcionales: adquisición de datos, procesamiento de habilidades, y taxonomía ESCO. Esta sección documenta la especificación completa de los 87 campos distribuidos entre las tablas, tipos de datos PostgreSQL, 34 índices optimizados, y volúmenes de datos procesados.
+
+\subsubsection*{C.1.1. Tabla raw\_jobs}
 
 Almacena ofertas laborales tal como fueron scrapeadas, sin procesamiento ni normalización.
 
 \textbf{Campos principales:}
 \begin{itemize}
     \item \texttt{job\_id} (UUID, PK): Identificador único generado automáticamente
-    \item \texttt{portal} (VARCHAR(100)): Origen de la oferta (computrabajo, bumeran, elempleo, etc.)
+    \item \texttt{portal} (VARCHAR(50)): Origen de la oferta (computrabajo, bumeran, elempleo, hiringcafe, occmundial, zonajobs, indeed)
     \item \texttt{country} (CHAR(2)): Código de país ISO 3166-1 alpha-2 (CO, MX, AR)
+    \item \texttt{url} (TEXT): URL original de la oferta en el portal
     \item \texttt{title} (TEXT): Título del cargo tal como aparece en el portal
+    \item \texttt{company} (TEXT): Nombre de la empresa empleadora
+    \item \texttt{location} (TEXT): Ubicación geográfica del puesto (ciudad, región)
     \item \texttt{description} (TEXT): Descripción detallada del cargo (cruda, puede contener HTML)
     \item \texttt{requirements} (TEXT): Sección de requisitos y habilidades requeridas
-    \item \texttt{company} (VARCHAR(255)): Nombre de la empresa empleadora
     \item \texttt{salary\_raw} (TEXT): Rango salarial cuando está disponible (formato heterogéneo)
-    \item \texttt{contract\_type} (VARCHAR(100)): Tipo de contrato (tiempo completo, medio tiempo, freelance)
+    \item \texttt{contract\_type} (VARCHAR(50)): Tipo de contrato (tiempo completo, medio tiempo, freelance)
     \item \texttt{remote\_type} (VARCHAR(50)): Modalidad (presencial, remoto, híbrido)
-    \item \texttt{url} (TEXT): URL original de la oferta en el portal
     \item \texttt{posted\_date} (DATE): Fecha de publicación de la oferta (cuando disponible)
     \item \texttt{scraped\_at} (TIMESTAMP): Timestamp de recolección por el spider
-    \item \texttt{content\_hash} (CHAR(64), UNIQUE): Hash SHA-256 para deduplicación
-    \item \texttt{processed} (BOOLEAN): Bandera de control de procesamiento
+    \item \texttt{content\_hash} (VARCHAR(64), UNIQUE): Hash SHA-256 para deduplicación por contenido
+    \item \texttt{raw\_html} (TEXT): HTML completo de la oferta original (para auditoría)
+    \item \texttt{is\_processed} (BOOLEAN): Bandera de control de procesamiento por pipelines
+\end{itemize}
+
+\textbf{Campos de calidad y deduplicación (Migrations 006, 007):}
+\begin{itemize}
+    \item \texttt{is\_usable} (BOOLEAN): FALSE si la oferta es junk/test y no debe procesarse
+    \item \texttt{unusable\_reason} (TEXT): Razón de marcado como no usable (descripción vacía, oferta de prueba, etc.)
+    \item \texttt{is\_duplicate} (BOOLEAN): TRUE si esta oferta es un duplicado semántico de otra
+    \item \texttt{duplicate\_of} (UUID, FK $\to$ raw\_jobs.job\_id): Referencia al job\_id de la oferta original de mayor calidad
+    \item \texttt{duplicate\_similarity\_score} (FLOAT): Score de similitud (0.0-1.0) que desencadenó la detección de duplicado
+    \item \texttt{duplicate\_detection\_method} (VARCHAR(50)): Método usado (exact\_match, fuzzy\_title, semantic\_embedding)
 \end{itemize}
 
 \textbf{Índices}:
 \begin{itemize}
     \item B-tree en \texttt{posted\_date} para análisis temporal
     \item B-tree en \texttt{country} para filtrado por región
-    \item B-tree compuesto en \texttt{(country, posted\_date)} para queries frecuentes
-    \item UNIQUE en \texttt{content\_hash} para prevenir duplicados
+    \item B-tree en \texttt{portal} para estadísticas por fuente
+    \item B-tree compuesto en \texttt{(country, posted\_date)} para queries frecuentes de series temporales
+    \item UNIQUE en \texttt{content\_hash} para prevenir duplicados exactos
+    \item B-tree en \texttt{is\_processed} para monitoreo de pipeline
+    \item B-tree parcial en \texttt{is\_usable} WHERE \texttt{is\_usable = TRUE} para filtrar ofertas válidas
+    \item B-tree en \texttt{is\_duplicate} para análisis de duplicación
+    \item B-tree en \texttt{duplicate\_of} para navegación de cadenas de duplicados
 \end{itemize}
 
 \textbf{Volumen actual}: 30,660 ofertas únicas (54.21\% del total scrapeado tras deduplicación y filtrado de calidad)
 
-\subsubsection*{E.1.2. Tabla extracted\_skills}
+\subsubsection*{C.1.2. Tabla extracted\_skills}
 
-Contiene habilidades identificadas por Pipeline A (NER + expresiones regulares).
+Contiene habilidades identificadas por Pipeline A mediante NER (Named Entity Recognition) y expresiones regulares sobre texto limpio de ofertas laborales.
 
 \textbf{Campos principales}:
 \begin{itemize}
-    \item \texttt{skill\_id} (UUID, PK): Identificador único de la extracción
-    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs): Referencia a la oferta laboral
-    \item \texttt{skill\_text} (VARCHAR(255)): Texto de la habilidad extraída (crudo, sin normalizar)
-    \item \texttt{extraction\_method} (VARCHAR(20)): Método de extracción (``NER'', ``regex'', ``esco\_match'')
-    \item \texttt{confidence\_score} (DECIMAL(3,2)): Score de confianza (0.00-1.00)
-    \item \texttt{esco\_uri} (VARCHAR(255), FK $\to$ esco\_skills): Enlace a taxonomía ESCO (nullable)
-    \item \texttt{extracted\_at} (TIMESTAMP): Timestamp de procesamiento
+    \item \texttt{extraction\_id} (UUID, PK): Identificador único de la extracción
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs.job\_id): Referencia a la oferta laboral procesada
+    \item \texttt{skill\_text} (TEXT): Texto de la habilidad extraída tal como aparece en la oferta (crudo, sin normalizar)
+    \item \texttt{skill\_type} (VARCHAR(50)): Tipo de habilidad detectada (hard, soft, técnica, interpersonal)
+    \item \texttt{extraction\_method} (VARCHAR(50)): Método de extracción utilizado (NER, regex, esco\_match)
+    \item \texttt{confidence\_score} (FLOAT): Score de confianza de la extracción (0.0-1.0)
+    \item \texttt{source\_section} (VARCHAR(50)): Sección de origen del texto (title, description, requirements)
+    \item \texttt{span\_start} (INTEGER): Posición inicial del texto en la sección fuente (para auditoría)
+    \item \texttt{span\_end} (INTEGER): Posición final del texto en la sección fuente
+    \item \texttt{esco\_uri} (TEXT, FK $\to$ esco\_skills.skill\_uri): URI del concepto ESCO mapeado (nullable)
+    \item \texttt{extracted\_at} (TIMESTAMP): Timestamp de procesamiento por Pipeline A
 \end{itemize}
 
 \textbf{Índices}:
 \begin{itemize}
-    \item B-tree compuesto en \texttt{(job\_id, extraction\_method)} para comparación de pipelines
-    \item GIN en \texttt{skill\_text} para full-text search
-    \item B-tree en \texttt{esco\_uri} para joins con taxonomía
+    \item B-tree en \texttt{job\_id} para joins frecuentes con raw\_jobs
+    \item B-tree compuesto en \texttt{(job\_id, extraction\_method)} para análisis comparativo de métodos
+    \item B-tree en \texttt{skill\_type} para estadísticas segregadas por tipo
+    \item B-tree en \texttt{extraction\_method} para evaluación de performance por técnica
+    \item GIN en \texttt{skill\_text} para full-text search de habilidades
 \end{itemize}
 
 \textbf{Volumen estimado}: 8,268 skills extraídas de 300 ofertas del gold standard (27.6 skills/job promedio)
 
-\subsubsection*{E.1.3. Tabla enhanced\_skills}
+\subsubsection*{C.1.3. Tabla enhanced\_skills}
 
-Almacena el enriquecimiento semántico realizado por Pipeline B (LLM).
+Almacena el enriquecimiento semántico realizado por Pipeline B mediante procesamiento con Large Language Models (LLMs) locales, incluyendo normalización de habilidades, inferencia implícita, mapeo a taxonomía ESCO y razonamiento explicativo.
 
 \textbf{Campos principales}:
 \begin{itemize}
-    \item \texttt{enhanced\_skill\_id} (UUID, PK): Identificador único
-    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs): Referencia a la oferta laboral
-    \item \texttt{skill\_normalized} (VARCHAR(255)): Habilidad normalizada por el LLM
-    \item \texttt{skill\_type} (VARCHAR(20)): Tipo de habilidad (``hard\_skill'', ``soft\_skill'')
-    \item \texttt{is\_implicit} (BOOLEAN): Indica si la skill fue inferida implícitamente
-    \item \texttt{esco\_uri} (VARCHAR(255), FK $\to$ esco\_skills): URI del concepto ESCO (nullable)
-    \item \texttt{llm\_confidence} (DECIMAL(3,2)): Nivel de confianza del LLM (0.00-1.00)
-    \item \texttt{reasoning} (TEXT): Justificación del razonamiento del LLM
-    \item \texttt{llm\_model} (VARCHAR(100)): Modelo utilizado (``gemma-3-4b'', ``llama-3-3b'')
-    \item \texttt{processed\_at} (TIMESTAMP): Timestamp de procesamiento
+    \item \texttt{enhancement\_id} (UUID, PK): Identificador único del enhancement
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs.job\_id): Referencia a la oferta laboral procesada
+    \item \texttt{original\_skill\_text} (TEXT): Texto original de la habilidad extraída de la oferta (previo a normalización)
+    \item \texttt{normalized\_skill} (TEXT): Habilidad normalizada y estandarizada por el LLM
+    \item \texttt{skill\_type} (VARCHAR(50)): Tipo de habilidad clasificada (hard, soft)
+    \item \texttt{esco\_concept\_uri} (TEXT, FK $\to$ esco\_skills.skill\_uri): URI del concepto ESCO mapeado (nullable)
+    \item \texttt{esco\_preferred\_label} (TEXT): Etiqueta preferida del concepto ESCO en español (desnormalizado para performance)
+    \item \texttt{llm\_confidence} (FLOAT): Nivel de confianza del LLM en la extracción y normalización (0.0-1.0)
+    \item \texttt{llm\_reasoning} (TEXT): Justificación textual del razonamiento del LLM para la clasificación
+    \item \texttt{is\_duplicate} (BOOLEAN): TRUE si esta habilidad es duplicado de otra en el mismo job
+    \item \texttt{duplicate\_of\_id} (UUID): Referencia al enhancement\_id de la habilidad canónica (nullable)
+    \item \texttt{enhanced\_at} (TIMESTAMP): Timestamp de procesamiento por Pipeline B
+    \item \texttt{llm\_model} (VARCHAR(100)): Identificador del modelo LLM utilizado (gemma-3-4b-instruct, llama-3-8b-instruct)
+\end{itemize}
+
+\textbf{Campos de métricas (Migration 009)}:
+\begin{itemize}
+    \item \texttt{processing\_time\_seconds} (FLOAT): Tiempo total de procesamiento del job completo en segundos (compartido por todas las skills del mismo job)
+    \item \texttt{tokens\_used} (INTEGER): Total de tokens consumidos por el LLM para procesar el job completo (compartido por todas las skills del mismo job)
+    \item \texttt{esco\_match\_method} (VARCHAR(20)): Método de mapeo ESCO utilizado (exact, fuzzy, semantic, emergent)
 \end{itemize}
 
 \textbf{Índices}:
 \begin{itemize}
-    \item B-tree en \texttt{job\_id} para joins frecuentes
+    \item B-tree en \texttt{job\_id} para joins frecuentes con raw\_jobs
     \item B-tree en \texttt{skill\_type} para análisis segregado hard/soft
-    \item B-tree en \texttt{is\_implicit} para estudios de inferencia contextual
+    \item B-tree en \texttt{llm\_model} para comparación entre modelos
+    \item B-tree en \texttt{processing\_time\_seconds} para análisis de performance
+    \item B-tree en \texttt{tokens\_used} para análisis de costos computacionales
+    \item B-tree en \texttt{esco\_match\_method} para evaluación de precisión de mapeo por método
 \end{itemize}
 
 \textbf{Volumen estimado}: Datos de 299/300 jobs del gold standard procesados con Gemma 3 4B (99.3\% cobertura)
 
-\subsubsection*{E.1.4. Tabla skill\_embeddings}
+\subsubsection*{C.1.4. Tabla skill\_embeddings}
 
-Contiene las representaciones vectoriales de alta dimensionalidad generadas con E5 Multilingual.
+Contiene las representaciones vectoriales de alta dimensionalidad generadas con el modelo E5 Multilingual, utilizadas para búsqueda semántica de similitud, clustering con HDBSCAN y reducción dimensional con UMAP. Esta tabla implementa arquitectura de lookup por texto en lugar de foreign keys para mayor flexibilidad y performance.
 
 \textbf{Campos principales}:
 \begin{itemize}
-    \item \texttt{embedding\_id} (UUID, PK): Identificador único
-    \item \texttt{skill\_id} (UUID, FK $\to$ extracted\_skills o enhanced\_skills): Referencia a la skill
-    \item \texttt{skill\_text} (VARCHAR(255)): Texto de la habilidad (desnormalizado para performance)
-    \item \texttt{embedding\_vector} (VECTOR(768)): Vector de 768 dimensiones (pgvector)
-    \item \texttt{model\_name} (VARCHAR(100)): Modelo de embedding utilizado
-    \item \texttt{model\_version} (VARCHAR(50)): Versión del modelo
-    \item \texttt{generated\_at} (TIMESTAMP): Timestamp de generación
+    \item \texttt{embedding\_id} (UUID, PK): Identificador único del embedding
+    \item \texttt{skill\_text} (TEXT, UNIQUE): Texto de la habilidad usado como clave de lookup (no hay FK a extracted\_skills o enhanced\_skills)
+    \item \texttt{embedding} (VECTOR(768)): Vector de 768 dimensiones generado por modelo E5 (extensión pgvector)
+    \item \texttt{model\_name} (VARCHAR(100)): Identificador del modelo de embedding utilizado (e5-multilingual-large)
+    \item \texttt{model\_version} (VARCHAR(50)): Versión específica del modelo
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de generación del embedding
 \end{itemize}
 
 \textbf{Índices}:
 \begin{itemize}
-    \item IVFFlat en \texttt{embedding\_vector} con parámetros \texttt{lists=100, probes=10} para búsqueda k-NN
-    \item B-tree en \texttt{skill\_text} para búsqueda exacta
+    \item UNIQUE en \texttt{skill\_text} para prevenir duplicados y permitir lookup rápido
+    \item IVFFlat en \texttt{embedding} con parámetros \texttt{lists=100, probes=10} para búsqueda k-NN aproximada
+    \item B-tree en \texttt{model\_name} para filtrado por versión de modelo
 \end{itemize}
 
 \textbf{Performance de índice IVFFlat}:
@@ -119,80 +157,265 @@ Contiene las representaciones vectoriales de alta dimensionalidad generadas con 
     \item Trade-off: 100\% recall con exact search (IndexFlatIP en FAISS)
 \end{itemize}
 
-\subsubsection*{E.1.5. Tabla analysis\_results}
+\subsubsection*{C.1.5. Tabla analysis\_results}
 
-Almacena resultados de clustering y análisis de tendencias temporales.
+Almacena resultados de clustering HDBSCAN, proyecciones UMAP, análisis de tendencias temporales y métricas agregadas del observatorio. Esta tabla implementa diseño flexible mediante campos JSONB para almacenar configuraciones y resultados heterogéneos.
 
 \textbf{Campos principales}:
 \begin{itemize}
     \item \texttt{analysis\_id} (UUID, PK): Identificador único del análisis
-    \item \texttt{analysis\_type} (VARCHAR(50)): Tipo de análisis (``clustering'', ``trends'', ``profile'')
-    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs): Referencia a la oferta (nullable para análisis agregados)
-    \item \texttt{country} (CHAR(2)): País del análisis (CO, MX, AR, o NULL para agregado)
-    \item \texttt{date\_range\_start} (DATE): Inicio del rango temporal analizado
-    \item \texttt{date\_range\_end} (DATE): Fin del rango temporal analizado
-    \item \texttt{config\_params} (JSONB): Parámetros de configuración del análisis (UMAP, HDBSCAN)
-    \item \texttt{cluster\_id} (INTEGER): ID del clúster asignado (-1 para ruido en HDBSCAN)
-    \item \texttt{umap\_x} (DECIMAL(10,6)): Coordenada X de la proyección UMAP
-    \item \texttt{umap\_y} (DECIMAL(10,6)): Coordenada Y de la proyección UMAP
-    \item \texttt{cluster\_label} (VARCHAR(255)): Etiqueta descriptiva del clúster
-    \item \texttt{results} (JSONB): Resultados estructurados (métricas, frecuencias, top skills)
+    \item \texttt{analysis\_type} (VARCHAR(50)): Tipo de análisis ejecutado (clustering, trends, demand\_profile, skill\_frequency)
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs.job\_id): Referencia a oferta individual (nullable para análisis agregados)
+    \item \texttt{country} (CHAR(2)): País del análisis (CO, MX, AR, NULL para análisis agregado multi-país)
+    \item \texttt{date\_range\_start} (DATE): Fecha de inicio del rango temporal analizado
+    \item \texttt{date\_range\_end} (DATE): Fecha de fin del rango temporal analizado
+    \item \texttt{parameters} (JSONB): Parámetros de configuración del análisis (hiperparámetros UMAP, HDBSCAN, filtros aplicados)
+    \item \texttt{results} (JSONB): Resultados estructurados flexibles (cluster\_id, umap\_x, umap\_y, cluster\_label, métricas, frecuencias, top\_skills)
     \item \texttt{created\_at} (TIMESTAMP): Timestamp de creación del análisis
 \end{itemize}
 
 \textbf{Índices}:
 \begin{itemize}
-    \item B-tree en \texttt{analysis\_type} para filtrado por tipo
-    \item B-tree compuesto en \texttt{(country, date\_range\_start, date\_range\_end)} para análisis temporal
-    \item GIN en \texttt{config\_params} para búsqueda en JSON
-    \item B-tree en \texttt{cluster\_id} para análisis por clúster
+    \item B-tree en \texttt{analysis\_type} para filtrado por tipo de análisis
+    \item B-tree en \texttt{country} para segmentación geográfica
+    \item B-tree compuesto en \texttt{(country, date\_range\_start, date\_range\_end)} para series temporales
+    \item GIN en \texttt{parameters} para búsqueda en JSON de configuraciones específicas
+    \item GIN en \texttt{results} para búsqueda en JSON de resultados específicos
+    \item B-tree en \texttt{created\_at} para consultas por fecha de análisis
 \end{itemize}
 
-\textbf{Ejemplo de config\_params JSONB}:
+\textbf{Ejemplo de parameters JSONB}:
 \begin{verbatim}
 {
+  "pipeline": "pipeline_b_300_post",
   "umap": {"n_neighbors": 15, "min_dist": 0.1, "metric": "cosine"},
   "hdbscan": {"min_cluster_size": 12, "min_samples": 3, "method": "eom"}
 }
 \end{verbatim}
 
-\subsubsection*{E.1.6. Tabla esco\_skills}
+\textbf{Ejemplo de results JSONB (clustering)}:
+\begin{verbatim}
+{
+  "cluster_id": 5,
+  "umap_x": 2.456,
+  "umap_y": -1.234,
+  "cluster_label": "Data Science & Machine Learning",
+  "cluster_size": 1247,
+  "top_skills": ["python", "machine learning", "sql", "tensorflow"]
+}
+\end{verbatim}
 
-Tabla de referencia con la taxonomía ESCO completa extendida con habilidades de O*NET y agregadas manualmente.
+\subsubsection*{C.1.6. Tabla esco\_skills}
+
+Tabla de referencia con la taxonomía ESCO v1.1.0 completa extendida con habilidades de O*NET Hot Technologies y skills agregadas manualmente tras análisis exploratorio del mercado laboral tecnológico latinoamericano. Esta tabla central se complementa con cinco tablas auxiliares para etiquetas multilingües, relaciones jerárquicas, mapeos customizados, grupos y familias de skills (documentadas en sección C.1.7-C.1.11).
 
 \textbf{Campos principales}:
 \begin{itemize}
-    \item \texttt{esco\_uri} (VARCHAR(255), PK): URI del concepto ESCO (ej: \texttt{http://data.europa.eu/esco/skill/...})
-    \item \texttt{preferred\_label\_es} (VARCHAR(255)): Etiqueta preferida en español
-    \item \texttt{preferred\_label\_en} (VARCHAR(255)): Etiqueta preferida en inglés
-    \item \texttt{alt\_labels} (TEXT[]): Array de etiquetas alternativas (sinónimos, abreviaciones)
-    \item \texttt{skill\_type} (VARCHAR(50)): Tipo de habilidad (``knowledge'', ``skill'', ``competence'')
-    \item \texttt{description} (TEXT): Descripción detallada del concepto
-    \item \texttt{reusability\_level} (VARCHAR(50)): Nivel de reutilización (``transversal'', ``sector-specific'', ``occupation-specific'')
-    \item \texttt{source} (VARCHAR(50)): Fuente de la skill (``esco\_v1.1.0'', ``onet'', ``manual'')
+    \item \texttt{skill\_uri} (TEXT, PK): URI del concepto ESCO 
+    \item \texttt{skill\_id} (VARCHAR(50)): Identificador corto del concepto ESCO (ej: S1.2.3)
+    \item \texttt{preferred\_label\_es} (TEXT): Etiqueta preferida en español
+    \item \texttt{preferred\_label\_en} (TEXT): Etiqueta preferida en inglés
+    \item \texttt{description\_es} (TEXT): Descripción detallada del concepto en español
+    \item \texttt{description\_en} (TEXT): Descripción detallada del concepto en inglés
+    \item \texttt{skill\_type} (VARCHAR(50)): Tipo de habilidad según ESCO (knowledge, skill, competence)
+    \item \texttt{skill\_group} (VARCHAR(100), FK $\to$ esco\_skill\_groups.group\_id): Grupo jerárquico de clasificación (nullable)
+    \item \texttt{skill\_family} (VARCHAR(100), FK $\to$ esco\_skill\_families.family\_id): Familia de competencias de alto nivel (nullable)
+    \item \texttt{is\_active} (BOOLEAN): TRUE si la skill está activa en la versión actual de ESCO
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de inserción en base de datos local
 \end{itemize}
 
 \textbf{Índices}:
 \begin{itemize}
     \item B-tree en \texttt{preferred\_label\_es} para matching exacto español
     \item B-tree en \texttt{preferred\_label\_en} para matching exacto inglés
-    \item GIN en \texttt{alt\_labels} para búsqueda en array de sinónimos
-    \item B-tree en \texttt{source} para análisis de cobertura por fuente
+    \item GIN en \texttt{preferred\_label\_es} para full-text search español (to\_tsvector)
+    \item GIN en \texttt{preferred\_label\_en} para full-text search inglés (to\_tsvector)
+    \item B-tree en \texttt{skill\_type} para filtrado por tipo
+    \item B-tree en \texttt{skill\_group} para navegación jerárquica
+    \item B-tree en \texttt{skill\_family} para agrupación por familia
 \end{itemize}
 
-\textbf{Composición de la taxonomía}:
+\textbf{Composición de la taxonomía extendida}:
 \begin{itemize}
-    \item ESCO v1.1.0: 13,939 skills oficiales
-    \item O*NET Hot Technologies: 152 skills modernas (Terraform, Kubernetes, React, etc.)
-    \item Agregadas manualmente: 124 skills identificadas en análisis exploratorio
-    \item \textbf{Total}: 14,215 skills en la taxonomía extendida
+    \item \textbf{ESCO v1.1.0}: 13,939 skills oficiales de la taxonomía europea de competencias
+    \item \textbf{O*NET Hot Technologies}: 152 tecnologías emergentes del sector IT (Terraform, Kubernetes, React, FastAPI, etc.)
+    \item \textbf{Agregadas manualmente}: 83 skills identificadas en análisis exploratorio del mercado tech latinoamericano
+    \item \textbf{Total}: \textbf{14,174 skills} en la taxonomía extendida unificada
 \end{itemize}
 
-\subsection*{E.2. Configuración de PostgreSQL para Procesamiento Batch}
+\subsubsection*{C.1.7. Tabla cleaned\_jobs}
+
+Almacena el texto limpio y normalizado de ofertas laborales tras eliminación de HTML, normalización Unicode y concatenación de campos relevantes. Esta tabla implementa la separación entre raw data y processed data, facilitando reproducibilidad del pipeline de extracción sin re-scraping (Migration 006).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{job\_id} (UUID, PK/FK $\to$ raw\_jobs.job\_id): Identificador único, relación 1:1 con raw\_jobs
+    \item \texttt{title\_cleaned} (TEXT): Título del cargo limpio (sin HTML, normalizado)
+    \item \texttt{description\_cleaned} (TEXT): Descripción limpia (sin HTML, normalizado)
+    \item \texttt{requirements\_cleaned} (TEXT): Requisitos limpios (sin HTML, normalizado)
+    \item \texttt{combined\_text} (TEXT, NOT NULL): Concatenación de title + description + requirements para extracción unificada
+    \item \texttt{cleaning\_method} (VARCHAR(50)): Método de limpieza utilizado (html\_strip, normalize\_unicode, etc.)
+    \item \texttt{cleaned\_at} (TIMESTAMP): Timestamp de procesamiento de limpieza
+    \item \texttt{combined\_word\_count} (INTEGER): Conteo de palabras en combined\_text (métrica de calidad)
+    \item \texttt{combined\_char\_count} (INTEGER): Conteo de caracteres en combined\_text (métrica de calidad)
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{cleaned\_at} para monitoreo de progreso de limpieza
+    \item B-tree en \texttt{combined\_word\_count} para filtrado de calidad (ofertas muy cortas)
+    \item GIN en \texttt{combined\_text} para full-text search español (to\_tsvector)
+\end{itemize}
+
+\textbf{Volumen actual}: 30,660 ofertas limpias (100\% de raw\_jobs con is\_usable=TRUE)
+
+\subsubsection*{C.1.8. Tabla gold\_standard\_annotations}
+
+Almacena anotaciones manuales de habilidades extraídas de 300 ofertas laborales seleccionadas aleatoriamente, utilizadas como ground truth para evaluación comparativa de Pipeline A (NER+Regex) vs. Pipeline B (LLM). Esta tabla permite cálculo de métricas Precision, Recall, F1-Score y análisis de errores (Migration 008).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{id} (SERIAL, PK): Identificador único autoincremental
+    \item \texttt{job\_id} (UUID, FK $\to$ raw\_jobs.job\_id): Referencia a oferta anotada manualmente
+    \item \texttt{skill\_text} (TEXT): Texto de la habilidad anotada por humano
+    \item \texttt{skill\_type} (VARCHAR(10)): Tipo de habilidad (hard, soft)
+    \item \texttt{annotator} (VARCHAR(50)): Identificador del anotador (manual, claude, human\_reviewer)
+    \item \texttt{annotation\_date} (TIMESTAMP): Timestamp de creación de la anotación
+    \item \texttt{notes} (TEXT): Notas adicionales sobre la oferta o contexto de anotación
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{job\_id} para joins con raw\_jobs
+    \item B-tree en \texttt{skill\_type} para análisis segregado hard/soft
+    \item GIN en \texttt{skill\_text} para full-text search de habilidades anotadas
+    \item B-tree en \texttt{annotation\_date} para seguimiento cronológico de anotaciones
+\end{itemize}
+
+\textbf{Constraints}:
+\begin{itemize}
+    \item UNIQUE(\texttt{job\_id}, \texttt{skill\_text}, \texttt{skill\_type}): Previene anotaciones duplicadas
+    \item CHECK(\texttt{skill\_type} IN ('hard', 'soft')): Valida tipo de habilidad
+    \item CASCADE DELETE: Si se elimina raw\_jobs, se eliminan anotaciones asociadas
+\end{itemize}
+
+\textbf{Volumen actual}: 300 ofertas anotadas con múltiples skills cada una
+
+\subsubsection*{C.1.9. Tabla esco\_skill\_labels}
+
+Almacena etiquetas multilingües alternativas y sinónimos de conceptos ESCO, permitiendo matching flexible en español, inglés y otros idiomas. Esta tabla complementa los preferred\_label de esco\_skills con variantes terminológicas (Migration 004).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{label\_id} (UUID, PK): Identificador único de la etiqueta
+    \item \texttt{skill\_uri} (TEXT, FK $\to$ esco\_skills.skill\_uri): Referencia al concepto ESCO
+    \item \texttt{language\_code} (VARCHAR(5)): Código ISO 639-1 del idioma (es, en, fr, de, etc.)
+    \item \texttt{label} (TEXT): Texto de la etiqueta alternativa o sinónimo
+    \item \texttt{label\_type} (VARCHAR(20)): Tipo de etiqueta (preferred, alternative, hidden)
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de inserción
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{skill\_uri} para joins con esco\_skills
+    \item B-tree en \texttt{language\_code} para filtrado por idioma
+    \item GIN en \texttt{label} para full-text search de sinónimos
+\end{itemize}
+
+\textbf{Constraints}:
+\begin{itemize}
+    \item UNIQUE(\texttt{skill\_uri}, \texttt{language\_code}, \texttt{label}): Previene etiquetas duplicadas
+    \item CASCADE DELETE: Si se elimina esco\_skills, se eliminan labels asociadas
+\end{itemize}
+
+\subsubsection*{C.1.10. Tabla esco\_skill\_relations}
+
+Almacena relaciones jerárquicas y semánticas entre conceptos ESCO (broader/narrower para jerarquía, related para asociación semántica, essential/optional para relaciones con ocupaciones). Permite navegación ontológica y expansión de queries (Migration 004).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{relation\_id} (UUID, PK): Identificador único de la relación
+    \item \texttt{source\_skill\_uri} (TEXT, FK $\to$ esco\_skills.skill\_uri): Skill origen de la relación
+    \item \texttt{target\_skill\_uri} (TEXT, FK $\to$ esco\_skills.skill\_uri): Skill destino de la relación
+    \item \texttt{relation\_type} (VARCHAR(50)): Tipo de relación (broader, narrower, related, essential, optional)
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de inserción
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{source\_skill\_uri} para navegación desde origen
+    \item B-tree en \texttt{target\_skill\_uri} para navegación desde destino
+    \item B-tree en \texttt{relation\_type} para filtrado por tipo de relación
+\end{itemize}
+
+\textbf{Constraints}:
+\begin{itemize}
+    \item UNIQUE(\texttt{source\_skill\_uri}, \texttt{target\_skill\_uri}, \texttt{relation\_type}): Previene relaciones duplicadas
+    \item CASCADE DELETE: Si se elimina esco\_skills, se eliminan relaciones asociadas
+\end{itemize}
+
+\subsubsection*{C.1.11. Tabla custom\_skill\_mappings}
+
+Almacena mapeos manuales de habilidades emergentes o específicas del mercado latinoamericano hacia conceptos ESCO existentes, con justificación y score de confianza. Permite curación iterativa de la taxonomía (Migration 004).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{mapping\_id} (UUID, PK): Identificador único del mapeo
+    \item \texttt{skill\_text} (TEXT): Texto de la habilidad emergente no contemplada en ESCO
+    \item \texttt{esco\_skill\_uri} (TEXT, FK $\to$ esco\_skills.skill\_uri): URI del concepto ESCO mapeado (nullable)
+    \item \texttt{confidence\_score} (FLOAT): Score de confianza del mapeo manual (0.0-1.0)
+    \item \texttt{mapping\_reason} (TEXT): Justificación textual del mapeo manual
+    \item \texttt{created\_by} (VARCHAR(100)): Identificador del curador (system, manual, analyst\_name)
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de creación del mapeo
+    \item \texttt{updated\_at} (TIMESTAMP): Timestamp de última actualización
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item GIN en \texttt{skill\_text} para full-text search de skills emergentes
+    \item B-tree en \texttt{esco\_skill\_uri} para joins con esco\_skills
+    \item B-tree en \texttt{created\_by} para seguimiento de curadores
+\end{itemize}
+
+\subsubsection*{C.1.12. Tabla esco\_skill\_groups}
+
+Almacena grupos jerárquicos de clasificación de skills ESCO, con soporte de auto-referencia para modelar jerarquías multinivel (grupos pueden tener grupos padre). Facilita navegación y filtrado por categorías de alto nivel (Migration 004).
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{group\_id} (VARCHAR(50), PK): Identificador del grupo
+    \item \texttt{group\_name\_es} (TEXT): Nombre del grupo en español
+    \item \texttt{group\_name\_en} (TEXT): Nombre del grupo en inglés
+    \item \texttt{description\_es} (TEXT): Descripción del grupo en español
+    \item \texttt{description\_en} (TEXT): Descripción del grupo en inglés
+    \item \texttt{parent\_group\_id} (VARCHAR(50), FK $\to$ esco\_skill\_groups.group\_id): Grupo padre (auto-referencia, nullable)
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de inserción
+\end{itemize}
+
+\textbf{Índices}:
+\begin{itemize}
+    \item B-tree en \texttt{parent\_group\_id} para navegación jerárquica
+\end{itemize}
+
+\subsubsection*{C.1.13. Tabla esco\_skill\_families}
+
+Almacena familias de competencias de alto nivel para clasificación temática de skills ESCO. Representa el nivel más agregado de taxonomía (ej: "Competencias Digitales", "Competencias Lingüísticas", "Competencias Transversales"). Migration 004.
+
+\textbf{Campos principales}:
+\begin{itemize}
+    \item \texttt{family\_id} (VARCHAR(50), PK): Identificador de la familia
+    \item \texttt{family\_name\_es} (TEXT): Nombre de la familia en español
+    \item \texttt{family\_name\_en} (TEXT): Nombre de la familia en inglés
+    \item \texttt{description\_es} (TEXT): Descripción de la familia en español
+    \item \texttt{description\_en} (TEXT): Descripción de la familia en inglés
+    \item \texttt{created\_at} (TIMESTAMP): Timestamp de inserción
+\end{itemize}
+
+\subsection*{C.2. Configuración de PostgreSQL para Procesamiento Batch}
 
 La configuración de PostgreSQL se optimizó específicamente para procesamiento batch de grandes volúmenes de datos, priorizando throughput sobre latencia de consultas individuales.
 
-\subsubsection*{E.2.1. Configuración de Memoria}
+\subsubsection*{C.2.1. Configuración de Memoria}
 
 \begin{verbatim}
 # postgresql.conf
@@ -210,7 +433,7 @@ maintenance_work_mem = 1GB
 effective_cache_size = 12GB
 \end{verbatim}
 
-\subsubsection*{E.2.2. Resultados de las Optimizaciones}
+\subsubsection*{C.2.2. Resultados de las Optimizaciones}
 
 Las optimizaciones de configuración e índices lograron las siguientes mejoras de performance:
 
@@ -229,13 +452,13 @@ Las optimizaciones de configuración e índices lograron las siguientes mejoras 
         \end{itemize}
     \item \textbf{Matching ESCO}: Reducción de \textasciitilde6.5h a \textasciitilde6.5min (60× aceleración)
         \begin{itemize}
-            \item Memoización mediante diccionario \texttt{skill\_text} $\to$ \texttt{esco\_uri} en memoria
+            \item Memoización mediante diccionario que mapea \texttt{skill\_text} a \texttt{esco\_uri} en memoria
         \end{itemize}
 \end{itemize}
 
 Esta configuración permitió que el procesamiento del corpus completo de 30,660 ofertas completara en \textasciitilde6.2 horas (incluyendo todas las etapas: scraping, extracción, mapeo ESCO, embeddings, clustering).
 
-\subsection*{E.3. Estrategias de Persistencia y Trazabilidad}
+\subsection*{C.3. Estrategias de Persistencia y Trazabilidad}
 
 La base de datos implementa tres mecanismos fundamentales para garantizar reproducibilidad y trazabilidad:
 
