@@ -137,9 +137,9 @@ A continuación se presentan escenarios concretos que ilustran cómo el sistema 
 \hline
 \textbf{Fuente del estímulo} & El sistema procesa 2,756 skills extraídas de 100 ofertas laborales \\
 \hline
-\textbf{Estímulo} & Ejecución del matcher de 3 capas (exact $\rightarrow$ fuzzy $\rightarrow$ semantic deshabilitada) \\
+\textbf{Estímulo} & Ejecución del matcher de 2 capas (exact a fuzzy con threshold 0.92, semantic deshabilitada) \\
 \hline
-\textbf{Artefacto} & Módulo esco\_matcher\_3layers.py con búsquedas SQL y fuzzywuzzy \\
+\textbf{Artefacto} & Módulo esco\_matcher\_3layers.py (2 capas activas) con búsquedas SQL y fuzzywuzzy \\
 \hline
 \textbf{Ambiente} & PostgreSQL con 14,174 skills ESCO indexadas, servidor con 16GB RAM \\
 \hline

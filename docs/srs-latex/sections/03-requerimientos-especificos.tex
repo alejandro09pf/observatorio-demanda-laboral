@@ -115,12 +115,12 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
         \item Estado: IMPLEMENTADO
     \end{itemize}
 
-    \item[RF-04.2] El sistema debe mapear skills extraídas contra ESCO usando estrategia de tres capas.
+    \item[RF-04.2] El sistema debe mapear skills extraídas contra ESCO usando estrategia de dos capas.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Matching
-        \item Criterio: Layer 1 (Exact, SQL ILIKE, confidence 1.0), luego Layer 2 (Fuzzy, threshold 0.85), y finalmente Layer 3 (Semantic, threshold 0.87, DESHABILITADO)
-        \item Estado: PARCIALMENTE IMPLEMENTADO (Layer 1 + 2 activos, Layer 3 disabled)
+        \item Criterio: Layer 1 (Exact, SQL ILIKE, confidence 1.0), luego Layer 2 (Fuzzy, threshold 0.92). Layer 3 (Semantic) fue deshabilitada tras pruebas que revelaron falsos positivos en contexto técnico.
+        \item Estado: IMPLEMENTADO (Layer 1 + 2 activos)
         \item Match rate actual: 12.6\% (esperado para taxonomías 2016-2017)
     \end{itemize}
 
@@ -176,7 +176,7 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \section{Requerimientos de Desempeño}
 
 \begin{description}
-    \item[RD-01] El sistema debe extraer y almacenar vacantes desde múltiples portales de empleo.
+    \item[RDP-01] El sistema debe extraer y almacenar vacantes desde múltiples portales de empleo.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Scraping
@@ -185,7 +185,7 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
         \item Estado: CUMPLIDO (7,784\% sobre mínimo requerido)
     \end{itemize}
 
-    \item[RD-02] El preprocesamiento textual debe ejecutarse sin errores críticos.
+    \item[RDP-02] El preprocesamiento textual debe ejecutarse sin errores críticos.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Procesamiento
@@ -194,7 +194,7 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
         \item Estado: CUMPLIDO
     \end{itemize}
 
-    \item[RD-03] La generación de embeddings debe completarse en tiempo razonable.
+    \item[RDP-03] La generación de embeddings debe completarse en tiempo razonable.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Embeddings (Fase 0)
@@ -203,7 +203,7 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
         \item Estado: CUMPLIDO (15x mejor que requerimiento)
     \end{itemize}
 
-    \item[RD-04] La búsqueda semántica con FAISS debe ser eficiente.
+    \item[RDP-04] La búsqueda semántica con FAISS debe ser eficiente.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: FAISS Index
@@ -212,7 +212,7 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
         \item Estado: CUMPLIDO (25x más rápido que PostgreSQL pgvector)
     \end{itemize}
 
-    \item[RD-05] El sistema de extracción de skills debe procesar jobs sin fallos.
+    \item[RDP-05] El sistema de extracción de skills debe procesar jobs sin fallos.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Extracción Pipeline A
@@ -222,13 +222,13 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
         \item Estado: CUMPLIDO
     \end{itemize}
 
-    \item[RD-06] El matching contra ESCO debe completarse para todas las skills extraídas.
+    \item[RDP-06] El matching contra ESCO debe completarse para todas las skills extraídas.
     \begin{itemize}
         \item Prioridad: Alta
-        \item Módulo: Matching (3-layer strategy)
-        \item Criterio: Todas las skills procesadas por las 3 layers
-        \item Performance actual: 12.6\% match rate (Layer 1: 5.4\%, Layer 2: 7.1\%, Layer 3: disabled)
-        \item Estado: PARCIALMENTE CUMPLIDO (Layer 3 deshabilitado temporalmente)
+        \item Módulo: Matching (2-layer strategy)
+        \item Criterio: Todas las skills procesadas por las 2 layers activas (exact + fuzzy con threshold 0.92)
+        \item Performance actual: 12.6\% match rate (Layer 1: 5.4\%, Layer 2: 7.1\%)
+        \item Estado: CUMPLIDO (Layer 3 semantic deshabilitada por falsos positivos)
         \item Nota: 87.4\% emergent skills es esperado para taxonomías 2016-2017
     \end{itemize}
 \end{description}
@@ -277,21 +277,21 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \subsection{Confiabilidad}
 
 \begin{description}
-    \item[NFA-01] El sistema debe producir resultados consistentes ante entradas iguales.
+    \item[RNF-01] El sistema debe producir resultados consistentes ante entradas iguales.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Todos
         \item Criterio: Repetición del proceso genera mismos resultados
     \end{itemize}
 
-    \item[NFA-02] Se debe registrar el comportamiento del sistema mediante logs detallados.
+    \item[RNF-02] Se debe registrar el comportamiento del sistema mediante logs detallados.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Todos
         \item Criterio: Archivos de log por módulo
     \end{itemize}
 
-    \item[NFA-03] En caso de interrupciones, los módulos deben permitir ser reiniciados.
+    \item[RNF-03] En caso de interrupciones, los módulos deben permitir ser reiniciados.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Arquitectura General
@@ -302,14 +302,14 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \subsection{Disponibilidad}
 
 \begin{description}
-    \item[NFA-04] El sistema estará disponible para ejecución local en cualquier momento.
+    \item[RNF-04] El sistema estará disponible para ejecución local en cualquier momento.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Infraestructura
         \item Criterio: Pipeline completo corre offline
     \end{itemize}
 
-    \item[NFA-05] Scripts y notebooks deben estar organizados en GitHub.
+    \item[RNF-05] Scripts y notebooks deben estar organizados en GitHub.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Infraestructura
@@ -320,21 +320,21 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \subsection{Seguridad}
 
 \begin{description}
-    \item[NFA-06] Se evitará recolectar información personal.
+    \item[RNF-06] Se evitará recolectar información personal.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Scraping
         \item Criterio: Ningún campo sensible almacenado
     \end{itemize}
 
-    \item[NFA-07] Los spiders implementarán throttling.
+    \item[RNF-07] Los spiders implementarán throttling.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Scraping
         \item Criterio: Tiempo entre requests configurable
     \end{itemize}
 
-    \item[NFA-08] El código incluirá controles básicos de errores.
+    \item[RNF-08] El código incluirá controles básicos de errores.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Todos
@@ -345,14 +345,14 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \subsection{Mantenibilidad}
 
 \begin{description}
-    \item[NFA-09] El sistema debe estar documentado a nivel de código.
+    \item[RNF-09] El sistema debe estar documentado a nivel de código.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Todos
         \item Criterio: Documentación presente en repositorio
     \end{itemize}
 
-    \item[NFA-10] Cada módulo será independiente y versionado.
+    \item[RNF-10] Cada módulo será independiente y versionado.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Arquitectura Modular
@@ -363,14 +363,14 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
 \subsection{Portabilidad}
 
 \begin{description}
-    \item[NFA-11] El sistema debe poder ejecutarse en Linux, macOS o Windows con WSL.
+    \item[RNF-11] El sistema debe poder ejecutarse en Linux, macOS o Windows con WSL.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Infraestructura
         \item Criterio: Se ejecuta en tres sistemas operativos
     \end{itemize}
 
-    \item[NFA-12] Se debe proporcionar un archivo de entorno reproducible.
+    \item[RNF-12] Se debe proporcionar un archivo de entorno reproducible.
     \begin{itemize}
         \item Prioridad: Alta
         \item Módulo: Infraestructura
@@ -432,21 +432,21 @@ La trazabilidad entre los objetivos del proyecto y los requerimientos específic
 \hline
 Objetivo & Requerimientos Relacionados \\
 \hline
-Extracción automatizada de vacantes & RF-01, RD-01, NFA-06, NFA-07, REI-06 \\
+Extracción automatizada de vacantes & RF-01, RDP-01, RNF-06, RNF-07, REI-06 \\
 \hline
-Procesamiento y limpieza textual & RF-02, RF-03, RD-02, BD-01, BD-02 \\
+Procesamiento y limpieza textual & RF-02, RF-03, RDP-02, BD-01, BD-02 \\
 \hline
-Extracción de habilidades & RF-04, RF-04.1, RF-04.2, RF-04.3, RD-05, RD-06, BD-03, BD-05 \\
+Extracción de habilidades & RF-04, RF-04.1, RF-04.2, RF-04.3, RDP-05, RDP-06, BD-03, BD-05 \\
 \hline
-Generación de embeddings & RF-04.4, RF-04.5, RD-03, RD-04, BD-04 \\
+Generación de embeddings & RF-04.4, RF-04.5, RDP-03, RDP-04, BD-04 \\
 \hline
-Clustering de perfiles & RF-05, RD-03 \\
+Clustering de perfiles & RF-05, RDP-03 \\
 \hline
 Visualización de resultados & RF-06, REI-03, RDZ-04 \\
 \hline
-Arquitectura modular & RDZ-01, RDZ-03, RDZ-05, NFA-10 \\
+Arquitectura modular & RDZ-01, RDZ-03, RDZ-05, RNF-10 \\
 \hline
-Mantenibilidad y reproducibilidad & NFA-09, NFA-12, REI-01, REI-02 \\
+Mantenibilidad y reproducibilidad & RNF-09, RNF-12, REI-01, REI-02 \\
 \hline
 \end{tabular}
 \caption{Trazabilidad entre objetivos y requerimientos}
@@ -479,7 +479,7 @@ RF-04 & VP & Extracción exitosa con 2+ métodos (Regex + NER), success rate > 9
 \hline
 RF-04.1 & VP & Taxonomía cargada: 14,174 skills (ESCO + O*NET + Manual) \\
 \hline
-RF-04.2 & VA & Match rate > 10\%, Layer 1 + Layer 2 activos, confianza > 0.85 \\
+RF-04.2 & VA & Match rate > 10\%, Layer 1 + Layer 2 activos, threshold fuzzy 0.92 \\
 \hline
 RF-04.3 & VI & Skills emergentes rastreadas con frecuencia y contexto \\
 \hline
@@ -491,9 +491,9 @@ RF-05 & VD & Clustering ejecutado sin errores, clusters coherentes \\
 \hline
 RF-06 & VI & Visualizaciones exportadas en PDF/PNG/HTML \\
 \hline
-RD-01 a RD-06 & VA & Métricas de performance validadas contra umbrales \\
+RDP-01 a RDP-06 & VA & Métricas de performance validadas contra umbrales \\
 \hline
-NFA-01 a NFA-12 & VI/VD & Tests de reproducibilidad, logs, portabilidad \\
+RNF-01 a RNF-12 & VI/VD & Tests de reproducibilidad, logs, portabilidad \\
 \hline
 BD-01 a BD-05 & VP & Queries SQL exitosas, integridad referencial \\
 \hline

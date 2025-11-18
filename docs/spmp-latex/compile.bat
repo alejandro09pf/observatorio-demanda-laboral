@@ -16,7 +16,7 @@ echo [1/5] Primera compilacion con pdflatex...
 if not exist main.pdf (
     echo ERROR CRITICO: No se pudo generar el PDF
     echo Mostrando ultimas 50 lineas del log:
-    type main.log | more +$(wc -l main.log | awk '{print $1-50}')
+    powershell -Command "Get-Content main.log -Tail 50"
     pause
     exit /b 1
 )

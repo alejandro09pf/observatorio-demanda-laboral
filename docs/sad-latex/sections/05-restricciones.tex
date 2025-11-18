@@ -4,21 +4,21 @@ Estas son limitaciones específicas que afectan la capacidad del sistema para cu
 
 \subsection{Restricciones Computacionales}
 
-\subsubsection{Hardware Disponible}
+\subsubsection{C-3. Hardware Disponible y Recursos Computacionales}
 
 \begin{itemize}
     \item Servidores universitarios con CPU Intel Xeon (16 cores) / AMD Ryzen (8 cores)
     \item RAM: 16-32 GB (compartida con otros procesos)
-    \item GPU: NVIDIA GTX 1660 / RTX 3060 (6-12 GB VRAM) o Apple MPS
+    \item GPU: NVIDIA GTX 1660 / RTX 3060 con al menos 8GB VRAM requeridos para modelos de 7B parámetros, o Apple MPS
     \item Almacenamiento: 100-200 GB cuota en servidores universitarios
 \end{itemize}
 
 Implicaciones:
 \begin{itemize}
-    \item LLMs limitados a modelos $<$4B parámetros con cuantización Q4
+    \item LLMs ejecutables localmente requieren GPU con al menos 8GB VRAM para modelos de 7B parámetros con cuantización Q4
     \item Procesamiento batch preferido sobre tiempo real
     \item FAISS en modo CPU (suficiente para 14K vectores)
-    \item Imposibilidad de usar modelos grandes (GPT-4, Llama 70B)
+    \item Imposibilidad de usar modelos grandes (GPT-4, Llama 70B) sin infraestructura adicional
 \end{itemize}
 
 \subsection{Restricciones de Tiempo}
@@ -39,31 +39,49 @@ Implicaciones:
     \item Implementación incremental con entregas funcionales iterativas
 \end{itemize}
 
+\subsection{Restricciones Técnicas (continuación)}
+
+\subsubsection{C-4. Latencia de Procesamiento LLM}
+
+El procesamiento de ofertas con LLMs ejecutados localmente introduce latencia significativa (40-45 segundos/oferta) comparado con métodos tradicionales. Alternativamente, las llamadas a APIs de LLMs comerciales (OpenAI, Anthropic) reducirían latencia pero introducirían costos variables y dependencias externas. El diseño debe balancear calidad de resultados con viabilidad técnica y tiempos de procesamiento.
+
 \subsection{Restricciones de Datos}
 
-\subsubsection{Acceso a Portales}
+\subsubsection{C-1. Límites de Scraping y C-2. Dinamismo del DOM}
 
 \begin{itemize}
-    \item Scraping sujeto a términos de servicio de portales
+    \item \textbf{C-1}: Los portales de empleo implementan medidas anti-bot (CAPTCHAs, rate limiting, bloqueos por IP) que restringen la velocidad y volumen de recolección. El sistema debe respetar estas limitaciones mediante delays adaptativos, rotación de user-agents y estrategias de backoff exponencial.
+    \item \textbf{C-2}: La estructura HTML de los portales cambia frecuentemente sin previo aviso, lo que genera fragilidad en los selectores CSS/XPath. El sistema debe incluir monitoreo de fallos y mecanismos de alerta para intervención manual cuando los spiders dejan de funcionar.
     \item Rate limiting: 1-2 requests/segundo por portal
     \item Bloqueo de IPs ante comportamiento sospechoso
     \item Contenido JavaScript requiere Selenium (más lento)
 \end{itemize}
 
-\subsubsection{Cobertura Temporal}
+\subsubsection{C-5. Heterogeneidad de Formatos y C-6. Incompletitud de Información}
 
 \begin{itemize}
-    \item Dataset actual: marzo-diciembre 2024 (9 meses)
-    \item Análisis de tendencias de largo plazo limitado
-    \item Imposibilidad de comparar con años anteriores
+    \item \textbf{C-5}: No existe un estándar para la publicación de ofertas laborales. Los portales utilizan campos, nomenclaturas y niveles de detalle diferentes, lo que dificulta la normalización automática.
+    \item \textbf{C-6}: Muchas ofertas omiten información relevante (salario, requisitos detallados, tecnologías específicas), limitando la profundidad del análisis para ciertos campos.
 \end{itemize}
 
-\subsubsection{Idioma}
+\subsubsection{C-7. Ruido Lingüístico}
+
+Las ofertas contienen errores ortográficos, abreviaciones no estándar, mezcla de idiomas y uso informal del lenguaje, lo que reduce la efectividad de técnicas de NLP basadas en corpus formales.
 
 \begin{itemize}
     \item Ofertas en español (España + LatAm) y Spanglish técnico
     \item Modelos NLP optimizados para español de España
     \item Escasa literatura sobre NLP para español técnico latinoamericano
+\end{itemize}
+
+\subsubsection{C-8. Volatilidad Temporal}
+
+Las ofertas se eliminan o modifican frecuentemente (típicamente tienen vigencia de 30-60 días), lo que requiere estrategias de recolección periódica y versionado de datos.
+
+\begin{itemize}
+    \item Dataset actual: marzo-diciembre 2024 (9 meses)
+    \item Análisis de tendencias de largo plazo limitado
+    \item Imposibilidad de comparar con años anteriores
 \end{itemize}
 
 \subsection{Cumplimiento Normativo}
@@ -105,9 +123,11 @@ Mitigación:
     \item Análisis cualitativo de skills no matched
 \end{itemize}
 
-\subsection{Restricciones de Evaluación}
+\subsection{Restricciones Metodológicas}
 
-\subsubsection{Gold Standard}
+\subsubsection{C-9. Ausencia de Ground Truth}
+
+No existe un dataset etiquetado de referencia para habilidades en ofertas laborales en español latinoamericano, lo que dificulta la evaluación cuantitativa rigurosa de los modelos de extracción.
 
 \begin{itemize}
     \item Presupuesto limitado para anotadores profesionales
@@ -115,6 +135,10 @@ Mitigación:
     \item Anotadores: estudiantes de ingeniería (no expertos en RRHH)
     \item Sesgo potencial hacia perfiles técnicos conocidos
 \end{itemize}
+
+\subsubsection{C-10. Sesgo de Fuente}
+
+Los portales de empleo no representan el universo completo del mercado laboral. Excluyen ofertas publicadas en sitios corporativos directos, redes sociales, o canales informales, introduciendo sesgo de formalidad y tamaño de empresa.
 
 \subsubsection{Validación de Clustering}
 
@@ -154,7 +178,7 @@ La Tabla \ref{tab:resumen-restricciones} presenta un resumen consolidado de las 
 \hline
 \textbf{Categoría} & \textbf{Restricción Principal} \\
 \hline
-Computacional & Hardware limitado: 16-32GB RAM, GPU 6-12GB VRAM \\
+Computacional & Hardware limitado: 16-32GB RAM, GPU mínimo 8GB VRAM para modelos 7B params \\
 \hline
 Temporal & 6-12 meses para tesis completa, 4-6 meses desarrollo efectivo \\
 \hline
