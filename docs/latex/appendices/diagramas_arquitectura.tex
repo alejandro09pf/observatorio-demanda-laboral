@@ -22,7 +22,7 @@ El diagrama de arquitectura modular presentado en el Capítulo 5 (Figura \ref{fi
     \item \textbf{Scraping}: Framework Scrapy 2.11 con Selenium 4.15 para contenido dinámico, delays adaptativos (2-5s), rotación de user-agents, y backoff exponencial.
     \item \textbf{Extraction}: spaCy \texttt{es\_core\_news\_lg} v3.7 con EntityRuler personalizado, 548 patrones regex en 18 categorías, latencia 50-80ms por documento.
     \item \textbf{LLM Processing}: Gemma 3 4B con cuantización Q4 (4-6 GB VRAM), temperatura 0.3, max\_tokens 3072, latencia 18s (P50).
-    \item \textbf{ESCO Matching}: Taxonomía extendida 14,215 skills (13,939 ESCO v1.1.0 + 152 O*NET + 124 manuales), matching exact + fuzzy $\geq$0.85.
+    \item \textbf{ESCO Matching}: Taxonomía extendida 14,215 skills (13,939 ESCO v1.1.0 + 152 O*NET + 124 manuales), matching exact + fuzzy $\geq$0.92.
     \item \textbf{Embedding}: Modelo \texttt{intfloat/multilingual-e5-base} (768D, 278M parámetros), batch\_size=32, latencia $<$100ms/batch.
     \item \textbf{UMAP}: Parámetros \texttt{n\_neighbors=15}, \texttt{min\_dist=0.1}, \texttt{metric='cosine'}, reducción 768D $\rightarrow$ 2-3D.
     \item \textbf{HDBSCAN}: Parámetros \texttt{min\_cluster\_size=12}, \texttt{min\_samples=3}, \texttt{cluster\_selection\_method='eom'}.
@@ -44,61 +44,93 @@ El flujo de datos atraviesa las siguientes transformaciones principales desde la
 
 \subsection*{D.4. Comparación de Estilos Arquitectónicos}
 
-Durante la fase de diseño se evaluaron tres estilos arquitectónicos para el observatorio: microservicios, arquitectura orientada a eventos, y arquitectura de pipeline lineal. La Tabla \ref{tab:arch-comparison-anexo} presenta la comparación según criterios relevantes para el contexto académico y operativo del proyecto.
+Durante la fase de diseño se evaluaron tres estilos arquitectónicos para el observatorio: pipeline lineal tradicional, microservicios puros, y arquitectura híbrida que combina microservicios con pub/sub orientado a eventos. La Tabla \ref{tab:arch-comparison-anexo} presenta la comparación según criterios relevantes para el contexto académico y operativo del proyecto.
 
 \begin{table}[H]
 \centering
 \caption{Comparación de Estilos Arquitectónicos Evaluados}
 \label{tab:arch-comparison-anexo}
-\begin{tabular}{|p{3cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\begin{tabular}{|p{3.2cm}|p{2.8cm}|p{3cm}|p{3.5cm}|}
 \hline
-\textbf{Criterio} & \textbf{Microservicios} & \textbf{Event-Driven} & \textbf{Pipeline Lineal} \\
+\textbf{Criterio} & \textbf{Pipeline Lineal} & \textbf{Microservicios Puros} & \textbf{Arquitectura Híbrida} \\
 \hline
-Complejidad & Alta & Media-alta & Baja \\
+Complejidad de implementación & Baja & Alta & Media \\
 \hline
-Escalabilidad horizontal & Excelente & Excelente & Limitada \\
+Escalabilidad horizontal & Limitada & Excelente & Excelente (workers) \\
 \hline
-Trazabilidad & Media & Media & Excelente \\
+Latencia de consultas & Alta (bloqueante) & Baja & Baja (menor a 1s) \\
 \hline
-Debugging & Difícil & Medio & Fácil \\
+Throughput de procesamiento & Bajo (secuencial) & Medio & Alto (paralelo) \\
 \hline
-Overhead operativo & Alto & Medio & Bajo \\
+Trazabilidad & Excelente & Media & Alta \\
 \hline
-Time to market & Lento & Medio & Rápido \\
+Tolerancia a fallos & Baja & Alta & Alta \\
 \hline
-Requisitos infraestructura & K8s/Docker Swarm & Message broker & Servidor único \\
-\hline
-Tolerancia a fallos & Excelente & Buena & Media \\
-\hline
-Equipo requerido & 5+ devs & 3-4 devs & 2 devs \\
+Time to market & Rápido & Lento & Medio \\
 \hline
 \end{tabular}
 \end{table}
 
-Se seleccionó arquitectura de pipeline lineal fundamentado en cuatro razones principales:
+Se seleccionó arquitectura híbrida fundamentado en cuatro razones principales que balancean capacidades técnicas con viabilidad operativa. Primero, la arquitectura híbrida proporciona procesamiento paralelo mediante cola de tareas (Redis + Celery) sin la complejidad completa de microservicios puros que requieren service mesh, service discovery, y circuit breakers. Segundo, permite escalar horizontalmente solo los workers de procesamiento (agregar más workers Celery) sin necesidad de escalar todos los componentes, reduciendo costos operativos. Tercero, frontend (Next.js), API (FastAPI), y workers (Celery) operan independientemente con comunicación desacoplada mediante cola de eventos, facilitando desarrollo modular y debugging. Cuarto, el sistema pub/sub con Redis permite procesamiento batch de miles de ofertas sin bloquear la API web, con monitoreo de progreso en tiempo real y tolerancia a fallos mediante reintentos automáticos.
 
-\begin{enumerate}
-    \item \textbf{Simplicidad operativa}: Proyecto académico con equipo de 2 desarrolladores y recursos computacionales limitados (1 servidor, sin infraestructura Kubernetes/Docker Swarm).
-    \item \textbf{Trazabilidad completa}: Flujo unidireccional de datos permite debugging determinístico y auditoría de transformaciones etapa por etapa.
-    \item \textbf{Velocidad de desarrollo}: Implementación de microservicios requiere 3-4x más tiempo en configuración de comunicación inter-servicios, service discovery, y manejo de fallos distribuidos.
-    \item \textbf{Naturaleza batch del dominio}: El análisis de demanda laboral no requiere procesamiento en tiempo real (latencias de horas/días son aceptables), eliminando ventajas principales de arquitecturas asíncronas.
-\end{enumerate}
+El pipeline lineal fue descartado por impedir paralelismo y limitar throughput a procesamiento secuencial. Los microservicios puros fueron descartados por introducir complejidad innecesaria para un proyecto académico con equipo de 2 desarrolladores. La arquitectura híbrida proporciona el balance óptimo entre capacidades técnicas y viabilidad operativa.
 
-\subsection*{D.5. Limitaciones de la Arquitectura de Pipeline Lineal}
+\subsection*{D.5. Características de la Arquitectura Híbrida}
 
-Es importante reconocer las limitaciones inherentes de la arquitectura seleccionada:
+La arquitectura implementada combina tres patrones complementarios que operan coordinadamente para maximizar throughput y tolerancia a fallos. El primer patrón corresponde a microservicios en capas con separación física entre frontend (Next.js + React), API backend (FastAPI), y base de datos (PostgreSQL) con comunicación HTTP/REST, permitiendo desarrollo, despliegue y escalamiento independiente de cada componente. El segundo patrón implementa Event-Driven Architecture mediante cola de tareas distribuida con Redis como message broker y Celery como sistema de workers, habilitando procesamiento asíncrono de pipelines de extracción con paralelismo configurable. El tercer patrón estructura el procesamiento como pipelines modulares donde cada etapa (scraping, normalización, extracción, matching, clustering) se implementa como módulo Python independiente orquestado por Celery tasks, facilitando testing unitario y evolución incremental.
 
-\begin{itemize}
-    \item \textbf{Procesamiento secuencial sincrónico}: Impide aprovechamiento de paralelismo entre etapas, resultando en latencias acumulativas estimadas de 30-60 segundos por oferta para el pipeline completo cuando se incluye procesamiento con LLM.
-    \item \textbf{Escalabilidad horizontal limitada}: La naturaleza monolítica del orquestador requeriría migración a arquitectura de microservicios si el volumen superara las 100,000 ofertas mensuales.
-    \item \textbf{Ausencia de tolerancia a fallos distribuidos}: El fallo de una etapa detiene el pipeline completo, aunque esta limitación se mitiga mediante persistencia intermedia en PostgreSQL y capacidad de reinicio desde checkpoints.
-\end{itemize}
+Esta arquitectura permite procesamiento paralelo de múltiples ofertas simultáneamente mediante workers Celery que operan en background sin bloquear la API web. La tolerancia a fallos se implementa mediante reintentos automáticos (max retries=3 configurado en tasks) y persistencia de estado en PostgreSQL permitiendo recuperación ante fallos de workers individuales sin pérdida de progreso. La escalabilidad horizontal se logra agregando workers Celery adicionales para incrementar throughput de procesamiento según demanda.
 
-Estas limitaciones fueron consideradas aceptables dado que:
+\subsection*{D.6. Stack Tecnológico Completo}
 
-\begin{itemize}
-    \item El análisis de demanda laboral no requiere procesamiento en tiempo real.
-    \item El volumen objetivo de 600,000 ofertas es procesable en 5-10 horas con el hardware disponible.
-    \item La simplicidad operativa reduce significativamente el tiempo de desarrollo: 3-4 meses comparado con 9-12 meses que requeriría una arquitectura de microservicios.
-    \item La arquitectura permite evolución futura mediante refactorización incremental de módulos críticos a servicios independientes si los requisitos de volumen o latencia lo justifican posteriormente.
-\end{itemize}
+Las siguientes tablas documentan las decisiones tecnológicas fundamentales y su justificación académica y técnica, organizadas por capa funcional del sistema. Todas las tecnologías seleccionadas cumplen con cinco criterios principales: licencias permisivas (MIT, Apache 2.0, PostgreSQL, CC BY) permitiendo uso académico y potencial comercial futuro; madurez y estabilidad con versiones $\geq$ 2.0 y comunidades activas; documentación académica completa con publicaciones científicas revisadas por pares para componentes críticos; reproducibilidad mediante control de versiones de dependencias y semillas fijas para componentes estocásticos; y escalabilidad demostrada para el procesamiento de más de 30,000 ofertas laborales.
+
+\begin{table}[H]
+\centering
+\caption{Stack Tecnológico: Infraestructura y Adquisición de Datos}
+\label{tab:tech-stack-infra}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{6.5cm}|}
+\hline
+\textbf{Componente} & \textbf{Tecnología} & \textbf{Justificación} \\
+\hline
+Base de datos & PostgreSQL 15+ con pgvector & Soporte JSONB para metadatos flexibles, extensión pgvector para vectores 768D, robustez ACID, particionamiento para escalabilidad. \\
+\hline
+Taxonomía & ESCO v1.1.0 (+ 276 ext.) & Cobertura 13,000+ skills con etiquetas español/inglés, extendida con 152 O*NET + 124 manual (total 14,215), estructura ontológica con URIs, respaldo institucional CE, licencia CC BY 4.0. \\
+\hline
+Framework scraping & Scrapy 2.11 + Selenium 4.15 & Arquitectura asíncrona (100+ req/min), manejo robusto de reintentos, middlewares extensibles, Selenium para JavaScript dinámico. \\
+\hline
+Modelo NLP español & spaCy 3.7 + es\_core\_news\_lg & Mejor modelo español disponible (97M parámetros), soporte EntityRuler para ESCO, optimizado CPU ($<$100ms/doc). \\
+\hline
+Lenguaje & Python 3.11+ & Ecosistema científico maduro (NumPy, pandas, scikit-learn), bibliotecas NLP referencia (spaCy, transformers), integración PostgreSQL. \\
+\hline
+Control versiones & Git + GitHub & Estándar industria, integración CI/CD (GitHub Actions), control issues/milestones, documentación Markdown, respaldo cloud. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Stack Tecnológico: Procesamiento y Análisis}
+\label{tab:tech-stack-analytics}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{6.5cm}|}
+\hline
+\textbf{Componente} & \textbf{Tecnología} & \textbf{Justificación} \\
+\hline
+LLM extracción & Gemma 3 4B (cuantización Q4) & Modelo ligero de 4B parámetros, despliegue local sin APIs (privacidad), cuantización Q4 (4-6 GB memoria unificada), seleccionado por evaluación comparativa sobre 4 candidatos, ejecución con aceleración Metal en Apple Silicon. \\
+\hline
+Embeddings & intfloat/multilingual-e5-base & Estado del arte multilingüe (768D), contrastive learning en 100 idiomas, normalización L2 integrada, 278M parámetros ejecutables CPU ($<$100ms/batch). \\
+\hline
+Reducción dimensional & UMAP \cite{mcinnes2018umap} & Preserva estructura local y global (superior t-SNE), escalabilidad millones puntos, reproducibilidad con semilla fija, parámetros interpretables (n\_neighbors, min\_dist). \\
+\hline
+Clustering & HDBSCAN \cite{campello2013} & No requiere especificar k, identifica ruido automático, maneja densidades variables (nicho vs. mainstream), jerarquía multinivel, min\_cluster\_size=12 tras experimentación. \\
+\hline
+Cola de tareas & Redis 7 + Celery 5.3 & Message broker para Event-Driven Architecture, persistencia RDB/AOF, Celery para orquestación distribuida con retry automático (max\_retries=3), scheduling con Celery Beat. \\
+\hline
+Frontend web & Next.js 14 + React 18 & Server-Side Rendering para SEO, React para componentes interactivos, TailwindCSS para diseño responsivo, shadcn/ui para componentes UI, Recharts para visualizaciones. \\
+\hline
+API backend & FastAPI 0.104 + Pydantic & Framework async Python, validación automática con Pydantic, generación OpenAPI/Swagger, endpoints REST para CRUD y publicación de tareas asíncronas. \\
+\hline
+Contenedorización & Docker 24 + Docker Compose & Orquestación de 7 servicios (nginx, frontend, api, postgres, redis, celery\_beat, celery\_worker), imágenes multi-arch (linux/arm64), volúmenes persistentes. \\
+\hline
+\end{tabular}
+\end{table}

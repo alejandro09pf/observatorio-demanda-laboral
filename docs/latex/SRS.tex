@@ -273,7 +273,7 @@ Biblioteca de código abierto para búsqueda eficiente de similitud en espacios 
 Metodología implementada para mapear habilidades extraídas contra la taxonomía ESCO:
 \begin{itemize}
     \item \textbf{Layer 1 - Exact Match:} Búsqueda exacta mediante SQL ILIKE con confianza 1.0
-    \item \textbf{Layer 2 - Fuzzy Match:} Similitud difusa con fuzzywuzzy, threshold 0.85, confianza 0.85-1.0
+    \item \textbf{Layer 2 - Fuzzy Match:} Similitud difusa con fuzzywuzzy, threshold 0.92, confianza 0.92-1.0
     \item \textbf{Layer 3 - Semantic Match:} Búsqueda semántica con FAISS, threshold 0.87, confianza 0.87-1.0 (actualmente deshabilitado debido a limitaciones del modelo E5 con vocabulario técnico)
 \end{itemize}
 
@@ -805,7 +805,7 @@ Este capítulo detalla de manera exhaustiva los requerimientos funcionales y no 
     \begin{itemize}
         \item \textbf{Prioridad:} Alta
         \item \textbf{Módulo:} Matching
-        \item \textbf{Criterio:} Layer 1 (Exact, SQL ILIKE, confidence 1.0) → Layer 2 (Fuzzy, threshold 0.85) → Layer 3 (Semantic, threshold 0.87, DESHABILITADO)
+        \item \textbf{Criterio:} Layer 1 (Exact, SQL ILIKE, confidence 1.0) → Layer 2 (Fuzzy, threshold 0.92) → Layer 3 (Semantic, threshold 0.87, DESHABILITADO)
         \item \textbf{Estado:} ⚠️ PARCIALMENTE IMPLEMENTADO (Layer 1 + 2 activos, Layer 3 disabled)
         \item \textbf{Match rate actual:} 12.6\% (esperado para taxonomías 2016-2017)
     \end{itemize}

@@ -22,11 +22,11 @@ Hard Skills (habilidades técnicas) son capacidades específicas, medibles y ens
 
 Soft Skills (habilidades transversales) son capacidades relacionales e interpersonales transversales a dominios con evaluación subjetiva y relevancia estable \cite{aguilera2018}: liderazgo, comunicación, trabajo en equipo, resolución de problemas, adaptabilidad.
 
-Para NLP automatizado, las hard skills presentan ventaja por expresión léxica consistente (``Docker'' con variantes limitadas), mientras soft skills exhiben alta variabilidad lingüística (``trabajo en equipo'' = ``colaboración'', ``espíritu colaborativo'', ``teamwork'') \cite{martinez2024}.
+Para NLP automatizado, las hard skills presentan ventaja por expresión léxica consistente (``Docker'' con variantes limitadas), mientras soft skills exhiben alta variabilidad lingüística (``trabajo en equipo'' = ``colaboración'', ``espíritu colaborativo'', ``teamwork'') \cite{campos2024}.
 
 \subsection{Hard Skills IT en el Análisis Automatizado}
 
-Este trabajo se enfoca exclusivamente en hard skills IT por tres razones. Primero, las nomenclaturas estandarizadas globalmente facilitan extracción automatizada con alta precisión versus la ambigüedad semántica de soft skills \cite{nguyen2024}. Segundo, la trazabilidad a taxonomías ESCO (13k+ skills) y O*NET (233 skills subset) provee vocabularios controlados exhaustivos \cite{kavargyris2025, rubio2025}. Tercero, la identificación de tecnologías emergentes provee inteligencia accionable para actualización curricular \cite{rubio2025}.
+Este trabajo se enfoca exclusivamente en hard skills IT por tres razones. Primero, las nomenclaturas estandarizadas globalmente facilitan extracción automatizada con alta precisión versus la ambigüedad semántica de soft skills \cite{nguyen2024}. Segundo, la trazabilidad a taxonomías ESCO (13,939 skills) y O*NET (152 skills modernas) provee vocabularios controlados exhaustivos \cite{kavargyris2025, rubio2025}. Tercero, la identificación de tecnologías emergentes provee inteligencia accionable para actualización curricular \cite{rubio2025}.
 
 Las hard skills IT abarcan categorías como: lenguajes de programación (Python, Java, JavaScript), frameworks web (Django, React, Spring Boot), bases de datos relacionales y NoSQL (PostgreSQL, MongoDB), plataformas cloud (AWS, Azure, GCP), herramientas DevOps (Docker, Kubernetes, Terraform), metodologías ágiles (Scrum, Kanban, CI/CD) y dominios especializados (Machine Learning, Data Science, Blockchain, Ciberseguridad).
 
@@ -34,7 +34,7 @@ Las hard skills IT abarcan categorías como: lenguajes de programación (Python,
 
 Una taxonomía de habilidades es un sistema jerárquico que organiza skills en categorías, establece relaciones semánticas y provee identificadores únicos. Cumplen tres funciones principales. Primero, la estandarización mediante la unificación de variantes léxicas (``JS'' → ``JavaScript'' en ESCO) \cite{kavargyris2025}. Segundo, la comparabilidad internacional ya que ESCO es multilingüe (27 idiomas UE), facilitando análisis transnacionales \cite{kavas2024}. Tercero, el mapeo de relaciones al conectar skills con ocupaciones y sectores económicos.
 
-Limitación fundamental de las taxonomías: actualización lenta versus cambio tecnológico acelerado. ESCO v1.1.0 (2021) excluye tecnologías post-2022: ``ChatGPT'', ``LangChain'', ``Tailwind CSS'', ``dbt'', ``Terraform'' \cite{rubio2025}, generando ``skills emergentes'' sin representación en vocabularios controlados. Esta brecha temporal entre ciclos de actualización taxonómica (cada 2-3 años) y aparición de nuevas tecnologías (semanas/meses) plantea un desafío metodológico para los sistemas de análisis automatizado.
+Una limitación fundamental compartida por las taxonomías es su lentitud de actualización frente al cambio tecnológico acelerado. Por ejemplo, ESCO v1.1.0 (2021) no incluye tecnologías que surgieron después de 2022, como ``ChatGPT'', ``LangChain'', ``Tailwind CSS'', ``dbt'' o ``Terraform'' \cite{rubio2025}, generando una categoría de ``skills emergentes'' sin representación en vocabularios controlados. Esta brecha temporal entre los ciclos de actualización taxonómica (cada 2-3 años) y la aparición de nuevas tecnologías (en cuestión de semanas o meses) representa un desafío metodológico significativo para los sistemas de análisis automatizado del mercado laboral tecnológico.
 
 \subsection{Web Scraping y Adquisición de Datos}
 
@@ -48,7 +48,7 @@ La implementación debe seguir principios éticos y legales: respeto del archivo
 
 Una vez extraído el contenido textual de las ofertas laborales, el siguiente paso es prepararlo para el análisis computacional mediante técnicas de Procesamiento de Lenguaje Natural.
 
-El preprocesamiento es fundamental para estandarizar los datos textuales. La Tokenización consiste en segmentar el texto en unidades mínimas o ``tokens'' (generalmente palabras o signos de puntuación) \cite{nguyen2024}, transformando cadenas continuas en secuencias discretas procesables. La Lematización reduce las palabras a su forma base o raíz gramatical, permitiendo agrupar variaciones morfológicas (por ejemplo, ``programar'', ``programando'' y ``programado'' se unifican bajo el lema ``programar'') \cite{echeverria2022}.
+El preprocesamiento textual involucra operaciones de normalización y estructuración. Herramientas como spaCy realizan automáticamente tokenización (segmentación del texto en unidades mínimas o ``tokens'': palabras, signos de puntuación) \cite{nguyen2024} y análisis morfológico, transformando cadenas continuas en secuencias discretas procesables por algoritmos de NLP.
 
 Con el texto limpio y normalizado, el núcleo del desafío consiste en la extracción de habilidades mediante un enfoque híbrido. Las Expresiones Regulares (Regex) permiten identificar secuencias de texto específicas con formatos predecibles \cite{lukauskas2023}, siendo efectivas para capturar tecnologías con nomenclaturas estandarizadas. El Reconocimiento de Entidades Nombradas (NER) es una técnica de NLP diseñada para identificar y clasificar entidades como habilidades y competencias \cite{herandi2024}, permitiendo reconocer habilidades en contextos gramaticales complejos.
 
@@ -64,7 +64,7 @@ Existen diferentes modalidades de aplicación: zero-shot learning (sin ejemplos 
 
 Las habilidades extraídas deben representarse de forma que permita su análisis cuantitativo. Los Embeddings Semánticos son representaciones vectoriales en un espacio de alta dimensionalidad donde la distancia entre vectores refleja la similitud semántica entre textos \cite{kavas2024}. Esto permite capturar relaciones semánticas complejas, realizar búsquedas por similitud eficientemente y agrupar habilidades relacionadas.
 
-Dado que las ofertas laborales en América Latina contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de Embeddings Multilingües, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \cite{echeverria2022, kavas2024}. Modelos populares incluyen E5-large, Sentence Transformers basados en BERT y multilingual-e5-base.
+Dado que las ofertas laborales en América Latina contienen términos técnicos en inglés (``Spanglish''), es crucial el uso de Embeddings Multilingües, modelos entrenados para que textos con el mismo significado en diferentes idiomas tengan representaciones vectoriales cercanas en el mismo espacio semántico \cite{echeverria2022tecnica, kavas2024}. Modelos populares incluyen E5-large, Sentence Transformers basados en BERT y multilingual-e5-base.
 
 \subsection{Análisis No Supervisado: UMAP y HDBSCAN}
 
@@ -78,7 +78,7 @@ Para asegurar la comparabilidad y estandarización de resultados, el sistema int
 
 \section{Análisis del Contexto}
 
-El desafío de extraer, analizar y comprender la demanda de habilidades a partir de ofertas de empleo en línea ha sido abordado desde múltiples frentes en la literatura académica y aplicada. Si bien el objetivo es común traducir texto en conocimiento accionable sobre el mercado laboral, las aproximaciones metodológicas varían significativamente en complejidad, escalabilidad y profundidad semántica.
+El desafío de extraer, analizar y comprender la demanda de habilidades a partir de ofertas de empleo en línea ha sido abordado desde múltiples frentes en la literatura académica y aplicada. Si bien el objetivo es común, traducir texto en conocimiento accionable sobre el mercado laboral, las aproximaciones metodológicas varían significativamente en complejidad, escalabilidad y profundidad semántica.
 
 Para posicionar adecuadamente la contribución de este proyecto, fue necesario realizar un análisis crítico de las soluciones existentes a nivel global, agrupadas en tres grandes líneas de trabajo: primero, enfoques regionales en América Latina basados en análisis léxico y reglas manuales; segundo, la frontera de la extracción con Large Language Models (LLMs) mediante prompting y fine-tuning; y tercero, pipelines semánticos con descubrimiento no supervisado mediante embeddings y clustering.
 
@@ -88,17 +88,17 @@ El siguiente análisis demostrará que ninguna de estas líneas, de forma aislad
 
 La primera línea de trabajo comprende estudios pioneros en América Latina que validaron el uso de portales de empleo en línea como fuente de datos, pero emplearon metodologías de procesamiento de texto basadas en análisis léxico, frecuencias de términos y reglas manuales.
 
-El estudio más completo fue el de Rubio Arrubla (2024) para el mercado colombiano \cite{rubio2025}. Este trabajo construyó una base de datos masiva mediante web scraping del portal elempleo.com para el periodo 2018-2023, abarcando más de 500,000 ofertas laborales. Su principal aporte fue la caracterización cuantitativa del impacto de la pandemia, demostrando un cambio estructural: las vacantes tecnológicas aumentaron 50\% en 18 meses post-pandemia. Se observó una caída en la demanda de herramientas ofimáticas tradicionales como Excel (35.8\% en 2018 a 17.4\% en 2023) y un surgimiento exponencial de tecnologías especializadas como NoSQL (12.3\%), Django (5.5\%) y React (5.3\%) para 2023 \cite{rubio2025}.
+El estudio más completo fue el de Rubio Arrubla (2025) para el mercado colombiano \cite{rubio2025}. Este trabajo construyó una base de datos masiva mediante web scraping del portal elempleo.com para el periodo 2018-2023, abarcando más de 500,000 ofertas laborales. Su principal aporte fue la caracterización cuantitativa del impacto de la pandemia, demostrando un cambio estructural: las vacantes tecnológicas aumentaron 50\% en 18 meses post-pandemia. Se observó una caída en la demanda de herramientas ofimáticas tradicionales como Excel (35.8\% en 2018 a 17.4\% en 2023) y un surgimiento exponencial de tecnologías especializadas como NoSQL (12.3\%), Django (5.5\%) y React (5.3\%) para 2023 \cite{rubio2025}.
 
 Metodológicamente, implementó una tipología propia de habilidades y clasificó vacantes mediante emparejamiento de texto basado en n-gramas y similitud contra la Clasificación Internacional Uniforme de Ocupaciones (CIUO). Sin embargo, su dependencia de la coincidencia léxica fue una limitación: el método perdía eficiencia a medida que aumentaban las palabras en los títulos, al no capturar el contexto general \cite{rubio2025}.
 
 De forma análoga, Aguilera y Méndez (2018) para Argentina extrajeron datos de ZonaJobs y Bumeran mediante análisis de frecuencias y bigramas \cite{aguilera2018}. Para estandarizar el vocabulario informal, construyeron una lista de palabras clave semi-manual, limitando la escalabilidad y adaptabilidad a nuevas tecnologías.
 
-Para México, Martínez Sánchez (2024) combinó datos de encuestas oficiales con scraping, basándose en frecuencia de términos y tipología manual para segmentar habilidades \cite{martinez2024}.
+Para México, Campos et al. (2024) combinó datos de encuestas oficiales con scraping, basándose en frecuencia de términos y tipología manual para segmentar habilidades \cite{campos2024}.
 
 Estos estudios regionales fueron cruciales para establecer la viabilidad de la recolección de datos, pero expusieron una brecha fundamental compartida: su dependencia de la correspondencia léxica explícita. Al basarse en frecuencias, n-gramas o listas predefinidas, estos sistemas eran metodológicamente frágiles ante la ambigüedad y variabilidad del lenguaje natural.
 
-El Banco Interamericano de Desarrollo (BID) señaló la falta de pipelines modernos y automatizados en la región, destacando que la mayoría todavía se basa en reglas fijas o mapeos manuales sin incorporar embeddings ni NLP avanzado \cite{echeverria2022}. Esta constatación institucional refuerza la conclusión de un vacío sistémico: la ausencia de una solución que superara los enfoques léxicos para proporcionar análisis semántico, dinámico y escalable.
+El Banco Interamericano de Desarrollo (BID) señaló la falta de pipelines modernos y automatizados en la región, destacando que la mayoría todavía se basa en reglas fijas o mapeos manuales sin incorporar embeddings ni NLP avanzado \cite{echeverria2022tecnica}. Esta constatación institucional refuerza la conclusión de un vacío sistémico: la ausencia de una solución que superara los enfoques léxicos para proporcionar análisis semántico, dinámico y escalable.
 
 \subsection{La Frontera de la Extracción: El Uso de Large Language Models}
 
@@ -163,7 +163,7 @@ El análisis del contexto revela un panorama de investigación rico pero fragmen
 \hline
 \textbf{Enfoque} & \textbf{Ventajas} & \textbf{Limitaciones} & \textbf{Refs.} \\
 \hline
-Enfoques Regionales (Léxicos) & Validación de web scraping; Datos de alta frecuencia; Contexto local & Dependencia léxica; Escalabilidad limitada; No captura semántica & \cite{rubio2025, aguilera2018, martinez2024} \\
+Enfoques Regionales (Léxicos) & Validación de web scraping; Datos de alta frecuencia; Contexto local & Dependencia léxica; Escalabilidad limitada; No captura semántica & \cite{rubio2025, aguilera2018, campos2024} \\
 \hline
 LLMs Prompting & Flexibilidad; Sin entrenamiento; Captura contexto complejo & Inconsistencia de salida; Alucinaciones; F1 bajo (17-27\%) & \cite{nguyen2024} \\
 \hline
@@ -182,11 +182,11 @@ El análisis comparativo evidencia cinco brechas fundamentales que ninguna soluc
 
 La brecha geográfica y lingüística: Los estudios de vanguardia con LLMs se desarrollaron exclusivamente sobre datasets en inglés \cite{herandi2024, zhang2022}, dejando un vacío metodológico para el análisis del mercado laboral en español latinoamericano. Las particularidades lingüísticas del ``Spanglish'' técnico característico de la región no han sido abordadas sistemáticamente.
 
-En segundo lugar, se puede ver la brecha metodológica en la extracción: Los enfoques regionales validaron la recolección masiva de datos mediante web scraping \cite{rubio2025, aguilera2018, martinez2024}, pero se limitaron a análisis léxico sin capacidad semántica. Inversamente, los estudios internacionales con LLMs demostraron potencia inferencial \cite{nguyen2024, herandi2024} pero no fueron aplicados al contexto latinoamericano.
+En segundo lugar, se puede ver la brecha metodológica en la extracción: Los enfoques regionales validaron la recolección masiva de datos mediante web scraping \cite{rubio2025, aguilera2018, campos2024}, pero se limitaron a análisis léxico sin capacidad semántica. Inversamente, los estudios internacionales con LLMs demostraron potencia inferencial \cite{nguyen2024, herandi2024} pero no fueron aplicados al contexto latinoamericano. Crucialmente, no existen estudios que comparen sistemáticamente métodos tradicionales versus LLMs en español o en mercados laborales de América Latina.
 
 En cuanto a la fragmentación arquitectónica, las tres líneas de investigación operan de forma aislada. Los pipelines semánticos no integran LLMs \cite{lukauskas2023}, los estudios de LLMs no implementan análisis no supervisado completo \cite{herandi2024}, y los enfoques regionales no incorporan embeddings ni clustering \cite{rubio2025}.
 
-Tambien se encontro la ausencia de validación comparativa ya que ningún estudio contrasta sistemáticamente métodos tradicionales (NER + Regex) contra LLMs en el mismo corpus, impidiendo cuantificar el valor agregado de cada enfoque. Los estudios evalúan técnicas de forma aislada sin proveer marco de validación empírica cruzada.
+También se encontró la ausencia de validación comparativa ya que ningún estudio contrasta sistemáticamente métodos tradicionales (NER + Regex) contra LLMs en el mismo corpus, impidiendo cuantificar el valor agregado de cada enfoque. Los estudios evalúan técnicas de forma aislada sin proveer marco de validación empírica cruzada.
 
 Por último, la barrera de actualización taxonómica: Las taxonomías estandarizadas como ESCO presentan actualización lenta frente al cambio tecnológico \cite{rubio2025}. Las tecnologías emergentes post-2022 (frameworks, herramientas cloud, metodologías) no están representadas en vocabularios controlados, limitando la capacidad de los sistemas basados únicamente en matching taxonómico.
 

@@ -6,19 +6,17 @@ Este trabajo diseñó, implementó y validó un sistema completo de observatorio
 
 \subsection{Superioridad de Modelos de Lenguaje Grandes}
 
-Los resultados experimentales presentados en el Capítulo 7 demuestran de manera concluyente que los modelos de lenguaje grandes superan a métodos tradicionales basados en reglas y reconocimiento de entidades nombradas. Pipeline B alcanzó un F1-Score post-ESCO de 84.26\%, superando en 11.73 puntos porcentuales a Pipeline A (72.53\%), lo que representa una mejora relativa del 16.2\%. En términos de precisión, Pipeline B obtuvo 89.25\% versus 65.50\% de Pipeline A, evidenciando una mejora relativa del 36.3\%. Esta superioridad se mantiene consistentemente incluso en evaluación pre-ESCO, donde Pipeline B alcanzó casi el doble de rendimiento que métodos tradicionales.
+Los resultados experimentales presentados en el Capítulo 7 demuestran de manera concluyente que los modelos de lenguaje grandes (Large Language Models, LLMs) superan a métodos tradicionales basados en reglas y reconocimiento de entidades nombradas. Pipeline B alcanzó un F1-Score post-ESCO de 84.26\%, superando en 11.73 puntos porcentuales a Pipeline A que obtuvo 72.53\%, lo que representa una mejora relativa del 16.2\%. En términos de precisión, Pipeline B obtuvo 89.25\% versus 65.50\% de Pipeline A, evidenciando una mejora relativa del 36.3\%. Esta superioridad se mantiene consistentemente incluso en evaluación pre-ESCO, donde Pipeline B alcanzó casi el doble de rendimiento que métodos tradicionales.
 
 Más allá de las métricas cuantitativas, los LLMs demuestran robustez cualitativa ante variaciones de ortografía, nomenclatura y lenguaje. Mientras que métodos basados en reglas y expresiones regulares requieren actualización manual constante para capturar variantes como ``React.js''/``ReactJS''/``React JS'', errores tipográficos como ``Javascrpt'' o ``Kuberentes'', y nomenclaturas alternativas como ``K8s'' para Kubernetes, los modelos de lenguaje comprenden estas variaciones sin modificación de sus parámetros. Esta adaptabilidad elimina el mantenimiento continuo de diccionarios y patrones que caracteriza a sistemas basados en NER y regex, reduciendo significativamente el esfuerzo operativo de largo plazo.
 
 \subsection{Detección de Habilidades Emergentes}
 
-Los resultados confirman que los LLMs detectan habilidades emergentes ausentes en taxonomías estáticas como ESCO. El 59.5\% de habilidades extraídas por Pipeline B carecen de equivalente en ESCO v1.1.0, identificándose 4,945 habilidades emergentes de 8,301 extraídas en total. Estas incluyen tecnologías modernas como SAM (AWS Serverless Application Model), CDK (Cloud Development Kit), React Hooks y Kubernetes Custom Resource Definitions, que aparecen con frecuencia significativa en múltiples ofertas, validando demandas reales del mercado. Este hallazgo confirma la limitación inherente de taxonomías estáticas que se actualizan cada 2-3 años, mientras el mercado tecnológico evoluciona en ciclos de 6-12 meses.
+Los resultados confirman que los LLMs detectan habilidades emergentes ausentes en taxonomías estáticas como ESCO. Una proporción significativa de habilidades extraídas por Pipeline B carecen de equivalente en ESCO v1.1.0. Estas incluyen tecnologías modernas como SAM (AWS Serverless Application Model), CDK (Cloud Development Kit), React Hooks y Kubernetes Custom Resource Definitions, que aparecen con frecuencia significativa en múltiples ofertas, validando demandas reales del mercado. Este hallazgo confirma la limitación inherente de taxonomías estáticas que se actualizan cada 2-3 años, mientras el mercado tecnológico evoluciona en ciclos de 6-12 meses.
 
-\subsection{Inferencia de Habilidades Implícitas}
+\subsection{Comprensión Contextual y Extracción Semántica}
 
-Los LLMs demostraron capacidad de inferir habilidades implícitas a partir del contexto de las ofertas laborales. Esta comprensión contextual permite a los modelos identificar tecnologías y competencias que no aparecen explícitamente mencionadas, sino que se infieren de las responsabilidades descritas. Por ejemplo, al leer "diseñar arquitecturas escalables para millones de usuarios", el modelo puede inferir conocimientos en sistemas distribuidos y cloud computing aunque estos términos no aparezcan textualmente.
-
-Esta capacidad de comprensión contextual representa una ventaja cualitativa fundamental respecto a métodos sintácticos tradicionales, que se limitan a detectar menciones explícitas mediante patrones léxicos.
+Los LLMs pueden identificar habilidades tanto explícitas como contextuales en ofertas laborales. Esta comprensión contextual sugiere que los modelos podrían identificar tecnologías relacionadas basándose en responsabilidades descritas, aunque la validación cuantitativa de estas inferencias implícitas queda como trabajo futuro. La capacidad de procesamiento semántico representa una ventaja cualitativa respecto a métodos sintácticos tradicionales, que se limitan a detectar menciones explícitas mediante patrones léxicos.
 
 \section{Contribuciones del Trabajo}
 
@@ -26,11 +24,11 @@ Los hallazgos anteriores se sustentan en un conjunto de contribuciones metodoló
 
 \subsection{Contribuciones Metodológicas}
 
-Este trabajo desarrolló la primera evaluación rigurosa de modelos de lenguaje grandes versus métodos tradicionales para extracción de habilidades en español latinoamericano, llenando un vacío en la literatura que se ha concentrado principalmente en inglés y mercados europeos o estadounidenses.
+Este trabajo desarrolló la primera evaluación rigurosa de LLMs versus métodos tradicionales para extracción de habilidades en español latinoamericano, llenando un vacío en la literatura que se ha concentrado principalmente en inglés y mercados europeos o estadounidenses.
 
 La metodología de evaluación dual (pre-ESCO + post-ESCO) constituye una contribución metodológica clave. Esta separación permite comparar la capacidad de extracción pura de cada pipeline independientemente de su capacidad de normalización a taxonomías, evitando confundir ambas dimensiones en una única métrica compuesta.
 
-El gold standard de 7,848 anotaciones manuales con clasificación de habilidades técnicas, junto con el sistema de normalización canónica de 193 mapeos tecnológicos validados, constituye un recurso reutilizable para investigaciones futuras en el dominio de análisis de mercado laboral latinoamericano.
+El gold standard de 7,848 anotaciones manuales con clasificación de habilidades técnicas constituye un recurso reutilizable para investigaciones futuras en el dominio de análisis de mercado laboral latinoamericano.
 
 \subsection{Contribuciones Técnicas}
 
@@ -42,9 +40,9 @@ Pipeline A evolucionó mediante 7 experimentos iterativos que mejoraron F1 post-
 
 \subsection{Contribuciones Empíricas}
 
-El trabajo identifica empíricamente limitaciones concretas de ESCO como taxonomía oficial para el dominio tecnológico latinoamericano. Se documenta sesgo europeo en la selección de ocupaciones y habilidades, reflejando prioridades del mercado laboral europeo que no necesariamente coinciden con las dinámicas regionales latinoamericanas. La granularidad resulta inconsistente entre categorías: algunas áreas tecnológicas presentan descomposición excesivamente detallada mientras otras permanecen agregadas en términos genéricos.
+El trabajo identifica empíricamente limitaciones concretas de ESCO como taxonomía oficial para el dominio tecnológico latinoamericano. La granularidad resulta inconsistente entre categorías: algunas áreas tecnológicas presentan descomposición excesivamente detallada mientras otras permanecen agregadas en términos genéricos.
 
-La desactualización tecnológica constituye otra limitación crítica observada. Herramientas y frameworks modernos ampliamente demandados en el mercado (React Hooks, Serverless Framework, infrastructure-as-code con Terraform) carecen de representación en ESCO v1.1.0, reflejando el rezago inherente a taxonomías que se actualizan cada 2-3 años. Estas observaciones empíricas contribuyen a la discusión sobre la necesidad de taxonomías dinámicas actualizadas frecuentemente o sistemas híbridos que combinen vocabularios controlados con detección automática de términos emergentes.
+La desactualización tecnológica constituye la limitación crítica principal observada. Herramientas y frameworks modernos ampliamente demandados en el mercado como React Hooks, Serverless Framework e infrastructure-as-code con Terraform carecen de representación en ESCO v1.1.0, reflejando el rezago inherente a taxonomías que se actualizan cada 2-3 años mientras el mercado tecnológico evoluciona en ciclos más cortos. Estas observaciones empíricas contribuyen a la discusión sobre la necesidad de taxonomías dinámicas actualizadas frecuentemente o sistemas híbridos que combinen vocabularios controlados con detección automática de términos emergentes.
 
 \subsection{Contribuciones Prácticas}
 
@@ -60,7 +58,7 @@ Si bien las contribuciones descritas son sustanciales, la honestidad académica 
 
 La principal limitación operativa de Pipeline B es su velocidad de procesamiento. Con una mediana de 18 segundos por oferta, el sistema requiere aproximadamente 15-25 segundos por documento versus 1-2 segundos de Pipeline A. Esta diferencia limita la aplicabilidad en escenarios de tiempo real donde se requiere respuesta inmediata.
 
-Adicionalmente, una tasa de error del 0.7\% (2 de 300 ofertas) experimentó \textit{mode collapse}, donde el modelo LLM entró en ciclos de repetición infinita que requirieron intervención manual. Aunque la frecuencia es baja, estos casos evidencian fragilidad ocasional en la generación.
+Adicionalmente, una tasa de error del 0.7\% (2 de 300 ofertas) experimentó errores en la generación donde el LLM no siguió el formato JSON especificado, requiriendo intervención manual. Aunque la frecuencia es baja, estos casos evidencian fragilidad ocasional en el cumplimiento estricto del formato de salida.
 
 En el componente de mapeo ESCO, persisten falsos positivos en fuzzy matching. Un ejemplo emblemático es el mapeo erróneo de ``REST'' (arquitectura de APIs) a ``restaurar dentaduras'' en la taxonomía odontológica de ESCO. Aunque el threshold 0.92 mitiga significativamente este problema comparado con valores más permisivos, no lo elimina por completo.
 
@@ -90,7 +88,7 @@ La separación metodológica entre extracción pura (pre-ESCO) y normalización 
 
 \subsection{Eficiencia de Modelos Pequeños y Limitaciones de Taxonomías}
 
-El proyecto demostró que modelos LLM de 4B parámetros (Gemma 3 4B) compiten efectivamente con alternativas más grandes sin requerir infraestructura costosa. Esta observación tiene implicaciones importantes para la democratización de capacidades avanzadas de NLP, permitiendo a instituciones con recursos limitados implementar soluciones competitivas en hardware consumer.
+El proyecto demostró que LLMs de 4B parámetros (Gemma 3 4B) compiten efectivamente con alternativas más grandes sin requerir infraestructura costosa. Esta observación facilita el acceso a capacidades avanzadas de NLP, permitiendo a instituciones con recursos limitados implementar soluciones competitivas en hardware consumer.
 
 Respecto a las taxonomías oficiales, ESCO resultó útil para normalización post-extracción, proporcionando identificadores estables y descripciones estandarizadas de habilidades. Sin embargo, su insuficiencia para cubrir tecnologías emergentes confirma la necesidad de sistemas híbridos que combinen taxonomías establecidas con detección dinámica de habilidades, en lugar de depender exclusivamente de vocabularios controlados estáticos.
 
@@ -98,7 +96,7 @@ Respecto a las taxonomías oficiales, ESCO resultó útil para normalización po
 
 Las 7,848 anotaciones manuales constituyen el activo más valioso del proyecto, habilitando evaluación rigurosa y cuantitativa de los diferentes enfoques. Sin este dataset de referencia, la comparación entre pipelines habría dependido de evaluación cualitativa subjetiva o métricas indirectas poco concluyentes.
 
-La comparación sistemática de 4 modelos LLM diferentes (Gemma, Llama, Qwen, Phi) resultó esencial para decisión informada. Las diferencias observadas en precisión, recall y velocidad de inferencia no eran predecibles a priori, validando la necesidad de experimentación empírica versus adopción de modelos basada únicamente en popularidad o reputación.
+La comparación sistemática de 4 LLMs diferentes (Gemma, Llama, Qwen, Phi) resultó esencial para decisión informada. Las diferencias observadas en precisión, recall y velocidad de inferencia no eran predecibles a priori, validando la necesidad de experimentación empírica versus adopción de modelos basada únicamente en popularidad o reputación.
 
 \subsection{Decisiones Arquitecturales y Tecnológicas}
 
@@ -136,11 +134,11 @@ Un sistema de matching bidireccional oferta-candidato basado en embeddings de ha
 
 \section{Reflexión Final}
 
-Este trabajo demuestra empíricamente la viabilidad y superioridad de los modelos de lenguaje grandes para extracción de habilidades técnicas en el contexto latinoamericano. La mejora de 16.2\% en F1-Score respecto a métodos tradicionales, combinada con la capacidad de detectar 59.5\% de habilidades emergentes ausentes en taxonomías oficiales, establece fundamentos cuantitativos sólidos para esta conclusión.
+Este trabajo demuestra empíricamente la viabilidad y superioridad de los LLMs para extracción de habilidades técnicas en el contexto latinoamericano. La mejora de 16.2\% en F1-Score respecto a métodos tradicionales, combinada con la capacidad de detectar habilidades emergentes ausentes en taxonomías oficiales, establece fundamentos cuantitativos sólidos para esta conclusión.
 
 Los resultados obtenidos sientan las bases para un observatorio laboral dinámico con aplicaciones prácticas inmediatas. Instituciones académicas pueden usar los datos de habilidades emergentes para actualizar currículos de formación en tecnología. Empresas pueden identificar tendencias de contratación y diseñar programas de capacitación interna basados en demanda real del mercado. Desarrolladores pueden orientar sus trayectorias profesionales hacia habilidades con alta demanda validada empíricamente.
 
-La democratización del acceso mediante código open-source y el uso de modelos locales de 4B parámetros ejecutables en hardware consumer es particularmente relevante para el contexto latinoamericano. Instituciones con recursos limitados pueden implementar soluciones similares sin depender de infraestructura costosa o APIs comerciales, contribuyendo al desarrollo tecnológico regional mediante herramientas accesibles.
+El acceso facilitado mediante código open-source y el uso de modelos locales de 4B parámetros ejecutables en hardware consumer es particularmente relevante para el contexto latinoamericano. Instituciones con recursos limitados pueden implementar soluciones similares sin depender de infraestructura costosa o APIs comerciales, contribuyendo al desarrollo tecnológico regional mediante herramientas accesibles.
 
 Desde la perspectiva de Ingeniería de Sistemas, el proyecto demuestra que la integración efectiva de tecnologías heterogéneas produce sistemas robustos para problemas reales. El observatorio combina web scraping distribuido, procesamiento de lenguaje natural, modelos de lenguaje grandes, bases de datos relacionales y clustering no supervisado en una arquitectura modular escalable. El sistema procesa actualmente 30,660 ofertas laborales de tres países, pero la arquitectura soporta escalamiento a millones de ofertas y decenas de países sin cambios fundamentales en el diseño.
 

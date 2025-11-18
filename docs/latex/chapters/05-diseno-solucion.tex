@@ -8,7 +8,7 @@ La construcción de un observatorio de demanda laboral automatizado requiere la 
 
 El Reconocimiento de Entidades Nombradas es una tarea fundamental de NLP que consiste en localizar y clasificar entidades en texto dentro de categorías predefinidas \cite{nadeau2007}. Los sistemas NER modernos se basan en modelos de aprendizaje supervisado, particularmente arquitecturas basadas en transformers \cite{devlin2019}. Para el dominio de habilidades técnicas, NER presenta ventajas teóricas significativas: alta precisión para entidades conocidas en datasets balanceados ($>$90\%), contextualización bidireccional para desambiguación, y eficiencia computacional con latencias de milisegundos por documento \cite{zhang2018}. Sin embargo, enfrenta limitaciones críticas: dependencia del vocabulario de entrenamiento, baja cobertura en dominios especializados, y la incapacidad de inferir habilidades implícitas no mencionadas explícitamente en el texto \cite{canete2020}.
 
-En este proyecto se adoptó un enfoque híbrido que combina el modelo base \texttt{es\_core\_news\_lg} de spaCy con un EntityRuler personalizado poblado con 666 patrones de habilidades técnicas de la taxonomía ESCO, permitiendo reconocimiento directo de terminología técnica no presente en el modelo pre-entrenado \cite{decorte2023}. Los resultados experimentales revelaron que NER en este contexto específico presentó desempeño mixto: si bien aporta cobertura adicional de skills contextuales (mejora de +6.91pp F1 Pre-ESCO), introduce ruido que degrada precisión Post-ESCO (-6.64pp versus configuración Regex-Only). A pesar de este trade-off, NER se mantuvo en Pipeline A dado que incrementa recall detectando menciones contextuales que patrones deterministas omiten, como se documenta en la sección de pruebas de modelos.
+En este proyecto se adoptó un enfoque híbrido que combina el modelo base \texttt{es\_core\_news\_lg} de spaCy con un EntityRuler personalizado poblado con 666 patrones de habilidades técnicas de la taxonomía ESCO, permitiendo reconocimiento directo de terminología técnica no presente en el modelo pre-entrenado \cite{fareri2021}. Los resultados experimentales revelaron que NER en este contexto específico presentó desempeño mixto: si bien aporta cobertura adicional de skills contextuales (mejora de +6.91pp F1 Pre-ESCO), introduce ruido que degrada precisión Post-ESCO (-6.64pp versus configuración Regex-Only). A pesar de este trade-off, NER se mantuvo en Pipeline A dado que incrementa recall detectando menciones contextuales que patrones deterministas omiten, como se documenta en la sección de pruebas de modelos.
 
 \subsection{Extracción basada en Expresiones Regulares}
 
@@ -18,7 +18,7 @@ Las expresiones regulares (regex) son patrones de búsqueda basados en lenguajes
 
 Los Large Language Models representaron un cambio de paradigma en NLP, basándose en arquitecturas transformer pre-entrenadas sobre corpus masivos mediante objetivos de modelado de lenguaje \cite{brown2020, touvron2023}. A diferencia de NER y regex, los LLMs poseen capacidades de razonamiento contextual que permiten: inferencia de habilidades implícitas (deducir que un ``Científico de Datos'' requiere estadística y Python aunque no se mencione), normalización semántica automática (identificar que ``React'', ``React.js'' y ``ReactJS'' son equivalentes), desambiguación contextual, adaptación al lenguaje informal y ``Spanglish'', y razonamiento explicable mediante prompt engineering \cite{zhang2022, wei2023, vilares2016}.
 
-Sin embargo, presentaron limitaciones significativas: latencia 15-25x mayor que Pipeline A (tiempo típico de procesamiento de 15-25s por documento vs. 1s), no-determinismo con temperatura $>$ 0, alucinaciones que generaron habilidades incorrectas, alto costo computacional (GPUs 4-6GB o APIs de pago), y sesgo lingüístico hacia el inglés con rendimiento degradado en español técnico \cite{elazar2023, ji2023, banon2020}.
+Sin embargo, presentaron limitaciones significativas: latencia 15-25x mayor que Pipeline A (tiempo típico de procesamiento de 15-25s por documento vs. 1s), no-determinismo con temperatura $>$ 0, alucinaciones que generaron habilidades incorrectas, alto costo computacional (GPU integrado o APIs de pago), y sesgo lingüístico hacia el inglés con rendimiento degradado en español técnico \cite{elazar2023, ji2023}.
 
 \subsection{Justificación del Enfoque Dual}
 
@@ -44,7 +44,7 @@ Inferencia implícita & No soportado & No soportado & Sí (capacidad arquitectó
 \hline
 Latencia & 0.97 s/job & $\sim$0.32 s/job & 18s (P50), 15-25s (P25-P75) \\
 \hline
-Costo computacional & Bajo (CPU) & Muy bajo (CPU) & Alto (GPU 4-6 GB) \\
+Costo computacional & Bajo (CPU) & Muy bajo (CPU) & Alto (GPU integrado) \\
 \hline
 Mantenimiento & Alto (filtros) & Alto (patrones) & Bajo (prompt eng.) \\
 \hline
@@ -61,26 +61,33 @@ Dado que ninguna técnica individual satisface todos los requisitos, se implemen
 
 Habiendo establecido que el Pipeline B requirió capacidades de LLMs para inferencia de habilidades implícitas y normalización semántica, el siguiente desafío consistió en seleccionar un modelo específico que balanceara rendimiento lingüístico con restricciones computacionales del proyecto.
 
-Se identificaron cuatro modelos LLM de código abierto como candidatos principales, evaluados según criterios de costo computacional, rendimiento en español latinoamericano, soporte multilingüe y capacidad de despliegue local sin dependencias de APIs comerciales.
+\textbf{Justificación de la Selección:}
+
+La selección de modelos LLM se fundamentó en cuatro criterios técnicos principales. Primero, se priorizaron modelos open-source dada la naturaleza académica del proyecto y la necesidad de reproducibilidad científica. Segundo, el estado del arte en extracción de habilidades con LLMs estableció a Llama 3 como referente base, con estudios demostrando efectividad de LLMs fine-tuned alcanzando F1-Score de 64.8\% sobre SkillSpan dataset \cite{herandi2024} y validaciones de Llama-3 8B para contextos multilingües europeos \cite{kavas2024}. Adicionalmente, se documentó que el prompting con LLMs requiere prompt engineering cuidadoso para tareas de extracción estructurada \cite{nguyen2024}. Tercero, el rango de parámetros 3-4B se determinó mediante restricción de hardware disponible: el procesamiento local con GPU integrado (MacBook Air M4 con 16 GB de memoria unificada y aceleración Metal) permite ejecutar modelos de hasta 4.3B parámetros con cuantización Q4\_K\_M (4 bits por peso), requiriendo aproximadamente 2.4-2.8 GB de memoria unificada según la fórmula:
+
+\begin{equation}
+\text{Memoria} \approx \frac{\text{Parámetros} \times 4 \text{ bits}}{8 \text{ bits/byte}} + \text{overhead KV-cache}
+\end{equation}
+
+donde el overhead del KV-cache representa típicamente 15-20\% adicional. Modelos de 7B+ parámetros excederían los 5 GB de memoria unificada con cuantización Q4, comprometiendo estabilidad del sistema durante inferencia. Cuarto, se consultaron rankings especializados (Hugging Face Open LLM Leaderboard filtrado por español, LMArena) para identificar candidatos con desempeño reportado en tareas de NLP multilingüe.
 
 \textbf{Candidatos Evaluados:}
 
-Gemma 3 4B es un modelo ligero desarrollado por Google basado en la arquitectura Gemini. Con 4 mil millones de parámetros, está optimizado para despliegue eficiente en hardware limitado. Sus ventajas incluyen: tamaño compacto que permite ejecución en CPU o GPUs de gama media (4-6 GB VRAM con cuantización Q4), licencia permisiva Gemma para uso académico y comercial, tokenización eficiente heredada de la familia Gemini, y soporte multilingüe con cobertura de español latinoamericano. Las limitaciones principales son: menor capacidad de razonamiento complejo comparado con modelos más grandes, vocabulario técnico potencialmente limitado debido al tamaño reducido, y documentación aún en desarrollo al ser un modelo relativamente nuevo.
+Se identificaron cuatro modelos LLM de código abierto como candidatos principales, evaluados según criterios de costo computacional, rendimiento en español latinoamericano, soporte multilingüe y capacidad de despliegue local sin dependencias de APIs comerciales. Dado que el Pipeline B fue utilizado únicamente para comparación experimental contra el gold standard, los modelos se ejecutaron localmente con GPU integrado (aceleración Metal en Apple Silicon) para validar su viabilidad técnica en contextos académicos con recursos limitados.
 
-Llama 3 3B (Meta AI) es la versión compacta de la familia LLaMA 3, entrenado sobre un corpus masivo multilingüe con enfoque en eficiencia. Con 3 mil millones de parámetros, representa el balance extremo entre rendimiento y recursos computacionales. Ventajas: requisitos mínimos de memoria (3-4 GB VRAM con cuantización Q4), arquitectura optimizada con Grouped-Query Attention para inferencia rápida, tokenización eficiente de la familia LLaMA 3, licencia LLaMA 3 Community License permisiva para proyectos académicos, y latencia reducida ideal para procesamiento batch. Limitaciones: capacidad de razonamiento más limitada que modelos grandes, posible degradación en tareas complejas de inferencia, y menor cobertura de vocabulario técnico especializado.
+Gemma 3 4B es un modelo ligero desarrollado por Google basado en la arquitectura Gemini, con 4 mil millones de parámetros optimizado para despliegue eficiente en hardware limitado. El modelo permite ejecución con GPU integrado mediante cuantización Q4 (tamaño compacto), cuenta con licencia permisiva Gemma para uso académico y comercial, ofrece tokenización eficiente heredada de la familia Gemini, y provee soporte multilingüe con cobertura de español latinoamericano. Sin embargo, presenta menor capacidad de razonamiento complejo comparado con modelos más grandes, vocabulario técnico potencialmente limitado debido al tamaño reducido, y documentación aún en desarrollo al ser un modelo relativamente nuevo.
 
-Qwen 2.5 3B (Alibaba Cloud) es parte de la familia Qwen (Qianwen) optimizada para multilingüismo con énfasis en idiomas asiáticos y europeos. Con 3 mil millones de parámetros, destaca por su arquitectura de atención eficiente. Ventajas: precisión superior en tareas de extracción estructurada, tokenización eficiente multilingüe, requisitos moderados de memoria (3-4 GB VRAM con Q4), y licencia Apache 2.0 permisiva. Limitaciones: conservadurismo excesivo con recall bajo en contextos ambiguos, menor cobertura de vocabulario técnico latinoamericano, y tendencia a omitir skills implícitas.
+Llama 3.2 3B es la versión compacta de la familia LLaMA 3 de Meta AI, entrenado sobre un corpus masivo multilingüe con enfoque en eficiencia y 3 mil millones de parámetros que representan el balance extremo entre rendimiento y recursos computacionales. El modelo requiere memoria mínima (3-4 GB con cuantización Q4), implementa arquitectura optimizada con Grouped-Query Attention para inferencia rápida, ofrece tokenización eficiente de la familia LLaMA 3, cuenta con licencia LLaMA 3 Community License permisiva para proyectos académicos, y proporciona latencia reducida ideal para procesamiento batch. No obstante, presenta capacidad de razonamiento más limitada que modelos grandes, posible degradación en tareas complejas de inferencia, y menor cobertura de vocabulario técnico especializado.
 
-La selección de estos cuatro modelos específicos se fundamentó en criterios técnicos y de disponibilidad de recursos. En primer lugar, se priorizaron modelos open-source dada la naturaleza académica del proyecto y la necesidad de reproducibilidad científica. En segundo lugar, se identificó a Llama 3 como referente base según los estudios del estado del arte analizados en el Capítulo 3, donde Herandi et al. (2024) demostraron la efectividad de LLMs fine-tuned para extracción de habilidades alcanzando F1-Score de 64.8\% sobre SkillSpan dataset \cite{herandi2024}, mientras que Kavas et al. (2024) validaron específicamente Llama-3 8B para contextos multilingües en Europa \cite{kavas2024}. Nguyen et al. (2024) documentaron que el prompting con LLMs, aunque flexible, requiere prompt engineering cuidadoso para tareas de extracción estructurada \cite{nguyen2024}. En tercer lugar, el rango de parámetros 3-4B se determinó mediante restricción de hardware disponible: un MacBook Air M4 base con 16 GB de memoria unificada permite ejecutar modelos de hasta 4.3B parámetros con cuantización Q4\_K\_M (4 bits por peso), requiriendo aproximadamente 2.4-2.8 GB de VRAM según la fórmula:
+Qwen 2.5 3B es parte de la familia Qwen (Qianwen) de Alibaba Cloud optimizada para multilingüismo con énfasis en idiomas asiáticos y europeos, con 3 mil millones de parámetros que destacan por su arquitectura de atención eficiente. El modelo ofrece precisión superior en tareas de extracción estructurada, tokenización eficiente multilingüe, requisitos moderados de memoria (3-4 GB con Q4), y licencia Apache 2.0 permisiva. Por otro lado, muestra conservadurismo excesivo con recall bajo en contextos ambiguos, menor cobertura de vocabulario técnico latinoamericano, y tendencia a omitir skills implícitas.
 
-\begin{equation}
-\text{VRAM} \approx \frac{\text{Parámetros} \times 4 \text{ bits}}{8 \text{ bits/byte}} + \text{overhead KV-cache}
-\end{equation}
+Phi-3.5 Mini de Microsoft Research es un modelo ultra-compacto de 3.8 mil millones de parámetros entrenado con datos sintéticos de alta calidad. El modelo implementa arquitectura extremadamente eficiente con baja latencia, demuestra capacidad de razonamiento avanzado para su tamaño, provee soporte multilingüe, y cuenta con licencia MIT. Sin embargo, presenta inconsistencias en generación de JSON estructurado causando pérdidas durante parsing, menor robustez en instrucciones complejas comparado con modelos más grandes, y vocabulario técnico limitado en español.
 
-donde el overhead del KV-cache representa típicamente 15-20\% adicional. Modelos de 7B+ parámetros excederían los 5 GB de VRAM con cuantización Q4, comprometiendo estabilidad del sistema operativo durante inferencia. Adicionalmente, se consultaron rankings especializados: Hugging Face Open LLM Leaderboard (filtrado por modelos con evaluaciones en español) y LMArena (comparativa de modelos open-source en español) para identificar candidatos con desempeño reportado en tareas de NLP multilingüe.
+\textbf{Evaluación Comparativa:}
 
+Se evaluaron los cuatro modelos candidatos (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini) mediante un experimento comparativo inicial sobre 10 ofertas laborales. La evaluación midió Precision, Recall, F1-score para habilidades explícitas e implícitas, latencia promedio, throughput y presencia de alucinaciones. Basándose en estos resultados preliminares, Gemma 3 4B fue seleccionado como ganador y posteriormente procesó el conjunto completo de 300 ofertas laborales del gold standard (cuyo protocolo de construcción se describe detalladamente en el capítulo de Desarrollo, sección Protocolo de Anotación Manual) para validación exhaustiva.
 
-Phi-3.5 Mini (Microsoft Research) es un modelo ultra-compacto de 3.8 mil millones de parámetros entrenado con datos sintéticos de alta calidad. Ventajas: arquitectura extremadamente eficiente con baja latencia, capacidad de razonamiento avanzado para su tamaño, soporte multilingüe, y licencia MIT. Limitaciones: inconsistencias en generación de JSON estructurado causando pérdidas durante parsing, menor robustez en instrucciones complejas comparado con modelos más grandes, y vocabulario técnico limitado en español.
+Los modelos fueron evaluados con prompt engineering específico para español latinoamericano, incluyendo instrucciones para manejar ``Spanglish'', ejemplos contextuales con ofertas reales, normalización con taxonomía ESCO, y solicitud de formato JSON estructurado. Los parámetros de inferencia utilizados fueron: temperatura 0.3 (balance entre determinismo y creatividad), max\_tokens 3072, y system prompt estandarizado.
 
 La Tabla \ref{tab:comparacion-llms} resume la comparación cuantitativa entre los cuatro modelos evaluados.
 
@@ -106,44 +113,34 @@ JSON válido & 99\% & 90\% & 95\% & 60\% \\
 \hline
 Latencia (GPU) & 18s (P50) & 15.24s & N/D & N/D \\
 \hline
-VRAM (Q4) & 4-6 GB & 3-4 GB & 3-4 GB & 3-4 GB \\
+Memoria (Q4) & 4-6 GB & 3-4 GB & 3-4 GB & 3-4 GB \\
 \hline
 Licencia & Gemma & LLaMA 3 CL & Apache 2.0 & MIT \\
 \hline
 \end{tabular}
 \end{table}
 
-\textit{Nota: Los cuatro modelos fueron evaluados comparativamente sobre el gold standard de 300 ofertas laborales anotadas manualmente (100 por país: CO, MX, AR). Gemma 3 4B procesó 299/300 ofertas completas (99.3\% cobertura; 2 jobs con mode collapse); Llama, Qwen y Phi procesaron 10 ofertas cada uno para comparación preliminar, siendo descartados por menor rendimiento y problemas técnicos. F1 Pre-ESCO mide rendimiento antes de normalización taxonómica. Alucinaciones (DS) indica skills de Data Science extraídas erróneamente. JSON válido mide porcentaje de respuestas con formato estructurado correcto.}
+\textit{Nota: Los cuatro modelos fueron evaluados comparativamente sobre 10 ofertas laborales para selección inicial. Gemma 3 4B demostró mejor rendimiento en la evaluación preliminar y fue seleccionado para procesar el conjunto completo de 300 ofertas del gold standard, logrando 299/300 ofertas procesadas exitosamente (99.3\% cobertura; 2 jobs con mode collapse). Llama, Qwen y Phi procesaron solo las 10 ofertas iniciales, siendo descartados por menor rendimiento y problemas técnicos. F1 Pre-ESCO mide rendimiento antes de normalización taxonómica. Alucinaciones (DS) indica skills de Data Science extraídas erróneamente. JSON válido mide porcentaje de respuestas con formato estructurado correcto.}
 
-\textbf{Resultados de la Evaluación Comparativa:}
+Los resultados experimentales determinaron la selección definitiva de Gemma 3 4B para el Pipeline B, fundamentado en cinco hallazgos principales: precisión superior en la evaluación de 10 ofertas preliminares, ausencia de alucinaciones sistemáticas detectadas en otros modelos, cobertura efectiva de habilidades implícitas validada en las 300 ofertas completas, captura de tecnologías emergentes no presentes en ESCO, y robustez operacional con tasa de éxito superior al 99\%. La validación manual confirmó que Gemma genera outputs limpios sin fabricar skills, mientras que alternativas como Llama 3.2 presentaron alucinaciones sistemáticas en ofertas técnicas (métricas cuantitativas detalladas en el capítulo de Resultados).
 
-Se evaluaron los cuatro modelos candidatos (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini) mediante un experimento comparativo inicial sobre 10 ofertas laborales del gold standard. La evaluación midió Precision, Recall, F1-score para habilidades explícitas e implícitas, latencia promedio, throughput y presencia de alucinaciones. Basándose en estos resultados preliminares, Gemma 3 4B fue seleccionado como ganador y posteriormente procesó el conjunto completo de 300 ofertas laborales anotadas manualmente (100 por país: CO, MX, AR) para validación exhaustiva.
-
-El gold standard se construyó con distribución balanceada por país y representación diversa de roles técnicos: Backend (33.33\%), QA (16.33\%), Frontend (14.00\%), DevOps (11.67\%), Data Science (9.00\%), y otros roles especializados (15.67\%). El protocolo de anotación contempló la revisión de cada oferta identificando tres aspectos principales: primero, habilidades técnicas explícitas (hard skills) mencionadas directamente en el texto, totalizando 6,174 anotaciones de 1,914 skills únicas; segundo, habilidades blandas (soft skills) inferibles del contexto del cargo, totalizando 1,674 anotaciones de 306 skills únicas; y tercero, mapeo manual a conceptos ESCO cuando aplicable. El gold standard resultante contiene 7,848 anotaciones totales con promedio de 26.16 skills por oferta (20.58 hard + 5.58 soft), distribución de seniority Senior (54\%), Mid (41\%), Junior (5\%), y cobertura idiomática de Español (83.33\%) e Inglés (16.67\%).
-
-Los modelos fueron evaluados con prompt engineering específico para español latinoamericano, incluyendo instrucciones para manejar ``Spanglish'', ejemplos contextuales con ofertas reales, normalización con taxonomía ESCO, y solicitud de formato JSON estructurado. Los parámetros de inferencia utilizados fueron: temperatura 0.3 (balance entre determinismo y creatividad), max\_tokens 3072, y system prompt estandarizado.
-
-Los resultados experimentales sobre las 300 ofertas determinaron la selección definitiva de Gemma 3 4B para el Pipeline B, fundamentado en cinco hallazgos principales: precisión superior, ausencia de alucinaciones sistemáticas detectadas en otros modelos, cobertura efectiva de habilidades implícitas, captura de tecnologías emergentes no presentes en ESCO, y robustez operacional con tasa de éxito superior al 99\%. La validación manual confirmó que Gemma genera outputs limpios sin fabricar skills, mientras que alternativas como Llama 3.2 presentaron alucinaciones sistemáticas en ofertas técnicas (métricas cuantitativas detalladas en el capítulo de Resultados).
-
-El trade-off de latencia fue considerado aceptable para procesamiento batch, donde mayor tiempo de inferencia se compensa con eliminación de alucinaciones y mayor calidad semántica. La arquitectura final despliega Gemma 3 4B con cuantización Q4 (4-6 GB VRAM), temperatura 0.3, y max\_tokens 3072, ejecutándose localmente sin dependencias de APIs comerciales y garantizando privacidad de datos laborales sensibles.
+El trade-off de latencia fue considerado aceptable para procesamiento batch, donde mayor tiempo de inferencia se compensa con eliminación de alucinaciones y mayor calidad semántica. La arquitectura final despliega Gemma 3 4B con cuantización Q4 (4-6 GB memoria unificada), temperatura 0.3, y max\_tokens 3072, ejecutándose localmente sin dependencias de APIs comerciales y garantizando privacidad de datos laborales sensibles.
 
 \subsection{Embeddings Semánticos y Búsqueda de Similitud}
 
-Habiendo establecido las técnicas de extracción de habilidades (NER, Regex, LLMs) y los modelos para procesamiento lingüístico (Gemma/Llama), el siguiente desafío arquitectónico consistió en normalizar las habilidades extraídas contra una taxonomía de referencia y agruparlas para descubrir patrones emergentes. Esta normalización es crítica para eliminar variantes sintácticas (``React'', ``React.js'', ``ReactJS''), mapear términos coloquiales a conceptos ESCO formales, y habilitar análisis comparativo entre países y portales.
+Habiendo establecido las técnicas de extracción de habilidades (NER, Regex, LLMs) y el modelo para procesamiento lingüístico (Gemma), el siguiente desafío arquitectónico consistió en normalizar las habilidades extraídas contra una taxonomía de referencia y agruparlas para descubrir patrones emergentes. Esta normalización es crítica para eliminar variantes sintácticas (``React'', ``React.js'', ``ReactJS''), mapear términos coloquiales a conceptos ESCO formales, y habilitar análisis comparativo entre países y portales.
 
-En el observatorio, los embeddings semánticos cumplieron dos roles principales: primero, la normalización de habilidades extraídas contra taxonomía ESCO mediante búsqueda de similitud coseno; y segundo, el agrupamiento de habilidades para descubrir perfiles emergentes. El modelo \texttt{intfloat/\allowbreak multilingual-e5-base} fue seleccionado por su soporte multilingüe nativo (768D, 100 idiomas, entrenado con contrastive learning) \cite{wang2024}, normalización L2 integrada, tamaño compacto (278M parámetros ejecutables en CPU $<$100ms/batch), y licencia MIT.
+En el observatorio, los embeddings semánticos se utilizan para el agrupamiento de habilidades y descubrimiento de perfiles emergentes mediante clustering. El modelo \texttt{intfloat/\allowbreak multilingual-e5-base} fue seleccionado por su soporte multilingüe nativo (768D, 100 idiomas, entrenado con contrastive learning) \cite{wang2024}, normalización L2 integrada, tamaño compacto (278M parámetros ejecutables en CPU $<$100ms/batch), y licencia MIT.
 
-\textbf{Limitaciones Empíricas y Decisión Arquitectónica:}
+\textbf{Intento de Uso para Matching ESCO:}
 
-La evaluación experimental con 15 habilidades técnicas agregadas manualmente a ESCO reveló limitaciones críticas del modelo E5. Con threshold de similitud coseno = 0.75, se obtuvo tasa de matches correctos de 6.7\% (1/15) y falsos positivos de 93.3\% (14/15). Ejemplos de mapeos incorrectos: ``React'' se relacionó con ``neoplasia'' (0.828), ``Docker'' con ``Facebook'' (0.825), y ``Machine Learning'' con ``gas natural'' (0.825). El análisis de causa raíz identificó tres factores: entrenamiento en lenguaje natural vs. vocabulario técnico, confusión entre brand names y palabras comunes, y contaminación del espacio vectorial por 13,939 habilidades ESCO de dominios no técnicos.
+Inicialmente se intentó utilizar embeddings semánticos para normalización de habilidades extraídas contra taxonomía ESCO mediante búsqueda de similitud coseno (Layer 3 del matcher). Sin embargo, la evaluación experimental con 15 habilidades técnicas agregadas manualmente a ESCO reveló limitaciones críticas del modelo E5 para vocabulario técnico especializado. Con threshold de similitud coseno = 0.75, se obtuvo tasa de matches correctos de 6.7\% (1/15) y falsos positivos de 93.3\% (14/15). Ejemplos de mapeos incorrectos: ``React'' se relacionó con ``neoplasia'' (0.828), ``Docker'' con ``Facebook'' (0.825), y ``Machine Learning'' con ``gas natural'' (0.825). El análisis de causa raíz identificó tres factores: entrenamiento en lenguaje natural vs. vocabulario técnico, confusión entre brand names y palabras comunes, y contaminación del espacio vectorial por 13,939 habilidades ESCO de dominios no técnicos.
 
-La evaluación de thresholds demostró que no existe un valor que balancee precision y recall: thresholds bajos ($<$0.80) generan falsos positivos críticos, mientras que thresholds altos ($\geq$0.85) excluyen matches exactos. Con base en esta evidencia, se tomó la decisión de deshabilitar la capa de búsqueda semántica (Layer 3), operando el sistema con estrategia de dos capas: Layer 1 (Exact Match) mediante búsqueda SQL con confidence = 1.00, y Layer 2 (Fuzzy Match) con threshold = 0.85 para capturar variantes ortográficas.
-
-Para búsqueda de similitud en clustering, se adoptó FAISS (Facebook AI Similarity Search) con índice IndexFlatIP (exact search con inner product). FAISS demostró performance superior: 30,147 queries/segundo, latencia 0.033ms por query, speedup 25x sobre PostgreSQL pgvector, superando ampliamente el objetivo de diseño (100 q/s) por un margen de 301x \cite{johnson2019}.
+La evaluación de thresholds demostró que no existe un valor que balancee precision y recall: thresholds bajos ($<$0.80) generan falsos positivos críticos, mientras que thresholds altos ($\geq$0.92) excluyen matches exactos. Con base en esta evidencia, se tomó la decisión de deshabilitar la capa de búsqueda semántica (Layer 3), operando el sistema de matching ESCO con estrategia de dos capas: Layer 1 (Exact Match) mediante búsqueda SQL con confidence = 1.00, y Layer 2 (Fuzzy Match) con threshold = 0.92 para capturar variantes ortográficas. Los embeddings E5 se mantienen únicamente para clustering de habilidades, donde han demostrado efectividad en capturar relaciones semánticas para agrupamiento no supervisado.
 
 \subsection{Técnicas de Clustering No Supervisado}
 
-Una vez que las habilidades fueron extraídas, normalizadas y representadas como embeddings vectoriales de 768 dimensiones, el objetivo final del observatorio consistió en descubrir patrones y perfiles laborales emergentes sin categorías predefinidas. El sistema integró dos algoritmos complementarios para proyección dimensional y agrupamiento basado en densidad.
+Una vez que las habilidades fueron extraídas, normalizadas y representadas como embeddings vectoriales de 768 dimensiones, el objetivo final del observatorio consistió en descubrir patrones y perfiles laborales emergentes sin categorías predefinidas. El sistema integró dos algoritmos complementarios para proyección dimensional y agrupamiento basado en densidad, cuya efectividad para segmentación de ofertas laborales ha sido validada en estudios previos mediante combinación de técnicas de NLP y clustering \cite{lukauskas2023}.
 
 \textbf{Configuración de UMAP:}
 
@@ -155,19 +152,19 @@ Se seleccionó HDBSCAN sobre K-Means dado que el número de perfiles emergentes 
 
 \subsection{Taxonomías de Habilidades Laborales}
 
-Si bien las técnicas de extracción, embeddings y clustering constituyeron el núcleo analítico del observatorio, todas estas operaciones dependieron de un componente fundamental: una taxonomía de referencia que permitiera normalizar las habilidades extraídas del texto crudo y mapearlas a conceptos estandarizados. Sin esta normalización, habilidades equivalentes como ``React'', ``React.js'' y ``ReactJS'' hubieran sido tratadas como entidades distintas, fragmentando el análisis y degradando la calidad del clustering. La selección de la taxonomía apropiada requirió balancear cobertura, actualización, soporte multilingüe y accesibilidad. Se evaluaron tres alternativas principales.
+Si bien las técnicas de extracción, embeddings y clustering constituyeron el núcleo analítico del observatorio, todas estas operaciones dependieron de un componente fundamental: una taxonomía de referencia que permitiera normalizar las habilidades extraídas del texto crudo y mapearlas a conceptos estandarizados. Sin esta normalización, habilidades equivalentes como ``React'', ``React.js'' y ``ReactJS'' hubieran sido tratadas como entidades distintas, fragmentando el análisis y degradando la calidad del clustering. La selección de la taxonomía apropiada requirió balancear cobertura, actualización, soporte multilingüe y accesibilidad.
 
-\textbf{Alternativas Consideradas:}
+Se evaluaron tres alternativas principales para la normalización de habilidades. La primera, O*NET (Occupational Information Network), es la taxonomía del Departamento de Trabajo de Estados Unidos que contiene más de 1,000 ocupaciones y 20,000 habilidades organizadas jerárquicamente con actualización periódica y datos salariales asociados. Esta taxonomía ha sido ampliamente utilizada en investigación de mercado laboral y extracción de habilidades \cite{zhang2022}. Sin embargo, presenta limitaciones significativas para el contexto latinoamericano: enfoque centrado en el mercado estadounidense, escasa cobertura de tecnologías emergentes populares en la región, y ausencia de soporte multilingüe nativo que requeriría traducción automática con riesgo de pérdida semántica.
 
-O*NET (Occupational Information Network) es la taxonomía del Departamento de Trabajo de EE.UU. con 1,000+ ocupaciones y 20,000+ habilidades. Ventajas: altamente estructurada con relaciones jerárquicas, actualización periódica, y datos salariales asociados. Limitaciones: enfoque en mercado estadounidense, escasa cobertura de tecnologías emergentes, y ausencia de soporte multilingüe nativo. A pesar de sus limitaciones, se extrajeron 152 habilidades técnicas modernas (Hot Technologies) de O*NET para complementar ESCO, especialmente en áreas de tecnologías emergentes donde ESCO v1.1.0 presenta gaps de cobertura.
+La segunda alternativa, ESCO (European Skills, Competences, Qualifications and Occupations), es la taxonomía oficial de la Unión Europea que provee más de 13,000 habilidades, 3,000 ocupaciones, y soporte para 27 idiomas incluyendo español e inglés. ESCO ha sido adoptada extensivamente en sistemas de extracción de habilidades mediante LLMs y grafos de conocimiento \cite{kavargyris2025, kavas2025}, demostrando efectividad para matching de vacantes en contextos multilingües. La taxonomía ofrece etiquetas nativas en español que eliminan necesidad de traducción, cobertura amplia de habilidades tecnológicas organizadas mediante estructura ontológica con URIs únicos, y respaldo institucional de la Comisión Europea que garantiza mantenimiento a largo plazo. La versión v1.1.0 utilizada en este proyecto, publicada en 2021-2022, contiene 13,939 conceptos de habilidades con relaciones semánticas que facilitan navegación y expansión taxonómica. No obstante, ESCO presenta actualización menos frecuente que el ritmo del mercado tecnológico, resultando en menor cobertura de frameworks JavaScript modernos y librerías emergentes que aparecen constantemente en ofertas latinoamericanas.
 
-ESCO (European Skills, Competences, Qualifications and Occupations) es la taxonomía oficial de la Unión Europea con 13,000+ habilidades, 3,000+ ocupaciones, y soporte para 27 idiomas \cite{kavargyris2025}. Ventajas: etiquetas nativas en español e inglés, cobertura amplia de habilidades tecnológicas, estructura ontológica con URIs únicos, y respaldo institucional de la Comisión Europea garantizando mantenimiento. Limitaciones: actualización menos frecuente que el mercado tecnológico (v1.1.0 data de 2016-2017), y menor cobertura de frameworks JavaScript modernos.
+La tercera categoría evaluada corresponde a taxonomías propietarias como LinkedIn Skills y Burning Glass Technologies, que se actualizan con mayor frecuencia capturando tecnologías emergentes casi en tiempo real. Sin embargo, estas alternativas presentan limitaciones críticas para investigación académica: acceso restringido mediante APIs de pago con costos prohibitivos para proyectos sin financiamiento, licencias restrictivas que impiden publicación de resultados derivados, y falta de transparencia metodológica sobre criterios de inclusión y relaciones entre conceptos.
 
-Taxonomías propietarias (LinkedIn Skills, Burning Glass Technologies): Ventajas: actualizadas con mayor frecuencia, cobertura de tecnologías emergentes. Limitaciones críticas: acceso mediante API de pago, licencias restrictivas, y falta de transparencia metodológica.
+Tras evaluar estas alternativas, se seleccionó ESCO v1.1.0 como base taxonómica fundamentado en cuatro razones principales que priorizan reproducibilidad y accesibilidad. Primero, el soporte multilingüe nativo en español e inglés eliminó la necesidad de traducción automática que hubiera introducido errores y ambigüedad semántica en vocabulario técnico especializado. Segundo, la licencia Creative Commons BY 4.0 permitió uso académico y potencial comercial futuro sin restricciones legales ni costos de licenciamiento. Tercero, la estructura ontológica con URIs persistentes (formato \texttt{http://data.europa.eu/esco/skill/...}) facilitó la integración con sistemas de recomendación, LLMs mediante prompt engineering, y exportación de resultados en formatos estandarizados como RDF y JSON-LD. Cuarto, la cobertura de 13,939 habilidades resultó suficiente para establecer baseline de matching, permitiendo identificar gaps sistemáticos que guiaron la estrategia de extensión taxonómica.
 
-\textbf{Decisión Final:}
+Para mitigar las limitaciones de cobertura de ESCO, se implementó una estrategia de extensión dual basada en análisis de gaps del corpus latinoamericano. La taxonomía ESCO base fue extendida con 152 habilidades técnicas modernas extraídas de la sección Hot Technologies de O*NET, priorizando tecnologías emergentes con alta frecuencia en el corpus pero ausentes en ESCO v1.1.0 como frameworks JavaScript modernos (Next.js, Nuxt.js), plataformas cloud nativas (Kubernetes, Terraform), y herramientas DevOps (GitHub Actions, ArgoCD). Adicionalmente, se agregaron 124 habilidades identificadas manualmente mediante análisis exploratorio del gold standard de 300 ofertas anotadas. Estas habilidades corresponden a términos técnicos latinoamericanos no presentes en O*NET ni ESCO (por ejemplo, variantes regionales de nombres de tecnologías, acrónimos locales, y tecnologías adoptadas específicamente en mercados hispanohablantes), además de skills emergentes publicadas entre 2022-2025 posteriores a la fecha de corte de ESCO v1.1.0. El proceso de selección de estas 124 habilidades se basó en tres criterios: presencia en al menos 5 ofertas del corpus (threshold de relevancia), ausencia de match exacto o fuzzy contra ESCO extendido con O*NET (confirmación de gap taxonómico), y validación manual de legitimidad técnica para evitar incluir errores ortográficos o menciones espurias.
 
-Se seleccionó ESCO v1.1.0 como base taxonómica fundamentado en cuatro razones principales. En primer lugar, el soporte multilingüe nativo (español/inglés) eliminó la necesidad de traducción automática. En segundo lugar, la licencia Creative Commons BY 4.0 permitió uso académico y comercial sin restricciones. En tercer lugar, la estructura ontológica con URIs persistentes facilitó la integración con LLMs y sistemas de recomendación. En cuarto lugar, la cobertura de 13,939 habilidades resultó suficiente para establecer baseline. La taxonomía ESCO fue extendida con 152 habilidades técnicas de O*NET (Hot Technologies) y 124 habilidades agregadas manualmente identificadas en el análisis exploratorio, totalizando 14,215 skills. La taxonomía extendida se almacenó en PostgreSQL (tabla \texttt{esco\_skills}) con índices en \texttt{preferred\_label\_es}, \texttt{preferred\_label\_en} y \texttt{alt\_labels}, permitiendo búsquedas eficientes durante el matching.
+La taxonomía extendida final, totalizando 14,215 skills (13,939 ESCO + 152 O*NET + 124 manuales), se almacenó en PostgreSQL (tabla \texttt{esco\_skills}) con esquema normalizado que preserva URIs originales, etiquetas preferidas en español e inglés, etiquetas alternativas, y metadatos de proveniencia. Se crearon índices B-tree en \texttt{preferred\_label\_es}, \texttt{preferred\_label\_en} y GIN index en \texttt{alt\_labels} para permitir búsquedas eficientes durante matching (latencia $<$5ms para exact match, $<$50ms para fuzzy matching sobre 14K términos).
 
 Habiendo establecido las bases teóricas de las técnicas de extracción (NER, Regex, LLMs), modelos de lenguaje (Gemma, Llama), embeddings semánticos (E5 Multilingual), algoritmos de clustering (UMAP, HDBSCAN) y taxonomías de referencia (ESCO), la siguiente sección presentó la validación empírica de estas tecnologías sobre datos reales del mercado laboral latinoamericano. Las pruebas ejecutadas determinaron qué combinación de técnicas optimizó el balance entre precisión y cobertura para el contexto específico del español técnico, proporcionando evidencia cuantitativa que fundamentó las decisiones arquitectónicas del sistema.
 
@@ -177,7 +174,7 @@ Los fundamentos teóricos presentados en la sección anterior establecieron las 
 
 \subsection{Conjunto de Datos}
 
-El dataset del observatorio se compone de ofertas laborales tecnológicas recolectadas mediante web scraping de 8 portales principales en los países de Colmbia México y Argentina. El corpus final contiene 30,660 ofertas laborales únicas distribuidas como: México 17,835 (58.16\%), Colombia 9,479 (30.91\%), y Argentina 3,346 (10.93\%). Las ofertas abarcan el período de octubre 2018 a octubre 2025 (7 años de datos históricos), con 71.23\% de cobertura temporal (21,839 jobs con posted\_date válido). El trimestre más reciente (Q4 2025) representa 69\% del dataset total, reflejando la naturaleza dinámica del mercado laboral tecnológico.
+El dataset del observatorio se compone de ofertas laborales tecnológicas recolectadas mediante web scraping de 7 portales principales en los países de Colombia, México y Argentina. El corpus final contiene 30,660 ofertas laborales únicas distribuidas como: México 17,835 (58.16\%), Colombia 9,479 (30.91\%), y Argentina 3,346 (10.93\%). Las ofertas abarcan el período de octubre 2018 a octubre 2025 (7 años de datos históricos), con 71.23\% de cobertura temporal (21,839 jobs con posted\_date válido). La mayoría de las ofertas (69\%, equivalente a 21,155 ofertas) corresponden al trimestre más reciente (Q4 2025), reflejando la naturaleza dinámica del mercado laboral tecnológico y la concentración del esfuerzo de recolección en datos actuales.
 
 Cada oferta contiene los siguientes campos estructurados: \texttt{job\_id} (UUID único), \texttt{portal} (origen de la oferta), \texttt{country} (CO/MX/AR), \texttt{title} (título del cargo), \texttt{company} (empresa), \texttt{description} (descripción detallada del cargo), \texttt{requirements} (requisitos y habilidades), \texttt{salary\_raw} (rango salarial cuando disponible), \texttt{contract\_type} (tipo de contrato), \texttt{remote\_type} (modalidad presencial/remota/híbrida), \texttt{posted\_date} (fecha de publicación), y \texttt{content\_hash} (hash SHA-256 para deduplicación).
 
@@ -195,27 +192,104 @@ Las ofertas extraídas presentaron variabilidad significativa en formato y calid
 
 \subsection{Validación de Técnicas de Extracción (Pipeline A)}
 
-Se evaluó el rendimiento de los dos métodos del Pipeline A (Regex y NER) sobre el gold standard completo de 300 ofertas laborales manualmente anotadas (100 por país: Colombia, México, Argentina).
+Se evaluó el rendimiento de los dos métodos del Pipeline A (Regex y NER) sobre el gold standard completo de 300 ofertas laborales manualmente anotadas. La Tabla \ref{tab:validacion-pipeline-a} presenta la comparación cuantitativa de ambas configuraciones en escenarios Pre-ESCO y Post-ESCO.
 
-\textbf{Resultados de Extracción con Expresiones Regulares:}
+\begin{table}[H]
+\centering
+\caption{Validación de Técnicas de Extracción del Pipeline A (300 ofertas)}
+\label{tab:validacion-pipeline-a}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Configuración} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Skills/Job} \\
+\hline
+\multicolumn{5}{|c|}{\textit{Evaluación Pre-ESCO (sin normalización taxonómica)}} \\
+\hline
+Regex Only & 33.92\% & 12.31\% & 18.07\% & 22.8 \\
+NER+Regex & 22.54\% & 28.00\% & 24.98\% & 50.3 \\
+\hline
+\multicolumn{5}{|c|}{\textit{Evaluación Post-ESCO (con normalización ESCO)}} \\
+\hline
+Regex Only & \textbf{86.36\%} & 73.08\% & 79.17\% & --- \\
+NER+Regex & 65.50\% & \textbf{81.25\%} & 72.53\% & --- \\
+\hline
+\end{tabular}
+\end{table}
 
-El módulo regex implementó 548 patrones organizados en 18 categorías técnicas para tecnologías con nomenclatura estructurada. Resultados sobre el gold standard de 300 ofertas: F1-Score solo regex Pre-ESCO 18.07\%, F1-Score Post-ESCO 79.17\%, precision 86.36\% (post-ESCO), recall 73.08\%, latencia $\sim$0.32 s/job (320 ms). Las skills detectadas correctamente incluyeron Python, React, AWS, Docker, PostgreSQL, Kubernetes, Git, JavaScript, SQL, FastAPI. Los falsos positivos pre-ESCO correspondieron a acrónimos ambiguos (``ML'' en contextos no técnicos) y nombres de empresas similares a tecnologías (``Oracle'' empresa vs. ``Oracle Database''), pero fueron efectivamente filtrados mediante matching con ESCO. Conclusión: regex demostró alta precision post-normalización (86.36\%) validando su uso como método base, con velocidad submilisegundos permitiendo procesamiento masivo.
-
-\textbf{Resultados de Extracción con NER y spaCy:}
-
-El módulo NER utilizó \texttt{es\_core\_news\_lg} con EntityRuler poblado con 666 patrones ESCO y múltiples filtros post-extracción (200+ stopwords NER, 60+ technical generic stopwords). Resultados sobre gold standard: Pipeline A (NER+Regex) alcanzó F1-Score Pre-ESCO 24.98\% y F1-Score Post-ESCO 72.53\%, con recall de 64.43\% y precision post-filtrado de 9.3\% (pre-ESCO), latencia 50-80ms. El análisis reveló que NER aportó +6.91pp de mejora Pre-ESCO respecto a regex solo, pero generó -6.64pp de degradación Post-ESCO debido a extracción de variantes textuales que no mapearon a ESCO. Dado que ESCO no cubre exhaustivamente el vocabulario técnico latinoamericano emergente, se priorizó optimizar el F1-Score Pre-ESCO (captura de habilidades reales mencionadas) sobre el Post-ESCO (normalización a taxonomía), por lo que NER se mantuvo activo en la arquitectura final para maximizar cobertura de detección.
-
-\textbf{Estrategia Combinada y Matching con ESCO:}
-
-La arquitectura final combinó ambos métodos con deduplicación posterior, logrando signal-to-noise ratio de 0.98 después de matching con ESCO. El matching contra taxonomía ESCO extendida (14,215 skills totales: 13,939 ESCO v1.1.0 + 152 O*NET + 124 agregadas manualmente) se ejecuta en dos capas: Layer 1 (exact match) mediante SQL \texttt{ILIKE} en \texttt{preferred\_label\_es/en} con confidence 1.00, y Layer 2 (fuzzy match) con \texttt{fuzzywuzzy} ratio $\geq$ 0.85 para variantes ortográficas con confidence = ratio/100.
+Los resultados experimentales demostraron que el módulo regex alcanzó alta precisión post-normalización (86.36\%) con velocidad submilisegundos, mientras que la adición de NER mejoró recall (+6.91pp Pre-ESCO) al costo de introducir ruido que degradó precision Post-ESCO. La decisión de mantener NER activo se fundamentó en priorizar cobertura de habilidades emergentes sobre precisión en normalización taxonómica, dado que ESCO v1.1.0 no cubre exhaustivamente vocabulario técnico latinoamericano actual. La arquitectura final combinó ambos métodos con deduplicación posterior, implementando matching contra taxonomía ESCO extendida (14,215 skills) mediante dos capas: Layer 1 (exact match) con confidence 1.00, y Layer 2 (fuzzy match con threshold $\geq$ 0.92) para variantes ortográficas. El análisis comparativo detallado, incluyendo análisis de trade-offs y justificación de la configuración seleccionada, se presenta en el Capítulo de Resultados.
 
 \subsection{Evaluación del Sistema Completo con Gold Standard}
 
-Se ejecutó un test end-to-end procesando 300 ofertas laborales del gold standard (100 por país: Colombia, México, Argentina) con el pipeline completo utilizando el matcher ESCO implementado de dos capas (exact + fuzzy). Resultados globales: jobs procesados exitosamente 300/300 (100\%), total skills extraídas 8,268 (27.6 skills/job promedio), skills matched con ESCO 1,038 (12.6\% match rate), emergent skills sin match 7,230 (87.4\%), latencia promedio 1.82 segundos/job. Posteriormente se desarrolló un matcher experimental mejorado con mapeos manuales curados que incrementó el match rate a aproximadamente 25\%, permitiendo identificar y cuantificar con mayor precisión las habilidades emergentes ausentes en ESCO v1.1.0. Sin embargo, esta versión experimental no fue integrada al pipeline productivo para evitar introducir sesgos en la comparación entre Pipeline A y Pipeline B, manteniendo condiciones de evaluación equitativas donde ambos pipelines utilizan el mismo matcher sin bias.
+Se ejecutó un test end-to-end procesando 300 ofertas laborales del gold standard (100 por país: Colombia, México, Argentina) con el pipeline completo utilizando el matcher ESCO implementado de dos capas (exact + fuzzy). La Tabla \ref{tab:eval-sistema-completo} resume los resultados globales de la evaluación.
 
-La distribución de matching por capa fue: Layer 1 (exact match) 149 skills (43.1\% del matched, confidence 1.00), Layer 2 (fuzzy match) 197 skills (56.9\% del matched, confidence 0.85-0.99). El análisis por país reveló variación: Colombia 15.3\% match rate (mayor proporción de stacks enterprise tradicionales: Java, .NET, Oracle, SAP), México 11.3\% (mayor adopción de frameworks modernos), Argentina 12.5\% (balance intermedio).
+\begin{table}[H]
+\centering
+\caption{Resultados de Evaluación End-to-End del Sistema (300 ofertas)}
+\label{tab:eval-sistema-completo}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Métrica} & \textbf{Valor} \\
+\hline
+Jobs procesados exitosamente & 300/300 (100\%) \\
+Total skills extraídas & 8,268 \\
+Skills promedio por job & 27.6 \\
+Skills matched con ESCO & 1,038 (12.6\%) \\
+Emergent skills sin match & 7,230 (87.4\%) \\
+Latencia promedio & 1.82 s/job \\
+\hline
+\multicolumn{2}{|c|}{\textit{Distribución por Capa de Matching}} \\
+\hline
+Layer 1 (exact match, conf=1.00) & 149 skills (43.1\%) \\
+Layer 2 (fuzzy match, conf=0.92-1.00) & 197 skills (56.9\%) \\
+\hline
+\end{tabular}
+\end{table}
 
-Las top 10 skills matched con ESCO fueron: Python (14 menciones), Agile (13), SQL (10), JavaScript (10), Git (8), FastAPI (8), AWS Lambda (8), Kubernetes (6), Go (6), GitLab CI/CD (6). Las top 10 emergent skills (sin match ESCO, verificadas manualmente) fueron: Data Science (67), HTML5 (35), CSS3 (21), Matplotlib (15), Dashboards (13), Data Modeling (9), Data Analysis (9), Flux (8), Relay (8), SOAP (8). Interpretación: las emergent skills confirman predominancia de conceptos amplios de análisis de datos (Data Science, Dashboards, Data Analysis) y versiones específicas de tecnologías (HTML5, CSS3) que ESCO v1.1.0 no distingue granularmente. Adicionalmente, se identificaron skills post-2022 de IA generativa (ChatGPT, LLM, Generative AI, Fine-tuning de LLMs) con frecuencias bajas pero alta relevancia estratégica.
+Posteriormente se desarrolló un matcher experimental mejorado con mapeos manuales curados que incrementó el match rate a aproximadamente 25\%, permitiendo identificar y cuantificar con mayor precisión las habilidades emergentes ausentes en ESCO v1.1.0. Sin embargo, esta versión experimental no fue integrada al pipeline productivo para evitar introducir sesgos en la comparación entre Pipeline A y Pipeline B, manteniendo condiciones de evaluación equitativas donde ambos pipelines utilizan el mismo matcher sin bias.
+
+El análisis por país reveló variación significativa en el match rate, presentado en la Tabla \ref{tab:match-rate-pais}.
+
+\begin{table}[H]
+\centering
+\caption{Match Rate ESCO por País (Gold Standard)}
+\label{tab:match-rate-pais}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{País} & \textbf{Match Rate} & \textbf{Característica Tecnológica} \\
+\hline
+Colombia & 15.3\% & Stacks enterprise tradicionales (Java, .NET, Oracle, SAP) \\
+Argentina & 12.5\% & Balance intermedio \\
+México & 11.3\% & Mayor adopción de frameworks modernos \\
+\hline
+\end{tabular}
+\end{table}
+
+La Tabla \ref{tab:top-skills-matched-emergent} presenta las habilidades más frecuentes en ambas categorías.
+
+\begin{table}[H]
+\centering
+\caption{Top 10 Skills Matched y Emergent (Gold Standard)}
+\label{tab:top-skills-matched-emergent}
+\begin{tabular}{|l|r|l|r|}
+\hline
+\multicolumn{2}{|c|}{\textbf{Skills Matched con ESCO}} & \multicolumn{2}{c|}{\textbf{Emergent Skills (sin match)}} \\
+\hline
+\textbf{Skill} & \textbf{Menciones} & \textbf{Skill} & \textbf{Menciones} \\
+\hline
+Python & 14 & Data Science & 67 \\
+Agile & 13 & HTML5 & 35 \\
+SQL & 10 & CSS3 & 21 \\
+JavaScript & 10 & Matplotlib & 15 \\
+Git & 8 & Dashboards & 13 \\
+FastAPI & 8 & Data Modeling & 9 \\
+AWS Lambda & 8 & Data Analysis & 9 \\
+Kubernetes & 6 & Flux & 8 \\
+Go & 6 & Relay & 8 \\
+GitLab CI/CD & 6 & SOAP & 8 \\
+\hline
+\end{tabular}
+\end{table}
+
+Las emergent skills confirman predominancia de conceptos amplios de análisis de datos (Data Science, Dashboards, Data Analysis) y versiones específicas de tecnologías (HTML5, CSS3) que ESCO v1.1.0 no distingue granularmente. Adicionalmente, se identificaron skills post-2022 de IA generativa (ChatGPT, LLM, Generative AI, Fine-tuning de LLMs) con frecuencias bajas pero alta relevancia estratégica.
 
 El match rate de 12.6\% fue obtenido con el matcher baseline de dos capas (exact + fuzzy 0.92) operando sobre la taxonomía ESCO extendida de 14,215 skills (13,939 ESCO v1.1.0 + 152 O*NET + 124 agregadas manualmente). Este porcentaje es bajo pero esperado considerando dos factores principales. Primero, el corpus contiene alta frecuencia de conceptos amplios (Data Science, Data Analysis) y versiones específicas (HTML5, CSS3) que ESCO trata genéricamente sin distinguir granularidad. Segundo, el mercado laboral latinoamericano presenta alta demanda de tecnologías post-2022 (ChatGPT, Generative AI, LLM) ausentes en taxonomías europeas. Iteraciones posteriores con matcher enhanced de 4 capas incrementaron el coverage a $\sim$25\%, validando que las habilidades no matched (87.4\% baseline, 74.7\% enhanced) corresponden genuinamente a emergent skills y representan señal valiosa de innovación del mercado para análisis exploratorio posterior.
 
@@ -225,7 +299,7 @@ Para maximizar el valor analítico de las emergent skills, se propone un proceso
 
 \section{Arquitectura}
 
-Las pruebas experimentales presentadas en la sección anterior proporcionaron evidencia empírica crítica que determinó las decisiones arquitectónicas del sistema. Los resultados demostraron que el enfoque dual NER+Regex alcanza precision de 78-95\% con latencias submilisegundos, que el matching con ESCO requiere expansión manual debido al bajo match rate inicial (12.6\%), y que los embeddings E5 presentan limitaciones para búsqueda semántica en vocabulario técnico especializado. Adicionalmente, las características del dominio  procesamiento batch de ofertas laborales sin requisitos de tiempo real, corpus objetivo de 600,000 ofertas, y recursos limitados propios de un proyecto académico restringieron las opciones arquitectónicas viables.
+Las pruebas experimentales presentadas en la sección anterior proporcionaron evidencia empírica crítica que determinó las decisiones arquitectónicas del sistema. Los resultados demostraron que el enfoque dual NER+Regex alcanza precision de 78-95\% con latencias submilisegundos, que el matching con ESCO requiere expansión manual debido al bajo match rate inicial (12.6\%), y que los embeddings E5 presentan limitaciones para búsqueda semántica en vocabulario técnico especializado. Adicionalmente, las características del dominio  procesamiento batch de ofertas laborales sin requisitos de tiempo real, corpus de más de 30,000 ofertas, y recursos limitados propios de un proyecto académico restringieron las opciones arquitectónicas viables.
 
 El sistema se diseñó como un observatorio automatizado end-to-end que integra siete etapas especializadas de procesamiento, desde la adquisición de ofertas laborales hasta la generación de visualizaciones analíticas. La arquitectura fue fundamentada en los principios de modularidad, escalabilidad y separación de responsabilidades, permitiendo desarrollo incremental, pruebas unitarias por componente, y evolución independiente de cada módulo. Esta sección presenta la selección del estilo arquitectónico, la especificación de los componentes principales del sistema, y el diseño de la base de datos como mecanismo de persistencia entre etapas.
 
@@ -301,11 +375,11 @@ El pipeline lineal fue descartado por impedir paralelismo y limitar throughput. 
 
 La vista física describe el mapeo de componentes lógicos sobre infraestructura física, especificando hardware, contenedores Docker, configuración de red, y estrategia de despliegue. Esta sección detalla la topología de deployment que materializa la arquitectura lógica presentada anteriormente.
 
-\subsubsection{Especificaciones del Servidor}
+\subsubsection{Especificaciones del Entorno de Desarrollo}
 
-El sistema se despliega en un servidor único que ejecuta todos los servicios mediante contenedores Docker. Las especificaciones mínimas recomendadas incluyen un hardware o máquina virtual con CPU de 8 cores a 2.4 GHz (Intel Xeon o AMD EPYC), 16 GB de RAM DDR4, almacenamiento de 500 GB SSD con preferencia NVMe, red de 1 Gbps, y opcionalmente GPU NVIDIA con 8GB VRAM para aceleración de inferencia con LLM.
+El sistema se desarrolló y desplegó localmente en un MacBook Air M4 2024 que ejecuta todos los servicios mediante contenedores Docker. Las especificaciones del hardware utilizado comprenden procesador Apple M4 (10 cores: 4 performance + 6 efficiency), 16 GB de memoria unificada DDR5, almacenamiento interno de 512 GB SSD, y GPU integrado de 10 cores con soporte para aceleración Metal Framework.
 
-El software base requerido comprende Docker Engine versión 24.0 o superior, Docker Compose v2, y NVIDIA Container Toolkit en caso de utilizar GPU. La configuración de firewall establece puertos abiertos 80 para HTTP y 443 para HTTPS, manteniendo todos los demás puertos bloqueados externamente. La comunicación interna entre contenedores se realiza mediante red Docker.
+El software base comprende macOS Sequoia 15.0, Docker Desktop 4.25+ para Apple Silicon con soporte ARM64, y Python 3.11 con MLX framework para ejecución de LLMs con aceleración Metal. La arquitectura ARM del chip M4 requiere imágenes Docker multi-arquitectura (linux/arm64) o construcción local mediante buildx. El GPU integrado permite ejecución de modelos LLM cuantizados (Q4) de hasta 4B parámetros con consumo aproximado de 4-6 GB de memoria unificada, siendo suficiente para procesamiento experimental del Pipeline B sobre el gold standard de 300 ofertas.
 
 \subsubsection{Contenedores Docker y Orquestación}
 
@@ -347,7 +421,7 @@ El servicio \texttt{celery\_worker} puede replicarse dinámicamente (1, 2, 4, 8,
 
 \subsubsection{Configuración de Red y Volúmenes}
 
-Todos los contenedores se conectan a una red bridge interna (subnet 172.18.0.0/16) que proporciona resolución DNS automática por nombre de servicio y aislamiento de red (solo nginx expone puertos externamente). Los datos que deben persistir entre reinicios de contenedores se almacenan en volúmenes Docker: \texttt{postgres\_data} (100 GB para base de datos completa), \texttt{redis\_data} (10 GB para dumps y snapshots), y \texttt{logs\_data} (20 GB para logs de todos los servicios). Se implementa estrategia de backup diario de PostgreSQL mediante pg\_dump y snapshots semanales de volúmenes Docker.
+Los contenedores se conectan mediante la red bridge por defecto de Docker Compose, que proporciona resolución DNS automática por nombre de servicio. Los datos que deben persistir entre reinicios de contenedores se almacenan en volúmenes Docker nombrados: \texttt{postgres\_data} para la base de datos PostgreSQL y \texttt{redis\_data} para persistencia de Redis. El sistema implementa respaldos automáticos diarios de la base de datos PostgreSQL mediante \texttt{pg\_dump}, almacenando dumps comprimidos en el directorio \texttt{data/backups/} del host con rotación de 7 días.
 
 \subsection{Vista de Procesos: Ejecución y Concurrencia}
 
@@ -355,11 +429,11 @@ La vista de procesos describe el comportamiento dinámico del sistema en tiempo 
 
 \subsubsection{Pipeline CRISP-DM y Flujo de Procesamiento}
 
-El procesamiento de datos sigue la metodología CRISP-DM (Cross-Industry Standard Process for Data Mining) adaptada al dominio de análisis de mercado laboral. El pipeline se compone de 7 etapas secuenciales ejecutadas por los Celery Workers. La primera etapa de Scraping realiza recolección automatizada mediante Scrapy y Selenium desde 8 portales de empleo en 3 países, con tiempo estimado de 5 a 10 minutos por portal, implementando deduplicación mediante hash SHA-256 de título, empresa, ubicación y fecha.
+El procesamiento de datos sigue la metodología CRISP-DM (Cross-Industry Standard Process for Data Mining) adaptada al dominio de análisis de mercado laboral. El pipeline se compone de 6 etapas secuenciales ejecutadas por los Celery Workers. La primera etapa de Scraping realiza recolección automatizada mediante Scrapy y Selenium desde 7 portales de empleo en 3 países, implementando deduplicación mediante hash SHA-256 del contenido normalizado.
 
-La segunda etapa de Cleaning ejecuta normalización de texto, eliminación de HTML, y detección de idioma, generando como salida cleaned jobs con campo is\_usable en un tiempo de 50 a 100 milisegundos por oferta. La tercera etapa de Extraction realiza identificación de habilidades mediante Pipelines A basado en NER y Regex o Pipeline B basado en LLM. Estos pipelines son variantes experimentales de esta etapa, no arquitecturas separadas, con tiempo de procesamiento de 100 a 200 milisegundos para Pipeline A o 2 a 5 segundos para Pipeline B por oferta.
+La segunda etapa de Cleaning ejecuta normalización de texto, eliminación de HTML residual, conversión a UTF-8, y separación de disclaimers legales. La tercera etapa de Extraction realiza identificación de habilidades mediante Pipeline A (NER+Regex) o Pipeline B (Gemma 3 4B). Estos pipelines son variantes experimentales de esta etapa, no arquitecturas separadas. La cuarta etapa de Matching mapea las habilidades extraídas contra la taxonomía ESCO extendida (14,215 skills) mediante dos capas: Layer 1 con exact match y Layer 2 con fuzzy matching (threshold 0.92).
 
-La cuarta etapa de Enhancement ejecuta normalización con LLM, inferencia de skills implícitas, y mapeo a taxonomía ESCO en un tiempo de 1 a 3 segundos por oferta. La quinta etapa de Embedding genera representaciones vectoriales de 768 dimensiones con modelo E5-multilingual en 100 milisegundos por lote de 32 skills. La sexta etapa de Clustering realiza reducción dimensional con UMAP transformando de 768 dimensiones a 2 o 3 dimensiones, seguida de clustering con HDBSCAN, requiriendo de 2 a 5 minutos para 10,000 skills. La séptima etapa de Visualization genera gráficos incluyendo scatter plots, heatmaps, y tendencias temporales, produciendo imágenes PNG y datos JSON para frontend en 10 a 30 segundos.
+La quinta etapa de Embedding genera representaciones vectoriales de 768 dimensiones con modelo E5-multilingual para las habilidades extraídas. La sexta etapa de Clustering realiza reducción dimensional con UMAP (transformando de 768D a 2-3D), seguida de clustering con HDBSCAN para identificar perfiles laborales emergentes. Finalmente, la etapa de Visualization genera scatter plots UMAP 2D/3D, dendrogramas jerárquicos, y gráficos de distribución de habilidades por país y portal, exportando resultados como imágenes PNG y metadatos JSON para el frontend.
 
 \begin{figure}[H]
 \centering
@@ -370,9 +444,9 @@ La cuarta etapa de Enhancement ejecuta normalización con LLM, inferencia de ski
 
 \subsubsection{Escalabilidad Horizontal de Workers}
 
-La arquitectura permite escalamiento horizontal dinámico de workers sin modificar código ni reconfigurar servicios. Redis distribuye tareas equitativamente entre workers disponibles mediante load balancing automático. El impacto en throughput es aproximadamente lineal: con 1 worker, 100 tareas de 5 segundos requieren 500 segundos (8 min 20s); con 4 workers, el tiempo se reduce a 125 segundos (2 min 5s); con 8 workers, a 62.5 segundos (1 min 2s). El speedup real es aproximadamente 0.7×N debido a overhead de comunicación y contención de recursos.
+La arquitectura permite escalamiento horizontal dinámico de workers mediante el comando \texttt{docker-compose up -d --scale celery\_worker=N}, sin modificar código ni reconfigurar servicios. Redis distribuye tareas equitativamente entre workers disponibles mediante load balancing automático. Cada worker consume tareas independientemente de la cola compartida, permitiendo procesamiento paralelo de múltiples ofertas laborales simultáneamente.
 
-El sistema implementa tolerancia a fallos: si un worker falla, Redis redistribuye tareas pendientes a workers restantes, y las tareas en ejecución se reintentan automáticamente en otro worker (hasta 3 reintentos con delay de 60 segundos).
+El sistema implementa mecanismos básicos de recuperación ante errores: las tareas fallidas se reintentan automáticamente hasta 3 veces con configuración \texttt{max\_retries=3} en las definiciones de tasks de Celery. El estado de ejecución de cada tarea se persiste en Redis, permitiendo monitoreo de progreso mediante el frontend. La base de datos PostgreSQL garantiza persistencia de resultados exitosos mediante transacciones ACID.
 
 \subsubsection{Gestión de Tareas Asíncronas}
 
@@ -395,56 +469,4 @@ Las habilidades extraídas por ambos pipelines se transforman posteriormente en 
 
 Todas las tablas derivadas mantienen referencia mediante llave foránea hacia raw\_jobs, garantizando trazabilidad completa desde cualquier resultado de análisis hasta la oferta laboral original que lo generó. La especificación detallada de campos, tipos de datos, índices optimizados, configuración de PostgreSQL para procesamiento batch, y estrategias de persistencia se documentan exhaustivamente en el Apéndice E.
 
-Habiendo documentado la arquitectura del sistema mediante tres vistas complementarias (Lógica, Física y Procesos) que especifican los patrones arquitectónicos híbridos, los siete servicios especializados, la infraestructura de despliegue con Docker, el pipeline CRISP-DM de 7 etapas, y el diseño de base de datos con 6 tablas principales, la siguiente sección presenta las decisiones tecnológicas concretas que materializaron esta arquitectura. La selección de herramientas y tecnologías se fundamentó en criterios de madurez, licencias permisivas, escalabilidad comprobada y reproducibilidad científica, asegurando que cada componente arquitectónico contara con una implementación robusta y bien documentada.
-
-\section{Herramientas y Tecnologías}
-
-Las Tablas \ref{tab:tech-stack-infra} y \ref{tab:tech-stack-analytics} resumen las decisiones tecnológicas fundamentales y su justificación académica y técnica, organizadas por capa funcional del sistema.
-
-\begin{table}[H]
-\centering
-\caption{Stack Tecnológico: Infraestructura y Adquisición de Datos}
-\label{tab:tech-stack-infra}
-\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{6.5cm}|}
-\hline
-\textbf{Componente} & \textbf{Tecnología} & \textbf{Justificación} \\
-\hline
-Base de datos & PostgreSQL 15+ con pgvector & Soporte JSONB para metadatos flexibles, extensión pgvector para vectores 768D, robustez ACID, particionamiento para escalabilidad. \\
-\hline
-Taxonomía & ESCO v1.1.0 (+ 276 ext.) & Cobertura 13,000+ skills con etiquetas español/inglés, extendida con 152 O*NET + 124 manual (total 14,215), estructura ontológica con URIs, respaldo institucional CE, licencia CC BY 4.0. \\
-\hline
-Framework scraping & Scrapy 2.11 + Selenium 4.15 & Arquitectura asíncrona (100+ req/min), manejo robusto de reintentos, middlewares extensibles, Selenium para JavaScript dinámico. \\
-\hline
-Modelo NLP español & spaCy 3.7 + es\_core\_news\_lg & Mejor modelo español disponible (97M parámetros), soporte EntityRuler para ESCO, optimizado CPU ($<$100ms/doc). \\
-\hline
-Lenguaje & Python 3.11+ & Ecosistema científico maduro (NumPy, pandas, scikit-learn), bibliotecas NLP referencia (spaCy, transformers), integración PostgreSQL. \\
-\hline
-Control versiones & Git + GitHub & Estándar industria, integración CI/CD (GitHub Actions), control issues/milestones, documentación Markdown, respaldo cloud. \\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\caption{Stack Tecnológico: Procesamiento y Análisis}
-\label{tab:tech-stack-analytics}
-\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{6.5cm}|}
-\hline
-\textbf{Componente} & \textbf{Tecnología} & \textbf{Justificación} \\
-\hline
-LLM enriquecimiento & Gemma 3 4B / Llama 3 3B (Q4) & Modelos ligeros de 3-4B parámetros, despliegue local sin APIs (privacidad), cuantización Q4 (3-6 GB VRAM), selección por evaluación comparativa. \\
-\hline
-Embeddings & intfloat/multilingual-e5-base & Estado del arte multilingüe (768D), contrastive learning en 100 idiomas, normalización L2 integrada, 278M parámetros ejecutables CPU. \\
-\hline
-Índice similitud & FAISS IndexFlatIP & Velocidad 30,147 q/s (25x superior pgvector), búsqueda exacta (100\% recall), latencia 0.033ms, Facebook AI Research. \\
-\hline
-Reducción dimensional & UMAP \cite{mcinnes2018umap} & Preserva estructura local y global (superior t-SNE), escalabilidad millones puntos, reproducibilidad con semilla fija, parámetros interpretables. \\
-\hline
-Clustering & HDBSCAN \cite{campello2013} & No requiere especificar k, identifica ruido automático, maneja densidades variables (nicho vs. mainstream), jerarquía multinivel. \\
-\hline
-Orquestación & Typer CLI + APScheduler & Interface tipo Git con validación automática, scheduler 24/7, logging estructurado, integración cron/systemd. \\
-\hline
-\end{tabular}
-\end{table}
-
-Todas las tecnologías seleccionadas cumplen con cinco criterios principales. Primero, licencias permisivas (MIT, Apache 2.0, PostgreSQL, CC BY) permitiendo uso académico y potencial comercial futuro. Segundo, madurez y estabilidad con versiones $\geq$ 2.0 y comunidades activas. Tercero, documentación académica completa con publicaciones científicas revisadas por pares para componentes críticos. Cuarto, reproducibilidad mediante control de versiones de dependencias y semillas fijas para componentes estocásticos. Quinto, escalabilidad demostrada para el objetivo de 600,000 ofertas laborales mediante arquitectura de pipeline por lotes y particionamiento de base de datos.
+Habiendo documentado la arquitectura del sistema mediante tres vistas complementarias (Lógica, Física y Procesos) que especifican los patrones arquitectónicos híbridos, los siete servicios especializados, la infraestructura de despliegue con Docker, el pipeline CRISP-DM de 6 etapas, y el diseño de base de datos con 6 tablas principales, el stack tecnológico completo que materializa esta arquitectura se documenta detalladamente en el Apéndice D (Tablas \ref{tab:tech-stack-infra} y \ref{tab:tech-stack-analytics}). La selección de tecnologías se fundamentó en cinco criterios: licencias permisivas para uso académico, madurez y estabilidad demostrada, documentación académica con publicaciones revisadas por pares, reproducibilidad mediante control de versiones, y escalabilidad validada para procesamiento de más de 30,000 ofertas laborales.

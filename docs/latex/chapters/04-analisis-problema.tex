@@ -12,9 +12,9 @@ Los requerimientos funcionales definen las capacidades operativas que el observa
 
 \begin{itemize}
     \item \textbf{Adquisición automatizada de datos}: Recolección de ofertas laborales desde portales de empleo en Colombia, México y Argentina mediante web scraping que soporte tanto contenido estático (HTML directo) como dinámico (JavaScript rendering) \cite{orozco2019webscraping}.
-    \item \textbf{Procesamiento de lenguaje natural}: Normalización y limpieza de texto adaptada al español latinoamericano técnico, incluyendo tokenización, lematización y manejo de ``Spanglish'' \cite{rubio2025}.
+    \item \textbf{Procesamiento de lenguaje natural}: Normalización y limpieza de texto adaptada al español latinoamericano técnico, incluyendo tokenización y manejo de ``Spanglish'' \cite{rubio2025}.
     \item \textbf{Extracción dual de habilidades}: Pipeline A con NER y regex para habilidades explícitas; Pipeline B con LLMs para inferencia de habilidades implícitas.
-    \item \textbf{Normalización taxonómica}: Mapeo de habilidades extraídas contra taxonomía ESCO mediante matching exacto y difuso (fuzzywuzzy $\geq$0.85).
+    \item \textbf{Normalización taxonómica}: Mapeo de habilidades extraídas contra taxonomía ESCO mediante matching exacto y difuso (fuzzywuzzy $\geq$0.92).
     \item \textbf{Análisis no supervisado}: Generación de embeddings semánticos (768D), reducción dimensional (UMAP), y clustering jerárquico (HDBSCAN) para descubrir perfiles emergentes.
     \item \textbf{Trazabilidad completa}: Registro de metadatos de procesamiento (timestamps, versiones de modelos, parámetros) para reproducibilidad científica.
 \end{itemize}
@@ -24,11 +24,10 @@ Los requerimientos funcionales definen las capacidades operativas que el observa
 Los requerimientos no funcionales establecen las propiedades de calidad que garantizan la viabilidad técnica y operativa del sistema:
 
 \begin{itemize}
-    \item \textbf{Escalabilidad}: Capacidad de procesar 600,000 ofertas en 6 meses con latencias aceptables (extracción $<$30 seg/oferta, clustering $<$4 horas).
+    \item \textbf{Escalabilidad}: Capacidad de procesar más de 30,000 ofertas con latencias aceptables (extracción $<$30 seg/oferta, clustering $<$4 horas).
     \item \textbf{Multilingüismo}: Soporte nativo para español, inglés y mezcla técnica (``Spanglish'') en todos los modelos de NLP.
     \item \textbf{Reproducibilidad científica}: Semillas aleatorias fijas, versionado de modelos, y persistencia de datasets intermedios.
-    \item \textbf{Eficiencia computacional}: Índices FAISS para búsqueda semántica en tiempo sub-lineal ($O(\log n)$).
-    \item \textbf{Portabilidad y mantenibilidad}: Contenedorización Docker, adherencia a PEP 8, documentación técnica completa, y arquitectura modular extensible.
+    \item \textbf{Portabilidad y mantenibilidad}: Contenedorización Docker, adherencia a PEP 8, documentación técnica, y arquitectura modular extensible.
 \end{itemize}
 
 \subsection{Requerimientos de datos}
@@ -37,7 +36,7 @@ Los requerimientos de datos especifican las características del corpus de ofert
 
 \begin{itemize}
     \item \textbf{Cobertura geográfica}: Ofertas de Colombia, México y Argentina con al menos 2 portales por país.
-    \item \textbf{Volumen y calidad}: Mínimo 100,000 ofertas con descripción $>$100 caracteres y al menos 2 habilidades identificables, tras deduplicación y filtrado de calidad.
+    \item \textbf{Volumen y calidad}: Más de 30,000 ofertas con descripción $>$100 caracteres y al menos 2 habilidades identificables, tras deduplicación y filtrado de calidad.
     \item \textbf{Metadatos temporales}: Fecha de publicación, recolección y expiración para análisis de evolución temporal.
     \item \textbf{Representatividad sectorial}: Aunque enfocado en tecnología, captura de múltiples sectores (TI, finanzas, manufactura, salud) para identificar demanda transversal de competencias digitales.
 \end{itemize}
@@ -74,7 +73,6 @@ El contexto de español latinoamericano técnico presenta desafíos metodológic
 
 \begin{itemize}
     \item \textbf{Ausencia de ground truth}: No existe dataset etiquetado de referencia para habilidades en ofertas laborales en español latinoamericano, dificultando evaluación cuantitativa rigurosa.
-    \item \textbf{Subjetividad de ``habilidad'':} Definición inherentemente contextual (ej: ¿``trabajo en equipo'' es técnica o blanda? ¿``Microsoft Office'' debe segmentarse?).
     \item \textbf{Sesgo de fuente}: Portales de empleo excluyen ofertas en sitios corporativos directos, redes sociales o canales informales, introduciendo sesgo de formalidad y tamaño de empresa.
 \end{itemize}
 
@@ -96,17 +94,17 @@ El observatorio se estructura como un pipeline secuencial de transformación de 
     \item \textbf{Clustering}: UMAP (768D$\to$2-3D) + HDBSCAN $\to$ \texttt{analysis\_results}
 \end{enumerate}
 
-La orquestación se gestiona mediante CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler (APScheduler).
+La orquestación se gestiona mediante CLI único (Typer) que permite ejecución manual de etapas individuales o automatización completa mediante scheduler.
 
 \subsection{Interfaces críticas}
 
 El sistema define cuatro interfaces críticas que garantizan la comunicación entre módulos:
 
 \begin{itemize}
-    \item \textbf{Scraper-Database}: Pipeline personalizado \texttt{PostgreSQLPipeline} serializa items a JSON e inserta en \texttt{raw\_jobs} con deduplicación por hash SHA-256.
-    \item \textbf{Extractor-ESCO}: Módulo \texttt{ESCOMatcher} con métodos \texttt{find\_\allowbreak exact\_\allowbreak match()} y \texttt{find\_\allowbreak fuzzy\_\allowbreak match()}, implementando memoización que reduce procesamiento batch de ~6.5h a ~6.5min (60× aceleración).
-    \item \textbf{LLM-Processor}: Módulo \texttt{LLMHandler} abstrae llamadas a modelos locales (llama.cpp) o APIs remotas (OpenAI) con interfaz unificada que retorna JSON validado (Pydantic).
-    \item \textbf{Orquestador-Pipeline}: \texttt{MasterController} expone comandos CLI con control de estado persistente en base de datos para reinicio tras fallos.
+    \item \textbf{Scraper-Database}: \texttt{JobPostgresPipeline} implementa batch inserts optimizados con deduplicación por hash SHA-256 del contenido, almacenando ofertas en \texttt{raw\_jobs}.
+    \item \textbf{Extractor-ESCO}: \texttt{ESCOMatcher3Layers} implementa estrategia de matching de 3 capas (exact, fuzzy, semantic) contra taxonomía ESCO extendida, con caché de resultados para optimizar procesamiento batch.
+    \item \textbf{LLM-Processor}: \texttt{LLMHandler} abstrae llamadas a modelos locales (llama.cpp, transformers) o APIs remotas (OpenAI) con interfaz unificada, soportando múltiples backends sin modificar código de negocio.
+    \item \textbf{Orquestador-Pipeline}: \texttt{MasterController} coordina scheduler, pipeline automator y health monitoring, con control de estado persistente para reinicio tras fallos.
 \end{itemize}
 
 \subsection{Casos de uso principales}
@@ -114,7 +112,7 @@ El sistema define cuatro interfaces críticas que garantizan la comunicación en
 El observatorio soporta cuatro casos de uso fundamentales:
 
 \begin{itemize}
-    \item \textbf{Recolección programada}: Scheduler (APScheduler) ejecuta spiders periódicamente para mantener corpus actualizado, con registro de métricas y alertas por caída de volumen.
+    \item \textbf{Recolección programada}: Scheduler ejecuta spiders periódicamente para mantener corpus actualizado, con registro de métricas y alertas por caída de volumen.
     \item \textbf{Análisis temporal de demanda}: Generación automática de visualizaciones (heatmaps, gráficos de evolución) y reportes JSON con métricas de clustering por trimestre.
     \item \textbf{Validación de pipeline}: Comparación experimental de Pipeline A vs. B mediante métricas de solapamiento (Jaccard) y análisis cualitativo de habilidades únicas.
     \item \textbf{Extensibilidad geográfica}: Arquitectura modular permite agregar nuevos países implementando spiders heredados de \texttt{BaseSpider} sin modificaciones al pipeline de procesamiento.
@@ -122,4 +120,4 @@ El observatorio soporta cuatro casos de uso fundamentales:
 
 \vspace{0.5cm}
 
-\noindent\textit{Nota: La especificación técnica detallada de los requerimientos, restricciones y casos de uso presentados en este capítulo se encuentra en el Apéndice C.}
+\noindent\textit{Nota: La especificación técnica detallada de los requerimientos, restricciones y casos de uso presentados en este capítulo se encuentra en el Apéndice C. Los detalles de arquitectura física, lógica, despliegue e interfaces se presentan en el capítulo de Desarrollo.}
