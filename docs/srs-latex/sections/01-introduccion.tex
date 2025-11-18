@@ -2,19 +2,11 @@
 
 \section{Propósito}
 
-El presente documento tiene como propósito especificar de manera detallada los requerimientos funcionales y no funcionales del sistema denominado Observatorio de Demanda Laboral en Tecnología en Latinoamérica, una herramienta de análisis automatizado orientada a procesar, extraer y segmentar habilidades tecnológicas desde portales de empleo en línea, mediante técnicas modernas de procesamiento de lenguaje natural (NLP), scraping, embeddings semánticos y clustering no supervisado.
+El presente documento tiene como propósito especificar de manera detallada los requerimientos funcionales y no funcionales del sistema denominado Observatorio de Demanda Laboral en Tecnología en Latinoamérica, una herramienta de análisis automatizado orientada a procesar, extraer y segmentar habilidades tecnológicas desde portales de empleo en línea, mediante técnicas modernas de procesamiento de lenguaje natural, scraping, embeddings semánticos y clustering no supervisado.
 
-Este documento está dirigido principalmente a los siguientes públicos:
+Este documento está dirigido principalmente a tres audiencias complementarias. En primer lugar, sirve como guía estructurada para el equipo de desarrollo del proyecto, compuesto por los estudiantes \autorUno{} y \autorDos{}, orientando la implementación y validación del sistema. En segundo lugar, constituye evidencia formal del entendimiento técnico y conceptual del producto para el director del proyecto, \director{}, y los jurados evaluadores. Finalmente, proporciona un marco de referencia para otros actores académicos o institucionales interesados en replicar o adaptar el sistema en contextos similares, tales como universidades, centros de investigación o entidades públicas vinculadas al análisis del mercado laboral.
 
-\begin{itemize}
-    \item El equipo de desarrollo del proyecto, compuesto por los estudiantes \autorUno{} y  \autorDos{}, como guía estructurada para la implementación y validación del sistema.
-
-    \item El director del proyecto, \director{}, y los jurados evaluadores, como evidencia formal del entendimiento técnico y conceptual del producto a desarrollar.
-
-    \item Otros actores académicos o institucionales interesados en replicar o adaptar el sistema en contextos similares, como universidades, centros de investigación o entidades públicas vinculadas al análisis del mercado laboral.
-\end{itemize}
-
-El documento cubre la totalidad del sistema propuesto, sin limitarse a un solo módulo o subsistema. Por tanto, especifica requerimientos relacionados con la adquisición de datos (scraping), su procesamiento semántico, análisis estadístico y segmentación por perfiles laborales, así como aspectos de validación, modularidad, documentación técnica y estándares de calidad.
+El documento cubre la totalidad del sistema propuesto, sin limitarse a un solo módulo o subsistema. Por tanto, especifica requerimientos relacionados con la adquisición de datos mediante scraping, su procesamiento semántico, análisis estadístico y segmentación por perfiles laborales, así como aspectos de validación, modularidad, documentación técnica y estándares de calidad.
 
 La importancia de este documento radica en su papel como contrato técnico entre los actores involucrados, asegurando una visión compartida del comportamiento esperado del sistema, las restricciones existentes, los criterios de aceptación y los estándares metodológicos adoptados. Además, facilita la trazabilidad entre los objetivos definidos en la propuesta de grado y las funcionalidades implementadas en cada fase, garantizando coherencia metodológica, control de calidad y sostenibilidad del desarrollo.
 
@@ -22,38 +14,13 @@ La importancia de este documento radica en su papel como contrato técnico entre
 
 El sistema propuesto, titulado Observatorio de Demanda Laboral en Tecnología en Latinoamérica, tiene como propósito desarrollar una herramienta automatizada capaz de analizar la evolución de las habilidades tecnológicas demandadas en el mercado laboral digital, específicamente en los países de Colombia (CO), México (MX) y Argentina (AR). El sistema abarca desde la recolección periódica de datos a través de scraping en portales de empleo hasta el procesamiento semántico y la segmentación de perfiles laborales utilizando técnicas avanzadas de NLP y clustering no supervisado.
 
-Alcance geográfico: Colombia (CO), México (MX), Argentina (AR)
+El alcance geográfico del observatorio comprende tres países latinoamericanos: Colombia, México y Argentina. Las fuentes de datos corresponden a 7 portales de empleo principales que concentran la mayor parte de las ofertas laborales tecnológicas en la región, incluyendo Computrabajo, Bumeran, ElEmpleo, HiringCafe, OCC Mundial, ZonaJobs e Indeed.
 
-Fuentes de datos: 8 portales de empleo principales incluyendo hiring.cafe, computrabajo, bumeran, elempleo.com, zonajobs, indeed, magneto y occ mundial.
+La taxonomía base del sistema constituye una integración unificada de 14,174 habilidades, compuesta por 13,939 competencias de la base europea ESCO v1.1.0, complementadas con 152 tecnologías emergentes del catálogo O*NET Hot Technologies del sector IT, y 83 habilidades curadas manualmente específicas para el mercado tecnológico latinoamericano. El stack tecnológico seleccionado incluye Python 3.10 o superior como lenguaje base, Scrapy para extracción automatizada, spaCy para procesamiento de lenguaje natural, PostgreSQL como sistema de gestión de base de datos, FAISS para búsqueda vectorial eficiente, el modelo de embeddings multilingües E5 de 768 dimensiones, y los algoritmos HDBSCAN y UMAP para clustering y reducción dimensional respectivamente.
 
-Taxonomía base: El sistema utiliza una taxonomía unificada de 14,215 skills totales, compuesta por:
-\begin{itemize}
-    \item ESCO v1.1.0: 13,939 skills (base europea de competencias laborales)
-    \item O*NET Hot Technologies: 152 skills (tecnologías emergentes del sector IT)
-    \item Manual Curated Skills: 124 skills (específicas para el mercado tech latinoamericano)
-\end{itemize}
+El producto incluye siete funcionalidades principales integradas en un pipeline secuencial. La primera funcionalidad corresponde a la extracción automatizada de vacantes desde los portales web mediante spiders especializados que respetan las normas de uso de cada sitio. La segunda funcionalidad implementa preprocesamiento y limpieza textual mediante tokenización, lematización y normalización de formatos, preparando los datos para análisis posterior. La tercera funcionalidad ejecuta la detección de habilidades explícitas e implícitas mediante técnicas híbridas que combinan reconocimiento de entidades nombradas, expresiones regulares y modelos de lenguaje.
 
-Stack tecnológico: Python 3.10+, Scrapy, spaCy, PostgreSQL, FAISS, embeddings E5 multilingües (intfloat/multilingual-e5-base, 768D), HDBSCAN, UMAP.
-
-El producto incluirá las siguientes funcionalidades principales:
-
-\begin{itemize}
-    \item Extracción automatizada de vacantes desde 8 portales web principales, mediante spiders adaptables que operan respetando las normas de uso de cada sitio.
-
-    \item Procesamiento y limpieza textual, incluyendo tokenización, lematización y detección de habilidades explícitas mediante técnicas híbridas de NER, expresiones regulares y modelos de lenguaje.
-
-    \item Representación semántica de habilidades mediante embeddings multilingües (modelo E5 de 768 dimensiones) y reducción de dimensionalidad (UMAP).
-
-    \item Mapeo de habilidades contra taxonomía ESCO mediante estrategia de tres capas: matching exacto, fuzzy matching y semantic matching con FAISS.
-
-    \item Agrupamiento de perfiles mediante algoritmos robustos como HDBSCAN, que permitan segmentar la demanda en grupos funcionales coherentes.
-
-    \item Visualización macro de resultados a través de gráficos interpretables y reportes estáticos que permitan identificar patrones emergentes sin requerir dashboards interactivos.
-
-    \item Documentación metodológica y código reproducible, que permitan replicar o adaptar el sistema a otras regiones o sectores, bajo principios de ética, apertura y eficiencia computacional.
-\end{itemize}
-
-Este sistema no contempla el desarrollo de una interfaz web pública ni funcionalidades de tipo portal o dashboard interactivo, sino que prioriza la generación de reportes analíticos estáticos y reutilizables, como producto de validación académica y técnica.
+La cuarta funcionalidad genera representaciones semánticas mediante el modelo de embeddings E5 de 768 dimensiones, seguido de reducción dimensional con UMAP para visualización y agrupación eficiente. La quinta funcionalidad mapea las habilidades extraídas contra la taxonomía ESCO mediante una estrategia de tres capas que incluye matching exacto, fuzzy matching con umbral de similitud del 85 por ciento, y semantic matching mediante búsqueda vectorial con FAISS. La sexta funcionalidad agrupa perfiles laborales mediante el algoritmo HDBSCAN, que permite segmentar la demanda en grupos funcionales coherentes sin requerir especificación previa del número de clusters. La séptima funcionalidad genera visualizaciones macro mediante gráficos interpretables y reportes estáticos, complementados por un dashboard web interactivo desarrollado con Next.js que permite consulta dinámica de métricas y tendencias. Finalmente, el sistema proporciona documentación metodológica completa y código reproducible que permite replicar o adaptar la solución a otras regiones o sectores bajo principios de ética, apertura científica y eficiencia computacional.
 
 El alcance funcional se circunscribe al dominio de las ofertas de empleo tecnológicas publicadas en español en los países mencionados, sin contemplar vacantes en otros idiomas ni otros sectores económicos. Sin embargo, el diseño modular del sistema permitirá su adaptación futura a nuevos contextos geográficos o temáticos.
 
@@ -141,22 +108,10 @@ Lenguaje de programación ampliamente utilizado en ciencia de datos y NLP, por s
 
 \section{Apreciación Global}
 
-El presente documento de Especificación de Requerimientos del Software (SRS) tiene como objetivo presentar de manera estructurada y detallada los aspectos fundamentales del sistema ``\proyectoTitulo''. La organización del documento se ha realizado con el propósito de facilitar su comprensión tanto para usuarios técnicos como no técnicos, brindando una visión progresiva desde el contexto general hasta los requerimientos específicos del sistema.
+El presente documento de Especificación de Requerimientos del Software tiene como objetivo presentar de manera estructurada y detallada los aspectos fundamentales del sistema Observatorio de Demanda Laboral en Tecnología en Latinoamérica. La organización del documento se ha realizado con el propósito de facilitar su comprensión tanto para usuarios técnicos como no técnicos, brindando una visión progresiva desde el contexto general hasta los requerimientos específicos del sistema.
 
-El contenido del documento se distribuye de la siguiente manera:
+El contenido del documento se distribuye en tres secciones principales. La Sección 1 expone la introducción general del proyecto, incluyendo su propósito, alcance, definiciones clave, referencias utilizadas y una apreciación global de su contenido. La Sección 2 describe de manera general los factores que afectan al producto, incluyendo su perspectiva dentro del ecosistema tecnológico, interfaces con otros sistemas y con el usuario, consideraciones de hardware y software, restricciones operativas, y requerimientos de adaptación al entorno de despliegue. La Sección 3 presenta los requerimientos funcionales y no funcionales del sistema, detallando exhaustivamente cada funcionalidad esperada, las restricciones técnicas y operativas, las condiciones necesarias para su correcto funcionamiento, los criterios de validación y verificación, los atributos de calidad del software, los requerimientos de base de datos, la trazabilidad entre objetivos y requerimientos, y el estado actual de implementación de cada módulo del sistema.
 
-\begin{itemize}
-    \item En la Sección 1, se expone la introducción general del proyecto, incluyendo su propósito, alcance, definiciones clave, referencias utilizadas y una apreciación global de su contenido.
-
-    \item La Sección 2 describe de manera general los factores que afectan al producto, incluyendo su perspectiva, interfaces con otros sistemas y con el usuario, consideraciones de hardware y software, restricciones de memoria, operaciones del sistema y requerimientos de adaptación al entorno.
-
-    \item La Sección 3 presentará los requerimientos funcionales y no funcionales del sistema, detallando cada una de las funcionalidades esperadas, así como las restricciones y condiciones necesarias para su correcto funcionamiento.
-
-    \item En las Secciones 4 y 5, se incluirán descripciones de cómo se piensan manejar los requerimientos mencionados anteriormente, así como el proceso de verificación y validación.
-
-    \item Finalmente, se anexarán diagramas, tablas de trazabilidad y otros elementos que complementen la especificación del sistema.
-\end{itemize}
-
-Este documento servirá como base para el diseño, desarrollo, validación y evaluación del sistema propuesto, asegurando que todos los actores involucrados compartan una visión clara y consensuada de los objetivos, alcances y funcionalidades del software a implementar.
+Este documento servirá como base para el diseño, desarrollo, validación y evaluación del sistema propuesto, asegurando que todos los actores involucrados compartan una visión clara y consensuada de los objetivos, alcances y funcionalidades del software a implementar. Además, constituye un instrumento de trazabilidad que permite verificar el cumplimiento de cada requerimiento especificado durante el ciclo de vida del proyecto.
 
 % ============================================================================

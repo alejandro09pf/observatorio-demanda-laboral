@@ -4,6 +4,10 @@ REM Observatorio de Demanda Laboral en Tecnología en Latinoamérica
 REM
 REM Uso: compile.bat
 
+set MIKTEX_PATH=C:\Users\PcMaster\AppData\Local\Programs\MiKTeX\miktex\bin\x64
+set PDFLATEX=%MIKTEX_PATH%\pdflatex.exe
+set BIBER=%MIKTEX_PATH%\biber.exe
+
 echo ============================================================
 echo Compilando SRS - Especificacion de Requerimientos de Software
 echo ============================================================
@@ -11,7 +15,7 @@ echo.
 
 REM Primera compilación
 echo [1/4] Primera compilacion con pdflatex...
-pdflatex -interaction=nonstopmode main.tex
+"%PDFLATEX%" -interaction=nonstopmode main.tex
 if errorlevel 1 (
     echo ERROR: Primera compilacion fallo
     pause
@@ -21,7 +25,7 @@ if errorlevel 1 (
 REM Generar bibliografía con biber
 echo.
 echo [2/4] Generando bibliografia con biber...
-biber main
+"%BIBER%" main
 if errorlevel 1 (
     echo ADVERTENCIA: biber fallo, continuando...
 )
@@ -29,7 +33,7 @@ if errorlevel 1 (
 REM Segunda compilación
 echo.
 echo [3/4] Segunda compilacion con pdflatex...
-pdflatex -interaction=nonstopmode main.tex
+"%PDFLATEX%" -interaction=nonstopmode main.tex
 if errorlevel 1 (
     echo ERROR: Segunda compilacion fallo
     pause
@@ -39,7 +43,7 @@ if errorlevel 1 (
 REM Tercera compilación para referencias cruzadas
 echo.
 echo [4/4] Tercera compilacion con pdflatex...
-pdflatex -interaction=nonstopmode main.tex
+"%PDFLATEX%" -interaction=nonstopmode main.tex
 if errorlevel 1 (
     echo ERROR: Tercera compilacion fallo
     pause

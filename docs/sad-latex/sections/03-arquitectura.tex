@@ -191,7 +191,20 @@ El logging estructurado con niveles jerárquicos permite debugging granular dura
 
 \subsection{Vistas arquitectónicas del sistema}
 
-Para documentar completamente la arquitectura híbrida del observatorio, se presentan dos vistas complementarias siguiendo el Modelo 4+1 de Vistas Arquitectónicas. La Vista Lógica describe la organización funcional de componentes y sus relaciones, mientras que la Vista Física documenta la topología de despliegue en el servidor de producción con especificaciones de infraestructura.
+Para documentar completamente la arquitectura híbrida del observatorio, se presentan tres vistas complementarias siguiendo el Modelo 4+1 de Vistas Arquitectónicas. La Vista de Contexto establece las fronteras del sistema y actores externos, la Vista Lógica describe la organización funcional de componentes y sus relaciones, la Vista Física documenta la topología de despliegue en el servidor de producción con especificaciones de infraestructura, y los Diagramas de Secuencia ilustran las interacciones dinámicas entre componentes para los flujos críticos del sistema.
+
+\subsubsection{Vista de Contexto}
+
+La Vista de Contexto (Figura \ref{fig:vista-contexto-sad}) establece las fronteras del sistema del Observatorio de Demanda Laboral y define los actores externos que interactúan con él. El diagrama muestra cómo el sistema se relaciona con tres categorías de actores: usuarios finales (investigadores académicos, analistas de mercado laboral, estudiantes universitarios), fuentes de datos (8 portales de empleo en Colombia, México y Argentina: Computrabajo, Bumeran, ElEmpleo, HiringCafe, OCC Mundial, ZonaJobs, Indeed, Magneto), y recursos de conocimiento (taxonomía ESCO v1.1.0 con 14,174 habilidades normalizadas, modelos de lenguaje Gemma 3 4B y Llama 3 3B, modelo de embeddings E5 Multilingual).
+
+El sistema expone tres interfaces principales de interacción: API REST para consultas programáticas y automatización, interfaz web Next.js para visualización interactiva de análisis y reportes, y orquestador Celery para procesamiento batch asíncrono. La arquitectura de contexto refleja la naturaleza académica del proyecto, optimizado para análisis científico reproducible y exploración de datos antes que para operaciones transaccionales de alta frecuencia. Los límites del sistema están claramente definidos: el observatorio no almacena datos personales de candidatos, no realiza procesamiento de currículums, ni implementa sistemas de recomendación de empleos; su responsabilidad única es analizar y visualizar tendencias agregadas de habilidades demandadas en el mercado laboral latinoamericano.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{diagrams/DiagramaContexto.PNG}
+\caption{Vista de Contexto del Sistema. Fronteras del sistema, actores externos (usuarios finales, portales de empleo, recursos de conocimiento), interfaces de interacción (API REST, interfaz web, orquestador Celery), y límites de responsabilidad del observatorio.}
+\label{fig:vista-contexto-sad}
+\end{figure}
 
 \subsubsection{Vista Lógica}
 
@@ -216,6 +229,25 @@ La Vista Física (Figura \ref{fig:vista-fisica-sad}) documenta el despliegue en 
 \end{figure}
 
 La arquitectura implementada cumple con cinco características esenciales para el proyecto: modularidad donde cada componente puede ejecutarse y desarrollarse independientemente facilitando debugging y mantenimiento, trazabilidad completa mediante foreign keys que conectan cualquier resultado analítico con la oferta laboral original que lo generó, reproducibilidad científica garantizada por parámetros fijos documentados en código con semillas aleatorias controladas y versiones específicas de dependencias, escalabilidad horizontal mediante batch processing optimizado con índices de base de datos especializados y capacidad de particionamiento futuro, y resiliencia operativa con persistencia intermedia en cada etapa del pipeline más checkpoints que permiten recuperación ante fallos y manejo robusto de errores.
+
+\subsubsection{Diagramas de Secuencia}
+
+Los Diagramas de Secuencia documentan las interacciones dinámicas entre componentes para los flujos críticos del sistema. La Figura \ref{fig:diagrama-secuencia-event-driven} ilustra el flujo de procesamiento asíncrono mediante arquitectura event-driven, que constituye el mecanismo principal para ejecución de tareas computacionalmente intensivas en el observatorio.
+
+El diagrama muestra la secuencia completa de eventos desde que un usuario solicita iniciar un proceso de scraping hasta que los resultados son almacenados y notificados. El flujo comienza cuando el usuario o Celery Beat envía una solicitud POST a la API FastAPI para iniciar scraping. La API valida la solicitud, publica un mensaje en la cola Redis mediante el broker Celery, retorna inmediatamente un task\_id al cliente sin bloquear, y marca el estado inicial como PENDING en la tabla task\_status de PostgreSQL.
+
+Celery Worker, monitoreando continuamente la cola Redis, detecta el nuevo mensaje, extrae los parámetros de la tarea, actualiza el estado a STARTED, ejecuta el scraper correspondiente (Scrapy + Selenium), procesa las ofertas laborales recolectadas, persiste los resultados en la tabla raw\_jobs de PostgreSQL, actualiza el estado final a SUCCESS con metadatos (ofertas procesadas, tiempo de ejecución), y opcionalmente publica un evento de notificación para tareas dependientes en el pipeline.
+
+El cliente puede consultar el progreso de la tarea mediante polling periódico al endpoint GET /tasks/\{task\_id\} de la API, que consulta PostgreSQL y retorna el estado actualizado, o mediante WebSocket para notificaciones en tiempo real (implementación futura). Este patrón de procesamiento asíncrono desacopla la API de las tareas de larga duración, permite escalabilidad horizontal agregando workers sin modificar código, garantiza tolerancia a fallos mediante reintentos configurables y dead letter queues, y mantiene trazabilidad completa registrando cada transición de estado con timestamps precisos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{diagrams/Diagrama secuencia event driven.png}
+\caption{Diagrama de Secuencia Event-Driven. Flujo de procesamiento asíncrono mostrando interacciones entre Usuario/Celery Beat, API FastAPI, Redis (broker), Celery Worker, y PostgreSQL desde solicitud inicial hasta persistencia de resultados y notificación de estado.}
+\label{fig:diagrama-secuencia-event-driven}
+\end{figure}
+
+La arquitectura event-driven implementada proporciona cuatro ventajas críticas para el observatorio: desacoplamiento temporal donde la API no bloquea esperando procesamiento de horas, escalabilidad elástica mediante workers que pueden agregarse dinámicamente según carga, resiliencia ante fallos con reintentos automáticos y persistencia de estado en cada etapa, y visibilidad operativa mediante logging estructurado y métricas de performance por tipo de tarea. Este diseño arquitectónico habilita procesamiento batch eficiente de decenas de miles de ofertas laborales manteniendo responsividad de la interfaz web y garantizando reproducibilidad científica mediante trazabilidad end-to-end.
 
 \subsection{Componentes del Sistema}
 
