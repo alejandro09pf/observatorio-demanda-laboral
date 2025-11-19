@@ -1,5 +1,5 @@
 # Residential Proxy Configuration for Enhanced Anti-Detection
-# This file contains high-quality residential proxies for bypassing Cloudflare protection
+# This file outlines how to configure high-quality residential proxies for bypassing Cloudflare protection. Not implemented, just a placeholder.
 
 proxy_pools:
   # Premium residential proxies (highest quality, lowest detection rate)

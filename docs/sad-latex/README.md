@@ -196,4 +196,4 @@ Bogotá D.C., Colombia
 ---
 
 **Versión del README:** 1.0
-**Última actualización:** Enero 2025
+**Última actualización:** Noviembre 2025

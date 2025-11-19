@@ -1,8 +1,8 @@
 # 🔬 Clustering & Temporal Analysis - Implementation Log
 
 > **Objetivo:** Implementar sistema de clustering temporal de skills para detectar evolución de demanda laboral
-> **Autor:** Nicolás Camacho + Claude Code
-> **Fecha inicio:** 2025-01-05
+> **Autores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
+> **Fecha inicio:** 2025-11-05
 > **Estado:** En desarrollo - Fase de análisis exploratorio
 
 ---
@@ -267,7 +267,7 @@ outputs/clustering/
 ## 3. Estado de Datos
 
 ### 3.1 Dataset General
-**Última actualización:** 2025-01-05
+**Última actualización:** 2025-11-05
 
 | Tabla | Registros | Notas |
 |-------|-----------|-------|
@@ -297,7 +297,7 @@ Argentina:  3,823 jobs (6.8%)
 
 **Objetivo:** Usar gold standard para prototipo (200-500 skills)
 
-**Query ejecutada:** 2025-01-05 16:30 UTC
+**Query ejecutada:** 2025-11-05 16:30 UTC
 ```sql
 SELECT COUNT(*) as total_annotations,
        COUNT(DISTINCT job_id) as unique_jobs,
@@ -363,7 +363,7 @@ GROUP BY skill_type;
 
 **Objetivo:** Entender composición de skills disponibles (ESCO + O*NET + Manual)
 
-**Query ejecutada:** 2025-01-05 16:32 UTC
+**Query ejecutada:** 2025-11-05 16:32 UTC
 ```sql
 SELECT
     COUNT(*) as total_skills,
@@ -467,7 +467,7 @@ Skills SIN embeddings:      1,728 (90.3%)
 3. 🚨 90% de skills del mercado NO tienen embeddings
 4. 💡 Necesitamos generar embeddings para gold standard
 
-**Fecha completada:** 2025-01-05 16:45 UTC
+**Fecha completada:** 2025-11-05 16:45 UTC
 
 ---
 
@@ -477,7 +477,7 @@ Skills SIN embeddings:      1,728 (90.3%)
 
 **Script creado:** `scripts/generate_gold_standard_embeddings.py`
 
-**Fecha ejecución:** 2025-01-05 15:40-15:42 UTC
+**Fecha ejecución:** 2025-11-05 15:40-15:42 UTC
 
 **Algoritmo:**
 ```python
@@ -701,7 +701,7 @@ WHERE gs.skill_type = 'hard';
 
 **Script creado:** `scripts/select_clustering_subset.py`
 
-**Fecha ejecución:** 2025-01-05 16:02 UTC
+**Fecha ejecución:** 2025-11-05 16:02 UTC
 
 ---
 
@@ -1198,9 +1198,9 @@ Ver código en próxima sección...
 
 ### 5.1 Prototipo - Resultados Exploratorios
 
-### ✅ Fase 4: Ejecución del Prototipo de Clustering (2025-01-05)
+### ✅ Fase 4: Ejecución del Prototipo de Clustering (2025-11-05)
 
-**Fecha ejecución:** 2025-01-05 19:20-19:21 UTC
+**Fecha ejecución:** 2025-11-05 19:20-19:21 UTC
 **Script:** `scripts/prototype_clustering.py`
 **Input:** 400 skills del gold standard
 **Output:** Visualización 2D + JSON de resultados
@@ -1468,9 +1468,9 @@ outputs/clustering/
 
 ---
 
-### ✅ Fase 5: Experimentación de Parámetros (2025-01-05)
+### ✅ Fase 5: Experimentación de Parámetros (2025-11-05)
 
-**Fecha:** 2025-01-05 19:25-19:45 UTC
+**Fecha:** 2025-11-05 19:25-19:45 UTC
 **Objetivo:** Determinar configuración óptima de parámetros basado en experimentación sistemática
 **Total experimentos:** 13 configuraciones diferentes
 
@@ -1802,9 +1802,9 @@ outputs/clustering/
 
 ---
 
-### ✅ Fase 6: Prototipo de Análisis Temporal (2025-01-05)
+### ✅ Fase 6: Prototipo de Análisis Temporal (2025-11-05)
 
-**Fecha:** 2025-01-05 20:47-20:48 UTC
+**Fecha:** 2025-11-05 20:47-20:48 UTC
 **Objetivo:** Validar pipeline completo con visualizaciones temporales sobre gold standard
 **Dataset:** 300 jobs gold standard (1,914 skills únicas)
 **Scope:** Prototipo técnico para validar enfoque antes de escalar a 31k jobs
@@ -2058,7 +2058,7 @@ outputs/clustering/temporal/
 ```json
 {
   "metadata": {
-    "created_at": "2025-01-05T20:48:05Z",
+    "created_at": "2025-11-05T20:48:05Z",
     "n_skills": 1911,
     "algorithm": "UMAP + HDBSCAN"
   },
@@ -2277,7 +2277,7 @@ outputs/clustering/temporal/
 
 ## 📝 Notas de Desarrollo
 
-### 2025-01-05 - Sesión 1: Análisis exploratorio, planificación y generación de embeddings
+### 2025-11-05 - Sesión 1: Análisis exploratorio, planificación y generación de embeddings
 
 **Duración:** 16:00-17:00 UTC (1 hora)
 
@@ -5490,7 +5490,7 @@ Casos de uso válidos:
 ---
 
 **Fecha:** 2025-11-08 01:30
-**Autor:** Nicolás Camacho + Claude Code
+**Autores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Status:** ✅ Análisis cualitativo completado
 
 
@@ -5772,7 +5772,7 @@ Pipeline A: 1,314 → 289 (-78.0%) ⭐ MENOR PÉRDIDA
 ---
 
 **Fecha:** 2025-11-08 02:00
-**Autor:** Nicolás Camacho + Claude Code  
+**Autores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Status:** ✅ Análisis cualitativo COMPLETADO (6/8 pipelines)
 **Próximo paso:** Ejecutar Pipeline A 30k en servidor con más RAM
 
@@ -7658,7 +7658,7 @@ Cada directorio contiene:
 ---
 
 ## 🔬 FASE 14: Análisis Científico Completo de Clusterings de Producción
-**Fecha:** 2025-01-09  
+**Fecha:** 2025-11-08  
 **Objetivo:** Análisis cuantitativo, estadístico y semántico riguroso de los 8 clusterings finales para documentación de tesis
 
 ### Contexto

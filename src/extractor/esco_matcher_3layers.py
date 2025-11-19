@@ -55,7 +55,7 @@ class ESCOMatcher3Layers:
 
     # Thresholds (optimized after extensive testing + Experimento #1)
     # Increased from 0.85 to 0.92 to eliminate absurd matches like "REST"→"restaurar dentaduras"
-    FUZZY_THRESHOLD = 0.92  # Was 0.85 (2025-01-05 - Mejora 1.3)
+    FUZZY_THRESHOLD = 0.92  # Was 0.85 (2025-11-05 - Mejora 1.3)
     SEMANTIC_THRESHOLD = 0.87  # Not used when Layer 3 disabled
 
     # Adaptive threshold for very short strings (≤4 chars)
@@ -286,7 +286,7 @@ class ESCOMatcher3Layers:
                         score_ratio = fuzz.ratio(skill_text.lower(), label_es.lower()) / 100.0
                         score_partial = fuzz.partial_ratio(skill_text.lower(), label_es.lower()) / 100.0
 
-                        # CRITICAL FIX (2025-01-05 - Mejora 1.3.1):
+                        # CRITICAL FIX (2025-11-05 - Mejora 1.3.1):
                         # For very short strings (≤4 chars), partial_ratio causes absurd matches:
                         #   "REST" → "RESTaurar dentaduras" (partial_ratio = 1.00)
                         #   "CI" → "CIsco Webex" (partial_ratio = 1.00)

@@ -6,7 +6,7 @@ from Latin American job portals to provide insights into skill demand trends.
 """
 
 __version__ = "1.0.0"
-__author__ = "Nicolas Francisco Camacho Alarcon"
+__author__ = "Nicolás Francisco Camacho Alarcón y Alejandro Pinzón"
 __description__ = "Automated Labor Market Observatory for Latin America"
 
 # Import main components for easy access

@@ -1,6 +1,6 @@
 # Pipeline B: Iteración y Pruebas - Documento de Trabajo
 
-**Fecha inicio:** 2025-01-05
+**Fecha inicio:** 2025-11-05
 **Objetivo:** Lograr extracción de calidad en Pipeline B antes de correr los 300 jobs gold standard
 **Estrategia:** Iterar en batches pequeños (10-15 jobs) hasta conseguir calidad consistente
 
@@ -77,7 +77,7 @@ ESCO skills:             14,174 ✅
 ---
 
 ### [Iteración 2] Validación de Consistencia (10 jobs) - [COMPLETA]
-**Fecha:** 2025-01-05
+**Fecha:** 2025-11-05
 **Modelo:** Gemma 3 4B Instruct
 **Jobs procesados:** 10 (jobs 1-10 del gold standard)
 **Duración:** 1.9 min (112.8s)
@@ -123,7 +123,7 @@ La diferencia de solo -1.1% confirma que NO es suerte, es el límite intrínseco
 ---
 
 ### [Iteración 3] Ajuste de Prompt - Extracción Exhaustiva - [COMPLETA - ❌ SOBRE-EXTRAE]
-**Fecha:** 2025-01-05
+**Fecha:** 2025-11-05
 **Modelo:** Gemma 3 4B Instruct
 **Jobs procesados:** 10 (mismos que Iter 2)
 **Prompt:** Versión 2 (con lista exhaustiva de tecnologías)
@@ -288,7 +288,7 @@ El modelo interpreta esto como **"INCLUYE estos si aparecen"** (checklist) en lu
 ## 📝 LOG DE ITERACIONES
 
 ### [Iteración 0] Setup Inicial - [COMPLETA]
-**Fecha:** 2025-01-05
+**Fecha:** 2025-11-05
 **Duración:** 45 min
 **Cambios realizados:**
 1. ✅ Modificado `src/llm_processor/prompts.py`:
@@ -320,7 +320,7 @@ El modelo interpreta esto como **"INCLUYE estos si aparecen"** (checklist) en lu
 ---
 
 ### [Iteración 0.5] Debugging Multi-Modelo - [COMPLETA]
-**Fecha:** 2025-01-05
+**Fecha:** 2025-11-05
 **Duración:** 4 horas
 
 **Problema inicial:**
@@ -389,7 +389,7 @@ El modelo interpreta esto como **"INCLUYE estos si aparecen"** (checklist) en lu
 ---
 
 ### [Iteración 1] Primera Prueba (5 jobs) - [COMPLETA]
-**Fecha:** 2025-01-05
+**Fecha:** 2025-11-05
 **Jobs procesados:** 5 gold standard jobs
 **Modelos probados:** Gemma 3 4B, Llama 3.2 3B, Mistral 7B, ~~Qwen 2.5 3B~~
 **Duración:** 3 horas (incluyendo debugging)
@@ -868,7 +868,7 @@ Antes de correr los 300 jobs, verificar:
 
 ---
 
-## 🎯 EJECUCIÓN FINAL - 300 JOBS GOLD STANDARD (2025-01-05)
+## 🎯 EJECUCIÓN FINAL - 300 JOBS GOLD STANDARD (2025-11-05)
 
 ### Resultado Final
 
@@ -974,13 +974,13 @@ WHERE g.job_id NOT IN (
 ---
 
 **Estado actual:** ✅ EJECUCIÓN COMPLETA - 298/300 jobs procesados
-**Última actualización:** 2025-01-05
+**Última actualización:** 2025-11-05
 
 ---
 
-## 🔬 [Iteración 5] COMPARACIÓN MULTI-MODELO: 4 LLMs (2025-01-06)
+## 🔬 [Iteración 5] COMPARACIÓN MULTI-MODELO: 4 LLMs (2025-11-06)
 
-**Fecha:** 2025-01-06
+**Fecha:** 2025-11-06
 **Objetivo:** Comparar Gemma 3 4B contra 3 modelos alternativos (Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini)
 **Dataset:** 10 jobs del gold standard (subset para comparación)
 **Job analizado en detalle:** `8c827878-8efa-4733-9f3c-277d204a437b` (Python Developer @ DaCodes)

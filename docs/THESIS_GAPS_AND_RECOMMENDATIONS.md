@@ -202,7 +202,7 @@ Las anotaciones se almacenarán en tabla \texttt{gold\_standard\_annotations}:
       "is_emergent": false
     }
   ],
-  "annotation_date": "2025-01-15",
+  "annotation_date": "2025-11-05",
   "annotation_time_minutes": 8
 }
 \end{verbatim}

@@ -3,7 +3,7 @@
 ### Complete Implementation Blueprint
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** November 2025  
 **Team Size:** 2 developers  
 **Target OS:** Windows (primary), macOS (secondary)  
 **Database:** PostgreSQL 15+ with pgvector  
@@ -451,8 +451,8 @@ python orchestrator.py report --format pdf --output-dir outputs/
   "salary_raw": "$6.000.000 - $8.000.000 COP",
   "contract_type": "Tiempo completo",
   "remote_type": "Híbrido",
-  "posted_date": "2025-01-15",
-  "scraped_at": "2025-01-20T10:30:00Z",
+  "posted_date": "2025-11-05",
+  "scraped_at": "2025-11-08T10:30:00Z",
   "content_hash": "a8f5f167f4e7c41e489e2f95a87c3e5d"
 }
 ```
@@ -530,7 +530,7 @@ python orchestrator.py report --format pdf --output-dir outputs/
   "model_name": "intfloat/multilingual-e5-base",
   "model_version": "1.0.0",
   "processing_batch": 1,
-  "created_at": "2025-01-20T11:00:00Z"
+  "created_at": "2025-11-08T11:00:00Z"
 }
 ```
 
@@ -561,9 +561,9 @@ python orchestrator.py report --format pdf --output-dir outputs/
     "silhouette_score": 0.68
   },
   "output_files": [
-    "outputs/2025-01-20/cluster_report.pdf",
-    "outputs/2025-01-20/skill_distribution.png",
-    "outputs/2025-01-20/raw_data.csv"
+    "outputs/2025-11-08/cluster_report.pdf",
+    "outputs/2025-11-08/skill_distribution.png",
+    "outputs/2025-11-08/raw_data.csv"
   ]
 }
 ```
@@ -742,7 +742,7 @@ labor-observatory/
 │   └── cache/
 │
 ├── outputs/
-│   └── 2025-01-20/
+│   └── 2025-11-08/
 │       ├── analysis_report.pdf
 │       ├── cluster_visualization.png
 │       ├── skill_frequency.png

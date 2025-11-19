@@ -1,7 +1,7 @@
 # Sistema de Evaluación de Pipelines - Log de Implementación
 
 **Fecha de Inicio:** 2025-11-05
-**Autor:** Claude + Nicolás Camacho
+**Autores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Objetivo:** Evaluar y comparar Pipeline A (NER+Regex) vs Pipeline B (LLMs) contra Gold Standard
 
 ---

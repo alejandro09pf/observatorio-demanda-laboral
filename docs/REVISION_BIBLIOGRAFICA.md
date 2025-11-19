@@ -2,7 +2,6 @@
 
 **Documento de tesis**: Observatorio de demanda laboral en América Latina
 **Fecha de revisión**: 2025-11-13
-**Revisor**: Claude (Asistente IA)
 
 ---
 

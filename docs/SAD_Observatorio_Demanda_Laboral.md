@@ -2,7 +2,7 @@
 
 ## Documento SAD
 
-**Enero 2025**
+**Noviembre 2025**
 **Versión 1.0**
 
 **Nicolás Francisco Camacho Alarcón**
@@ -948,5 +948,5 @@ Estas son limitaciones específicas que afectan la capacidad del sistema para cu
 
 **Código del Proyecto:** CIS2025CP08
 **Versión del Documento:** 1.0
-**Fecha de Creación:** Enero 2025
+**Fecha de Creación:** Noviembre 2025
 **Pontificia Universidad Javeriana - Facultad de Ingeniería**

@@ -51,7 +51,7 @@ def test_insert_fake_job():
             "salary_raw": "$25,000 - $35,000 MXN",
             "contract_type": "Tiempo completo",
             "remote_type": "Híbrido",
-            "posted_date": "2025-01-20"
+            "posted_date": "2025-11-08"
         }
         
         # Generate content hash
@@ -134,7 +134,7 @@ def test_batch_insert():
                 "salary_raw": "$3,500,000 - $4,500,000 COP",
                 "contract_type": "Tiempo completo",
                 "remote_type": "Presencial",
-                "posted_date": "2025-01-19"
+                "posted_date": "2025-11-07"
             },
             {
                 "portal": "computrabajo",
@@ -148,7 +148,7 @@ def test_batch_insert():
                 "salary_raw": "$150,000 - $200,000 ARS",
                 "contract_type": "Tiempo completo",
                 "remote_type": "Remoto",
-                "posted_date": "2025-01-18"
+                "posted_date": "2025-11-06"
             }
         ]
         

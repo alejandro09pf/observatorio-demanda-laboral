@@ -6,7 +6,7 @@
 
 ---
 
-## Iteración 1 - Baseline Implementation (2025-01-06)
+## Iteración 1 - Baseline Implementation (2025-11-06)
 
 ### Configuración Inicial
 ```python
@@ -97,7 +97,7 @@ Patrones identificados:
 
 ---
 
-## Iteración 2 - Noise Filtering (2025-01-06)
+## Iteración 2 - Noise Filtering (2025-11-06)
 
 ### Configuración Actualizada
 ```python
@@ -208,7 +208,7 @@ NOISE_PATTERNS += [
 
 ---
 
-## Iteración 3 - Priorizing Recall (2025-01-06)
+## Iteración 3 - Priorizing Recall (2025-11-06)
 
 ### Configuración Actualizada
 ```python
@@ -309,7 +309,7 @@ nlp = spacy.load("es_core_news_sm")  # Spanish model
 
 ---
 
-## Iteración 4 - Noun Phrase Chunking + TF-IDF Ranking (2025-01-06)
+## Iteración 4 - Noun Phrase Chunking + TF-IDF Ranking (2025-11-06)
 
 ### Configuración
 ```python

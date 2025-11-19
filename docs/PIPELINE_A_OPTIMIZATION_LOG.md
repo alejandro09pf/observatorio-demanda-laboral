@@ -2,7 +2,7 @@
 ## NER + Regex + ESCO Matching - Iterative Improvement
 
 **Última actualización**: 2025-11-07 22:15:00
-**Responsable**: Claude (Senior NLP/AI Engineer)
+**Responsables**: Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Objetivo**: Mejorar Pipeline A para alcanzar Precision ≥0.85 y Recall ≥0.60 eliminando extracción de basura
 
 ---
@@ -620,7 +620,7 @@ raw_jobs → cleaned_jobs (combined_text) →
 
 ## 🚨 PROBLEMAS IDENTIFICADOS (Baseline - Experimento #0)
 
-### **Experimento #0: Test Inicial (2025-01-05 17:57)**
+### **Experimento #0: Test Inicial (2025-11-05 17:57)**
 
 **Script**: `test_pipeline_audit.py`
 **Jobs testeados**: 3 del gold standard
@@ -674,7 +674,7 @@ raw_jobs → cleaned_jobs (combined_text) →
 - [x] Documentar baseline (Experimento #0)
 - [x] Definir plan de mejoras
 
-#### ✅ **1.2 - Agregar filtro de stopwords al NER** (COMPLETADO 2025-01-05)
+#### ✅ **1.2 - Agregar filtro de stopwords al NER** (COMPLETADO 2025-11-05)
 **Archivo**: `src/extractor/ner_extractor.py`
 **Cambios realizados**:
 - [x] Agregadas 200+ stopwords categorizadas (navegación, verbos, genéricos, países, empresas)
@@ -778,7 +778,7 @@ WHERE is_active = TRUE
 ## 📊 REGISTRO DE EXPERIMENTOS
 
 ### **Experimento #0 - Baseline (COMPLETADO)**
-**Fecha**: 2025-01-05 17:57
+**Fecha**: 2025-11-05 17:57
 **Script**: `test_pipeline_audit.py`
 **Jobs**: 3 del gold standard
 **Resultados**: Ver sección "Problemas Identificados" arriba
@@ -786,7 +786,7 @@ WHERE is_active = TRUE
 ---
 
 ### **Experimento #1 - Filtro de stopwords** ✅ COMPLETADO
-**Fecha**: 2025-01-05 13:59
+**Fecha**: 2025-11-05 13:59
 **Objetivo**: Eliminar basura del NER
 **Cambios aplicados**: Mejora 1.2 (stopwords filter con 5 categorías)
 **Expectativa**: Garbage rate 100% → <20%
@@ -844,7 +844,7 @@ WHERE is_active = TRUE
 ---
 
 ### **Experimento #2 - Fuzzy threshold 0.92** ✅ COMPLETADO (ÉXITO PARCIAL)
-**Fecha**: 2025-01-05 14:02
+**Fecha**: 2025-11-05 14:02
 **Objetivo**: Eliminar matches absurdos de ESCO
 **Cambios aplicados**: Mejora 1.3 (threshold 0.92 general + 0.95 para strings ≤4 chars)
 **Expectativa**: 0 matches tipo "REST→dentaduras"
@@ -895,7 +895,7 @@ Investigación:
 ---
 
 ### **Experimento #3 - Normalización + EntityRuler** ✅ COMPLETADO
-**Fecha**: 2025-01-05 14:06
+**Fecha**: 2025-11-05 14:06
 **Objetivo**: Mejorar ESCO exact match rate + precisión NER
 **Cambios aplicados**:
 - Mejora 1.4: Diccionario normalización Regex (~80 aliases con capitalización ESCO)
@@ -952,7 +952,7 @@ Investigación:
 ---
 
 ### **Experimento #4 - Maximización Pipeline A** ✅ COMPLETADO
-**Fecha**: 2025-01-05 14:13
+**Fecha**: 2025-11-05 14:13
 **Objetivo**: Dar a Pipeline A su máximo potencial vs LLM
 **Cambios aplicados**:
 - Mejora 1.5: Actualizar a es_core_news_lg (modelo grande, +7% accuracy)
@@ -999,7 +999,7 @@ Investigación:
 ---
 
 ### **Experimento #5 - Evaluación vs Gold Standard** ✅ COMPLETADO
-**Fecha**: 2025-01-05 14:31
+**Fecha**: 2025-11-05 14:31
 **Objetivo**: Comparar Pipeline A vs anotaciones manuales (gold bullets)
 **Jobs analizados**: 3 jobs con 132 hard skills anotadas manualmente
 
@@ -1171,7 +1171,7 @@ if skill_text[0] in ',;:+':
 ---
 
 ### **Experimento #6 - Post 3 Critical Fixes** ✅ COMPLETADO
-**Fecha**: 2025-01-05 14:40
+**Fecha**: 2025-11-05 14:40
 **Objetivo**: Validar las 3 mejoras críticas en 10 jobs diversos
 **Jobs analizados**: 10 jobs con 402 hard skills anotadas manualmente
 **Cambios aplicados**:
@@ -1295,7 +1295,7 @@ Pipeline A necesita 1-2 iteraciones más para alcanzar recall ≥60% antes de be
 ---
 
 ### **Experimento #7 - Refinamiento Crítico** ✅ COMPLETADO
-**Fecha**: 2025-01-05 14:48
+**Fecha**: 2025-11-05 14:48
 **Objetivo**: Corregir problemas identificados en Exp #6 y mejorar recall
 **Jobs analizados**: Mismos 10 jobs (402 hard skills)
 **Cambios aplicados**:
@@ -1406,7 +1406,7 @@ Pipeline A ha alcanzado un nivel de madurez razonable:
 ---
 
 ### **Experimento #8 - NER Optimization & Pattern Expansion** ✅ COMPLETADO
-**Fecha**: 2025-01-05 15:05
+**Fecha**: 2025-11-05 15:05
 **Objetivo**: Optimizar NER y agregar patterns faltantes para superar 60% recall
 **Jobs analizados**: Mismos 10 jobs (402 hard skills)
 
@@ -1532,7 +1532,7 @@ Agregados al diccionario DOMAIN_SPECIFIC_ALIASES.
 ---
 
 ### **Post-Experimento #8: Limpieza Metodológica y Taxonomías Externas** ✅ COMPLETADO
-**Fecha**: 2025-01-05 (post Exp #8)
+**Fecha**: 2025-11-05 (post Exp #8)
 **Motivación**: Identificamos data leakage - patterns informales agregados analizando jobs del gold standard
 
 #### **Problema Detectado:**
@@ -1737,7 +1737,7 @@ r'\bAPI\s+Gateway\b'  # ¿Muy específico? Pierde "API gateway", "api-gateway"
 
 ---
 
-### **Opción 3: Modelos Transformer Alternativos** (Investigación 2025-01-05)
+### **Opción 3: Modelos Transformer Alternativos** (Investigación 2025-11-05)
 
 #### **Modelos disponibles más potentes que `es_core_news_lg`:**
 
@@ -1878,7 +1878,7 @@ Usar LLM (Mistral 7B local o GPT-4 API) como capa de validación/extracción:
 
 ---
 
-### **Decisión Estratégica Actual (2025-01-05)**
+### **Decisión Estratégica Actual (2025-11-05)**
 
 **Para Fase 1/MVP:**
 1. ✅ Mantener Pipeline A como baseline (64.43% recall)
@@ -2178,8 +2178,8 @@ else:
 
 # 🔴 EXPERIMENTO #8: DIAGNÓSTICO CRÍTICO - PRECISION 20.57%
 
-**Fecha**: 2025-11-06  
-**Investigador**: Claude (Senior NLP Engineer)  
+**Fecha**: 2025-11-06
+**Investigadores**: Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Objetivo**: Diagnosticar causas raíz de Precision=20.57% (80% falsos positivos) y proponer soluciones
 
 ---
@@ -2510,8 +2510,8 @@ TOTAL EXTRAÍDO: ~7,125 skills
 
 # 🔧 EXPERIMENTO #9: FIX PRECISION 20.57% → OBJETIVO 45%+
 
-**Fecha inicio:** 2025-11-06  
-**Investigador:** Claude (Senior NLP Engineer)  
+**Fecha inicio:** 2025-11-06
+**Investigadores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Objetivo:** Arreglar los 3 problemas identificados en Experimento #8 para duplicar precision
 
 ---

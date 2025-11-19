@@ -61,8 +61,8 @@ sequenceDiagram
   "salary_raw": "$6.000.000 - $8.000.000 COP",
   "contract_type": "Tiempo completo",
   "remote_type": "Híbrido",
-  "posted_date": "2025-01-15",
-  "scraped_at": "2025-01-20T10:30:45.123456Z",
+  "posted_date": "2025-11-05",
+  "scraped_at": "2025-11-08T10:30:45.123456Z",
   "content_hash": "a8f5f167f44ace41e489e2f95a87c3e5d",
   "raw_html": "<div class=\"job-posting\">...</div>",
   "is_processed": false
@@ -85,8 +85,8 @@ sequenceDiagram
   "salary_raw": "$40,000 - $60,000 MXN mensuales",
   "contract_type": "Tiempo completo",
   "remote_type": "Remoto",
-  "posted_date": "2025-01-18",
-  "scraped_at": "2025-01-20T11:15:22.654321Z",
+  "posted_date": "2025-11-06",
+  "scraped_at": "2025-11-08T11:15:22.654321Z",
   "content_hash": "b7e4g268f55bdf52f590f3g96b98d4f6e",
   "raw_html": "<article class=\"job-card\">...</article>",
   "is_processed": false
@@ -100,8 +100,8 @@ sequenceDiagram
   "scraping_session_id": "session_20250120_101500",
   "portal": "computrabajo",
   "country": "CO",
-  "start_time": "2025-01-20T10:15:00Z",
-  "end_time": "2025-01-20T10:45:00Z",
+  "start_time": "2025-11-08T10:15:00Z",
+  "end_time": "2025-11-08T10:45:00Z",
   "statistics": {
     "total_pages_visited": 50,
     "total_jobs_found": 487,
@@ -130,7 +130,7 @@ sequenceDiagram
 {
   "extraction_id": "770e8400-e29b-41d4-a716-446655440002",
   "job_id": "550e8400-e29b-41d4-a716-446655440000",
-  "extraction_timestamp": "2025-01-20T12:00:00Z",
+  "extraction_timestamp": "2025-11-08T12:00:00Z",
   "extracted_skills": [
     {
       "skill_text": "react",
@@ -185,7 +185,7 @@ sequenceDiagram
 {
   "extraction_id": "880e8400-e29b-41d4-a716-446655440003",
   "job_id": "660e8400-e29b-41d4-a716-446655440001",
-  "extraction_timestamp": "2025-01-20T12:05:00Z",
+  "extraction_timestamp": "2025-11-08T12:05:00Z",
   "regex_patterns_matched": [
     {
       "pattern_name": "experiencia_en",
@@ -439,7 +439,7 @@ sequenceDiagram
   ],
   "model": "intfloat/multilingual-e5-base",
   "batch_size": 32,
-  "timestamp": "2025-01-20T13:00:00Z"
+  "timestamp": "2025-11-08T13:00:00Z"
 }
 ```
 
@@ -525,7 +525,7 @@ sequenceDiagram
 ```json
 {
   "clustering_analysis_id": "ff0e8400-e29b-41d4-a716-446655440010",
-  "analysis_timestamp": "2025-01-20T14:00:00Z",
+  "analysis_timestamp": "2025-11-08T14:00:00Z",
   "clustering_parameters": {
     "algorithm": "hdbscan",
     "min_cluster_size": 5,
@@ -612,7 +612,7 @@ sequenceDiagram
   "temporal_analysis_id": "110e8400-e29b-41d4-a716-446655440011",
   "analysis_period": {
     "start_date": "2024-07-01",
-    "end_date": "2025-01-20",
+    "end_date": "2025-11-08",
     "total_days": 203
   },
   "skill_trends": [
@@ -627,7 +627,7 @@ sequenceDiagram
         {"month": "2024-10", "count": 175},
         {"month": "2024-11", "count": 189},
         {"month": "2024-12", "count": 178},
-        {"month": "2025-01", "count": 195}
+        {"month": "2025-11", "count": 195}
       ]
     },
     {
@@ -641,7 +641,7 @@ sequenceDiagram
         {"month": "2024-10", "count": 78},
         {"month": "2024-11", "count": 92},
         {"month": "2024-12", "count": 108},
-        {"month": "2025-01", "count": 125}
+        {"month": "2025-11", "count": 125}
       ]
     }
   ],
@@ -663,7 +663,7 @@ sequenceDiagram
 ```json
 {
   "geographic_analysis_id": "220e8400-e29b-41d4-a716-446655440012",
-  "analysis_date": "2025-01-20",
+  "analysis_date": "2025-11-08",
   "country_statistics": {
     "CO": {
       "total_jobs": 1847,
@@ -813,7 +813,7 @@ Result:
 ```json
 {
   "message_id": "msg_330e8400-e29b-41d4-a716-446655440013",
-  "timestamp": "2025-01-20T15:00:00Z",
+  "timestamp": "2025-11-08T15:00:00Z",
   "source_module": "extractor",
   "target_module": "llm_processor",
   "message_type": "job_batch_ready",
@@ -829,7 +829,7 @@ Result:
   "metadata": {
     "priority": "normal",
     "retry_count": 0,
-    "processing_deadline": "2025-01-20T15:10:00Z"
+    "processing_deadline": "2025-11-08T15:10:00Z"
   }
 }
 ```
@@ -839,11 +839,11 @@ Result:
 ```json
 {
   "status_check_id": "status_440e8400-e29b-41d4-a716-446655440014",
-  "timestamp": "2025-01-20T15:30:00Z",
+  "timestamp": "2025-11-08T15:30:00Z",
   "modules_status": {
     "scraper": {
       "status": "idle",
-      "last_run": "2025-01-20T14:45:00Z",
+      "last_run": "2025-11-08T14:45:00Z",
       "jobs_scraped_today": 234
     },
     "extractor": {
@@ -861,11 +861,11 @@ Result:
     "embedder": {
       "status": "idle",
       "embeddings_generated": 487,
-      "last_run": "2025-01-20T13:00:00Z"
+      "last_run": "2025-11-08T13:00:00Z"
     },
     "analyzer": {
       "status": "idle",
-      "last_analysis": "2025-01-20T14:00:00Z",
+      "last_analysis": "2025-11-08T14:00:00Z",
       "clusters_found": 12
     }
   },
@@ -889,7 +889,7 @@ Result:
   "error_id": "err_550e8400-e29b-41d4-a716-446655440015",
   "module": "scraper",
   "error_type": "HTTPError",
-  "timestamp": "2025-01-20T16:00:00Z",
+  "timestamp": "2025-11-08T16:00:00Z",
   "details": {
     "url": "https://www.computrabajo.com.co/ofertas/page-51",
     "status_code": 429,
@@ -909,7 +909,7 @@ Result:
   "error_id": "err_660e8400-e29b-41d4-a716-446655440016",
   "module": "llm_processor",
   "error_type": "ModelError",
-  "timestamp": "2025-01-20T16:15:00Z",
+  "timestamp": "2025-11-08T16:15:00Z",
   "details": {
     "job_id": "770e8400-e29b-41d4-a716-446655440017",
     "model": "mistral-7b-instruct",
@@ -929,7 +929,7 @@ Result:
   "error_id": "err_770e8400-e29b-41d4-a716-446655440018",
   "module": "database",
   "error_type": "ConnectionError",
-  "timestamp": "2025-01-20T16:30:00Z",
+  "timestamp": "2025-11-08T16:30:00Z",
   "details": {
     "operation": "insert_enhanced_skills",
     "error_message": "connection refused",

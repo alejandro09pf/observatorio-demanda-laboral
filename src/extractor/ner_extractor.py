@@ -163,7 +163,7 @@ class NERExtractor:
     def _load_default_model(self):
         """Load default spaCy model."""
         try:
-            # Try Spanish large model first (Mejora 1.5 - 2025-01-05)
+            # Try Spanish large model first (Mejora 1.5 - 2025-11-05)
             # Large model has better accuracy for multi-word NER (~92% vs ~85%)
             self.nlp = spacy.load("es_core_news_lg")
             logger.info("✅ Loaded Spanish spaCy LARGE model (es_core_news_lg)")
@@ -180,8 +180,8 @@ class NERExtractor:
         """
         Add rule-based entity recognition for ESCO technical skills.
 
-        As a Senior NLP Engineer, I'm loading ~500 technical skills from ESCO
-        to create an EntityRuler that recognizes tech skills BEFORE the generic NER.
+        Loads ~500 technical skills from ESCO to create an EntityRuler
+        that recognizes tech skills BEFORE the generic NER.
 
         Strategy:
         1. Query ESCO for technical skills (onet_hot_tech, onet_in_demand, tier1_critical)
@@ -203,7 +203,7 @@ class NERExtractor:
                 cursor = conn.cursor()
 
                 # Get technical skills (hot tech + in-demand + critical + technical knowledge)
-                # EXPANDED (Mejora 2.3 - 2025-01-05): Include technical "knowledge" skills
+                # EXPANDED (Mejora 2.3 - 2025-11-05): Include technical "knowledge" skills
                 cursor.execute("""
                     SELECT DISTINCT
                         preferred_label_es,
@@ -416,7 +416,7 @@ class NERExtractor:
                     skills.append(skill)
 
             # ============================================================================
-            # NOUN CHUNKS DISABLED - Experimento #8 (2025-01-05)
+            # NOUN CHUNKS DISABLED - Experimento #8 (2025-11-05)
             # Razón: Hit rate 7-20% (93% ruido) según análisis deep_analysis_missing_skills.py
             # Extrae: "Cuales", "Entrega", "Auxilio", "Vacaciones", frases largas, etc.
             # Decisión: Desactivar para reducir ruido. Las skills válidas se agregan a Regex.
@@ -492,7 +492,7 @@ class NERExtractor:
         """
         Filter out non-technical garbage from NER extractions.
 
-        As a Senior NLP Engineer, I'm implementing multi-level filters:
+        Multi-level filters:
         1. Stopwords filter (web nav, verbs, generic nouns, countries, companies)
         2. Length filter (≤2 chars unless technical acronym)
         3. Technical acronym validation (uppercase check)
