@@ -1,8 +1,8 @@
 # 📘 Sistema Completo del Observatorio de Demanda Laboral - Manual Técnico
 
 > **Documento Maestro:** Guía completa del pipeline end-to-end desde scraping hasta análisis temporal
-> **Autor:** Nicolás Camacho + Claude Code
-> **Fecha:** 2025-01-09
+> **Autores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
+> **Fecha:** 2025-11-08
 > **Propósito:** Manual de usuario + Documentación técnica de todos los componentes del sistema
 
 ---
@@ -1360,7 +1360,7 @@ Aplica **5 filtros secuenciales:**
 
 ```python
 # ============================================================================
-# NOUN CHUNKS DISABLED - Experimento #8 (2025-01-05)
+# NOUN CHUNKS DISABLED - Experimento #8 (2025-11-05)
 # Razón: Hit rate 7-20% (93% ruido) según análisis deep_analysis_missing_skills.py
 # Extrae: "Cuales", "Entrega", "Auxilio", "Vacaciones", frases largas, etc.
 # Decisión: Desactivar para reducir ruido. Las skills válidas se agregan a Regex.
@@ -1679,7 +1679,7 @@ final_confidence = (extraction_confidence * 0.7) + (esco_confidence * 0.3)
 
 #### 5.7.3 ¿Por qué desactivar noun chunks?
 
-**Experimento #8 (2025-01-05):** Análisis cuantitativo de noun chunks
+**Experimento #8 (2025-11-05):** Análisis cuantitativo de noun chunks
 
 **Método:**
 1. Ejecutar Pipeline A con noun chunks activados en 300 jobs gold standard
@@ -2052,7 +2052,7 @@ AMBIGUOUS_WORDS = [
 
 ### 6.3 Proceso de Iteración
 
-#### Iteración 1 - Baseline (2025-01-06)
+#### Iteración 1 - Baseline (2025-11-06)
 
 **Configuración:**
 ```python
@@ -2077,7 +2077,7 @@ max_df=0.5, min_df=2, max_features=10000, threshold=0.1
 
 **Diagnóstico:** TF-IDF captura artefactos de scraping con alta frecuencia.
 
-#### Iteración 2 - Noise Filtering (2025-01-06)
+#### Iteración 2 - Noise Filtering (2025-11-06)
 
 **Mejoras aplicadas:**
 1. Stopwords ampliadas: +50 términos de dominio
@@ -2093,7 +2093,7 @@ max_df=0.5, min_df=2, max_features=10000, threshold=0.1
 
 **Mejora marginal:** +1% F1 pero aún lejos del objetivo (45-50%)
 
-#### Iteración 3 - Noun Phrase Mining (2025-01-06)
+#### Iteración 3 - Noun Phrase Mining (2025-11-06)
 
 **Nueva estrategia:** Combinar TF-IDF con spaCy noun chunks para capturar skills multi-palabra.
 
@@ -2279,7 +2279,7 @@ TF-IDF no puede hacer esto solo con estadísticas.
 
 **Status:** ❌ **DESCARTADO**
 
-**Fecha decisión:** 2025-01-06
+**Fecha decisión:** 2025-11-06
 
 **Motivos:**
 1. F1 score inaceptable: 20.57% vs meta 45-50%
@@ -2923,7 +2923,7 @@ llm_model: 'gemma-3-4b-instruct'
 processing_time_seconds: 2.34
 tokens_used: 1450
 is_duplicate: FALSE
-enhanced_at: '2025-01-09 14:32:15'
+enhanced_at: '2025-11-08 14:32:15'
 ```
 
 ---
@@ -4604,7 +4604,7 @@ score = max(score_ratio, score_partial)
 
 ---
 
-#### **Mejora 1.3 (Enero 2025) - Eliminar partial_ratio:**
+#### **Mejora 1.3 (Noviembre 2025) - Eliminar partial_ratio:**
 
 **Decisión:** Solo usar `ratio` (matching completo de strings).
 
@@ -4629,7 +4629,7 @@ score = fuzz.ratio(skill_text.lower(), label_es.lower()) / 100.0
 
 ---
 
-#### **Mejora 1.3.1 (Enero 2025) - Adaptive threshold para strings cortos:**
+#### **Mejora 1.3.1 (Noviembre 2025) - Adaptive threshold para strings cortos:**
 
 **Problema descubierto:** Strings de ≤4 caracteres tienen matching demasiado permisivo.
 
@@ -4710,7 +4710,7 @@ else:
 
 **Estado actual:** **LAYER3_ENABLED = False** (línea 56)
 
-**Razón:** Después de investigación exhaustiva (Enero 2025), se determinó que **E5 multilingual embeddings NO son adecuados para vocabulario técnico**.
+**Razón:** Después de investigación exhaustiva (Noviembre 2025), se determinó que **E5 multilingual embeddings NO son adecuados para vocabulario técnico**.
 
 ---
 
@@ -4730,7 +4730,7 @@ else:
 
 ---
 
-#### **Investigación y Hallazgos (Enero 2025)**
+#### **Investigación y Hallazgos (Noviembre 2025)**
 
 **Documentación completa:** `docs/FAISS_ANALYSIS_AND_RECOMMENDATION.md` (354 líneas)
 
@@ -5377,7 +5377,7 @@ manual_skills: 83
 
 ### 9.14 Estado Actual y Próximos Pasos
 
-**Estado actual (Enero 2025):**
+**Estado actual (Noviembre 2025):**
 - ✅ Layer 1 (Exact) implementado y funcional
 - ✅ Layer 2 (Fuzzy) mejorado con threshold 0.92 y adaptive logic
 - ✅ Layer 3 (FAISS) investigado exhaustivamente y **DESHABILITADO**
@@ -6013,7 +6013,7 @@ embeddings = model.encode(
 
 ### 10.11 Estado Actual y Próximos Pasos
 
-**Estado actual (Enero 2025):**
+**Estado actual (Noviembre 2025):**
 - ✅ 114,763 embeddings generados (100% coverage)
 - ✅ Modelo: intfloat/multilingual-e5-base (768D)
 - ✅ Scripts: 3 scripts automatizados para diferentes datasets
@@ -8053,7 +8053,7 @@ A: Sí. Pipeline A no requiere GPU. Pipeline B (Gemma) corre en CPU (lento pero 
 A:
 ```bash
 # 1. Scraping incremental (solo nuevas ofertas)
-python -m src.orchestrator scrape getonboard --since 2025-01-01
+python -m src.orchestrator scrape getonboard --since 2025-11-01
 
 # 2. Re-ejecutar pipeline en nuevas ofertas
 python -m src.orchestrator extract --pipeline A --new-only
@@ -10253,7 +10253,7 @@ A: Diagnóstico de performance:
 
 ## 🚧 Estado del Documento
 
-**Última actualización:** 2025-01-09
+**Última actualización:** 2025-11-08
 **Versión:** 0.1 (DRAFT - EN CONSTRUCCIÓN)
 
 **Progreso de verificación:**

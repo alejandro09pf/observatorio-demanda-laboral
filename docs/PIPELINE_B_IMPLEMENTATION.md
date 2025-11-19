@@ -2,7 +2,7 @@
 
 ## ✅ QUÉ SE IMPLEMENTÓ (CORRECTO)
 
-He implementado **Pipeline B** como un **extractor DIRECTO paralelo** a Pipeline A (NER+Regex), NO como post-procesamiento.
+Se implementó **Pipeline B** como un **extractor DIRECTO paralelo** a Pipeline A (NER+Regex), NO como post-procesamiento.
 
 ### Arquitectura Correcta
 
@@ -322,15 +322,15 @@ A: SÍ. Instala con: `CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-pytho
 
 ---
 
-**Autor:** Claude Code
-**Fecha:** 2025-01-03
+**Autores:** Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
+**Fecha:** 2025-11-03
 **Estado:** ✅ IMPLEMENTACIÓN COMPLETA Y CORREGIDA
 
 ---
 
-## 🔬 COMPARACIÓN COMPLETA: 4 Modelos LLM (2025-01-06)
+## 🔬 COMPARACIÓN COMPLETA: 4 Modelos LLM (2025-11-06)
 
-**Fecha del experimento:** 2025-01-06
+**Fecha del experimento:** 2025-11-06
 **Dataset:** 10 jobs del gold standard
 **Job analizado en detalle:** `8c827878-8efa-4733-9f3c-277d204a437b` (Python Developer @ DaCodes)
 
@@ -709,7 +709,7 @@ Después de comparar 4 modelos LLM (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3
 
 ---
 
-**Fecha análisis:** 2025-01-06
+**Fecha análisis:** 2025-11-06
 **Modelos comparados:** 4 (Gemma 3 4B, Llama 3.2 3B, Qwen 2.5 3B, Phi-3.5 Mini)
 **Dataset:** 10 jobs gold standard (job detallado: 8c827878-8efa-4733-9f3c-277d204a437b)
 **Resultado:** Gemma 3 4B seleccionado como modelo único para Pipeline B

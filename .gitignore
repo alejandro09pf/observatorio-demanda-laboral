@@ -15,15 +15,18 @@ ENV/
 *.swp
 *.swo
 .history/
+.claude/
 
 # Data and Models
 data/models/*.gguf
 data/models/*/
 data/cache/
-data/backups/*.sql.gz
-!data/backups/backup_part_*
+data/backups/
 outputs/
 logs/
+
+# Documentation
+docs/Bibliografia/
 
 # Database
 *.db

@@ -135,7 +135,7 @@ class RegexExtractor:
                 r'\bCTE\b', r'\bOLS\b', r'\bRLS\b', r'\bParquet\b', r'\bDelta\b',
             ],
             # ===================================================================
-            # NER-UNIQUE SKILLS (Experimento #8 - 2025-01-05)
+            # NER-UNIQUE SKILLS (Experimento #8 - 2025-11-05)
             # ===================================================================
             # Skills que SOLO NER encontraba (27 total) ahora en Regex para evitar dependencia
             # Fuente: analyze_ner_performance.py - 41.9% precision pero 27 skills únicas valiosas
@@ -600,8 +600,7 @@ class RegexExtractor:
         """
         Normalize skill text for comparison AND ESCO matching.
 
-        As a Senior NLP Engineer, I'm implementing comprehensive normalization
-        to maximize ESCO exact match rate (~300 aliases).
+        Comprehensive normalization to maximize ESCO exact match rate (~300 aliases).
 
         Strategy:
         - Lowercase input
@@ -717,7 +716,7 @@ class RegexExtractor:
         }
 
         # ============================================================================
-        # LATAM/Enterprise Technologies (Mejora 2.4 - 2025-01-05)
+        # LATAM/Enterprise Technologies (Mejora 2.4 - 2025-11-05)
         # ============================================================================
 
         # Enterprise Software (common in LATAM)

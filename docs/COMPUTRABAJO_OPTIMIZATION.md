@@ -335,6 +335,6 @@ Si encuentras formas de optimizar aún más:
 
 ---
 
-**Autor**: Claude Code
+**Autores**: Nicolás Francisco Camacho Alarcón y Alejandro Pinzón
 **Fecha**: Octubre 2025
 **Versión**: 1.0

@@ -2,16 +2,12 @@
 
 **FUENTE**: Datos de `cleaned_jobs` (SIN HTML, texto limpio)
 
-**INSTRUCCIONES**: Para cada job advertisement, debes:
-1. Leer la descripción y requirements COMPLETOS
-2. Verificar que es un job de software/tech válido (marcar checkbox)
-3. Listar hard skills como TÉRMINOS ATÓMICOS en español (Python, React, Docker)
-4. Listar soft skills como TÉRMINOS ATÓMICOS en español (Comunicación, Liderazgo)
-5. Agregar comentarios breves
-
-**FORMATO**: Términos atómicos, uno por línea, en español.
-
-**PROHIBIDO AUTOMATIZAR** - Debes leer uno por uno manualmente.
+**INSTRUCCIONES**: Para cada job advertisement, se debe:
+1. Leer la descripción y requirements completos
+2. Verificar que es un job de software/tech válido
+3. Listar hard skills como termios atomicos en español (Python, React, Docker)
+4. Listar soft skills como terminos atomicos en español (Comunicación, Liderazgo)
+5. Agregar comentarios breves sobre el trabajo para futura investigacion.
 
 ---
 
@@ -64,7 +60,7 @@ Trabajo en equipo
 
 **Comentarios**:
 ```
-Developer Advocate en Zyte (empresa de web scraping). Rol técnico combinado con evangelización y trabajo comunitario. Válido para gold standard.
+Developer Advocate en Zyte (empresa de web scraping). Rol técnico combinado con evangelización y trabajo comunitario.
 ```
 
 ---
@@ -120,7 +116,7 @@ Adaptabilidad
 
 **Comentarios**:
 ```
-Field Engineer con experiencia en automatización y scripting. Rol técnico que hace de puente entre equipos de ingeniería y operaciones. Válido.
+Field Engineer con experiencia en automatización y scripting. Rol técnico que hace de puente entre equipos de ingeniería y operaciones.
 ```
 
 ---

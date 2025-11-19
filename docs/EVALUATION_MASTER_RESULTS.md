@@ -152,7 +152,7 @@
 
 ---
 
-#### **Pipeline B Iteraciones** (2025-01-05 - 2025-11-06)
+#### **Pipeline B Iteraciones** (2025-11-05 - 2025-11-06)
 **Docs**: `docs/PIPELINE_B_ITERACION_Y_PRUEBAS.md`
 
 **Modelos evaluados:**
@@ -758,7 +758,7 @@ confidence_threshold = 0.1
 ## 🔍 EXPERIMENTOS FAISS/EMBEDDINGS
 
 **Documento**: `docs/FAISS_ANALYSIS_AND_RECOMMENDATION.md`
-**Fecha**: 2025-01-23
+**Fecha**: 2025-11-08
 **Motivación**: FAISS Layer 3 producía 0 matches con threshold 0.87
 
 ### Experimento #1: Threshold Testing (0.80 → 0.90)
@@ -837,7 +837,7 @@ confidence_threshold = 0.1
 ## 📊 SELECCIÓN DE 300 GOLD STANDARD JOBS
 
 **Script**: `scripts/select_gold_standard_jobs.py`
-**Fecha de selección**: 2025-01-XX (ver logs)
+**Fecha de selección**: 2025-11-XX (ver logs)
 
 ### Metodología de Selección Estratificada
 
@@ -946,7 +946,7 @@ WHERE is_usable = TRUE
 
 ## 🎯 Resultados de Clustering de Producción (Fase 14)
 
-**Fecha:** 2025-01-09  
+**Fecha:** 2025-11-08  
 **Dataset:** 8 clusterings finales (Manual, Pipeline A, Pipeline B × PRE/POST ESCO × 300/30k jobs)
 
 ### Resumen Ejecutivo

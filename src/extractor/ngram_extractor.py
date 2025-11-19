@@ -14,9 +14,6 @@ Strategy:
 2. Multi-word n-grams: Capture technical terms like "Machine Learning", "React Native"
 3. Domain-aware filtering: Remove noise patterns specific to job postings
 4. Adaptive thresholding: Extract variable number of skills based on document length
-
-Author: Generated for academic comparison
-Date: 2025-01-06
 """
 
 from typing import List, Dict, Set, Tuple, Optional
