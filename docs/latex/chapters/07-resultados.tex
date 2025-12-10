@@ -1,5 +1,7 @@
 \chapter{RESULTADOS}
 
+Este capítulo presenta los hallazgos obtenidos tras la implementación y ejecución del observatorio. Se organiza en tres secciones principales: primero, la evaluación comparativa de los pipelines de extracción; segundo, los resultados del sistema de clustering; y tercero, el análisis del mercado laboral tecnológico latinoamericano derivado de los datos procesados.
+
 \section{Evaluación Comparativa de Pipelines de Extracción}
 
 Esta sección presenta los resultados cuantitativos de la evaluación de los cuatro pipelines principales sobre el gold standard de 300 ofertas anotadas. Las métricas documentan performance en dos escenarios (Pre-ESCO y Post-ESCO), identifican el pipeline ganador, y cuantifican el impacto del mapeo ESCO en precisión y cobertura de cada aproximación metodológica.
@@ -33,7 +35,7 @@ Entre LLMs, Gemma 3 4B alcanzó el mejor F1 de 46.23\% con balance entre Precisi
 
 \subsection{Evaluación Post-ESCO: Capacidad de Estandarización}
 
-La Tabla~\ref{tab:eval_post_esco} presenta métricas tras mapear todas las skills a taxonomía ESCO, evaluando alineación con vocabulario controlado.
+Complementando la evaluación Pre-ESCO, la Tabla~\ref{tab:eval_post_esco} presenta métricas tras mapear todas las skills a taxonomía ESCO, evaluando alineación con vocabulario controlado.
 
 \begin{table}[h]
 \centering
@@ -68,7 +70,7 @@ El trade-off crítico identificado fue estandarización versus diversidad léxic
 
 \section{Análisis del Mercado Laboral Tecnológico Latinoamericano}
 
-Esta sección presenta hallazgos del análisis sobre el corpus completo de 30,660 ofertas procesadas, caracterizando distribución de skills, identificando tecnologías emergentes, y documentando tendencias temporales del mercado tech latinoamericano durante 2018-2025.
+Habiendo establecido Pipeline B (Gemma 3 4B) como el método de extracción superior, esta sección presenta los hallazgos del análisis sobre el corpus completo de 30,660 ofertas procesadas, caracterizando distribución de skills, identificando tecnologías emergentes, y documentando tendencias del mercado tech latinoamericano durante 2018-2025.
 
 \subsection{Resultados de Configuraciones de Clustering}
 

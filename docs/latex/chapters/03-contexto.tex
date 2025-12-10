@@ -12,9 +12,15 @@ Antes de abordar los aspectos técnicos de la solución, es fundamental establec
 
 Una oferta laboral (job posting) es un anuncio público de una vacante que especifica título del cargo, descripción de funciones, requisitos de formación, habilidades técnicas requeridas y condiciones del puesto \cite{rubio2025}. Las ofertas publicadas en portales de empleo constituyen una fuente de datos de alta frecuencia sobre demanda laboral, permitiendo capturar tendencias emergentes con granularidad temporal superior a encuestas tradicionales \cite{cardenas2015, rubio2025}. Sin embargo, representan únicamente ``demanda revelada'', excluyendo vacantes cubiertas por redes internas \cite{aguilera2018}. Los portales digitales (elempleo.com, computrabajo.com, LinkedIn) operan como observatorios del mercado laboral LATAM, proveyendo texto no estructurado procesable mediante NLP.
 
-\subsection{Habilidades, Competencias y Skills}
+\subsection{Habilidades, Competencias y Skills: Clarificación Terminológica}
 
-El término skill (habilidad) se define como la unidad básica de conocimiento, capacidad técnica o destreza requerida para un rol laboral \cite{kavargyris2025}. Para este trabajo, se adopta la definición operacional de skill como cualquier mención textual en ofertas que describa capacidades requeridas: lenguajes (``Python''), metodologías (``Scrum''), herramientas (``Docker''), conceptos técnicos (``microservicios'') o competencias transversales (``trabajo en equipo'') \cite{nguyen2024}. Las skills operan como proxy de demanda laboral: frecuencia refleja intensidad de demanda, co-ocurrencia revela ecosistemas tecnológicos \cite{lukauskas2023}.
+En la literatura académica y profesional del mercado laboral existen tres términos frecuentemente utilizados de manera intercambiable que requieren clarificación: skill, habilidad y competencia. Aunque relacionados, presentan matices conceptuales importantes.
+
+El término skill (del inglés) se define como la capacidad específica y demostrable para ejecutar una tarea particular, generalmente adquirida mediante entrenamiento o práctica \cite{kavargyris2025}. Es el término predominante en la literatura anglosajona y en taxonomías internacionales como ESCO y O*NET. El término habilidad es la traducción directa al español de skill y se utiliza como sinónimo en este trabajo, refiriendo a la capacidad técnica o destreza para realizar una actividad específica, como ``programar en Python'' o ``administrar bases de datos''.
+
+El término competencia tiene un alcance más amplio en marcos como el Europeo de Cualificaciones (EQF): integra conocimientos (saber), habilidades (saber hacer) y actitudes (saber ser) para desempeñar una función profesional de manera efectiva \cite{rubio2025}. Una competencia como ``desarrollo de software'' engloba múltiples skills (Python, Git, testing) junto con conocimientos teóricos (algoritmos, arquitectura) y actitudes (resolución de problemas, colaboración).
+
+Para este trabajo, se adopta el término skill (y su equivalente habilidad) como unidad de análisis, siguiendo la convención de la literatura de NLP aplicada al mercado laboral \cite{nguyen2024, kavargyris2025, lukauskas2023}. Operacionalmente, se define como cualquier mención textual en ofertas laborales que describa capacidades técnicas requeridas: lenguajes (``Python''), metodologías (``Scrum''), herramientas (``Docker''), conceptos técnicos (``microservicios'') o competencias transversales (``trabajo en equipo''). Los tres términos se utilizan de manera intercambiable a lo largo del documento, priorizando skill y habilidad por su especificidad y alineación con las taxonomías empleadas. Las skills operan como proxy de demanda laboral: su frecuencia refleja intensidad de demanda, y su co-ocurrencia revela ecosistemas tecnológicos \cite{lukauskas2023}.
 
 \subsection{Tipología de Habilidades: Hard Skills vs. Soft Skills}
 
@@ -78,7 +84,7 @@ Para asegurar la comparabilidad y estandarización de resultados, el sistema int
 
 \section{Análisis del Contexto}
 
-El desafío de extraer, analizar y comprender la demanda de habilidades a partir de ofertas de empleo en línea ha sido abordado desde múltiples frentes en la literatura académica y aplicada. Si bien el objetivo es común, traducir texto en conocimiento accionable sobre el mercado laboral, las aproximaciones metodológicas varían significativamente en complejidad, escalabilidad y profundidad semántica.
+Una vez establecidos los conceptos fundamentales del dominio, es necesario analizar cómo la literatura académica y aplicada ha abordado el desafío de extraer, analizar y comprender la demanda de habilidades a partir de ofertas de empleo en línea. Si bien el objetivo es común, traducir texto en conocimiento accionable sobre el mercado laboral, las aproximaciones metodológicas varían significativamente en complejidad, escalabilidad y profundidad semántica.
 
 Para posicionar adecuadamente la contribución de este proyecto, fue necesario realizar un análisis crítico de las soluciones existentes a nivel global, agrupadas en tres grandes líneas de trabajo: primero, enfoques regionales en América Latina basados en análisis léxico y reglas manuales; segundo, la frontera de la extracción con Large Language Models (LLMs) mediante prompting y fine-tuning; y tercero, pipelines semánticos con descubrimiento no supervisado mediante embeddings y clustering.
 
@@ -96,13 +102,13 @@ De forma análoga, Aguilera y Méndez (2018) para Argentina extrajeron datos de 
 
 Para México, Campos et al. (2024) combinó datos de encuestas oficiales con scraping, basándose en frecuencia de términos y tipología manual para segmentar habilidades \cite{campos2024}.
 
-Estos estudios regionales fueron cruciales para establecer la viabilidad de la recolección de datos, pero expusieron una brecha fundamental compartida: su dependencia de la correspondencia léxica explícita. Al basarse en frecuencias, n-gramas o listas predefinidas, estos sistemas eran metodológicamente frágiles ante la ambigüedad y variabilidad del lenguaje natural.
+En síntesis, estos estudios regionales fueron cruciales para establecer la viabilidad de la recolección de datos, pero expusieron una brecha fundamental compartida: su dependencia de la correspondencia léxica explícita. Al basarse en frecuencias, n-gramas o listas predefinidas, estos sistemas eran metodológicamente frágiles ante la ambigüedad y variabilidad del lenguaje natural.
 
 El Banco Interamericano de Desarrollo (BID) señaló la falta de pipelines modernos y automatizados en la región, destacando que la mayoría todavía se basa en reglas fijas o mapeos manuales sin incorporar embeddings ni NLP avanzado \cite{echeverria2022tecnica}. Esta constatación institucional refuerza la conclusión de un vacío sistémico: la ausencia de una solución que superara los enfoques léxicos para proporcionar análisis semántico, dinámico y escalable.
 
 \subsection{La Frontera de la Extracción: El Uso de Large Language Models}
 
-Paralelamente, una segunda línea de investigación a nivel internacional ha explorado el uso de LLMs para superar las limitaciones de los métodos léxicos, representando la frontera del estado del arte en extracción semántica.
+Dado el vacío identificado en los enfoques regionales, una segunda línea de investigación a nivel internacional ha explorado el uso de LLMs para superar las limitaciones de los métodos léxicos, representando la frontera del estado del arte en extracción semántica.
 
 Nguyen et al. (2024) investigaron el uso de LLMs de propósito general (GPT-3.5, GPT-4) en modalidad prompting sin re-entrenamiento (few-shot learning) \cite{nguyen2024}. Experimentaron con dos formatos de salida: extracción directa (``EXTRACTION-STYLE'') y etiquetado (``NER-STYLE''). Aunque los LLMs no igualaron la precisión de modelos supervisados tradicionales, demostraron capacidad superior para interpretar frases sintácticamente complejas. Sin embargo, el estudio advirtió sobre limitaciones: inconsistencia en formatos de salida, riesgo de ``alucinaciones'' (entidades no reales) y rendimiento cuantitativo inferior (F1-score entre 17.8\% y 27.8\%) \cite{nguyen2024}.
 
@@ -114,7 +120,7 @@ Si bien los LLMs representan la tecnología de punta, su aplicación efectiva no
 
 \subsection{Pipelines Semánticos y Descubrimiento No Supervisado}
 
-La tercera línea se centra en arquitecturas de análisis completas que van más allá de la extracción para estructurar datos y descubrir patrones latentes de manera no supervisada, respondiendo cómo se agrupan las habilidades y evolucionan los perfiles laborales.
+Más allá de la extracción individual de habilidades, la tercera línea de investigación se centra en arquitecturas de análisis completas que estructuran datos y descubren patrones latentes de manera no supervisada, respondiendo cómo se agrupan las habilidades y evolucionan los perfiles laborales.
 
 Lukauskas et al. (2023) es el pilar fundamental de esta aproximación \cite{lukauskas2023}. Su investigación en el mercado laboral de Lituania propuso y validó un pipeline de extremo a extremo que se ha convertido en referencia metodológica. El flujo comenzaba con extracción mediante Regex, seguido de vectorización con modelos basados en BERT (Sentence Transformers) para generar embeddings de 384 dimensiones. Conscientes de la ``maldición de la dimensionalidad'', compararon cinco métodos de reducción (PCA, t-SNE, UMAP, Trimap, Isomap), concluyendo que UMAP ofrecía los mejores resultados al preservar estructura local y global según la métrica de trustworthiness \cite{lukauskas2023}.
 

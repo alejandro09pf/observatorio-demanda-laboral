@@ -1,5 +1,7 @@
 \chapter{DESARROLLO DE LA SOLUCIÓN}
 
+Con base en el diseño arquitectónico presentado en el capítulo anterior, este capítulo describe la implementación concreta de cada componente del observatorio. Se detalla la infraestructura técnica, los sistemas de extracción de habilidades, el mapeo a taxonomías estandarizadas, el sistema de clustering, y la interfaz de usuario.
+
 \section{Implementación de la Infraestructura}
 
 El sistema se implementó sobre PostgreSQL 15.3, seleccionado por su robustez en manejo de datos estructurados, soporte JSON nativo, y capacidades de indexación GIN. El esquema normalizado (3FN) utiliza seis tablas principales: \texttt{raw\_jobs} (ofertas crudas del scraping), \texttt{cleaned\_jobs} (ofertas normalizadas), \texttt{extracted\_\allowbreak skills} (Pipeline A), \texttt{enhanced\_\allowbreak skills} (Pipeline B), \texttt{gold\_\allowbreak standard\_\allowbreak annotations} (300 ofertas anotadas manualmente), y \texttt{esco\_skills} (14,215 skills de taxonomía ESCO extendida). Cada tabla de skills incluye metadatos de trazabilidad (\texttt{extraction\_\allowbreak method}, \texttt{llm\_model}, \texttt{esco\_uri}) permitiendo comparaciones sistemáticas entre pipelines.
@@ -18,7 +20,7 @@ El pipeline de limpieza aplicó normalización de texto, eliminación de HTML re
 
 \section{Implementación de Sistemas de Extracción de Habilidades}
 
-Se implementaron cuatro aproximaciones metodológicas para extracción automática de habilidades técnicas: Pipeline A (NER + Regex), Pipeline B (LLM), Pipeline A.1 (TF-IDF, descartado), y configuración Regex-Only para baseline.
+Una vez establecida la infraestructura base, se procedió a implementar los sistemas de extracción de habilidades, componente central del observatorio. Se desarrollaron cuatro aproximaciones metodológicas para extracción automática de habilidades técnicas: Pipeline A (NER + Regex), Pipeline B (LLM), Pipeline A.1 (TF-IDF, descartado), y configuración Regex-Only para baseline.
 
 \subsection{Pipeline A: NER y Expresiones Regulares}
 
@@ -85,7 +87,7 @@ La configuración Regex-Only reutilizó los 548 patrones de Pipeline A eliminand
 
 \section{Implementación del Sistema de Mapeo a Taxonomía ESCO}
 
-El sistema de mapeo normaliza las habilidades extraídas por Pipeline A y Pipeline B contra la taxonomía ESCO v1.1.0, consolidando variantes ortográficas (``React''/``React.js''/``ReactJS''), diferencias idiomáticas (``Database''/``Base de datos''), y abreviaciones (``JS''/``JavaScript'', ``K8s''/``Kubernetes'') bajo URIs canónicos únicos. Las skills sin correspondencia ESCO se preservan como emergentes para análisis de tecnologías no estandarizadas.
+Tras la extracción de habilidades mediante los pipelines descritos, el siguiente componente crítico es la normalización contra vocabularios controlados. El sistema de mapeo normaliza las habilidades extraídas por Pipeline A y Pipeline B contra la taxonomía ESCO v1.1.0, consolidando variantes ortográficas (``React''/``React.js''/``ReactJS''), diferencias idiomáticas (``Database''/``Base de datos''), y abreviaciones (``JS''/``JavaScript'', ``K8s''/``Kubernetes'') bajo URIs canónicos únicos. Las skills sin correspondencia ESCO se preservan como emergentes para análisis de tecnologías no estandarizadas.
 
 El sistema opera sobre una versión extendida de ESCO v1.1.0 que incorpora 13,939 habilidades oficiales de la Comisión Europea (98.1\% del total), complementadas con 152 habilidades técnicas de O*NET Skills del U.S. Department of Labor no cubiertas por ESCO (1.1\%), y 124 tecnologías modernas agregadas manualmente tras análisis exploratorio (0.9\%) que incluyen frameworks modernos como Next.js y Remix, herramientas DevOps como Terraform y ArgoCD, y tecnologías de AI/ML como LangChain y Prompt Engineering, totalizando 14,215 habilidades en la taxonomía extendida.
 
@@ -117,7 +119,7 @@ El mapper se integró como etapa 5 del orquestador, procesando skills desde \tex
 
 \section{Implementación del Sistema de Clustering de Habilidades}
 
-El sistema de clustering de habilidades constituye un componente analítico central del observatorio, diseñado para descubrir familias semánticas de skills sin categorías predefinidas, analizar evolución temporal de perfiles tecnológicos, y detectar tecnologías emergentes mediante análisis no supervisado. Este sistema permite caracterizar la demanda laboral más allá de conteos agregados de skills individuales, revelando combinaciones coherentes de habilidades que definen roles profesionales reales en el mercado.
+Con las habilidades extraídas y normalizadas, el siguiente paso fue implementar el sistema de clustering para descubrir patrones latentes en la demanda laboral. El sistema de clustering de habilidades constituye un componente analítico central del observatorio, diseñado para descubrir familias semánticas de skills sin categorías predefinidas, analizar evolución temporal de perfiles tecnológicos, y detectar tecnologías emergentes mediante análisis no supervisado. Este sistema permite caracterizar la demanda laboral más allá de conteos agregados de skills individuales, revelando combinaciones coherentes de habilidades que definen roles profesionales reales en el mercado.
 
 La arquitectura del clustering integra tres componentes complementarios que transforman texto de skills en agrupaciones semánticas interpretables, el primero siendo embeddings semánticos que capturan similitud entre skills en espacio vectorial de 768 dimensiones, el segundo reducción dimensional mediante UMAP que proyecta vectores de alta dimensión a espacio 2D preservando estructura local y global, y por ultimo clustering density-based con HDBSCAN que identifica automáticamente agrupaciones densas sin especificar número de clusters a priori.
 
